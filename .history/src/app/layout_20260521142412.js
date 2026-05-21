@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
     <html lang="pt-BR">
       <body className="h-screen flex overflow-hidden">
         <Sidebar />
-        <main className="flex-1 flex flex-col min-w-0 mt-5">
+        <main className="flex-1 flex flex-col min-w-0">
           {children}
         </main>
       </body>
