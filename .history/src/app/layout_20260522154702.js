@@ -1,0 +1,17 @@
+import 
+import "./globals.css";
+
+export const metadata = {
+  title: "SGS-Front",
+  description: "Projeto Final - Sistema de Compras - FrontEnd",
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="pt-BR">
+      <body>
+          {children}
+      </body>
+    </html>
+  );
+}
