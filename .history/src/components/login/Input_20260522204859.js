@@ -18,7 +18,7 @@ export function Input({
                 </div>
             )}
             <input
-                type={tipoAtual}
+                type={type}
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}

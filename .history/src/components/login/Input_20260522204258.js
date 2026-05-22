@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -8,6 +7,7 @@ export function Input({
     const [mostrarSenha, setMostrarSenha] = useState(false);
 
     const tipoAtual = type === "password" && mostrarSenha ? "text" : type;
+
     return (
 
         <div className=" relative flex items-center w-full">
@@ -18,17 +18,14 @@ export function Input({
                 </div>
             )}
             <input
-                type={tipoAtual}
+                type={type}
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
                 className={`
                 h-14 rounded-xl px-4 bg-white text-lg w-full
                 outline-none border border-transparent focus:border-[#5D8EF7] 
-                transition-all text-gray-800 
-                [&::-ms-reveal]:hidden 
-                [&::-webkit-credentials-auto-fill-button]:hidden 
-                ${className}
+                transition-all text-gray-800 ${className}
                 ${iconSrc ? "pl-14 pr-4" : "px-4"}  
                     ${className}
             `}

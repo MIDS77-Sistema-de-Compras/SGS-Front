@@ -8,6 +8,7 @@ export function Input({
     const [mostrarSenha, setMostrarSenha] = useState(false);
 
     const tipoAtual = type === "password" && mostrarSenha ? "text" : type;
+
     return (
 
         <div className=" relative flex items-center w-full">
@@ -18,7 +19,7 @@ export function Input({
                 </div>
             )}
             <input
-                type={tipoAtual}
+                type={type}
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
