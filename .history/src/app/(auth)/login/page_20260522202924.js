@@ -17,7 +17,7 @@ export default function LoginPage() {
     return (
         <main className="min-h-screen w-full bg-gradient-to-br from-[#002663] via-[#003C97] to-[#4B84F4] flex items-center justify-between px-16 lg:px-28 relative py-12">
 
-            <div className="flex flex-col justify-between h-[580px] max-w-[800px]">
+            <div className="flex flex-col justify-between h-[70vh] max-w-[800px]">
                 <div className="text-white mt-10">
                     <p className="text-4xl font-light tracking-wide">Olá,</p>
                     <p className="text-4xl font-light tracking-wide mt-1">Bem-vindo(a) ao</p>
@@ -43,7 +43,7 @@ export default function LoginPage() {
                     </div>
                 </div>
             </div>
-
+        
             <form onSubmit={handleLogin} className="w-[580px] h-[580px] bg-[#0A2E6B] rounded-[24px] px-10 pt-12 pb-8 flex flex-col shadow-2xl border border-white/5">
 
                 <div className="mb-10">

@@ -17,7 +17,7 @@ export default function LoginPage() {
     return (
         <main className="min-h-screen w-full bg-gradient-to-br from-[#002663] via-[#003C97] to-[#4B84F4] flex items-center justify-between px-16 lg:px-28 relative py-12">
 
-            <div className="flex flex-col justify-between h-[580px] max-w-[800px]">
+            <div className="flex flex-col justify-between h-[70vh] max-w-[800px]">
                 <div className="text-white mt-10">
                     <p className="text-4xl font-light tracking-wide">Olá,</p>
                     <p className="text-4xl font-light tracking-wide mt-1">Bem-vindo(a) ao</p>
@@ -26,7 +26,7 @@ export default function LoginPage() {
                     </h1>
                 </div>
 
-                <div className="flex items-center gap-6 mt-10">
+                <div className="flex items-center mt-6">
                     <Image
                         src="/images/logos/senaiLogo.png"
                         alt="Logo SENAI"

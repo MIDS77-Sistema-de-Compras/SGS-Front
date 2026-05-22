@@ -1,10 +1,11 @@
 import Image from "next/image";
 
 export function Input({
-    type = "text", placeholder, value, onChange, className = "", iconSrc, iconAlt = "Ícone" }) {
+    type = "text", placeholder, value, onChange, className = ""
+}) {
     return (
 
-        <div className=" relative flex items-center w-full">
+        <div className=" relarive flex items-center w-full">
 
             {iconSrc && (
                 <div className="absolute left-4">

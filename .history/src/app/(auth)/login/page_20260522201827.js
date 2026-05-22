@@ -17,7 +17,7 @@ export default function LoginPage() {
     return (
         <main className="min-h-screen w-full bg-gradient-to-br from-[#002663] via-[#003C97] to-[#4B84F4] flex items-center justify-between px-16 lg:px-28 relative py-12">
 
-            <div className="flex flex-col justify-between h-[580px] max-w-[800px]">
+            <div className="flex flex-col justify-between h-[80vh] max-w-[800px]">
                 <div className="text-white mt-10">
                     <p className="text-4xl font-light tracking-wide">Olá,</p>
                     <p className="text-4xl font-light tracking-wide mt-1">Bem-vindo(a) ao</p>
@@ -26,7 +26,7 @@ export default function LoginPage() {
                     </h1>
                 </div>
 
-                <div className="flex items-center gap-6 mt-10">
+                <div className="flex items-center gap-6">
                     <Image
                         src="/images/logos/senaiLogo.png"
                         alt="Logo SENAI"
@@ -55,23 +55,22 @@ export default function LoginPage() {
                 </p>
 
                 <div className="flex flex-col gap-4">
+                    <Image src="/images/iconeUsuario.png" alt="Icone de usuario" width={40} height={40} className="opacity-90 hover:opacity-100 cursor-pointer" />
 
                     <Input
                         type="text"
                         placeholder="E-mail ou número de CPF"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        iconSrc="/images/iconeUsuario.png"
-                        iconAlt="Icone de usuario"
+                        iconSrc="/images/"
                     />
+                    <Image src="/images/iconeSenha.png" alt="Icone de senha" width={40} height={40} className="opacity-90 hover:opacity-100 cursor-pointer" />
 
                     <Input
                         type="password"
                         placeholder="Senha"
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
-                        iconSrc="/images/iconeSenha.png"
-                        iconAlt="Icone da senha"
                     />
                 </div>
 
