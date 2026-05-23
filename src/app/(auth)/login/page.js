@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 import { Input } from "@/components/login/Input";
 import { Button } from "@/components/login/Button";
 import Image from "next/image";
@@ -9,9 +11,18 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
 
+    const router = useRouter();
+
     function handleLogin(e) {
         e.preventDefault();
-        console.log({ email, senha });
+
+        const tokenBackend = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...exampletoken";
+        Cookies.set("token", tokenBackend, {
+            expires: 1,
+            secure: true,
+            sameSite: "strict"
+        });
+        router.push("/")
     }
 
     return (
