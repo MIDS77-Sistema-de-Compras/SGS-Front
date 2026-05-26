@@ -43,14 +43,44 @@ export default function LoginPage() {
                         alt="Logo SENAI"
                         width={140}
                         height={35}
-                        className="object-contain"
+                        className="object-contain w-auto h-auto"
                     />
                     <div className="flex items-center gap-4 border-l border-white/20 pl-6">
-                        <Image src="/images/logos/facebookLogo.png" alt="Facebook" width={18} height={18} className="opacity-90 hover:opacity-100 cursor-pointer" />
-                        <Image src="/images/logos/youtubeLogo.png" alt="YouTube" width={18} height={18} className="opacity-90 hover:opacity-100 cursor-pointer" />
-                        <Image src="/images/logos/xLogo.png" alt="X" width={16} height={16} className="opacity-90 hover:opacity-100 cursor-pointer" />
-                        <Image src="/images/logos/linkedinLogo.png" alt="LinkedIn" width={18} height={18} className="opacity-90 hover:opacity-100 cursor-pointer" />
-                        <Image src="/images/logos/instagramLogo.png" alt="Instagram" width={18} height={18} className="opacity-90 hover:opacity-100 cursor-pointer" />
+                        <Image 
+                            src="/images/logos/facebookLogo.png" 
+                            alt="Facebook" 
+                            width={18} 
+                            height={18} 
+                            className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
+                        />
+                        <Image 
+                            src="/images/logos/youtubeLogo.png" 
+                            alt="YouTube" 
+                            width={18} 
+                            height={18} 
+                            className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
+                        />
+                        <Image 
+                            src="/images/logos/xLogo.png" 
+                            alt="X" 
+                            width={16} 
+                            height={16} 
+                            className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
+                        />
+                        <Image 
+                            src="/images/logos/linkedinLogo.png" 
+                            alt="LinkedIn" 
+                            width={18} 
+                            height={18} 
+                            className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
+                        />
+                        <Image 
+                            src="/images/logos/instagramLogo.png" 
+                            alt="Instagram" 
+                            width={18} 
+                            height={18} 
+                            className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
+                        />
                     </div>
                 </div>
             </div>
@@ -58,7 +88,13 @@ export default function LoginPage() {
             <form onSubmit={handleLogin} className="w-[580px] h-[580px] bg-[#0A2E6B] rounded-[24px] px-10 pt-12 pb-8 flex flex-col shadow-2xl border border-white/5">
 
                 <div className="mb-10">
-                    <Image src="/images/logos/sgcLogo.png" alt="Sgc" width={110} height={110} className="opacity-90 hover:opacity-100 cursor-pointer" />
+                    <Image 
+                        src="/images/logos/sgcLogo.png" 
+                        alt="Sgc" 
+                        width={110} 
+                        height={110} 
+                        className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
+                    />
                 </div>
 
                 <p className="text-white text-[13px] font-medium opacity-90 text-left mb-6 ">
