@@ -36,7 +36,7 @@ export function Footer(){
                         alt="Logo SENAI"
                         width={120}
                         height={30}
-                        className="object-contain"
+                        className="object-contain h-auto w-auto"
                     />
                 </div>
                 <p className="text-[10px] text-white/50 leading-tight mt-1">
