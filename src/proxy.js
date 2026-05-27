@@ -1,19 +1,28 @@
 import { NextResponse } from "next/server";
 
-export function proxy(request){
-    const token = request.cookies.get('token')?.value
-    const { pathname } = request.nextUrl
+const publicPaths = [
+    "/login",
+    "/recuperar-senha",
+    "/autenticacao",
+    "/nova-senha",
+];
 
-    if(pathname === '/login'){
-        if(token){
-            return NextResponse.redirect(new URL('/', request.url))
+export function proxy(request) {
+    const token = request.cookies.get("token")?.value;
+    const { pathname } = request.nextUrl;
+
+    if (publicPaths.includes(pathname)) {
+        if (pathname === "/login" && token) {
+            return NextResponse.redirect(new URL("/", request.url));
         }
-        return NextResponse.next()
+        return NextResponse.next();
     }
-    if(!token){
-        return NextResponse.redirect(new URL('/login', request.url))
+
+    if (!token) {
+        return NextResponse.redirect(new URL("/login", request.url));
     }
-    return NextResponse.next()
+
+    return NextResponse.next();
 }
 
 export const config = {
