@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/login/Button";
 import AuthBackground from "@/components/login/AuthBackground";
 import FormCard from "@/components/login/FormCard";
 
