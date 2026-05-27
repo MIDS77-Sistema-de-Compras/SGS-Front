@@ -193,8 +193,8 @@ export default function Home(){
 
             <footer className="flex gap-15 mt-auto">
                 <Link 
-                    href="../solicitacoes/criar"
-                    className="flex flex-1 rounded-lg bg-[#103D85] py-4 px-50 gap-3 items-center justify-center shadow-lg transition-all active:scale-[0.98] hover:bg-[#3366cc]"
+                    href="/solicitacoes/criar"
+                    className="flex flex-1 rounded-xl bg-[#103D85] py-4 px-50 gap-3 items-center justify-center shadow-lg transition-all active:scale-[0.98] hover:bg-[#3366cc]"
                 >
                     <Image 
                         src="/images/home/novaSolicitacao.png"
@@ -207,8 +207,8 @@ export default function Home(){
                     </p>
                 </Link>
                 <Link 
-                    href="../solicitacoes/criar"
-                    className="flex flex-1 rounded-lg border border-[#777777] py-4 px-50 gap-3 justify-center items-center shadow-lg transition-all active:scale-[0.98] hover:bg-gray-100"
+                    href="/solicitacoes"
+                    className="flex flex-1 rounded-xl border border-[#777777] py-4 px-50 gap-3 justify-center items-center shadow-lg transition-all active:scale-[0.98] hover:bg-gray-100"
                 >
                     <Image 
                         src="/images/home/minhasSolicitacoes.png"
