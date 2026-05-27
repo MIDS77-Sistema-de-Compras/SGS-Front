@@ -6,8 +6,7 @@ export default function CadastroUsuarios() {
   const [nivelAcesso, setNivelAcesso] = useState('DOCENTE');
 
   return (
-
-    <div className="absolute inset-y-0 right-0 left-[260px] bg-[#F8FAFC] px-12 pb-12 overflow-y-auto font-sans flex flex-col gap-6">
+    <div className="absolute inset-y-0 right-0 left-[260px] bg-[#FFFFFF] px-12 pb-12 overflow-y-auto font-sans flex flex-col gap-6">
 
       <TopBar />
 
