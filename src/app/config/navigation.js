@@ -11,7 +11,7 @@ export const sidebarRoutes = [
     },
     {
         label: "Nova Solicitação",
-        href: "/solicitacoes/nova",
+        href: "/solicitacoes/criar",
         icon: "/images/novaSolicitacao.png",
     },
     {
