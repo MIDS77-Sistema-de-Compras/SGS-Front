@@ -27,6 +27,7 @@ export default function HomeFooter() {
                     alt="Icone de Nova Solicitação"
                     width={30}
                     height={30}
+                    className="w-auto h-auto"
                 />
                 <p className="font-bold">
                     Minhas Solicitações

@@ -33,7 +33,11 @@ export default function LoginPage() {
     return (
         <div>
             <AuthBackground>
-                <FormCard onSubmit={handleLogin}>
+                <FormCard 
+                    onSubmit={handleLogin}
+                    onTermosClick={() => setModalTermosOpen(true)}
+                    onPoliticasClick={() => setModalPoliticasOpen(true)}
+                >
 
                     <p className="text-white text-[13px] font-medium opacity-90 text-left mb-6">
                         Insira suas credenciais para acessar o sistema

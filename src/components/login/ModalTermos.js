@@ -3,8 +3,8 @@ import { Modal } from "./Modal";
 export function ModalTermos({ isOpen, onClose }) {
     return (
         <Modal
-            isOpen={modalTermosOpen}
-            onClose={() => setModalTermosOpen(false)}
+            isOpen={isOpen}
+            onClose={onClose}
             title="Termos de Uso"
         >
             <p className="font-semibold">

@@ -4,10 +4,11 @@ export default function FormCard({
     onSubmit,
     showBackLink = false,
     backHref = "/login",
+    onTermosClick,
+    onPoliticasClick,
     children,
 }) {
     return (
-
         <form
             onSubmit={onSubmit}
             className="w-[580px] h-[580px] bg-[#0A2E6B] rounded-[24px] px-10 pt-12 pb-8 flex flex-col shadow-2xl border border-white/5"
@@ -35,11 +36,9 @@ export default function FormCard({
             {children}
 
             <div className="flex justify-between text-[11px] text-white/60 underline mt-auto">
-                <a href="#" className="hover:text-white transition-colors">Termos de Uso</a>
-                <a href="#" className="hover:text-white transition-colors">Políticas de privacidade</a>
+                <a href="#" onClick={onTermosClick} className="hover:text-white transition-colors">Termos de Uso</a>
+                <a href="#" onClick={onPoliticasClick} className="hover:text-white transition-colors">Políticas de privacidade</a>
             </div>
         </form>
-
-
     )
 }

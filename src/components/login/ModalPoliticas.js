@@ -3,8 +3,8 @@ import { Modal } from "./Modal";
 export function ModalPoliticas({ isOpen, onClose }) {
     return (
         <Modal
-            isOpen={modalPoliticasOpen}
-            onClose={() => setModalPoliticasOpen(false)}
+            isOpen={isOpen}
+            onClose={onClose}
             title="Política de privacidade"
         >
             <p>
