@@ -12,10 +12,9 @@ export default function AutenticacaoPage() {
 
     function handleChange(value, index) {
         const novo = [...codigo];
-        novo[index] = value.slice(-1); // só 1 dígito
+        novo[index] = value.slice(-1);
         setCodigo(novo);
 
-        // Avança o foco automaticamente
         if (value && index < 5) {
             document.getElementById(`digit-${index + 1}`)?.focus();
         }
@@ -38,7 +37,6 @@ export default function AutenticacaoPage() {
                     Digite o código de verificação enviado para o seu e-mail cadastrado.
                 </p>
 
-                {/* Inputs do código */}
                 <div className="flex gap-3 justify-center mb-8">
                     {codigo.map((val, i) => (
                         <input
