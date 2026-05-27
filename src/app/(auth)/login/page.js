@@ -39,7 +39,7 @@ export default function LoginPage() {
 
                 <div className="flex items-center gap-6 mt-10">
                     <Image
-                        src="/images/logos/senaiLogo.png"
+                        src="/images/logos/senai-white.png"
                         alt="Logo SENAI"
                         width={140}
                         height={35}
@@ -47,35 +47,35 @@ export default function LoginPage() {
                     />
                     <div className="flex items-center gap-4 border-l border-white/20 pl-6">
                         <Image 
-                            src="/images/logos/facebookLogo.png" 
+                            src="/images/logos/facebook.png" 
                             alt="Facebook" 
                             width={18} 
                             height={18} 
                             className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
                         />
                         <Image 
-                            src="/images/logos/youtubeLogo.png" 
+                            src="/images/logos/youtube.png" 
                             alt="YouTube" 
                             width={18} 
                             height={18} 
                             className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
                         />
                         <Image 
-                            src="/images/logos/xLogo.png" 
+                            src="/images/logos/x.png" 
                             alt="X" 
                             width={16} 
                             height={16} 
                             className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
                         />
                         <Image 
-                            src="/images/logos/linkedinLogo.png" 
+                            src="/images/logos/linkedin.png" 
                             alt="LinkedIn" 
                             width={18} 
                             height={18} 
                             className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
                         />
                         <Image 
-                            src="/images/logos/instagramLogo.png" 
+                            src="/images/logos/instagram.png" 
                             alt="Instagram" 
                             width={18} 
                             height={18} 
@@ -89,7 +89,7 @@ export default function LoginPage() {
 
                 <div className="mb-10">
                     <Image 
-                        src="/images/logos/sgcLogo.png" 
+                        src="/images/logos/sgc.png" 
                         alt="Sgc" 
                         width={110} 
                         height={110} 
@@ -108,7 +108,7 @@ export default function LoginPage() {
                         placeholder="E-mail ou número de CPF"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        iconSrc="/images/iconeUsuario.png"
+                        iconSrc="/images/icons/user.png"
                         iconAlt="Icone de usuario"
                     />
 
@@ -117,7 +117,7 @@ export default function LoginPage() {
                         placeholder="Senha"
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
-                        iconSrc="/images/iconeSenha.png"
+                        iconSrc="/images/icons/password.png"
                         iconAlt="Icone da senha"
                     />
                 </div>
