@@ -1,4 +1,4 @@
-export default function MinhasSolicitacoes(){
+export default function NovaSolicitacao(){
     return (
         <div>
             
