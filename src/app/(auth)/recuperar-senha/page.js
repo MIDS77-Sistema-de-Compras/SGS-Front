@@ -13,7 +13,7 @@ export default function RecuperarSenhaPage() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        router.push("/recuperar-senha");
+        router.push("/autenticacao");
     }
 
     return (

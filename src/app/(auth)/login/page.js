@@ -70,12 +70,13 @@ export default function LoginPage() {
                         />
                         <span>Mantenha-me conectado</span>
                     </label>
-                    <a
-                        onClick={() => router.push("/autenticacao")}
-                        className="hover:underline opacity-90 hover:opacity-100 cursor-pointer"
+                    <button
+                        type="button"
+                        onClick={() => router.push("/recuperar-senha")}
+                        className="hover:underline opacity-90 hover:opacity-100 cursor-pointer bg-transparent border-0 p-0 text-inherit text-xs"
                     >
                         Esqueceu sua senha?
-                    </a>
+                    </button>
                 </div>
 
             </FormCard>
