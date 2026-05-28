@@ -5,11 +5,16 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/login/Input";
 import { Button } from "@/components/login/Button";
 import FormCard from "@/components/login/FormCard";
+import { ModalTermos } from "@/components/login/ModalTermos";
+import { ModalPoliticas } from "@/components/login/ModalPoliticas";
 
 export default function NovaSenhaPage() {
     const [senha, setSenha] = useState("");
     const [confirmar, setConfirmar] = useState("");
     const router = useRouter();
+
+    const [modalTermosOpen, setModalTermosOpen] = useState(false);
+    const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -17,43 +22,59 @@ export default function NovaSenhaPage() {
     }
 
     return (
-        <FormCard onSubmit={handleSubmit} showBackLink backHref="/autenticacao">
+        <div>
+            <FormCard
+                onSubmit={handleSubmit}
+                showBackLink backHref="/login"
+                onTermosClick={() => setModalTermosOpen(true)}
+                onPoliticasClick={() => setModalPoliticasOpen(true)}
+            >
 
-            <h2 className="text-white text-2xl font-bold mb-2">
-                Alterar senha
-            </h2>
-            <p className="text-white/60 text-[13px] mb-8">
-                Defina sua nova senha de acesso ao sistema.
-            </p>
-
-            <div className="flex flex-col gap-4">
-                <Input
-                    type="password"
-                    placeholder="Nova senha"
-                    value={senha}
-                    onChange={(e) => setSenha(e.target.value)}
-                    iconSrc="/images/iconeSenha.png"
-                    iconAlt="Icone de senha"
-                />
-                <Input
-                    type="password"
-                    placeholder="Confirmar nova senha"
-                    value={confirmar}
-                    onChange={(e) => setConfirmar(e.target.value)}
-                    iconSrc="/images/iconeSenha.png"
-                    iconAlt="Icone de senha"
-                />
-            </div>
-
-            <div className="mt-8">
-                <Button
-                    type="submit"
-                    className="w-full py-3 bg-[#4B84F4] hover:bg-[#3b71f3] text-white font-semibold rounded-lg transition-colors"
-                >
+                <h2 className="text-white text-2xl font-bold mb-2">
                     Alterar senha
-                </Button>
-            </div>
+                </h2>
+                <p className="text-white/60 text-[13px] mb-8">
+                    Defina sua nova senha de acesso ao sistema.
+                </p>
 
-        </FormCard>
+                <div className="flex flex-col gap-4">
+                    <Input
+                        type="password"
+                        placeholder="Nova senha"
+                        value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
+                        iconSrc="/images/iconeSenha.png"
+                        iconAlt="Icone de senha"
+                    />
+                    <Input
+                        type="password"
+                        placeholder="Confirmar nova senha"
+                        value={confirmar}
+                        onChange={(e) => setConfirmar(e.target.value)}
+                        iconSrc="/images/iconeSenha.png"
+                        iconAlt="Icone de senha"
+                    />
+                </div>
+
+                <div className="mt-8">
+                    <Button
+                        type="submit"
+                        className="w-full py-3 bg-[#4B84F4] hover:bg-[#3b71f3] text-white font-semibold rounded-lg transition-colors"
+                    >
+                        Alterar senha
+                    </Button>
+                </div>
+
+            </FormCard>
+
+            <ModalTermos
+                isOpen={modalTermosOpen}
+                onClose={() => setModalTermosOpen(false)}
+            />
+            <ModalPoliticas
+                isOpen={modalPoliticasOpen}
+                onClose={() => setModalPoliticasOpen(false)}
+            />
+        </div>
     );
 }

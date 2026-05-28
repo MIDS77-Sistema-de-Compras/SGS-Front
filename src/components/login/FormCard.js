@@ -36,8 +36,20 @@ export default function FormCard({
             {children}
 
             <div className="flex justify-between text-[11px] text-white/60 underline mt-auto">
-                <a href="#" onClick={onTermosClick} className="hover:text-white transition-colors">Termos de Uso</a>
-                <a href="#" onClick={onPoliticasClick} className="hover:text-white transition-colors">Políticas de privacidade</a>
+                <button
+                    type="button"
+                    onClick={onTermosClick}
+                    className="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer"
+                >
+                    Termos de Uso
+                </button>
+                <button
+                    type="button"
+                    onClick={onPoliticasClick}
+                    className="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer"
+                >
+                    Políticas de privacidade
+                </button>
             </div>
         </form>
     )
