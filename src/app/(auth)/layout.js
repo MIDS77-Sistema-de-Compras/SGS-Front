@@ -1,5 +1,9 @@
+import AuthBackground from "@/components/login/AuthBackground";
+
 export default function AuthLayout({ children }) {
-    return (<>
-        {children}
-    </>)
+    return (
+        <AuthBackground>
+            {children}
+        </AuthBackground>
+    )
 }
