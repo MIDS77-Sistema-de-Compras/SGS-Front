@@ -7,7 +7,7 @@ export default function ListProducts({products}){
     // PLEASE someone improve this logic, it was the only way I found and it might be unstable.
     return (
         <div className="flex flex-col items-center border border-[#00000020] border-dashed rounded-xl pt-1 pb-5 px-2 bg-gray-100">
-            {products.length < 1 ? (
+            {products.length === 1 ? (
                 <div className="flex flex-col items-center pt-5">
                     <div className="bg-white p-4 mb-4 rounded-full">
                         <Image src={fileBox} alt="File Box Icon" />

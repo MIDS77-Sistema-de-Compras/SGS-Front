@@ -1,7 +1,10 @@
+import Image from "next/image";
 import FormInput from "../form/FormInput";
 import SelectFormInput from "../form/SelectFormInput";
 import SubmitButton from "../form/SubmitButton";
+import UploadFileInput from "../form/UploadFileInput";
 import ListProducts from "./ListProducts";
+import send from "../../../public/images/icons/send.svg";
 
 export default function RequestForm(){
     return (
@@ -43,7 +46,7 @@ export default function RequestForm(){
                     <div className="mt-7 mb-5">
                         <ListProducts products={[{id: "PROD-001", name: "Produto Placeholder"}, {id: "PROD-002", name: "Produto Placeholder"}] /* you might aswell unadd those placeholders to see the empty state of the component */} />
                     </div>
-                    <div className="grid grid-cols-6 gap-4">
+                    <div action={"Add product to the list"} className="grid grid-cols-6 gap-4">
                         <div className="col-span-3">
                             <FormInput label={"Produto"} placeholder={"Não há produtos cadastrados...?"} type={"text"} isRequired={true} />
                         </div>
@@ -53,8 +56,18 @@ export default function RequestForm(){
                         <div>
                             <SelectFormInput name={"unit"} title={"Quantidade"} label={"Selecione..."} options={["Litros", "Gramas"]} isRequired={true} />
                         </div>
-                        <SubmitButton textSize={"3rem"}>+</SubmitButton>
+                        <SubmitButton className={"text-[3rem]"}>+</SubmitButton>
                     </div>
+                </div>
+                {/* pins */}
+                <div className="mt-12 mb-5 mx-4">
+                    <p className="flex items-center font-semibold tracking-wider text-[#103D85] before:block before:bg-[#103D85] before:py-4 before:px-[3px] before:mr-2 before:rounded">ANEXOS</p>
+                    <div className="mt-7 mb-5">
+                        <UploadFileInput />
+                    </div>
+                </div>
+                <div className="flex flex-col items-end">
+                    <SubmitButton className={"py-6 px-7 mx-4 mb-5 font-semibold"}><span className="flex gap-5">Finalizar Solicitação <Image src={send} /></span></SubmitButton>
                 </div>
             </form>
         </div>

@@ -11,7 +11,7 @@ export const metadata = {
   title: "SGS-Front",
   description: "Projeto Final - Sistema de Compras - FrontEnd",
   icons: {
-    icon: "/images/logos/sgcLogo.png"
+    icon: "/images/logos/sgc.png" // need to change
   }
 };
 
