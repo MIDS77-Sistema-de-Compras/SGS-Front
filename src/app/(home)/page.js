@@ -191,6 +191,7 @@ export default function Home(){
                 </div>
             </section>
 
+
             <footer className="flex gap-15 mt-auto">
                 <Link 
                     href="/solicitacoes/criar"
