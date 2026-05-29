@@ -30,7 +30,7 @@ export default function AuthLayout({
 
                 <div className="flex items-center gap-6 mt-10">
                     <Image
-                        src="/images/logos/senaiLogo.png"
+                        src="/images/logos/senai-white.png"
                         alt="Logo SENAI"
                         width={140}
                         height={35}
@@ -38,35 +38,35 @@ export default function AuthLayout({
                     />
                     <div className="flex items-center gap-4 border-l border-white/20 pl-6">
                         <Image
-                            src="/images/logos/facebookLogo.png"
+                            src="/images/logos/facebook.png"
                             alt="Facebook"
                             width={18}
                             height={18}
                             className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer"
                         />
                         <Image
-                            src="/images/logos/youtubeLogo.png"
+                            src="/images/logos/youtube.png"
                             alt="YouTube"
                             width={18}
                             height={18}
                             className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer"
                         />
                         <Image
-                            src="/images/logos/xLogo.png"
+                            src="/images/logos/x.png"
                             alt="X"
                             width={16}
                             height={16}
                             className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer"
                         />
                         <Image
-                            src="/images/logos/linkedinLogo.png"
+                            src="/images/logos/linkedin.png"
                             alt="LinkedIn"
                             width={18}
                             height={18}
                             className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer"
                         />
                         <Image
-                            src="/images/logos/instagramLogo.png"
+                            src="/images/logos/instagram.png"
                             alt="Instagram"
                             width={18}
                             height={18}

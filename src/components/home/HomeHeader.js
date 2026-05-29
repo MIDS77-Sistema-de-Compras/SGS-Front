@@ -4,7 +4,7 @@ export default function Header(){
     return (
         <header className="flex items-center">
             <Image 
-                src="/images/sgsLogoBlue.png"
+                src="/images/logos/sgs-blue.png"
                 alt="Logo SGS"
                 width={230}
                 height={100}
