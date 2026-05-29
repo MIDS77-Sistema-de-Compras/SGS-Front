@@ -28,7 +28,7 @@ export default function PasswordField() {
 
     return (
         <div className="md:col-span-2">
-            <label className="block text-[12px] font-bold text-[#103D85]/70 mb-2">
+            <label className="block text-[12px] font-bold text-[#103D85]/70 mb-2 mt-4">
                 Senha <span className="text-[#BA1A1A]">*</span>
             </label>
 
