@@ -4,7 +4,7 @@ export default function Topbar(){
     return (
         <div className="flex w-full mt-8 gap-10 items-center">
             <Image 
-                src="/images/sgsLogoBlue.png"
+                src="/images/logos/sgs-blue.png"
                 alt="Logo SGS"
                 width={115}
                 height={50}
