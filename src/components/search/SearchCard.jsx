@@ -5,7 +5,7 @@ export function SearchCard({ cr }) {
         <div
             className="
                 bg-white rounded-3xl shadow-md
-                p-5 flex flex-col gap-6
+                p-3 flex flex-col gap-1
                 w-full
             "
         >
@@ -13,14 +13,14 @@ export function SearchCard({ cr }) {
                 <div
                     className="
                         bg-gray-100 rounded-2xl
-                        px-4 py-3
-                        font-bold text-2xl text-gray-800
+                        px-3 py-2
+                        font-bold text-1xl text-gray-800
                     "
                 >
                     {cr.id}
                 </div>
 
-                <div className="text-right font-bold text-xl text-black">
+                <div className="text-right font-bold text-sm text-black">
                     {cr.tipo}
                 </div>
             </div>

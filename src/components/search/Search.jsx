@@ -22,9 +22,54 @@ export function Search({
         );
     }, [search, data]);
 
-    return (
+   return (
+    <div
+        className="
+            w-full max-w-[380px]
+            mx-auto
+            border border-gray-400
+            rounded-[25px]
+            overflow-hidden
+            bg-[#FFFFFF]
+            shadow-md
+        "
+    >
+        {/* TOPO */}
+        <div
+            className="
+                flex items-center justify-between
+                px-4 py-3
+                bg-[#efeff2]
+                border-b border-gray-300
+            "
+        >
+            <div className="flex items-center gap-3">
+                <span className="text-[#103D85] text-2base">
+                    ↺
+                </span>
 
-        <div className="flex flex-col gap-6 w-full border-red-500 p-10">
+                <h1 className="font-bold text-[#103D85] text-1base">
+                    Busca de CR
+                </h1>
+            </div>
+
+            <div
+                className="
+                    bg-[#d9dde7]
+                    text-[#103D85]
+                    text-xs
+                    font-bold
+                    px-2 py-1
+                    rounded-xl
+                "
+            >
+                RECENTES
+            </div>
+        </div>
+
+        {/* CONTEÚDO */}
+        <div className="p-2 flex flex-col gap-2">
+
             <Input
                 type="text"
                 placeholder={placeholder}
@@ -32,25 +77,29 @@ export function Search({
                 onChange={(e) => setSearch(e.target.value)}
             />
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
                 {filteredData.length > 0 ? (
                     filteredData.map((cr) => (
                         <SearchCard
-                            key={cr.cr}
+                            key={cr.id}
                             cr={cr}
                         />
                     ))
                 ) : (
-                    <div
-                        className="
-                            text-center text-gray-400
-                            py-10
-                        "
-                    >
+                    <div className="text-center text-gray-400 py-6">
                         Nenhum resultado encontrado
                     </div>
                 )}
             </div>
+
         </div>
-    );
+
+        {/* BARRINHAS DE BAIXO */}
+        <div className="flex justify-center itens-center gap-2 py-5">
+            <div className="w-10 h-2 bg-gray-300 rounded-full"></div>
+            <div className="w-3 h-2 bg-gray-300 rounded-full"></div>
+            <div className="w-10 h-2 bg-gray-300 rounded-full"></div>
+        </div>
+    </div>
+);
 }

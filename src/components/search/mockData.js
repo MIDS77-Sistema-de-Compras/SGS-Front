@@ -1,4 +1,5 @@
 export const mockCRs = [
+    /*dados fixos, alterar para consumir api quando a mesma estiver pronta*/
     {
         id: 7571,
         tipo: "INICIAÇÃO PRESENCIAL",

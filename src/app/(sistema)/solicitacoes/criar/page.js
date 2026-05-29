@@ -3,31 +3,29 @@ import { Search } from "@/components/search/Search";
 
 export default function NovaSolicitacao(){
     return (
-        <div>
-            <section className="mt-10">
+            <div className="w-full flex justify-end pt-20 pr-20">
                 <Search
                     data={[
                         {
-                            cr: "7571",
+                            id: "7571",
                             tipo: "INICIAÇÃO PRESENCIAL",
-                            wegSupervisor: "Não se aplica",
-                            senaiSupervisor: "Kelvin Heron Campestrini",
+                            weg: "Não se aplica",
+                            senai: "Kelvin Heron Campestrini",
                         },
                         {
-                            cr: "8071",
+                            id: "8071",
                             tipo: "APRENDIZAGEM - GERAL",
-                            wegSupervisor: "Viviane Ciez",
-                            senaiSupervisor: "Viviane Ciez",
+                            weg: "Viviane Ciez",
+                            senai: "Viviane Ciez",
                         },
                         {
-                            cr: "13498",
+                            id: "13498",
                             tipo: "APRENDIZAGEM TÉCNICA",
-                            wegSupervisor: "Emerson Tissi ou Andrei Jorge",
-                            senaiSupervisor: "Não se aplica",
+                            weg: "Emerson Tissi ou Andrei Jorge",
+                            senai: "Não se aplica",
                         },
                     ]}
                 />
-                        </section>
-        </div>
-    )
+            </div>
+    );
 }
