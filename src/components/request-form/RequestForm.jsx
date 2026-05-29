@@ -9,7 +9,7 @@ import send from "../../../public/images/icons/send.svg";
 export default function RequestForm(){
     return (
         <div className="border border-[#00000050] rounded-xl flex flex-1 flex-col">
-            <div className="p-2 border border-transparent border-b-[#00000050]">
+            <div className="px-3 py-4 border border-transparent border-b-[#00000050]">
                 <h1 className="text-[#103D85] font-bold text-2xl">Nova Solicitação</h1>
             </div>
             <form action={"won't do now since the API isn't done yet"}>
@@ -46,17 +46,17 @@ export default function RequestForm(){
                     <div className="mt-7 mb-5">
                         <ListProducts products={[{id: "PROD-001", name: "Produto Placeholder"}, {id: "PROD-002", name: "Produto Placeholder"}] /* you might aswell unadd those placeholders to see the empty state of the component */} />
                     </div>
-                    <div action={"Add product to the list"} className="grid grid-cols-6 gap-4">
-                        <div className="col-span-3">
+                    <div action={"Add product to the list"} className="flex gap-4">
+                        <div className="">
                             <FormInput label={"Produto"} placeholder={"Não há produtos cadastrados...?"} type={"text"} isRequired={true} />
                         </div>
                         <div>
                             <FormInput label={"Quantidade"} placeholder={"Ex: 2"} type={"number"} isRequired={true} />
                         </div>
                         <div>
-                            <SelectFormInput name={"unit"} title={"Quantidade"} label={"Selecione..."} options={["Litros", "Gramas"]} isRequired={true} />
+                            <SelectFormInput name={"unit"} title={"Quantidade"} label={"Selecione..."} options={["L", "g"]} isRequired={true} />
                         </div>
-                        <SubmitButton className={"text-[3rem]"}>+</SubmitButton>
+                        <SubmitButton className={"text-[2rem] px-8"}>+</SubmitButton>
                     </div>
                 </div>
                 {/* pins */}
@@ -67,7 +67,7 @@ export default function RequestForm(){
                     </div>
                 </div>
                 <div className="flex flex-col items-end">
-                    <SubmitButton className={"py-6 px-7 mx-4 mb-5 font-semibold"}><span className="flex gap-5">Finalizar Solicitação <Image src={send} /></span></SubmitButton>
+                    <SubmitButton className={"py-6 px-7 mx-4 mb-5 font-semibold"}><span className="flex gap-5">Finalizar Solicitação <Image src={send} alt="Paper Plane Send Icon" /></span></SubmitButton>
                 </div>
             </form>
         </div>
