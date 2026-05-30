@@ -10,7 +10,6 @@ export default function MonitoramentoSolicitacoes() {
     const [busca, setBusca] = useState("");
     const [abaAtiva, setAbaAtiva] = useState('pendentes');
 
-    
     const crs = [
         { id: 1, nome: 'CR Blumenau' },
         { id: 2, nome: 'CR Joinville' },

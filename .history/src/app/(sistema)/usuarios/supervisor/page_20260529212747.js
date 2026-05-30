@@ -10,115 +10,25 @@ export default function MonitoramentoSolicitacoes() {
     const [busca, setBusca] = useState("");
     const [abaAtiva, setAbaAtiva] = useState('pendentes');
 
-    
     const crs = [
         { id: 1, nome: 'CR Blumenau' },
         { id: 2, nome: 'CR Joinville' },
         { id: 3, nome: 'CR Florianópolis' },
     ];
 
-    const solicitacoes = [
-        {
-            id: 1,
-            titulo: "CR-1024 : Compra de materiais de escritório",
-            sub: "Aguardando aprovação da gerência",
-            dataCriacao: "2026-05-29T14:30:00Z",
-            status: "Em análise",
-            cr: 1,
-            perfil: "DOCENTE"
-        },
-        {
-            id: 2,
-            titulo: "CR-2048 : Solicitação de notebook",
-            sub: "Em validação pelo setor de TI",
-            dataCriacao: "2026-05-29T13:15:00Z",
-            status: "Em análise",
-            cr: 2,
-            perfil: "SUPERVISOR"
-        },
-        {
-            id: 3,
-            titulo: "CR-3105 : Aquisição de EPIs",
-            sub: "Pedido encaminhado ao comprador",
-            dataCriacao: "2026-05-28T10:15:00Z",
-            status: "Em atendimento",
-            cr: 3,
-            perfil: "COORDENADOR"
-        },
-        {
-            id: 4,
-            titulo: "CR-4127 : Compra de componentes elétricos",
-            sub: "Prazo excedido para atendimento",
-            dataCriacao: "2026-05-25T16:00:00Z",
-            status: "Atrasada",
-            cr: 1,
-            perfil: "SUPERVISOR"
-        },
-        {
-            id: 5,
-            titulo: "CR-5231 : Contratação de serviço de manutenção",
-            sub: "Solicitação cancelada pelo requisitante",
-            dataCriacao: "2026-05-24T09:00:00Z",
-            status: "Pedido Cancelado",
-            cr: 2,
-            perfil: "DOCENTE"
-        },
-        {
-            id: 6,
-            titulo: "CR-6345 : Compra de mobiliário",
-            sub: "Parte dos itens já foi recebida",
-            dataCriacao: "2026-05-23T11:00:00Z",
-            status: "Recebimento Parcial",
-            cr: 3,
-            perfil: "COORDENADOR"
-        },
-        {
-            id: 7,
-            titulo: "CR-7412 : Aquisição de equipamentos de rede",
-            sub: "Aguardando retorno do comprador",
-            dataCriacao: "2026-05-22T15:30:00Z",
-            status: "Aguardando comprador",
-            cr: 1,
-            perfil: "DOCENTE"
-        },
-        {
-            id: 8,
-            titulo: "CR-8567 : Compra de materiais de limpeza",
-            sub: "Coleta de cotações em andamento",
-            dataCriacao: "2026-05-20T14:20:00Z",
-            status: "Solicitando orçamento",
-            cr: 2,
-            perfil: "SUPERVISOR"
-        },
-        {
-            id: 9,
-            titulo: "CR-9183 : Reposição de ferramentas",
-            sub: "Compra realizada via fundo rotativo",
-            dataCriacao: "2026-05-19T08:10:00Z",
-            status: "Fundo Rotativo",
-            cr: 3,
-            perfil: "DOCENTE"
-        },
-        {
-            id: 10,
-            titulo: "CR-1049 : Compra de peças de reposição",
-            sub: "Atendimento pelo centro de distribuição",
-            dataCriacao: "2026-05-15T17:45:00Z",
-            status: "CD central",
-            cr: 1,
-            perfil: "COORDENADOR"
-        },
-        {
-            id: 11,
-            titulo: "CR-1176 : Solicitação de materiais para laboratório",
-            sub: "Pedido realizado diretamente pelo portal",
-            dataCriacao: "2026-05-10T12:00:00Z",
-            status: "Solicitado pelo portal",
-            cr: 2,
-            perfil: "DOCENTE"
-        }
-    ];
-
+   const solicitacoes = [
+    { id: 1, titulo: "CR-1024 : Compra de materiais de escritório", sub: "Aguardando aprovação da gerência", dataCriacao: "2026-05-29T14:30:00Z", status: "Em análise" },
+    { id: 2, titulo: "CR-2048 : Solicitação de notebook", sub: "Em validação pelo setor de TI", dataCriacao: "2026-05-29T13:15:00Z", status: "Em análise" },
+    { id: 3, titulo: "CR-3105 : Aquisição de EPIs", sub: "Pedido encaminhado ao comprador", dataCriacao: "2026-05-28T10:15:00Z", status: "Em atendimento" },
+    { id: 4, titulo: "CR-4127 : Compra de componentes elétricos", sub: "Prazo excedido para atendimento", dataCriacao: "2026-05-25T16:00:00Z", status: "Atrasada" },
+    { id: 5, titulo: "CR-5231 : Contratação de serviço de manutenção", sub: "Solicitação cancelada pelo requisitante", dataCriacao: "2026-05-24T09:00:00Z", status: "Pedido Cancelado" },
+    { id: 6, titulo: "CR-6345 : Compra de mobiliário", sub: "Parte dos itens já foi recebida", dataCriacao: "2026-05-23T11:00:00Z", status: "Recebimento Parcial" },
+    { id: 7, titulo: "CR-7412 : Aquisição de equipamentos de rede", sub: "Aguardando retorno do comprador", dataCriacao: "2026-05-22T15:30:00Z", status: "Aguardando comprador" },
+    { id: 8, titulo: "CR-8567 : Compra de materiais de limpeza", sub: "Coleta de cotações em andamento", dataCriacao: "2026-05-20T14:20:00Z", status: "Solicitando orçamento" },
+    { id: 9, titulo: "CR-9183 : Reposição de ferramentas", sub: "Compra realizada via fundo rotativo", dataCriacao: "2026-05-19T08:10:00Z", status: "Fundo Rotativo" },
+    { id: 10, titulo: "CR-1049 : Compra de peças de reposição", sub: "Atendimento pelo centro de distribuição", dataCriacao: "2026-05-15T17:45:00Z", status: "CD central" },
+    { id: 11, titulo: "CR-1176 : Solicitação de materiais para laboratório", sub: "Pedido realizado diretamente pelo portal", dataCriacao: "2026-05-10T12:00:00Z", status: "Solicitado pelo portal" }
+];
     const STATUS_CORES = {
         "Em análise": "bg-[#E1AD01]",
         "Em atendimento": "bg-[#11B6D4]",
@@ -171,6 +81,7 @@ export default function MonitoramentoSolicitacoes() {
             item.sub.toLowerCase().includes(busca.toLowerCase());
 
         return (
+            filtroAba &&
             filtroCr &&
             filtroPerfil &&
             filtroBusca
@@ -285,30 +196,12 @@ export default function MonitoramentoSolicitacoes() {
                 <div className="h-[500px] overflow-y-auto p-6 bg-white">
                     {(() => {
                         const itensFiltrados = solicitacoes.filter((item) => {
-
-                        const filtroAba =
-                            abaAtiva === 'pendentes'
-                                ? item.status === 'Em análise'
-                                : item.status !== 'Em análise';
-
-                        const filtroCr =
-                            cr === '' || item.cr === Number(cr);
-
-                        const filtroPerfil =
-                            perfil === '' || item.perfil === perfil;
-
-                        const filtroBusca =
-                            busca === '' ||
-                            item.titulo.toLowerCase().includes(busca.toLowerCase()) ||
-                            item.sub.toLowerCase().includes(busca.toLowerCase());
-
-                        return (
-                            filtroAba &&
-                            filtroCr &&
-                            filtroPerfil &&
-                            filtroBusca
-                        );
-                    });
+                            if (abaAtiva === 'pendentes') {
+                                return item.status === 'Em análise';
+                            } else {
+                                return item.status !== 'Em análise';
+                            }
+                        });
 
                         if (itensFiltrados.length === 0) {
                             return (
