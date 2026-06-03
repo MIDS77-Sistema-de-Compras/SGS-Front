@@ -16,6 +16,16 @@ const config = {
   "framework": "@storybook/nextjs-vite",
   "staticDirs": [
     "..\\public"
-  ]
+  ],
+    viteFinal: async (config) => {
+    return {
+      ...config,
+      esbuild: {
+        loader: "jsx",
+        include: /src\/.*\.js$/,
+        exclude: [],
+      },
+    };
+  },
 };
 export default config;
