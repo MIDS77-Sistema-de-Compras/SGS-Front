@@ -1,8 +1,9 @@
 import { Search } from "@/components/search/Search";
-
+import RequestForm from "@/components/request-form/RequestForm";
 
 export default function NovaSolicitacao(){
     return (
+      <>
             <div className="w-full flex justify-end pt-20 pr-20">
                 <Search
                     data={[
@@ -27,5 +28,8 @@ export default function NovaSolicitacao(){
                     ]}
                 />
             </div>
+<div className="mx-10 mt-7">
+            <RequestForm />
+        </div>
+</>
     );
-}

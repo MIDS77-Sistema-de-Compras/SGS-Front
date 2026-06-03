@@ -20,7 +20,7 @@ export function Footer(){
             >
                 <div className="opacity-80 group-hover:opacity-100 transition-opacity">
                     <Image 
-                        src="/images/sair.png"
+                        src="/images/icons/logout.png"
                         alt="Ícone Sair"
                         width={22}
                         height={22}
@@ -32,7 +32,7 @@ export function Footer(){
             <div className="pt-4 border-t border-white/50 flex flex-col gap-1">
                 <div className="w-32 h-auto relative">
                     <Image 
-                        src="/images/logoSenai.png"
+                        src="/images/logos/senai-white.png"
                         alt="Logo SENAI"
                         width={120}
                         height={30}
