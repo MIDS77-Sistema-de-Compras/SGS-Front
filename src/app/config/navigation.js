@@ -29,27 +29,27 @@ export const sidebarRoutes = [
 export const admRoutes = [
     {
         label: "Início",
-        href: "/",
-        icon: "/images/home.png",
+        href: "/admin",
+        icon: "/images/icons/home.png",
     },
     {
         label: "Gerenciar Usuários",
         href: "/usuarios",
-        icon: "/images/gerenciarUsuarios.png",
+        icon: "/images/adm/gerenciarUsuarios.png",
     },
     {
         label: "Análise de Registros",
         href: "/usuarios/cadastro",
-        icon: "/images/analiseRegistros.png",
+        icon: "/images/adm/analiseRegistros.png",
     },
     {
         label: "Notificações",
         href: "/notificacoes",
-        icon: "/images/notificacoes.png",
+        icon: "/images/icons/notifications.png",
     },
     {
         label: "Configurações",
         href: "/configuracoes",
-        icon: "/images/config.png",
+        icon: "/images/icons/config.png",
     },
 ]
