@@ -8,11 +8,11 @@ import send from "../../../public/images/icons/send.svg";
 
 export default function RequestForm(){
     return (
-        <div className="border border-[#00000050] rounded-xl flex flex-1 flex-col">
+        <div className="border border-[#00000050] rounded-xl flex flex-1 flex-col overflow-hidden">
             <div className="px-3 py-4 border border-transparent border-b-[#00000050]">
                 <h1 className="text-[#103D85] font-bold text-2xl">Nova Solicitação</h1>
             </div>
-            <form action={"won't do now since the API isn't done yet"}>
+            <form action={"won't do now since the API isn't done yet"} className="flex-1 overflow-y-auto">
                 {/* general infos */}
                 <div className="my-5 mx-4">
                     <p className="flex items-center font-semibold tracking-wider text-[#103D85] before:block before:bg-[#103D85] before:py-4 before:px-[3px] before:mr-2 before:rounded">INFORMAÇÕES GERAIS</p>
