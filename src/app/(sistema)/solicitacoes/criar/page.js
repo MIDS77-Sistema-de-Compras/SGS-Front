@@ -3,8 +3,13 @@ import RequestForm from "@/components/request-form/RequestForm";
 
 export default function NovaSolicitacao(){
     return (
-      <>
-            <div className="w-full flex justify-end pt-20 pr-20">
+     <div className="flex gap-10 ">
+
+            <div className="flex-1">
+                <RequestForm />
+            </div>
+
+            <div className="flex">
                 <Search
                     data={[
                         {
@@ -28,8 +33,6 @@ export default function NovaSolicitacao(){
                     ]}
                 />
             </div>
-<div className="mx-10 mt-7">
-            <RequestForm />
         </div>
 </>
     );
