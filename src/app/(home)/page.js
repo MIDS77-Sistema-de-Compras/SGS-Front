@@ -2,6 +2,8 @@
 
 import Cookies from "js-cookie"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
+import Link from "next/link"
 import Header from "@/components/home/HomeHeader"
 import SummaryCard from "@/components/home/SummaryCard"
 import HomeFooter from "@/components/home/HomeFooter"
