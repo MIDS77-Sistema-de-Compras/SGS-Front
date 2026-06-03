@@ -10,7 +10,7 @@ export function Input({
     const tipoAtual = type === "password" && mostrarSenha ? "text" : type;
     return (
 
-        <div className=" relative flex items-center w-full">
+        <div className="relative flex items-center w-full">
 
             {iconSrc && (
                 <div className="absolute left-4">

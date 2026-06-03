@@ -3,7 +3,7 @@ import RequestForm from "@/components/request-form/RequestForm";
 
 export default function NovaSolicitacao() {
     return (
-        <div className="flex gap-10 ">
+        <div className="flex gap-10">
 
             <div className="flex-1">
                 <RequestForm />
