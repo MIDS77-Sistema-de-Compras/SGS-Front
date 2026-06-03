@@ -1,31 +1,17 @@
-"use client";
-
 export function SearchCard({ cr }) {
     return (
-        <div
-            className="
-                bg-white rounded-3xl shadow-md
-                p-3 flex flex-col gap-1
-                w-full
-            "
-        >
-            <div className="flex justify-between items-start">
-                <div
-                    className="
-                        bg-gray-100 rounded-2xl
-                        px-3 py-2
-                        font-bold text-1xl text-gray-800
-                    "
-                >
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-3 flex flex-col gap-1 w-full">
+            <div className="flex justify-between items-center mb-3">
+                <div className="=bg-gray-100 rounded-2xl font-bold text-1xl text-gray-800">
                     {cr.id}
                 </div>
 
-                <div className="text-right font-bold text-sm text-black">
+                <div className="text-right font-bold text-[12px] text-black">
                     {cr.tipo}
                 </div>
             </div>
 
-            <div className="flex justify-between text-sm">
+            <div className="grid grid-cols-2 text-[12px]">
                 <div>
                     <p className="text-gray-400 font-semibold">WEG</p>
 
