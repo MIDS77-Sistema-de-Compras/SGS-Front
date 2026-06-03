@@ -11,7 +11,7 @@ import AccessLevelSelector from '@/components/adm/AccessLevelSelector';
 export default function CadastroUsuarios() {
   const [nivelAcesso, setNivelAcesso] = useState('DOCENTE');
 
-  const inputClass = "!h-auto py-2.5 !text-sm !border-gray-200 !shadow-sm !bg-white"
+  const inputClass = "!h-auto py-2.5 !text-sm !border-gray-200 !rounded-xl !shadow-sm !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
 
   return (
     <div className="w-full flex flex-col">

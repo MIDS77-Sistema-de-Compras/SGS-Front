@@ -32,17 +32,17 @@ export default function PasswordField() {
                 Senha <span className="text-[#BA1A1A]">*</span>
             </label>
 
-            <Input 
+            <Input
                 type="password"
                 placeholder="Mínimo 8 caracteres"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="!h-auto !px-3 !py-2.5 !border !border-gray-200 !shadow-sm !rounded-xl !text-sm !placeholder-[#6B7280]"
+                className="!h-auto !px-3 !py-2.5 !border !border-gray-200 !shadow-sm !rounded-xl !text-sm !placeholder-[#6B7280] focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
             />
 
             <div className="flex gap-3 pt-5">
                 {[0, 1, 2, 3, 4].map((index) => (
-                    <div 
+                    <div
                         key={index}
                         className={`h-2 w-1/4 rounded transition-colors duration-300 ${getBarColor(index)}`}
                     />
