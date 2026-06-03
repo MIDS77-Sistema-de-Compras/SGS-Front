@@ -5,14 +5,18 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Input } from "@/components/login/Input";
 import { Button } from "@/components/login/Button";
-import Image from "next/image";
+import FormCard from "@/components/login/FormCard";
+import { ModalTermos } from "@/components/login/ModalTermos";
+import { ModalPoliticas } from "@/components/login/ModalPoliticas";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
 
-    const router = useRouter();
+    const [modalTermosOpen, setModalTermosOpen] = useState(false);
+    const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
+    const router = useRouter();
     function handleLogin(e) {
         e.preventDefault();
 
@@ -20,89 +24,24 @@ export default function LoginPage() {
         Cookies.set("token", tokenBackend, {
             expires: 1,
             secure: true,
-            sameSite: "strict"
+            sameSite: "strict",
         });
-        router.push("/")
+        router.push("/");
     }
 
     return (
-        <main className="min-h-screen w-full bg-gradient-to-br from-[#002663] via-[#003C97] to-[#4B84F4] flex items-center justify-between px-16 lg:px-28 relative py-12">
+        <div>
+            <FormCard
+                onSubmit={handleLogin}
+                onTermosClick={() => setModalTermosOpen(true)}
+                onPoliticasClick={() => setModalPoliticasOpen(true)}
+            >
 
-            <div className="flex flex-col justify-between h-[580px] max-w-[800px]">
-                <div className="text-white mt-10">
-                    <p className="text-4xl font-light tracking-wide">Olá,</p>
-                    <p className="text-4xl font-light tracking-wide mt-1">Bem-vindo(a) ao</p>
-                    <h1 className="text-5xl font-bold leading-tight mt-4">
-                        Sistema de Gestão <br /> de Solicitações
-                    </h1>
-                </div>
-
-                <div className="flex items-center gap-6 mt-10">
-                    <Image
-                        src="/images/logos/senai-white.png"
-                        alt="Logo SENAI"
-                        width={140}
-                        height={35}
-                        className="object-contain w-auto h-auto"
-                    />
-                    <div className="flex items-center gap-4 border-l border-white/20 pl-6">
-                        <Image 
-                            src="/images/logos/facebook.png" 
-                            alt="Facebook" 
-                            width={18} 
-                            height={18} 
-                            className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
-                        />
-                        <Image 
-                            src="/images/logos/youtube.png" 
-                            alt="YouTube" 
-                            width={18} 
-                            height={18} 
-                            className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
-                        />
-                        <Image 
-                            src="/images/logos/x.png" 
-                            alt="X" 
-                            width={16} 
-                            height={16} 
-                            className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
-                        />
-                        <Image 
-                            src="/images/logos/linkedin.png" 
-                            alt="LinkedIn" 
-                            width={18} 
-                            height={18} 
-                            className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
-                        />
-                        <Image 
-                            src="/images/logos/instagram.png" 
-                            alt="Instagram" 
-                            width={18} 
-                            height={18} 
-                            className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <form onSubmit={handleLogin} className="w-[580px] h-[580px] bg-[#0A2E6B] rounded-[24px] px-10 pt-12 pb-8 flex flex-col shadow-2xl border border-white/5">
-
-                <div className="mb-10">
-                    <Image 
-                        src="/images/logos/sgc.png" 
-                        alt="Sgc" 
-                        width={110} 
-                        height={110} 
-                        className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer" 
-                    />
-                </div>
-
-                <p className="text-white text-[13px] font-medium opacity-90 text-left mb-6 ">
+                <p className="text-white text-[13px] font-medium opacity-90 text-left mb-6">
                     Insira suas credenciais para acessar o sistema
                 </p>
 
                 <div className="flex flex-col gap-4">
-
                     <Input
                         type="text"
                         placeholder="E-mail ou número de CPF"
@@ -111,7 +50,6 @@ export default function LoginPage() {
                         iconSrc="/images/icons/user.png"
                         iconAlt="Icone de usuario"
                     />
-
                     <Input
                         type="password"
                         placeholder="Senha"
@@ -123,7 +61,10 @@ export default function LoginPage() {
                 </div>
 
                 <div className="mt-20">
-                    <Button type="submit" className="w-full py-3 bg-[#4B84F4] hover:bg-[#3b71f3] text-white font-semibold rounded-lg transition-colors">
+                    <Button
+                        type="submit"
+                        className="w-full py-3 bg-[#4B84F4] hover:bg-[#3b71f3] text-white font-semibold rounded-lg transition-colors"
+                    >
                         Entrar
                     </Button>
                 </div>
@@ -137,17 +78,25 @@ export default function LoginPage() {
                         />
                         <span>Mantenha-me conectado</span>
                     </label>
-                    <a href="#" className="hover:underline opacity-90 hover:opacity-100">
+                    <button
+                        type="button"
+                        onClick={() => router.push("/recuperar-senha")}
+                        className="hover:underline opacity-90 hover:opacity-100 cursor-pointer bg-transparent border-0 p-0 text-inherit text-xs"
+                    >
                         Esqueceu sua senha?
-                    </a>
+                    </button>
                 </div>
 
-                <div className="flex justify-between text-[11px] text-white/60 underline mt-auto">
-                    <a href="#" className="hover:text-white transition-colors">Termos de Uso</a>
-                    <a href="#" className="hover:text-white transition-colors">Políticas de privacidade</a>
-                </div>
-            </form>
+            </FormCard>
 
-        </main>
+            <ModalTermos
+                isOpen={modalTermosOpen}
+                onClose={() => setModalTermosOpen(false)}
+            />
+            <ModalPoliticas
+                isOpen={modalPoliticasOpen}
+                onClose={() => setModalPoliticasOpen(false)}
+            />
+        </div>
     );
 }

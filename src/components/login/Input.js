@@ -48,9 +48,7 @@ export function Input({
                     </svg>
                     )}
                 </button>
-            )
-            }
-
+            )}
         </div >
     )
 }
