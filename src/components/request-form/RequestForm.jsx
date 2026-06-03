@@ -1,5 +1,4 @@
 import Image from "next/image";
-import FormInput from "../form/FormInput";
 import SelectFormInput from "../form/SelectFormInput";
 import SubmitButton from "../form/SubmitButton";
 import UploadFileInput from "../form/UploadFileInput";
