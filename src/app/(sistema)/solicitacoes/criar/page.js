@@ -28,8 +28,9 @@ export default function NovaSolicitacao(){
                     ]}
                 />
             </div>
-<div className="mx-10 mt-7">
+            <div className="mx-10 mt-7">
             <RequestForm />
         </div>
 </>
     );
+}
