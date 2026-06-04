@@ -16,7 +16,7 @@ export default function ListProducts({products}){
                 </div>
             ) : products.map((product, index) => (
                 <div key={index} className="flex w-full bg-white rounded-lg my-1">
-                    <p className="font-bold p-3">{product.id} <span className="font-normal text-neutral-500">- {product.name}</span></p>
+                    <p className="font-bold p-3 text-[14px]">{product.id} <span className="font-normal text-[12px] text-neutral-500">- {product.name}</span></p>
                 </div>
             ))}
         </div>
