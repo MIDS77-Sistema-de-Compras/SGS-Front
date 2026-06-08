@@ -1,8 +1,9 @@
+"use client"
+
 import React, { useState } from "react";
 import { Input } from "../login/Input";
 
-export default function PasswordField() {
-    const [password, setPassword] = useState('')
+export default function PasswordField({ value, onChange, ...rest }) {
 
     const calculateStrength = (pwd) => {
         let score = 0
@@ -17,8 +18,7 @@ export default function PasswordField() {
         return score
     }
 
-    const strengthScore = calculateStrength(password)
-
+    const strengthScore = calculateStrength(value)
     const getBarColor = (index) => {
         if (index >= strengthScore) return 'bg-gray-200'
 
@@ -35,8 +35,8 @@ export default function PasswordField() {
             <Input
                 type="password"
                 placeholder="Mínimo 8 caracteres"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={value}
+                onChange={onChange}
                 className="!h-auto !px-3 !py-2.5 !border !border-gray-200 !shadow-sm !rounded-xl !text-sm !placeholder-[#6B7280] focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
             />
 
