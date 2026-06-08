@@ -3,15 +3,22 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { sidebarRoutes } from "@/app/config/navigation"
+import { sidebarRoutes, admRoutes, coordenadorRoutes } from "@/app/config/navigation"
 
 export function Navigation(){
     const pathname = usePathname()
 
+    let currentRoutes = sidebarRoutes
+    if (pathname.startsWith('/admin')) {
+        currentRoutes = admRoutes
+    } else if (pathname.startsWith('/coordenador')) {
+        currentRoutes = coordenadorRoutes
+    }
+
     return (
         <nav>
             <ul className="flex flex-col gap-2">
-                {sidebarRoutes.map((route) => {
+                {currentRoutes.map((route) => {
                     const isActive = pathname === route.href
 
                     return(

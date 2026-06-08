@@ -53,3 +53,41 @@ export const admRoutes = [
         icon: "/images/icons/config.png",
     },
 ]
+
+export const coordenadorRoutes = [
+    {
+        label: "Início",
+        href: "/coordenador",
+        icon: "/images/icons/home.png",
+    },
+    {
+        label: "Gerenciar Usuários",
+        href: "/coordenador/usuarios",
+        icon: "/images/adm/gerenciarUsuarios.png",
+    },
+    {
+        label: "Solicitações em análise",
+        href: "/coordenador/solicitacoes",
+        icon: "/images/home/novaSolicitacao.png",
+    },
+    {
+        label: "Monitoramento",
+        href: "/coordenador/monitoramento",
+        icon: "/images/adm/analiseRegistros.png",
+    },
+    {
+        label: "Analítico",
+        href: "/coordenador/analitico",
+        icon: "/images/icons/my-requests.png",
+    },
+    {
+        label: "Notificações",
+        href: "/notificacoes",
+        icon: "/images/icons/notifications.png",
+    },
+    {
+        label: "Configurações",
+        href: "/configuracoes",
+        icon: "/images/icons/config.png",
+    },
+]
