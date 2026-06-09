@@ -7,6 +7,8 @@ import PhoneInput from '@/components/adm/PhoneInput';
 import SectionHeader from '@/components/adm/SectionHeader';
 import FormField from '@/components/adm/FormField';
 import AccessLevelSelector from '@/components/adm/AccessLevelSelector';
+import { useNotification } from '@/contexts/NotificationContext';
+
 
 export default function CadastroUsuarios() {
   const [nome, setNome] = useState('');
@@ -15,7 +17,7 @@ export default function CadastroUsuarios() {
   const [ramal, setRamal] = useState('');
   const [senha, setSenha] = useState('');
   const [nivelAcesso, setNivelAcesso] = useState('DOCENTE');
-
+  const { showNotification } = useNotification();
 
   const inputClass = "!h-auto py-2.5 !text-sm !border-gray-200 !rounded-xl !shadow-sm !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
 
@@ -43,15 +45,16 @@ export default function CadastroUsuarios() {
       });
 
       if (response.ok) {
-        alert("usuario cadastrado com sucesso")
+        showNotification("Usuário cadastrado com sucesso!", "success");
       } else {
+
         const errorData = await response.json();
         console.error('Erros de validação:', errorData);
-        alert('Erro ao cadastrar usuário. Verifique os dados.');
+        showNotification("Erro ao cadastrar usuário. Verifique os dados.", "error");
       }
     } catch (error) {
       console.error("Erro de conexão:", error);
-      alert('Não foi possível conectar ao servidor.');
+      showNotification("Não foi possível conectar ao servidor.", "error");
     }
   };
 

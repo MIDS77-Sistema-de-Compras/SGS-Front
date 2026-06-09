@@ -1,5 +1,4 @@
 import Topbar from "@/components/topbar/Topbar";
-import "../globals.css";
 import Sidebar from "@/components/sidebar/index";
 
 export default function SistemaLayout({ children }) {
