@@ -1,15 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import PasswordField from '@/components/adm/PasswordField';
-import { Input } from '@/components/login/Input';
-import PhoneInput from '@/components/adm/PhoneInput';
-import SectionHeader from '@/components/adm/SectionHeader';
-import FormField from '@/components/adm/FormField';
-import AccessLevelSelector from '@/components/adm/AccessLevelSelector';
+import PasswordField from '@/components/features/admin/PasswordField';
+import { Input } from '@/components/ui/input/Input';
+import PhoneInput from '@/components/ui/input/PhoneInput';
+import SectionHeader from '@/components/ui/layout/SectionHeader';
+import FormField from '@/components/ui/form/FormField';
+import AccessLevelSelector from '@/components/features/admin/AccessLevelSelector';
 import { useNotification } from '@/contexts/NotificationContext';
-import FieldError from '@/components/notifications/FieldError';
-import Button from '@/components/form/Button';
+import FieldError from '@/components/ui/form/FieldError';
+import Button from '@/components/ui/button/Button';
+
 export default function CadastroUsuarios() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -19,8 +20,6 @@ export default function CadastroUsuarios() {
   const [nivelAcesso, setNivelAcesso] = useState('DOCENTE');
   const [errors, setErrors] = useState({});
   const { showNotification } = useNotification();
-
-  const inputClass = "!h-auto py-2.5 !text-sm !border-gray-200 !rounded-xl !shadow-sm !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]";
 
   const validators = {
     nome: (v) => v.trim().length < 3 ? 'Nome deve ter ao menos 3 caracteres.' : '',
@@ -82,6 +81,7 @@ export default function CadastroUsuarios() {
       showNotification("Não foi possível conectar ao servidor.", "error");
     }
   };
+
   return (
     <div className="w-full flex flex-col">
 
@@ -102,21 +102,23 @@ export default function CadastroUsuarios() {
 
               <FormField label="Nome Completo" required className="md:col-span-2">
                 <Input
+                  variant="form"
                   placeholder="Nome completo do usuário..."
-                  className={inputClass}
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   onBlur={() => handleBlur('nome', nome)}
+                  error={errors.nome}
                 />
                 <FieldError message={errors.nome} />
               </FormField>
               <FormField label="CPF" required>
                 <Input
+                  variant="form"
                   placeholder="000.000.000-00"
-                  className={inputClass}
                   value={cpf}
                   onChange={(e) => setCpf(e.target.value)}
                   onBlur={() => handleBlur('cpf', cpf)}
+                  error={errors.cpf}
                 />
                 <FieldError message={errors.cpf} />
               </FormField>
@@ -124,22 +126,23 @@ export default function CadastroUsuarios() {
               <FormField label="Ramal" required className="ml-5">
                 <PhoneInput
                   placeholder="3222-0000"
-                  className={inputClass}
                   value={ramal}
                   onChange={(e) => setRamal(e.target.value)}
                   onBlur={() => handleBlur('ramal', ramal)}
+                  error={errors.ramal}
                 />
                 <FieldError message={errors.ramal} />
               </FormField>
 
               <FormField label="E-mail institucional" required className="md:col-span-2">
                 <Input
-                  type='email'
+                  type="email"
+                  variant="form"
                   placeholder="nome@senai.edu"
-                  className={inputClass}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onBlur={() => handleBlur('email', email)}
+                  error={errors.email}
                 />
                 <FieldError message={errors.email} />
               </FormField>
@@ -149,6 +152,7 @@ export default function CadastroUsuarios() {
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
                   onBlur={() => handleBlur('senha', senha)}
+                  error={errors.senha}
                 />
                 <FieldError message={errors.senha} />
               </div>

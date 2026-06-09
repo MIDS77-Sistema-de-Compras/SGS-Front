@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Input } from "@/components/login/Input";
-import { Button } from "@/components/login/Button";
-import FormCard from "@/components/login/FormCard";
-import { ModalTermos } from "@/components/login/ModalTermos";
-import { ModalPoliticas } from "@/components/login/ModalPoliticas";
+import { PasswordInput } from "@/components/ui/input/PasswordInput";
+import Button from "@/components/ui/button/Button";
+import FormCard from "@/components/features/auth/FormCard";
+import { ModalTermos } from "@/components/features/auth/ModalTermos";
+import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 
 export default function NovaSenhaPage() {
     const [senha, setSenha] = useState("");
@@ -38,16 +38,16 @@ export default function NovaSenhaPage() {
                 </p>
 
                 <div className="flex flex-col gap-4">
-                    <Input
-                        type="password"
+                    <PasswordInput
+                        variant="auth"
                         placeholder="Nova senha"
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
                         iconSrc="/images/iconeSenha.png"
                         iconAlt="Icone de senha"
                     />
-                    <Input
-                        type="password"
+                    <PasswordInput
+                        variant="auth"
                         placeholder="Confirmar nova senha"
                         value={confirmar}
                         onChange={(e) => setConfirmar(e.target.value)}
@@ -59,7 +59,9 @@ export default function NovaSenhaPage() {
                 <div className="mt-8">
                     <Button
                         type="submit"
-                        className="w-full py-3 bg-[#4B84F4] hover:bg-[#3b71f3] text-white font-semibold rounded-lg transition-colors"
+                        variant="auth"
+                        size="lg"
+                        fullWidth
                     >
                         Alterar senha
                     </Button>
