@@ -3,11 +3,16 @@ import { useNotification } from '@/contexts/NotificationContext';
 import { createUser } from '@/service/createUser';
 
 const VALIDATORS = {
-    nome: (v) => v.trim().length < 3 ? 'Nome deve ter ao menos 3 caracteres.' : '',
-    email: (v) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'E-mail inválido.' : '',
-    cpf: (v) => v.replace(/\D/g, '').length !== 11 ? 'CPF deve ter 11 dígitos.' : '',
-    ramal: (v) => !/^\d{4}-\d{4}$/.test(v) ? 'Ramal inválido. Use o formato 3222-0000.' : '',
-    senha: (v) => v.length < 6 ? 'Senha deve ter ao menos 6 caracteres.' : '',
+  nome: (v) => v.trim().length < 3 ? 'Nome deve ter ao menos 3 caracteres.' : '',
+  email: (v) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'E-mail inválido.' : '',
+  cpf: (v) => v.replace(/\D/g, '').length !== 11 ? 'CPF deve ter 11 dígitos.' : '',
+  ramal: (v) => {
+    const apenasNumeros = v.replace(/\D/g, '');
+    return apenasNumeros.length < 3 || apenasNumeros.length > 4
+      ? 'O ramal deve ter entre 3 e 4 números.' 
+      : '';
+  },
+  senha: (v) => v.length < 6 ? 'Senha deve ter o nível máximo de força.' : '',
 };
 
 const INITIAL_FORM_STATE = {
