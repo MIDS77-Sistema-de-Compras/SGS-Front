@@ -1,5 +1,6 @@
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import { NotificationProvider } from '@/contexts/NotificationContext';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -11,7 +12,7 @@ export const metadata = {
   title: "SGS-Front",
   description: "Projeto Final - Sistema de Compras - FrontEnd",
   icons: {
-    icon: "/images/logos/sgc.png" // need to change
+    icon: "/images/logos/sgc.png"
   }
 };
 
@@ -19,7 +20,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className={montserrat.variable}>
       <body>
+        <NotificationProvider>
           {children}
+        </NotificationProvider>
       </body>
     </html>
   );
