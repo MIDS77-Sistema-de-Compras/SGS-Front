@@ -8,8 +8,8 @@ import SectionHeader from '@/components/adm/SectionHeader';
 import FormField from '@/components/adm/FormField';
 import AccessLevelSelector from '@/components/adm/AccessLevelSelector';
 import { useNotification } from '@/contexts/NotificationContext';
-
-
+import FieldError from '@/components/notifications/FieldError';
+import Button from '@/components/form/Button';
 export default function CadastroUsuarios() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -17,12 +17,41 @@ export default function CadastroUsuarios() {
   const [ramal, setRamal] = useState('');
   const [senha, setSenha] = useState('');
   const [nivelAcesso, setNivelAcesso] = useState('DOCENTE');
+  const [errors, setErrors] = useState({});
   const { showNotification } = useNotification();
 
-  const inputClass = "!h-auto py-2.5 !text-sm !border-gray-200 !rounded-xl !shadow-sm !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
+  const inputClass = "!h-auto py-2.5 !text-sm !border-gray-200 !rounded-xl !shadow-sm !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]";
+
+  const validators = {
+    nome: (v) => v.trim().length < 3 ? 'Nome deve ter ao menos 3 caracteres.' : '',
+    email: (v) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'E-mail inválido.' : '',
+    cpf: (v) => v.replace(/\D/g, '').length !== 11 ? 'CPF deve ter 11 dígitos.' : '',
+    ramal: (v) => !/^\d{4}-\d{4}$/.test(v) ? 'Ramal inválido. Use o formato 3222-0000.' : '',
+    senha: (v) => v.length < 6 ? 'Senha deve ter ao menos 6 caracteres.' : '',
+  };
+
+  const handleBlur = (field, value) => {
+    const error = validators[field]?.(value) ?? '';
+    setErrors((prev) => ({ ...prev, [field]: error }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {
+      nome: validators.nome(nome),
+      email: validators.email(email),
+      cpf: validators.cpf(cpf),
+      ramal: validators.ramal(ramal),
+      senha: validators.senha(senha),
+    };
+    setErrors(newErrors);
+
+    const hasErrors = Object.values(newErrors).some((err) => err !== '');
+    if (hasErrors) {
+      showNotification('Preencha corretamente os campos destacados antes de continuar.', 'error');
+      return;
+    }
 
     const payload = {
       name: nome,
@@ -31,23 +60,19 @@ export default function CadastroUsuarios() {
       password: senha,
       extensionNumber: ramal.replace(/\D/g, ''),
       active: true,
-      nameRole: nivelAcesso
+      nameRole: nivelAcesso,
     };
-    console.log("DADOS SENDO ENVIADOS PARA A API:", payload);
 
     try {
       const response = await fetch("http://localhost:8080/users", {
         method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
         showNotification("Usuário cadastrado com sucesso!", "success");
       } else {
-
         const errorData = await response.json();
         console.error('Erros de validação:', errorData);
         showNotification("Erro ao cadastrar usuário. Verifique os dados.", "error");
@@ -57,8 +82,6 @@ export default function CadastroUsuarios() {
       showNotification("Não foi possível conectar ao servidor.", "error");
     }
   };
-
-
   return (
     <div className="w-full flex flex-col">
 
@@ -78,7 +101,14 @@ export default function CadastroUsuarios() {
             <div className="grid grid-cols-1 md:grid-cols-2">
 
               <FormField label="Nome Completo" required className="md:col-span-2">
-                <Input placeholder="Nome completo do usuário..." className={inputClass} value={nome} onChange={(e) => setNome(e.target.value)} />
+                <Input
+                  placeholder="Nome completo do usuário..."
+                  className={inputClass}
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  onBlur={() => handleBlur('nome', nome)}
+                />
+                <FieldError message={errors.nome} />
               </FormField>
               <FormField label="CPF" required>
                 <Input
@@ -86,26 +116,42 @@ export default function CadastroUsuarios() {
                   className={inputClass}
                   value={cpf}
                   onChange={(e) => setCpf(e.target.value)}
+                  onBlur={() => handleBlur('cpf', cpf)}
                 />
+                <FieldError message={errors.cpf} />
               </FormField>
+
               <FormField label="Ramal" required className="ml-5">
                 <PhoneInput
                   placeholder="3222-0000"
                   className={inputClass}
                   value={ramal}
                   onChange={(e) => setRamal(e.target.value)}
+                  onBlur={() => handleBlur('ramal', ramal)}
                 />
+                <FieldError message={errors.ramal} />
               </FormField>
 
               <FormField label="E-mail institucional" required className="md:col-span-2">
-                <Input type='email' placeholder="nome@senai.edu" className={inputClass} value={email}
-                  onChange={(e) => setEmail(e.target.value)} />
+                <Input
+                  type='email'
+                  placeholder="nome@senai.edu"
+                  className={inputClass}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={() => handleBlur('email', email)}
+                />
+                <FieldError message={errors.email} />
               </FormField>
 
-              <PasswordField
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-              />
+              <div className="md:col-span-2">
+                <PasswordField
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  onBlur={() => handleBlur('senha', senha)}
+                />
+                <FieldError message={errors.senha} />
+              </div>
 
             </div>
 
@@ -115,14 +161,14 @@ export default function CadastroUsuarios() {
               <AccessLevelSelector value={nivelAcesso} onChange={setNivelAcesso} />
 
             </div>
-            <div className="flex justify-end mt-5">
-              <button
-                type="submit"
-                className="bg-[#103D85] hover:bg-[#0b2a5c] text-white shadow-sm font-bold text-[14px] py-3 px-27 rounded-xl transform"
-              >
-                Criar Usuário +
-              </button>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-5">
+              <div className="col-start-2 md:col-start-4">
+                <Button type="submit" variant="primary" className="w-full">
+                  CRIAR USUÁRIO +
+                </Button>
+              </div>
             </div>
+
           </form>
         </div>
 

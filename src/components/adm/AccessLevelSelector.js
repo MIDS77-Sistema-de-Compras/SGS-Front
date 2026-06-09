@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Button from '@/components/form/Button'; 
 
 export default function AccessLevelSelector({ value, onChange }) {
     const niveis = ['COORDENADOR', 'SUPERVISOR', 'DOCENTE', 'COMPRADOR REG.'];
@@ -6,25 +7,21 @@ export default function AccessLevelSelector({ value, onChange }) {
     return (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-7 mb-2">
             {niveis.map((nivel) => (
-                <button
+                <Button
                     key={nivel}
-                    type="button"
+                    variant={value === nivel ? 'primary' : 'outline'}
                     onClick={() => onChange(nivel)}
-                    className={`py-2 px-4 rounded-xl border text-xs flex items-center justify-center gap-2 shadow-sm
-            ${value === nivel
-                            ? 'bg-[#103D85] text-white border-[#103D85]'
-                            : 'bg-white text-[#103D85] border-gray-200 hover:bg-gray-100'
-                        }`}
+                    className="w-full" 
                 >
                     <Image
                         src="/images/adm/usuario.png"
                         alt=""
-                        width={10}
-                        height={10}
-                        className={`w-auto h-auto duration-200 ${value === nivel ? 'brightness-0 invert' : ''}`}
+                        width={14}
+                        height={14}
+                        className={`w-auto h-3.5 duration-200 ${value === nivel ? 'brightness-0 invert' : ''}`}
                     />
                     {nivel}
-                </button>
+                </Button>
             ))}
         </div>
     );

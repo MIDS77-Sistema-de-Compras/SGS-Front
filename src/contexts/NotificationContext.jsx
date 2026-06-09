@@ -1,4 +1,3 @@
-// src/contexts/NotificationContext.jsx
 'use client';
 
 import { createContext, useContext, useState, useCallback } from 'react';
@@ -9,13 +8,11 @@ const NotificationContext = createContext(null);
 export function NotificationProvider({ children }) {
     const [notifications, setNotifications] = useState([]);
 
-    // Função para adicionar uma nova notificação na pilha
     const showNotification = useCallback((message, type = 'success') => {
         const id = Date.now();
         setNotifications((prev) => [...prev, { id, message, type }]);
     }, []);
 
-    // Função para remover da tela
     const removeNotification = useCallback((id) => {
         setNotifications((prev) => prev.filter((notification) => notification.id !== id));
     }, []);
