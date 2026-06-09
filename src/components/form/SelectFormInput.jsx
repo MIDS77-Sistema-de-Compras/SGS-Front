@@ -20,7 +20,7 @@ export default function SelectFormInput({
                 className={`
                     h-10.5 rounded-xl bg-white text-sm w-full
                     outline-none border border-gray-200 shadow-sm
-                    focus:border-[#5D8EF7] focus:shadow-none
+                    focus:border-[#103D85] focus:shadow-none
                     transition-all text-gray-800 appearance-none
                     [&::-ms-reveal]:hidden
                     [&::-webkit-credentials-auto-fill-button]:hidden

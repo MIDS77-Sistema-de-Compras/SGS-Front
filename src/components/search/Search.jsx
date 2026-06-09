@@ -23,9 +23,10 @@ export function Search({
     }, [search, data]);
 
     return (
-        <div className="max-w-[380px] h-fit self-start border border-gray-400 rounded-xl shadow-md">
+        <div className="w-[380px] flex flex-col border border-[#AAAAAA] rounded-xl shadow-md min-h-0">
+
             {/* TOPO */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-gray-300">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[#AAAAAA]">
                 <h1 className="font-bold text-[#103D85] text-[22px]">
                     Busca de CR
                 </h1>
@@ -36,7 +37,7 @@ export function Search({
             </div>
 
             {/* CONTEÚDO */}
-            <div className="p-5 flex flex-col gap-10">
+            <div className="p-5 flex flex-col gap-6 flex-1 min-h-0">
 
                 <Input
                     type="text"
@@ -46,7 +47,7 @@ export function Search({
                     className="!h-auto py-2.5 !text-sm !border-gray-200 !rounded-xl !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
                 />
 
-                <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-5 flex-1 overflow-y-auto pr-2">
                     {filteredData.length > 0 ? (
                         filteredData.map((cr) => (
                             <SearchCard
