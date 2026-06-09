@@ -8,7 +8,7 @@ import { useCreateUser } from '@/hooks/useCreateUser';
 
 export default function FormCreateUser() {
 
-    const { formData, errors, handleChange, handleBlur, handleSubmit } = useCreateUser();
+    const { formData, errors, isLoading, handleChange, handleBlur, handleSubmit } = useCreateUser();
 
     return (
         <form onSubmit={handleSubmit}>
@@ -37,7 +37,12 @@ export default function FormCreateUser() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-5">
                 <div className="col-start-2 md:col-start-4">
-                    <Button type="submit" variant="primary" className="w-full">
+                    <Button 
+                        type="submit" 
+                        variant="primary" 
+                        className="w-full"
+                        disabled={isLoading}
+                    >
                         CRIAR USUÁRIO +
                     </Button>
                 </div>

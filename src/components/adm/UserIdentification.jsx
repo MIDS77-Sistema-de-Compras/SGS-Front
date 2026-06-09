@@ -33,7 +33,7 @@ export default function UserIdentificationSection({ formData, errors, onChange, 
 
             <FormField label="Ramal" required>
                 <PhoneInput
-                    placeholder="3222-0000"
+                    placeholder="3344"
                     className={INPUT_CLASS}
                     value={formData.ramal}
                     onChange={(e) => onChange('ramal', e.target.value)}

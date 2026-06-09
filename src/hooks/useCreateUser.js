@@ -27,6 +27,7 @@ const INITIAL_FORM_STATE = {
 export function useCreateUser() {
     const [formData, setFormData] = useState(INITIAL_FORM_STATE);
     const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
     const { showNotification } = useNotification();
 
     const handleChange = (field, value) => {
@@ -63,19 +64,26 @@ export function useCreateUser() {
         };
 
         try {
+            setIsLoading(true);
             await createUser.create(payload);
+
             showNotification("Usuário cadastrado com sucesso!", "success");
             setFormData(INITIAL_FORM_STATE);
             setErrors({});
+
         } catch (error) {
             console.error("Erro ao cadastrar:", error.details || error.message);
             showNotification("Erro ao cadastrar usuário. Verifique os dados ou a conexão.", "error");
+
+        } finally {
+            setIsLoading(false)
         }
     };
 
     return {
         formData,
         errors,
+        isLoading,
         handleChange,
         handleBlur,
         handleSubmit,
