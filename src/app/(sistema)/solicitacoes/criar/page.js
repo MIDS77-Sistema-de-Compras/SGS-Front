@@ -1,16 +1,9 @@
 import { Search } from "@/components/search/Search";
 import RequestForm from "@/components/request-form/RequestForm";
 
-<<<<<<< HEAD
-export default function NovaSolicitacao(){
-    return (   
-     <div className="flex gap-10 ">
-=======
 export default function NovaSolicitacao() {
     return (
         <div className="flex gap-10">
->>>>>>> 75a4f78461574fd90fa0a230587e883c9e6b0ba0
-
             <div className="flex-1">
                 <RequestForm />
             </div>
