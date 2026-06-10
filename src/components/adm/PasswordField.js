@@ -1,9 +1,9 @@
 "use client"
 
-import React, { useState } from "react";
+import React from "react";
 import { Input } from "../login/Input";
 
-export default function PasswordField({ value, onChange, ...rest }) {
+export default function PasswordField({ value, onChange, error, ...rest }) {
 
     const calculateStrength = (pwd) => {
         let score = 0
@@ -11,20 +11,29 @@ export default function PasswordField({ value, onChange, ...rest }) {
 
         if (pwd.length >= 8) score += 1
         if (/[A-Z]/.test(pwd)) score += 1
+        if (/[a-z]/.test(pwd)) score += 1 
         if (/[0-9]/.test(pwd)) score += 1
-        if (/[a-z]/.test(pwd)) score += 1
         if (/[\W]/.test(pwd)) score += 1
 
-        return score
+        return score;
     }
 
     const strengthScore = calculateStrength(value)
+
     const getBarColor = (index) => {
         if (index >= strengthScore) return 'bg-gray-200'
-
         return 'bg-[#103D85]'
     }
+
     const strengthLabels = ['Nível de força', 'Muito Fraca', 'Razoável', 'Boa', 'Forte']
+
+    const criteria = [
+        { label: 'Precisa de 8 caracteres', test: (pwd) => pwd?.length >= 8 },
+        { label: 'Precisa de letra maiúscula', test: (pwd) => /[A-Z]/.test(pwd || '') },
+        { label: 'Precisa de letra minúscula', test: (pwd) => /[a-z]/.test(pwd || '') }, 
+        { label: 'Precisa de números', test: (pwd) => /[0-9]/.test(pwd || '') },
+        { label: 'Precisa de caracteres especiais', test: (pwd) => /[^A-Za-z0-9]/.test(pwd || '') },
+    ];
 
     return (
         <div className="md:col-span-2">
@@ -35,23 +44,51 @@ export default function PasswordField({ value, onChange, ...rest }) {
             <Input
                 type="password"
                 placeholder="Mínimo 8 caracteres"
-                value={value}
+                value={value || ''}
                 onChange={onChange}
                 className="!h-auto !px-3 !py-2.5 !border !border-gray-200 !shadow-sm !rounded-xl !text-sm !placeholder-[#6B7280] focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
+                {...rest}
             />
 
-            <div className="flex gap-3 pt-5">
+            <div className="flex gap-1.5 pt-3">
                 {[0, 1, 2, 3, 4].map((index) => (
                     <div
                         key={index}
-                        className={`h-2 w-1/4 rounded transition-colors duration-300 ${getBarColor(index)}`}
+                        className={`h-1.5 w-1/5 rounded-full transition-colors duration-300 ${getBarColor(index)}`}
                     />
                 ))}
             </div>
-
-            <span className="text-[10px] text-gray-500 block pt-2 font-medium">
+            <span className="text-[10px] text-gray-500 block pt-1.5 font-semibold">
                 {strengthLabels[strengthScore]}
             </span>
+
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 pt-3">
+                {criteria.map((criterion, index) => {
+                    const isMet = criterion.test(value);
+                    let textColor = "text-gray-400"; 
+
+                    if (isMet) {
+                        textColor = "text-[#34A853]"; 
+                    } else if (error) {
+                        textColor = "text-[#EA4335]"; 
+                    }
+
+                    return (
+                        <React.Fragment key={index}>
+                            {index > 0 && (
+                                <span className="text-gray-300 text-[10px] select-none">•</span>
+                            )}
+                            
+                            <span
+                                className={`text-[11px] font-medium tracking-wide transition-colors duration-200 ${textColor}`}
+                            >
+                                {criterion.label}
+                            </span>
+                        </React.Fragment>
+                    );
+                })}
+            </div>
+
         </div>
     )
 }

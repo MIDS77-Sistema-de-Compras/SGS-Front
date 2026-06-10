@@ -1,18 +1,30 @@
 import { useState } from 'react';
+
 import { useNotification } from '@/contexts/NotificationContext';
+
 import { createUser } from '@/service/createUser';
 
+
+
 const VALIDATORS = {
-  nome: (v) => v.trim().length < 3 ? 'Nome deve ter ao menos 3 caracteres.' : '',
-  email: (v) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'E-mail inválido.' : '',
-  cpf: (v) => v.replace(/\D/g, '').length !== 11 ? 'CPF deve ter 11 dígitos.' : '',
-  ramal: (v) => {
-    const apenasNumeros = v.replace(/\D/g, '');
-    return apenasNumeros.length < 3 || apenasNumeros.length > 4
-      ? 'O ramal deve ter entre 3 e 4 números.' 
-      : '';
-  },
-  senha: (v) => v.length < 6 ? 'Senha deve ter o nível máximo de força.' : '',
+    nome: (v) => v.trim().length < 3 ? 'Nome deve ter ao menos 3 caracteres.' : '',
+    email: (v) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'E-mail inválido.' : '',
+    cpf: (v) => v.replace(/\D/g, '').length !== 11 ? 'CPF deve ter 11 dígitos.' : '',
+    ramal: (v) => {
+        const apenasNumeros = v.replace(/\D/g, '');
+        return apenasNumeros.length < 3 || apenasNumeros.length > 4
+            ? 'O ramal deve ter entre 3 e 4 números.'
+            : '';
+    },
+    senha: (v) => {
+        if (!v) return 'A senha é obrigatória.';
+        if (v.length < 8) return 'A senha deve ter no mínimo 8 caracteres.';
+        if (!/[A-Z]/.test(v)) return 'A senha deve conter pelo menos uma letra maiúscula.';
+        if (!/[0-9]/.test(v)) return 'A senha deve conter pelo menos um número.';
+        if (!/[\W]/.test(v)) return 'A senha deve conter um caractere especial (ex: @, #, $, &).';
+
+        return '';
+    },
 };
 
 const INITIAL_FORM_STATE = {
