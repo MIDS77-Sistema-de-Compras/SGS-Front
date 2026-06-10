@@ -1,4 +1,4 @@
-import { Modal } from "./Modal";
+import { Modal } from "@/components/ui/overlay/Modal";
 
 export function ModalPoliticas({ isOpen, onClose }) {
     return (

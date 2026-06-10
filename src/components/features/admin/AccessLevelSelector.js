@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Button from '@/components/form/Button'; 
+import Button from '@/components/ui/button/Button';
 
 export default function AccessLevelSelector({ value, onChange }) {
     const niveis = ['COORDENADOR', 'SUPERVISOR', 'DOCENTE', 'COMPRADOR'];
@@ -11,7 +11,7 @@ export default function AccessLevelSelector({ value, onChange }) {
                     key={nivel}
                     variant={value === nivel ? 'primary' : 'outline'}
                     onClick={() => onChange(nivel)}
-                    className="w-full" 
+                    className="w-full"
                 >
                     <Image
                         src="/images/adm/usuario.png"

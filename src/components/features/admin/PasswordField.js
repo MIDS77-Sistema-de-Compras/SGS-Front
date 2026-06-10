@@ -1,7 +1,7 @@
 "use client"
 
-import React from "react";
-import { Input } from "../login/Input";
+import FormField from "@/components/ui/form/FormField";
+import { PasswordInput } from "@/components/ui/input/PasswordInput";
 
 export default function PasswordField({ value, onChange, error, ...rest }) {
 
@@ -36,17 +36,13 @@ export default function PasswordField({ value, onChange, error, ...rest }) {
     ];
 
     return (
-        <div className="md:col-span-2">
-            <label className="block text-[12px] font-bold text-[#103D85]/70 mb-2 mt-4">
-                Senha <span className="text-[#BA1A1A]">*</span>
-            </label>
-
-            <Input
-                type="password"
+        <FormField label="Senha" required className="md:col-span-2">
+            <PasswordInput
+                variant="form"
                 placeholder="Insira uma senha padrão"
-                value={value || ''}
+                value={value}
                 onChange={onChange}
-                className="!h-auto !px-3 !py-2.5 !border !border-gray-200 !shadow-sm !rounded-xl !text-sm !placeholder-[#6B7280] focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
+                error={error}
                 {...rest}
             />
 
