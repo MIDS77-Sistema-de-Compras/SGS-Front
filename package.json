@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "create-next-app": "^16.2.6",
-    "js-cookie": "^3.0.7",
+    "js-cookie": "^3.0.8",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4"
