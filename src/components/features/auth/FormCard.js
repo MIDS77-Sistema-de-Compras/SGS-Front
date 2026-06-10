@@ -25,7 +25,7 @@ export default function FormCard({
 
             <div className="mb-10">
                 <Image
-                    src="/images/logos/sgcLogo.png"
+                    src="/images/logos/sgc.png"
                     alt="SGS"
                     width={110}
                     height={110}

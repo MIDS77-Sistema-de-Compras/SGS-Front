@@ -45,7 +45,7 @@ export function Search({
                     onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <div className="flex flex-col gap-5 flex-1 overflow-y-auto pr-2">
+                <div className="flex flex-col gap-5 flex-1 overflow-y-auto">
                     {filteredData.length > 0 ? (
                         filteredData.map((cr) => (
                             <SearchCard

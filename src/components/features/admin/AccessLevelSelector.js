@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Button from '@/components/ui/button/Button';
 
 export default function AccessLevelSelector({ value, onChange }) {
-    const niveis = ['COORDENADOR', 'SUPERVISOR', 'DOCENTE', 'COMPRADOR REG.'];
+    const niveis = ['COORDENADOR', 'SUPERVISOR', 'DOCENTE', 'COMPRADOR'];
 
     return (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-7 mb-2">

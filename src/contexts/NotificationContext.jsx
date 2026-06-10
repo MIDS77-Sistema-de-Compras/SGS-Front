@@ -9,8 +9,20 @@ export function NotificationProvider({ children }) {
     const [notifications, setNotifications] = useState([]);
 
     const showNotification = useCallback((message, type = 'success') => {
-        const id = Date.now();
-        setNotifications((prev) => [...prev, { id, message, type }]);
+        setNotifications((prev) => {
+            const existingIndex = prev.findIndex((n) => n.message === message)
+            
+            if(existingIndex !== -1) {
+                const updated = [...prev]
+                updated[existingIndex] = {
+                    ...updated[existingIndex],
+                    id: Date.now(),
+                    type
+                };
+                return updated;
+            }
+            return [...prev, { id: Date.now(), message, type }]
+        });
     }, []);
 
     const removeNotification = useCallback((id) => {

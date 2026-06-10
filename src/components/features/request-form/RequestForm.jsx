@@ -19,8 +19,8 @@ export default function RequestForm() {
                 <h1 className="text-[#103D85] font-bold text-[22px]">Nova Solicitação</h1>
             </div>
 
-            <form 
-                action={"won't do now since the API isn't done yet"} 
+            <form
+                action={"won't do now since the API isn't done yet"}
                 className="flex-1 overflow-y-auto p-5"
             >
                 <SectionHeader label="INFORMAÇÕES GERAIS" />
@@ -113,7 +113,6 @@ export default function RequestForm() {
                         </span>
                     </Button>
                 </div>
-
             </form>
         </div>
     )
