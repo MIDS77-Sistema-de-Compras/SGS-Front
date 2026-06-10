@@ -1,4 +1,3 @@
-// src/components/notifications/Toast.jsx
 'use client';
 
 import { useEffect } from 'react';

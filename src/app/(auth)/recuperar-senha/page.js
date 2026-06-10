@@ -41,7 +41,7 @@ export default function RecuperarSenhaPage() {
                     placeholder="E-mail ou número de CPF"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    iconSrc="/images/iconeUsuario.png"
+                    iconSrc="/images/icons/user.png"
                     iconAlt="Icone de usuario"
                 />
 

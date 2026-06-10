@@ -47,7 +47,7 @@ export function Search({
                     className="!h-auto py-2.5 !text-sm !border-gray-200 !rounded-xl !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
                 />
 
-                <div className="flex flex-col gap-5 flex-1 overflow-y-auto pr-2">
+                <div className="flex flex-col gap-5 flex-1 overflow-y-auto">
                     {filteredData.length > 0 ? (
                         filteredData.map((cr) => (
                             <SearchCard

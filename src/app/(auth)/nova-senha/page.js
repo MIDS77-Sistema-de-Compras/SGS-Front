@@ -43,7 +43,7 @@ export default function NovaSenhaPage() {
                         placeholder="Nova senha"
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
-                        iconSrc="/images/iconeSenha.png"
+                        iconSrc="/images/icons/password.png"
                         iconAlt="Icone de senha"
                     />
                     <Input
@@ -51,7 +51,7 @@ export default function NovaSenhaPage() {
                         placeholder="Confirmar nova senha"
                         value={confirmar}
                         onChange={(e) => setConfirmar(e.target.value)}
-                        iconSrc="/images/iconeSenha.png"
+                        iconSrc="/images/icons/password.png"
                         iconAlt="Icone de senha"
                     />
                 </div>

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import SelectFormInput from "../form/SelectFormInput";
-import SubmitButton from "../form/SubmitButton";
 import UploadFileInput from "../form/UploadFileInput";
 import ListProducts from "./ListProducts";
 import send from "../../../public/images/icons/send.svg";
@@ -8,6 +7,7 @@ import FormField from "../adm/FormField";
 import { Input } from "../login/Input";
 import PhoneInput from "../adm/PhoneInput";
 import SectionHeader from "../adm/SectionHeader";
+import Button from '@/components/form/Button';
 
 export default function RequestForm() {
 
@@ -20,21 +20,16 @@ export default function RequestForm() {
                 <h1 className="text-[#103D85] font-bold text-[22px]">Nova Solicitação</h1>
             </div>
 
-            <form 
-                action={"won't do now since the API isn't done yet"} 
+            <form
+                action={"won't do now since the API isn't done yet"}
                 className="flex-1 overflow-y-auto p-5"
             >
                 {/* general infos */}
                 <SectionHeader label="INFORMAÇÕES GERAIS" />
 
-                <div className="grid grid-cols-2 items-center gap-5">
-                    <FormField label="Filial Pagadora">
-                        <SelectFormInput name={"branch"} options={["Senai", "SESI"]} isRequired={true} />
-                    </FormField>
-                    <FormField label="Data de Solicitação">
-                        <Input type="date" className={inputClass} />
-                    </FormField>
-                </div>
+                <FormField label="Filial Pagadora">
+                    <SelectFormInput name={"branch"} options={["Senai", "SESI"]} isRequired={true} />
+                </FormField>
 
                 {/* ident & costs */}
                 <div className="mt-10">
@@ -42,10 +37,10 @@ export default function RequestForm() {
 
                     <div className="grid grid-cols-3 items-center gap-5">
                         <FormField label="Solicitante/Destinatário" required className="col-span-2">
-                            <Input placeholder="Nome completo do docente..." className={inputClass} />
+                            <Input placeholder="Nome completo do destinatário..." className={inputClass} />
                         </FormField>
                         <FormField label="Ramal" required>
-                            <PhoneInput placeholder={"3222-0000"} className={inputClass} />
+                            <PhoneInput placeholder={"3344"} className={inputClass} />
                         </FormField>
                     </div>
 
@@ -76,7 +71,9 @@ export default function RequestForm() {
                             <SelectFormInput name={"unit"} label={"Selecione..."} options={["L", "g"]} />
                         </FormField>
 
-                        <SubmitButton className={"w-11 h-11 mt-auto flex items-center justify-center text-2xl"}>+</SubmitButton>
+                        <Button variant="primary" className="w-11 h-11 mt-auto flex items-center justify-center text-[18px]">
+                            +
+                        </Button>
                     </div>
 
                 </div>
@@ -92,18 +89,17 @@ export default function RequestForm() {
                 </div>
 
                 <div className="flex flex-col items-end mt-5">
-                    <SubmitButton className={"py-3 px-7 text-[14px] font-semibold"}>
-                        <span className="flex gap-5">FINALIZAR SOLICITAÇÃO 
-                            <Image 
-                                src={send} 
-                                alt="Paper Plane Send Icon" 
-                                width={15}
-                                height={21}
-                            />
-                        </span>
-                    </SubmitButton>
+                    <Button type="submit" variant="primary" className="items-center">
+                        FINALIZAR SOLICITAÇÃO
+                        <Image
+                            src={send}
+                            alt="Paper Plane Send Icon"
+                            width={10}
+                            height={10}
+                            className="w-4 h-auto"
+                        />
+                    </Button>
                 </div>
-
             </form>
         </div>
     )
