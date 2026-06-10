@@ -4,6 +4,7 @@ import TopBar from "@/components/topbar/Topbar";
 import Image from "next/image";
 import { useState } from "react";
 import { Input } from "@/components/login/Input";
+import { useRouter } from "next/navigation";
 
 export default function TodasSolicitacoes() {
 
@@ -11,6 +12,7 @@ export default function TodasSolicitacoes() {
     const [data, setData] = useState("");
     const [busca, setBusca] = useState("");
     const [abaAtiva, setAbaAtiva] = useState('todas');
+    const router = useRouter();
 
     const statusDisponiveis = [
         { id: 1, nome: "Em análise" },
@@ -273,8 +275,8 @@ export default function TodasSolicitacoes() {
                                     return (
                                         <div
                                             key={item.id}
-                                            className="flex text-lg items-center justify-between py-5 border-b border-gray-200"
-                                        >
+                                            onClick={() => router.push(`/solicitacoes/${item.id}`)}
+                                            className="flex text-lg items-center justify-between py-5 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition"                                        >
                                             <div className="flex items-center gap-20 px-6">
                                                 <span className="font-bold text-[#333333]">
                                                     {item.codigo}: Lista de {item.produtos.length}{" "}
