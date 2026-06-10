@@ -25,14 +25,9 @@ export default function RequestForm() {
             >
                 <SectionHeader label="INFORMAÇÕES GERAIS" />
 
-                <div className="grid grid-cols-2 items-center gap-5">
-                    <FormField label="Filial Pagadora">
-                        <Select name="branch" options={["Senai", "SESI"]} isRequired />
-                    </FormField>
-                    <FormField label="Data de Solicitação">
-                        <Input type="date" variant="form" />
-                    </FormField>
-                </div>
+                <FormField label="Filial Pagadora">
+                    <Select name="branch" options={["Senai", "SESI"]} isRequired />
+                </FormField>
 
                 <div className="mt-10">
                     <SectionHeader label="IDENTIFICAÇÃO E CENTRO DE CUSTO" />
@@ -103,10 +98,10 @@ export default function RequestForm() {
                         variant="primary"
                         className="py-3 px-7 text-[14px] font-semibold"
                     >
-                        <span className="flex gap-5">FINALIZAR SOLICITAÇÃO 
-                            <Image 
-                                src={send} 
-                                alt="Paper Plane Send Icon" 
+                        <span className="flex gap-5">FINALIZAR SOLICITAÇÃO
+                            <Image
+                                src={send}
+                                alt="Paper Plane Send Icon"
                                 width={15}
                                 height={21}
                             />

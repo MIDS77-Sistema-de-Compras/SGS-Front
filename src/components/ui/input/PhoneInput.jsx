@@ -38,7 +38,7 @@ const PhoneInput = forwardRef(function PhoneInput(
           variant: 'form',
           error,
           hasRightSlot: false,
-          className: 'flex-1 min-w-0 border-0 shadow-none ring-0 focus:ring-0 focus:border-0 rounded-none',
+          className: 'flex-1 min-w-0 border-0 shadow-none ring-0 focus:ring-0 focus:border-0 rounded-none !placeholder-gray-400',
         })}
         {...rest}
       />

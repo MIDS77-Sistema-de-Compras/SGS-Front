@@ -2,6 +2,7 @@
 
 import FormField from "@/components/ui/form/FormField";
 import { PasswordInput } from "@/components/ui/input/PasswordInput";
+import React from "react";
 
 export default function PasswordField({ value, onChange, error, ...rest }) {
 
@@ -85,6 +86,6 @@ export default function PasswordField({ value, onChange, error, ...rest }) {
                 })}
             </div>
 
-        </div>
+        </FormField>
     )
 }
