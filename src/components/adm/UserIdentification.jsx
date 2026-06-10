@@ -59,8 +59,8 @@ export default function UserIdentificationSection({ formData, errors, onChange, 
                     value={formData.senha}
                     onChange={(e) => onChange('senha', e.target.value)}
                     onBlur={() => onBlur('senha', formData.senha)}
+                    error={errors.senha}
                 />
-                <FieldError message={errors.senha} />
             </div>
         </div>
     );

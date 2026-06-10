@@ -32,7 +32,7 @@ export default function PasswordField({ value, onChange, error, ...rest }) {
         { label: 'Precisa de letra maiúscula', test: (pwd) => /[A-Z]/.test(pwd || '') },
         { label: 'Precisa de letra minúscula', test: (pwd) => /[a-z]/.test(pwd || '') }, 
         { label: 'Precisa de números', test: (pwd) => /[0-9]/.test(pwd || '') },
-        { label: 'Precisa de caracteres especiais', test: (pwd) => /[^A-Za-z0-9]/.test(pwd || '') },
+        { label: 'Precisa de caracteres especiais', test: (pwd) => /[\W]/.test(pwd || '') },
     ];
 
     return (
@@ -43,7 +43,7 @@ export default function PasswordField({ value, onChange, error, ...rest }) {
 
             <Input
                 type="password"
-                placeholder="Mínimo 8 caracteres"
+                placeholder="Insira uma senha padrão"
                 value={value || ''}
                 onChange={onChange}
                 className="!h-auto !px-3 !py-2.5 !border !border-gray-200 !shadow-sm !rounded-xl !text-sm !placeholder-[#6B7280] focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"

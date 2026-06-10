@@ -27,14 +27,9 @@ export default function RequestForm() {
                 {/* general infos */}
                 <SectionHeader label="INFORMAÇÕES GERAIS" />
 
-                <div className="grid grid-cols-2 items-center gap-5">
-                    <FormField label="Filial Pagadora">
-                        <SelectFormInput name={"branch"} options={["Senai", "SESI"]} isRequired={true} />
-                    </FormField>
-                    <FormField label="Data de Solicitação">
-                        <Input type="date" className={inputClass} />
-                    </FormField>
-                </div>
+                <FormField label="Filial Pagadora">
+                    <SelectFormInput name={"branch"} options={["Senai", "SESI"]} isRequired={true} />
+                </FormField>
 
                 {/* ident & costs */}
                 <div className="mt-10">
@@ -45,7 +40,7 @@ export default function RequestForm() {
                             <Input placeholder="Nome completo do destinatário..." className={inputClass} />
                         </FormField>
                         <FormField label="Ramal" required>
-                            <PhoneInput placeholder={"3222-0000"} className={inputClass} />
+                            <PhoneInput placeholder={"3344"} className={inputClass} />
                         </FormField>
                     </div>
 

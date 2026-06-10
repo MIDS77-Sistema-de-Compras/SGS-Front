@@ -17,13 +17,15 @@ const VALIDATORS = {
             : '';
     },
     senha: (v) => {
-        if (!v) return 'A senha é obrigatória.';
-        if (v.length < 8) return 'A senha deve ter no mínimo 8 caracteres.';
-        if (!/[A-Z]/.test(v)) return 'A senha deve conter pelo menos uma letra maiúscula.';
-        if (!/[0-9]/.test(v)) return 'A senha deve conter pelo menos um número.';
-        if (!/[\W]/.test(v)) return 'A senha deve conter um caractere especial (ex: @, #, $, &).';
-
-        return '';
+        const senhaValida =
+            v &&
+            v.length >= 8 &&
+            /[A-Z]/.test(v) &&
+            /[a-z]/.test(v) &&
+            /[0-9]/.test(v) &&
+            /[\W]/.test(v);
+        
+        return senhaValida ? '' : 'invalid'
     },
 };
 
