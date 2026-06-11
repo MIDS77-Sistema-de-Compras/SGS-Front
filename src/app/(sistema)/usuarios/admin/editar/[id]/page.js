@@ -1,6 +1,6 @@
 'use client';
+
 import { useState } from 'react';
-import TopBar from "@/components/topbar/Topbar"
 
 export default function EditarUsuarios({ params }) {
     const id = params.id;
@@ -16,9 +16,7 @@ export default function EditarUsuarios({ params }) {
     const [nivelAcesso, setNivelAcesso] = useState(() => usuario.nivelAcesso);
 
     return (
-        <div className="absolute inset-y-0 right-0 left-[260px] bg-[#FFFFFF] px-12 pb-12 overflow-y-auto font-sans flex flex-col gap-6">
-            <TopBar />
-
+        <div>
             <div className="w-[1287px] h-[590px] bg-white p-8 rounded-xl shadow-sm border border-[#797979] flex flex-col justify-between">
                 <div>
                     <div className="w-full pb-4">

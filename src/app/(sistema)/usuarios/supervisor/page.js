@@ -1,7 +1,7 @@
 'use client';
+
 import { useState } from 'react';
 import Image from 'next/image';
-import TopBar from "@/components/topbar/Topbar"
 
 export default function MonitoramentoSolicitacoes() {
 
@@ -178,9 +178,7 @@ export default function MonitoramentoSolicitacoes() {
     });
 
     return (
-        <div className="absolute inset-y-0 right-0 w-[1500px] left-[260px] bg-[#FFFFFF] px-12 pb-12 overflow-y-auto font-sans flex flex-col gap-6">
-            <TopBar />
-
+        <div>
             <div className="bg-white rounded-xl border border-[#797979] flex flex-row justify-between p-2">
                 <div className='flex flex-row items-center px-4'>
                     <Image
@@ -189,9 +187,7 @@ export default function MonitoramentoSolicitacoes() {
                         height={21}
                         width={21}
                         className="w-5 h-5"
-                    >
-
-                    </Image>
+                    />
 
                     <div className='text-xl text-[#133D87] pl-3 pr-64'>
                         <p>Filtrar</p>
