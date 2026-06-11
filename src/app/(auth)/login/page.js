@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { Input } from "@/components/login/Input";
-import { Button } from "@/components/login/Button";
-import FormCard from "@/components/login/FormCard";
-import { ModalTermos } from "@/components/login/ModalTermos";
-import { ModalPoliticas } from "@/components/login/ModalPoliticas";
+import { Input } from "@/components/ui/input/Input";
+import { PasswordInput } from "@/components/ui/input/PasswordInput";
+import Button from "@/components/ui/button/Button";
+import FormCard from "@/components/features/auth/FormCard";
+import { ModalTermos } from "@/components/features/auth/ModalTermos";
+import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -44,14 +45,15 @@ export default function LoginPage() {
                 <div className="flex flex-col gap-4">
                     <Input
                         type="text"
+                        variant="auth"
                         placeholder="E-mail ou número de CPF"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         iconSrc="/images/icons/user.png"
                         iconAlt="Icone de usuario"
                     />
-                    <Input
-                        type="password"
+                    <PasswordInput
+                        variant="auth"
                         placeholder="Senha"
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
@@ -63,7 +65,9 @@ export default function LoginPage() {
                 <div className="mt-20">
                     <Button
                         type="submit"
-                        className="w-full py-3 bg-[#4B84F4] hover:bg-[#3b71f3] text-white font-semibold rounded-lg transition-colors"
+                        variant="auth"
+                        size="lg"
+                        fullWidth
                     >
                         Entrar
                     </Button>

@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import FormCard from "@/components/login/FormCard";
-import { ModalTermos } from "@/components/login/ModalTermos";
-import { ModalPoliticas } from "@/components/login/ModalPoliticas";
+import FormCard from "@/components/features/auth/FormCard";
+import { ModalTermos } from "@/components/features/auth/ModalTermos";
+import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 
 export default function AutenticacaoPage() {
     const [codigo, setCodigo] = useState(["", "", "", "", "", ""]);
