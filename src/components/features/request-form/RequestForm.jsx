@@ -68,9 +68,8 @@ export default function RequestForm() {
                         </FormField>
 
                         <Button
-                            type="submit"
                             variant="primary"
-                            className="w-11 h-11 mt-auto flex items-center justify-center text-2xl"
+                            className="w-10 h-10 mt-auto flex items-center justify-center text-2xl"
                         >
                             +
                         </Button>
