@@ -22,6 +22,11 @@ body {
     height: 100%;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) #fff;
+}
+
 @keyframes slide-in {
   from {
     transform: translateX(110%);
