@@ -24,7 +24,7 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--primary) #fff;
+  scrollbar-color: var(--color-primary) #fff;
 }
 
 @keyframes slide-in {
