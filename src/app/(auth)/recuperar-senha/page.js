@@ -2,14 +2,18 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Input } from "@/components/login/Input";
-import { Button } from "@/components/login/Button";
-import AuthBackground from "@/components/login/AuthBackground";
-import FormCard from "@/components/login/FormCard";
+import { Input } from "@/components/ui/input/Input";
+import Button from "@/components/ui/button/Button";
+import FormCard from "@/components/features/auth/FormCard";
+import { ModalTermos } from "@/components/features/auth/ModalTermos";
+import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 
 export default function RecuperarSenhaPage() {
     const [email, setEmail] = useState("");
     const router = useRouter();
+
+    const [modalTermosOpen, setModalTermosOpen] = useState(false);
+    const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -17,8 +21,13 @@ export default function RecuperarSenhaPage() {
     }
 
     return (
-        <AuthBackground>
-            <FormCard onSubmit={handleSubmit} showBackLink backHref="/login">
+        <div>
+            <FormCard
+                onSubmit={handleSubmit}
+                showBackLink backHref="/login"
+                onTermosClick={() => setModalTermosOpen(true)}
+                onPoliticasClick={() => setModalPoliticasOpen(true)}
+            >
 
                 <h2 className="text-white text-2xl font-bold mb-2">
                     Recuperar senha
@@ -29,6 +38,7 @@ export default function RecuperarSenhaPage() {
 
                 <Input
                     type="text"
+                    variant="auth"
                     placeholder="E-mail ou número de CPF"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -39,13 +49,24 @@ export default function RecuperarSenhaPage() {
                 <div className="mt-8">
                     <Button
                         type="submit"
-                        className="w-full py-3 bg-[#4B84F4] hover:bg-[#3b71f3] text-white font-semibold rounded-lg transition-colors"
+                        variant="auth"
+                        size="lg"
+                        fullWidth
                     >
                         Enviar instruções
                     </Button>
                 </div>
 
             </FormCard>
-        </AuthBackground>
+
+            <ModalTermos
+                isOpen={modalTermosOpen}
+                onClose={() => setModalTermosOpen(false)}
+            />
+            <ModalPoliticas
+                isOpen={modalPoliticasOpen}
+                onClose={() => setModalPoliticasOpen(false)}
+            />
+        </div>
     );
 }
