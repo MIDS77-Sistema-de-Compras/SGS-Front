@@ -94,7 +94,8 @@ const STATUS_CORES = {
     "Em análise": "bg-[#FFC107]",
     "Reprovado": "bg-[#E50012]",
     "Parcial Aprovado": "bg-[#007BFF]",
-    "Aprovado": "bg-[#4CAF50]"
+    "Aprovado": "bg-[#4CAF50]",
+    "Auto-Aprovado": "bg-[#8E44AD]"
 };
 
 
@@ -102,6 +103,7 @@ function calcularStatusSolicitacao(produtos) {
     if (produtos.every(p => p.status === "Aprovado")) return "Aprovado";
     if (produtos.every(p => p.status === "Reprovado")) return "Reprovado";
     if (produtos.every(p => p.status === "Em análise")) return "Em análise";
+    if (produtos.every(p => p.status === "Auto-Aprovado")) return "Auto-Aprovado";
     return "Parcial Aprovado";
 }
 
@@ -110,11 +112,40 @@ export default function MyRequests() {
     const { id } = useParams();
 
 
-    const solicitacao = solicitacoes.find(s => s.id === Number(id));
-    const products = solicitacao?.produtos ?? [];
-
-
     const isProfessor = true;
+    const isSupervisor = false;
+
+
+    const solicitacao = solicitacoes.find(s => s.id === Number(id));
+
+
+    const produtosSupervisor = [
+        {
+            code: "IMP-002",
+            nome: "Impressora",
+            variation: "Epson Eco Tank",
+            quantity: 1,
+            unit: "UNIDADE",
+            additionalInfo: "Solicitado pelo supervisor da unidade.",
+            status: "Auto-Aprovado",
+            cr: "CR-Blumenau"
+        },
+        {
+            code: "MOU-003",
+            nome: "Mouse",
+            variation: "Mouse Ergonômico",
+            quantity: 3,
+            unit: "UNIDADE",
+            additionalInfo: "Reposição de estoque do laboratório.",
+            status: "Auto-Aprovado",
+            cr: "CR-Florianópolis"
+        }
+    ];
+
+
+    const products = isSupervisor
+        ? produtosSupervisor
+        : solicitacao?.produtos ?? [];
 
 
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -166,7 +197,7 @@ export default function MyRequests() {
     };
 
 
-    if (!solicitacao) {
+    if (!isSupervisor && !solicitacao) {
         return (
             <div className="flex-1 flex items-center justify-center font-sans">
                 <div className="text-center">
@@ -218,9 +249,9 @@ export default function MyRequests() {
                                 Realizada em: {new Date(solicitacao.data).toLocaleDateString('pt-BR')}
                             </span>
                         </div>
-                        <span className={`inline-block text-center text-xs font-bold text-white px-5 py-1.5 rounded-full w-32 shadow-sm tracking-wide mr-16 ${corGeral}`}>
-                          {statusGeral}
-                        </span>
+                       <span className={`inline-block text-center text-xs font-bold text-white px-5 py-1.5 rounded-full w-33 shadow-sm tracking-wide mr-16 ${corGeral}`}>
+                        {statusGeral}
+                       </span>
                     </div>
 
 
@@ -257,7 +288,7 @@ export default function MyRequests() {
                                                 </button>
                                             </td>
                                             <td className="py-5 px-6 text-center relative">
-                                                <span className={`inline-block text-center text-xs font-bold text-white px-5 py-1.5 rounded-full w-32 shadow-sm tracking-wide ${STATUS_CORES[item.status] || "bg-gray-400"}`}>
+                                                <span className={`inline-block text-center text-xs font-bold text-white px-5 py-1.5 rounded-full w-33 shadow-sm tracking-wide ${STATUS_CORES[item.status] || "bg-gray-400"}`}>
                                                     {item.status}
                                                 </span>
                                                 {isProfessor && item.status === "Em análise" && (
@@ -380,6 +411,8 @@ export default function MyRequests() {
                                             ? "A solicitação cumpre com os requisitos técnicos da unidade e o orçamento está dentro do limite estipulado para o trimestre corrente."
                                             : selectedProduct.status === "Reprovado"
                                             ? "A compra foi recusada temporariamente pois identificamos itens similares disponíveis no estoque central da instituição para remanejamento."
+                                            : selectedProduct.status === "Auto-Aprovado"
+                                            ? "Solicitação originada por Supervisor. Processo elegível para fluxo de aprovação direta."
                                             : "Aguardando análise do supervisor responsável."}
                                     </p>
                                 </div>
@@ -403,3 +436,5 @@ export default function MyRequests() {
         </div>
     );
 }
+
+
