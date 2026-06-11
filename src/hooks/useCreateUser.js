@@ -13,7 +13,7 @@ const VALIDATORS = {
     ramal: (v) => {
         const apenasNumeros = v.replace(/\D/g, '');
         return apenasNumeros.length < 3 || apenasNumeros.length > 4
-            ? 'O ramal deve ter entre 3 e 4 números.'
+            ? 'O ramal deve ter 4 números.'
             : '';
     },
     senha: (v) => {

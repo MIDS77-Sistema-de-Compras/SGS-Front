@@ -1,6 +1,8 @@
 'use client';
 
-import FormCreateUser from "@/components/adm/FormCreateUser";
+import FormCreateUser from "@/components/features/admin/FormCreateUser";
+
+
 
 export default function CadastroUsuarios() {
 

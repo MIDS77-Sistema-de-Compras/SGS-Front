@@ -1,9 +1,9 @@
 'use client'
 
-import SectionHeader from '@/components/adm/SectionHeader';
-import AccessLevelSelector from '@/components/adm/AccessLevelSelector';
-import UserIdentificationSection from '@/components/adm/UserIdentification';
-import Button from '@/components/form/Button';
+import SectionHeader from '@/components/ui/layout/SectionHeader';
+import AccessLevelSelector from './AccessLevelSelector';
+import UserIdentificationSection from './UserIdentification';
+import Button from '@/components/ui/button/Button';
 import { useCreateUser } from '@/hooks/useCreateUser';
 
 export default function FormCreateUser() {

@@ -1,7 +1,7 @@
-import FormField from '@/components/adm/FormField';
-import { Input } from '@/components/login/Input';
-import PhoneInput from '@/components/adm/PhoneInput';
-import PasswordField from '@/components/adm/PasswordField';
+import FormField from '@/components/ui/form/FormField';
+import Input from '@/components/ui/input/Input';
+import PhoneInput from '@/components/ui/input/PhoneInput';
+import PasswordField from './PasswordField';
 import FieldError from '@/components/notifications/FieldError';
 
 const INPUT_CLASS = "!h-auto py-2.5 !text-sm !border-gray-200 !rounded-xl !shadow-sm !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]";
@@ -34,7 +34,7 @@ export default function UserIdentificationSection({ formData, errors, onChange, 
             <FormField label="Ramal" required>
                 <PhoneInput
                     placeholder="3344"
-                    className={INPUT_CLASS}
+                    className="!h-auto !text-sm !border-gray-200 !rounded-xl !shadow-sm !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
                     value={formData.ramal}
                     onChange={(e) => onChange('ramal', e.target.value)}
                     onBlur={() => onBlur('ramal', formData.ramal)}
