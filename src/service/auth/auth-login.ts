@@ -1,7 +1,9 @@
 import { API_BASE_URL } from "../api";
 
+interface UserData {userName: string; password: string};
+
 export async function loginUser(email: string, password: string): Promise<any>{
-    const userData = {userName: email, password: password};
+    const userData: UserData = {userName: email, password: password};
 
     try{
         const res: Response = await fetch(`${API_BASE_URL}/auth/login`,{
