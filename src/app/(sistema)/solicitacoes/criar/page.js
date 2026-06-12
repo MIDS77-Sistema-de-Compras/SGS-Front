@@ -1,5 +1,5 @@
-import { Search } from "@/components/search/Search";
-import RequestForm from "@/components/request-form/RequestForm";
+import { Search } from "@/components/features/search/Search";
+import RequestForm from "@/components/features/request-form/RequestForm";
 
 export default function NovaSolicitacao() {
     return (
@@ -8,7 +8,7 @@ export default function NovaSolicitacao() {
                 <RequestForm />
             </div>
 
-            <div className="flex">
+            <div className="flex flex-col min-h-0">
                 <Search
                     data={[
                         {

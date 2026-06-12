@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Input } from "@/components/login/Input";
-import { Button } from "@/components/login/Button";
-import FormCard from "@/components/login/FormCard";
-import { ModalTermos } from "@/components/login/ModalTermos";
-import { ModalPoliticas } from "@/components/login/ModalPoliticas";
+import { Input } from "@/components/ui/input/Input";
+import Button from "@/components/ui/button/Button";
+import FormCard from "@/components/features/auth/FormCard";
+import { ModalTermos } from "@/components/features/auth/ModalTermos";
+import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 
 export default function RecuperarSenhaPage() {
     const [email, setEmail] = useState("");
@@ -38,17 +38,20 @@ export default function RecuperarSenhaPage() {
 
                 <Input
                     type="text"
+                    variant="auth"
                     placeholder="E-mail ou número de CPF"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    iconSrc="/images/iconeUsuario.png"
+                    iconSrc="/images/icons/user.png"
                     iconAlt="Icone de usuario"
                 />
 
                 <div className="mt-8">
                     <Button
                         type="submit"
-                        className="w-full py-3 bg-[#4B84F4] hover:bg-[#3b71f3] text-white font-semibold rounded-lg transition-colors"
+                        variant="auth"
+                        size="lg"
+                        fullWidth
                     >
                         Enviar instruções
                     </Button>

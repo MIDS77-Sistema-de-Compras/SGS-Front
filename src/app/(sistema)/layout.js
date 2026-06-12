@@ -1,6 +1,5 @@
-import Topbar from "@/components/topbar/Topbar";
-import "../globals.css";
-import Sidebar from "@/components/sidebar/index";
+import Topbar from "@/components/layout/topbar/Topbar";
+import Sidebar from "@/components/layout/sidebar/index";
 
 export default function SistemaLayout({ children }) {
     return (
