@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import MonitoramentoTabs from '@/components/features/supervisor/tempTabs';
+import MonitoringFilter from '@/components/features/supervisor/monitoringFilter';
+import { calcularTempoDecorrido } from '@/lib/utils/calculateTime';
+
 
 export default function MonitoramentoSolicitacoes() {
 
@@ -132,185 +135,60 @@ export default function MonitoramentoSolicitacoes() {
         "Solicitado pelo portal": "bg-[#E1AD01]"
     };
 
-    const calcularTempoDecorrido = (dataApi) => {
-        if (!dataApi) return "";
-        
-        const agora = new Date();
-        const dataSolicitacao = new Date(dataApi);
-        
-        const diferencaMs = agora - dataSolicitacao;
-        
-        if (diferencaMs < 0) return "Agora mesmo";
-
-        const minutos = Math.floor(diferencaMs / (1000 * 60));
-        const horas = Math.floor(diferencaMs / (1000 * 60 * 60));
-        const dias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
-
-        if (minutos < 1) {
-            return "Agora mesmo";
-        } else if (minutos < 60) {
-            return `Há ${minutos} ${minutos === 1 ? 'minuto' : 'minutos'}`;
-        } else if (horas < 24) {
-            return `Há ${horas} ${horas === 1 ? 'hora' : 'horas'}`;
-        } else {
-            return `Há ${dias} ${dias === 1 ? 'dia' : 'dias'}`;
-        }
-    };
-
-    const itensFiltrados = solicitacoes.filter((item) => {
-
-        const filtroCr =
-            cr === "" || item.cr === Number(cr);
-
-        const filtroPerfil =
-            perfil === "" || item.perfil === perfil;
-
-        const filtroBusca =
-            busca === "" ||
-            item.titulo.toLowerCase().includes(busca.toLowerCase()) ||
-            item.sub.toLowerCase().includes(busca.toLowerCase());
-
-        return (
-            filtroCr &&
-            filtroPerfil &&
-            filtroBusca
-        );
-    });
-
+  
     return (
-        <div>
-            <div className="bg-white rounded-xl border border-[#797979] flex flex-row justify-between p-2">
-                <div className='flex flex-row items-center px-4'>
-                    <Image
-                        src={'/images/icons/filtrar.png'}
-                        alt="Ícone de filtros"
-                        height={21}
-                        width={21}
-                        className="w-5 h-5"
-                    />
+        <div className="flex flex-col gap-4">
 
-                    <div className='text-xl text-[#133D87] pl-3 pr-64'>
-                        <p>Filtrar</p>
-                    </div>
-                </div>
+            <MonitoringFilter
+                cr={cr}
+                perfil={perfil}
+                busca={busca}
+                setCr={setCr}
+                setPerfil={setPerfil}
+                setBusca={setBusca}
+                crs={crs}
+            />
 
-                <div className="relative">
-                    <select
-                        value={cr}
-                        onChange={(e) => setCr(e.target.value)}
-                        className="appearance-none pl-3 w-[200px] py-2 border border-[#797979] rounded-xl text-sm text-[#374151] bg-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#103D85]"
-                    >
-
-                        <option value="">CR</option>
-                        {crs.map((cr) => (
-                            <option key={cr.id} value={cr.id}>
-                                {cr.nome}
-                            </option>
-                        ))}
-
-                    </select>
-                </div>
-
-                <div className="relative">
-                    <select
-                        value={perfil}
-                        onChange={(e) => setPerfil(e.target.value)}
-                        className="appearance-none pl-3 w-[200px] py-2 border border-[#797979] rounded-xl text-sm text-[#374151] bg-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#103D85]"
-                    >
-
-                        <option value="">Todos os perfis</option>
-                        <option value="DOCENTE">Docente</option>
-                        <option value="SUPERVISOR">Supervisor</option>
-                        <option value="COORDENADOR">Coordenador</option>
-
-                    </select>
-                </div>
-
-
-                <div className='flex flex-row items-center w-[400px] px-3 border border-[#797979] rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-[#103D85]'>
-                    <Image
-                        src={'/images/icons/lupa.png'}
-                        alt="Ícone de lupa"
-                        height={21}
-                        width={21}
-                        className="w-5 h-5"
-                    >
-                    </Image>
-
-                    <input
-                        type="text"
-                        placeholder="Buscar..."
-                        value={busca}
-                        onChange={(e) => setBusca(e.target.value)}
-                        className='pl-2 w-full py-2 text-sm focus:outline-none focus:ring-0 border-none bg-transparent'
-                    />
-                </div>
-            </div>
-
-            {/* Monitoramento */}
             <div className="bg-white border border-[#797979] rounded-2xl overflow-hidden">
 
-                <div className="flex justify-between items-end px-6 pt-4 border-b border-[#797979]">
-                    <h2 className="text-4xl font-bold text-[#133D87] pb-3">
-                        Monitoramento
-                    </h2>
+                <MonitoramentoTabs
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                />
 
-                    <div className="flex gap-3">
-                        <button
-                            onClick={() => setAbaAtiva('andamento')}
-                            className={`px-6 py-2 border border-[#797979] border-b-0 rounded-t-[18px] mb-[-1px] ${abaAtiva === 'andamento'
-                                    ? 'text-[#133D87] font-semibold bg-white'
-                                    : 'text-gray-500 bg-white'
-                                }`}
-                        >
-                            Em andamento
-                        </button>
-                        <button
-                            onClick={() => setAbaAtiva('pendentes')}
-                            className={`px-6 py-2 border border-[#797979] border-b-0 rounded-t-[18px] mb-[-1px] ${abaAtiva === 'pendentes'
-                                    ? 'text-[#133D87] font-semibold bg-white'
-                                    : 'text-gray-500 bg-white'
-                                }`}
-                        >
-                            Pendentes
-                        </button>
-                    </div>
-                </div>
-
-                {/* Conteúdo das Listas*/}
                 <div className="h-[500px] overflow-y-auto p-6 bg-white">
                     {(() => {
                         const itensFiltrados = solicitacoes.filter((item) => {
 
-                        const filtroAba =
-                            abaAtiva === 'pendentes'
-                                ? item.status === 'Em análise'
-                                : item.status !== 'Em análise';
+                            const filtroAba =
+                                abaAtiva === 'pendentes'
+                                    ? item.status === 'Em análise'
+                                    : item.status !== 'Em análise';
 
-                        const filtroCr =
-                            cr === '' || item.cr === Number(cr);
+                            const filtroCr =
+                                cr === '' || item.cr === Number(cr);
 
-                        const filtroPerfil =
-                            perfil === '' || item.perfil === perfil;
+                            const filtroPerfil =
+                                perfil === '' || item.perfil === perfil;
 
-                        const filtroBusca =
-                            busca === '' ||
-                            item.titulo.toLowerCase().includes(busca.toLowerCase()) ||
-                            item.sub.toLowerCase().includes(busca.toLowerCase());
+                            const filtroBusca =
+                                busca === '' ||
+                                item.titulo.toLowerCase().includes(busca.toLowerCase()) ||
+                                item.sub.toLowerCase().includes(busca.toLowerCase());
 
-                        return (
-                            filtroAba &&
-                            filtroCr &&
-                            filtroPerfil &&
-                            filtroBusca
-                        );
-                    });
+                            return (
+                                filtroAba &&
+                                filtroCr &&
+                                filtroPerfil &&
+                                filtroBusca
+                            );
+                        });
 
                         if (itensFiltrados.length === 0) {
                             return (
                                 <div className="text-gray-400 text-center pt-10">
-                                    {abaAtiva === 'pendentes' 
-                                        ? 'Nenhuma solicitação pendente encontrada.' 
+                                    {abaAtiva === 'pendentes'
+                                        ? 'Nenhuma solicitação pendente encontrada.'
                                         : 'Nenhuma solicitação em andamento encontrada.'}
                                 </div>
                             );
@@ -319,30 +197,43 @@ export default function MonitoramentoSolicitacoes() {
                         return (
                             <div className="flex flex-col gap-5">
                                 {itensFiltrados.map((item) => {
-                                    const corDefinida = STATUS_CORES[item.status] || "bg-gray-400";
+                                    const corDefinida =
+                                        STATUS_CORES[item.status] || 'bg-gray-400';
 
                                     return (
-                                        <div key={item.id} className="flex flex-row items-center justify-between pb-2">
-                                            
-                                            <div className="flex flex-row items-center gap-4">
-                                                <div className={`w-7 h-7 rounded-full ${corDefinida}`} />
-                                                
+                                        <div
+                                            key={item.id}
+                                            className="flex items-center justify-between pb-2"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div
+                                                    className={`w-7 h-7 rounded-full ${corDefinida}`}
+                                                />
+
                                                 <div className="flex flex-col">
-                                                    <span className="text-lg font-bold text-[#333333]">{item.titulo}</span>
-                                                    {item.sub && <span className="text-sm text-gray-400">{item.sub}</span>}
+                                                    <span className="text-lg font-bold text-[#333333]">
+                                                        {item.titulo}
+                                                    </span>
+
+                                                    {item.sub && (
+                                                        <span className="text-sm text-gray-400">
+                                                            {item.sub}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
 
-                                            <div className="flex flex-row items-center gap-12">
+                                            <div className="flex items-center gap-12">
                                                 <span className="text-xs text-gray-400 min-w-[60px] text-right">
                                                     {calcularTempoDecorrido(item.dataCriacao)}
                                                 </span>
-                                                                                                
-                                                <button className={`w-[240px] py-1 text-white text-center font-medium rounded-full transition-colors ${corDefinida}`}>
+
+                                                <button
+                                                    className={`w-[240px] py-1 text-white font-medium rounded-full ${corDefinida}`}
+                                                >
                                                     {item.status}
                                                 </button>
                                             </div>
-
                                         </div>
                                     );
                                 })}
@@ -352,6 +243,7 @@ export default function MonitoramentoSolicitacoes() {
                 </div>
 
             </div>
+
         </div>
     );
 }
