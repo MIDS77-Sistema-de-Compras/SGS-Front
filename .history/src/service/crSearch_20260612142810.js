@@ -25,10 +25,10 @@ export function filterCRs(termo, crs = []) {
         const codigo = (cr.crCode ?? '').toLowerCase();
         const supervisor = (cr.responsibleUserName ?? '').toLowerCase();
         const bloco = (cr.sector ?? '').toLowerCase();
-        const filial = (cr.branchName ?? '').toLowerCase();
+        const
 
         return (
-            codigo.includes(normalizado) || supervisor.includes(normalizado) || bloco.includes(normalizado) || filial.includes(normalizado)
+            codigo.includes(normalizado) || supervisor.includes(normalizado) || bloco.includes(normalizado)
         );
     });
 }

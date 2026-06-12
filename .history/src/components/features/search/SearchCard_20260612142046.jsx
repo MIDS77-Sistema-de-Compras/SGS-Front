@@ -2,7 +2,7 @@ export function SearchCard({ cr }) {
     return (
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-3 flex flex-col gap-1 w-full">
             <div className="flex justify-between items-center mb-3">
-                <div className="bg-gray-100 rounded-2xl font-bold text-xl text-gray-800 pr-2">
+                <div className="bg-gray-100 rounded-2xl font-bold text-xl text-gray-800 px-5">
                     {cr.crCode}
                 </div>
 

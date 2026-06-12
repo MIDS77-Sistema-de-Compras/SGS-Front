@@ -28,7 +28,7 @@ export function filterCRs(termo, crs = []) {
         const filial = (cr.branchName ?? '').toLowerCase();
 
         return (
-            codigo.includes(normalizado) || supervisor.includes(normalizado) || bloco.includes(normalizado) || filial.includes(normalizado)
+            codigo.includes(normalizado) || supervisor.includes(normalizado) || bloco.includes(normalizado) || filial.includes()
         );
     });
 }

@@ -14,7 +14,7 @@ export function SearchCard({ cr }) {
             <div className="grid grid-cols-2 text-[12px]">
                 <div>
                     <p className="text-gray-400 font-semibold">FILIAL</p>
-                    <p className="text-[#355C9C] font-medium">
+                    <p className="text-[#355C9C] font-medium truncate">
                         {cr.branchName}
                     </p>
                 </div>

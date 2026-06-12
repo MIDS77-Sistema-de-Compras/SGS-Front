@@ -21,7 +21,7 @@ export function SearchCard({ cr }) {
 
                 <div className="text-right">
                     <p className="text-gray-400 font-semibold">SUPERVISOR</p>
-                    <p className="text-[#355C9C] font-medium">
+                    <p className="text-[#355C9C] font-medium truncate">
                         {cr.responsibleUserName ?? 'Não atribuído'}
                     </p>
                 </div>
