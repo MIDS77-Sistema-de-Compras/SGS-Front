@@ -1,5 +1,6 @@
 "use client";
 
+
 import { Input } from "@/components/ui/input/Input";
 import { SearchCard } from "./SearchCard";
 import { useCRSearch } from "@/hooks/useCRSearch";

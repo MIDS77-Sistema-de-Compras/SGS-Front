@@ -16,15 +16,15 @@ export function SearchCard({ cr }) {
                     <p className="text-gray-400 font-semibold">FILIAL</p>
 
                     <p className="text-[#355C9C] font-medium">
-                        {cr.branchName}
+                        {cr.weg}
                     </p>
                 </div>
 
                 <div className="text-right">
-                    <p className="text-gray-400 font-semibold">SUPERVISOR</p>
+                    <p className="text-gray-400 font-semibold">SENAI</p>
 
                     <p className="text-[#355C9C] font-medium">
-                        {cr.responsibleUserName ?? 'Não atribuido'}
+                        {cr.senai}
                     </p>
                 </div>
             </div>

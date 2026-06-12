@@ -21,10 +21,10 @@ export function SearchCard({ cr }) {
                 </div>
 
                 <div className="text-right">
-                    <p className="text-gray-400 font-semibold">SUPERVISOR</p>
+                    <p className="text-gray-400 font-semibold">SENAI</p>
 
                     <p className="text-[#355C9C] font-medium">
-                        {cr.responsibleUserName ?? 'Não atribuido'}
+                        {cr.senai}
                     </p>
                 </div>
             </div>
