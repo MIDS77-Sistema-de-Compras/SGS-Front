@@ -1,14 +1,8 @@
-
-
-
-
 "use client";
-
 
 import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-
 
 const solicitacoes = [
     {
@@ -16,7 +10,7 @@ const solicitacoes = [
         codigo: "CR-0013",
         data: "2026-03-10",
         produtos: [
-            { code: "MOU-001", nome: "Mouse", status: "Reprovado", variation: "Mouse Ergonômico", quantity: 1, unit: "UNIDADE", additionalInfo: "Equipamento para estação de trabalho.", cr: "CR-Blumenau" },
+            { code: "MOU-001", nome: "Mouse Gamer RGB Wireless Pro Max Edição Limitada", status: "Reprovado", variation: "Mouse Ergonômico Sem Fio Recarregável Edition", quantity: 1, unit: "UNIDADE", additionalInfo: "Equipamento para estação de trabalho.", cr: "CR-Blumenau" },
             { code: "TEC-001", nome: "Teclado", status: "Reprovado", variation: "Teclado Mecânico", quantity: 1, unit: "UNIDADE", additionalInfo: "Reposição de teclado danificado.", cr: "CR-Blumenau" },
             { code: "MON-001", nome: "Monitor", status: "Reprovado", variation: "Monitor 24\" Full HD", quantity: 1, unit: "UNIDADE", additionalInfo: "Monitor para laboratório de informática.", cr: "CR-Blumenau" }
         ]
@@ -89,7 +83,6 @@ const solicitacoes = [
     }
 ];
 
-
 const STATUS_CORES = {
     "Em análise": "bg-[#FFC107]",
     "Reprovado": "bg-[#E50012]",
@@ -97,7 +90,6 @@ const STATUS_CORES = {
     "Aprovado": "bg-[#4CAF50]",
     "Auto-Aprovado": "bg-[#8E44AD]"
 };
-
 
 function calcularStatusSolicitacao(produtos) {
     if (produtos.every(p => p.status === "Aprovado")) return "Aprovado";
@@ -107,17 +99,13 @@ function calcularStatusSolicitacao(produtos) {
     return "Parcial Aprovado";
 }
 
-
 export default function MyRequests() {
     const { id } = useParams();
-
 
     const isProfessor = true;
     const isSupervisor = false;
 
-
     const solicitacao = solicitacoes.find(s => s.id === Number(id));
-
 
     const produtosSupervisor = [
         {
@@ -233,7 +221,7 @@ export default function MyRequests() {
                                 <path d="m15 18-6-6 6-6" />
                             </svg>
                         </Link>
-                        <h3 className="text-2xl font-bold text-[#103D85] tracking-tight">Minhas solicitações</h3>
+                        <h3 className="text-3xl font-bold text-[#103D85] tracking-tight">Minhas solicitações</h3>
                     </div>
 
 
@@ -249,46 +237,46 @@ export default function MyRequests() {
                                 Realizada em: {new Date(solicitacao.data).toLocaleDateString('pt-BR')}
                             </span>
                         </div>
-                       <span className={`inline-block text-center text-xs font-bold text-white px-5 py-1.5 rounded-full w-33 shadow-sm tracking-wide mr-16 ${corGeral}`}>
+                       <span className={`inline-block text-center text-sm font-bold text-white px-6 py-1.5 rounded-full w-33 shadow-sm tracking-wide mr-10 ${corGeral}`}>
                         {statusGeral}
                        </span>
                     </div>
 
 
                     <div className="w-full flex-1 overflow-y-auto">
-                        <table className="w-full border-collapse">
+                        <table className="w-full border-collapse table-fixed">
                             <thead className="sticky top-0 z-10">
                                 <tr className="bg-[#EEF2F6]">
-                                    <th className="py-3 px-6 text-left text-sm font-bold text-[#103D85] rounded-l-xl w-1/3">Produto</th>
-                                    <th className="py-3 px-4 text-left text-sm font-bold text-[#103D85] w-1/4">Variação</th>
-                                    <th className="py-3 px-4 text-center text-sm font-bold text-[#103D85] w-24">Quantidade</th>
-                                    <th className="py-3 px-4 text-center text-sm font-bold text-[#103D85] w-32">Informações adicionais</th>
-                                    <th className="py-3 px-6 text-center text-sm font-bold text-[#103D85] rounded-r-xl w-32">Status</th>
+                                    <th className="py-3 px-14 text-left text-base font-bold text-[#103D85] rounded-l-xl w-1/3">Produto</th>
+                                    <th className="py-3 px-14 text-left text-base font-bold text-[#103D85] w-1/4">Variação</th>
+                                    <th className="py-3 px-4 text-center text-base font-bold text-[#103D85] w-24">Quantidade</th>
+                                    <th className="py-3 px-4 text-center text-base font-bold text-[#103D85] w-32">Informações adicionais</th>
+                                    <th className="py-3 px-6 text-center text-base font-bold text-[#103D85] rounded-r-xl w-32">Status</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
                                 {localProducts.length > 0 ? (
                                     localProducts.map((item) => (
                                         <tr key={item.code} className="hover:bg-gray-50/40 transition-colors">
-                                            <td className="py-5 px-6 text-left text-sm text-gray-700 font-medium">
+                                            <td className="py-5 px-6 text-left text-base text-gray-700 font-medium truncate w-[100px] cursor-pointer" onClick={() => openModal(item)}>
                                                 {item.code} {item.nome}
                                             </td>
-                                            <td className="py-5 px-4 text-left text-sm text-gray-500">
+                                            <td className="py-5 px-4 text-left text-base text-gray-500 truncate w-[20px] cursor-pointer" onClick={() => openModal(item)}>
                                                 {item.variation}
                                             </td>
-                                            <td className="py-5 px-4 text-center text-sm text-gray-600 font-medium">
+                                            <td className="py-5 px-4 text-center text-base text-gray-600 font-medium">
                                                 {item.quantity} {item.unit?.toLowerCase()}
                                             </td>
-                                            <td className="py-5 px-4 text-center text-sm">
+                                            <td className="py-5 px-4 text-center text-base">
                                                 <button
                                                     onClick={() => openModal(item)}
-                                                    className="text-gray-400 underline underline-offset-2 hover:text-gray-600 text-xs transition-colors"
+                                                    className="text-gray-400 underline underline-offset-2 hover:text-gray-600 text-sm transition-colors"
                                                 >
                                                     Ver mais
                                                 </button>
                                             </td>
                                             <td className="py-5 px-6 text-center relative">
-                                                <span className={`inline-block text-center text-xs font-bold text-white px-5 py-1.5 rounded-full w-33 shadow-sm tracking-wide ${STATUS_CORES[item.status] || "bg-gray-400"}`}>
+                                                <span className={`inline-block text-center text-sm font-bold text-white px-5 py-1.5 rounded-full w-33 shadow-sm tracking-wide ${STATUS_CORES[item.status] || "bg-gray-400"}`}>
                                                     {item.status}
                                                 </span>
                                                 {isProfessor && item.status === "Em análise" && (
