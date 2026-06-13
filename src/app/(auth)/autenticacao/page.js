@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import AuthBackground from "@/components/login/AuthBackground";
-import FormCard from "@/components/login/FormCard";
+import FormCard from "@/components/features/auth/FormCard";
+import { ModalTermos } from "@/components/features/auth/ModalTermos";
+import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 
 export default function AutenticacaoPage() {
     const [codigo, setCodigo] = useState(["", "", "", "", "", ""]);
     const router = useRouter();
+
+    const [modalTermosOpen, setModalTermosOpen] = useState(false);
+    const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
     function handleChange(value, index) {
         const novo = [...codigo];
@@ -26,8 +30,13 @@ export default function AutenticacaoPage() {
     }
 
     return (
-        <AuthBackground>
-            <FormCard onSubmit={handleSubmit} showBackLink backHref="/login">
+        <div>
+            <FormCard
+                onSubmit={handleSubmit}
+                showBackLink backHref="/login"
+                onTermosClick={() => setModalTermosOpen(true)}
+                onPoliticasClick={() => setModalPoliticasOpen(true)}
+            >
 
                 <h2 className="text-white text-2xl font-bold mb-2">
                     Autenticação em Dois Fatores
@@ -60,12 +69,27 @@ export default function AutenticacaoPage() {
 
                 <p className="text-center text-white/50 text-xs mt-4">
                     Não recebeu o e-mail?{" "}
-                    <a href="#" className="text-[#4B84F4] hover:underline">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            console.log("Reenviando e-mail")
+                        }}
+                        className="text-[#4B84F4] hover:underline bg-transparent border-none p-0 cursos-pointer"
+                    >
                         Enviar novamente
-                    </a>
+                    </button>
                 </p>
 
             </FormCard>
-        </AuthBackground>
+
+            <ModalTermos
+                isOpen={modalTermosOpen}
+                onClose={() => setModalTermosOpen(false)}
+            />
+            <ModalPoliticas
+                isOpen={modalPoliticasOpen}
+                onClose={() => setModalPoliticasOpen(false)}
+            />
+        </div>
     );
 }

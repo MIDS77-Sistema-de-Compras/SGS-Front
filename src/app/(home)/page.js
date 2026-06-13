@@ -2,10 +2,12 @@
 
 import Cookies from "js-cookie"
 import { useRouter } from "next/navigation"
-import Header from "@/components/home/HomeHeader"
-import SummaryCard from "@/components/home/SummaryCard"
-import HomeFooter from "@/components/home/HomeFooter"
-import RecentActivity from "@/components/home/RecentActivity"
+import Image from "next/image"
+import Link from "next/link"
+import Header from "@/components/features/home/HomeHeader"
+import SummaryCard from "@/components/features/home/SummaryCard"
+import HomeFooter from "@/components/features/home/HomeFooter"
+import RecentActivity from "@/components/features/home/RecentActivity"
 
 export default function Home(){
     const router = useRouter()
