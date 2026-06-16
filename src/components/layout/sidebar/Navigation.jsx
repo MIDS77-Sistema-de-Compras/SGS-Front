@@ -4,17 +4,23 @@ import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { sidebarRoutes } from "@/app/config/navigation"
-
-export function Navigation(){
+import { compradorRoutes } from "@/app/config/navigation"
+export function Navigation() {
     const pathname = usePathname()
+
+    const routes = pathname.startsWith("/comprador")
+        ? compradorRoutes
+        : sidebarRoutes;
+
 
     return (
         <nav>
             <ul className="flex flex-col gap-2">
-                {sidebarRoutes.map((route) => {
+                {routes.map((route) => {
                     const isActive = pathname === route.href
 
-                    return(
+                    return (
+
                         <li key={route.href}>
                             <Link
                                 href={route.href}
@@ -29,7 +35,7 @@ export function Navigation(){
                             >
                                 <div className={`transition-transform duration-200 group-hover:scale-105 
                                     ${isActive ? "opacity-100" : "opacity-80"}`}>
-                                    <Image 
+                                    <Image
                                         src={route.icon}
                                         alt={`Ícone ${route.label}`}
                                         width={22}
