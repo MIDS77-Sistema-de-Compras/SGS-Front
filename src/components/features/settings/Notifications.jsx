@@ -30,9 +30,9 @@ export default function Notifications() {
                     </div>
                     <div
                         onClick={() => setActive(!active)}
-                        className={`w-11 h-6 rounded-full relative cursor-pointer flex items-center transition-all duration-200 ${active ? "bg-[#103D85]" : "bg-gray-300"}`}
+                        className={`w-11 h-6 rounded-full relative cursor-pointer flex items-center transition-colors duration-300 ${active ? "bg-[#103D85]" : "bg-gray-300"}`}
                     >
-                        <div className={`bg-white w-5 h-5 rounded-full shadow-sm absolute transition-all duration-200 ${active ? "right-0.5" : "left-0.5"}`} />
+                        <div className={`bg-white w-5 h-5 rounded-full shadow-sm absolute transition-transform duration-300 ease-in-out ${active ? "translate-x-5.5" : "translate-x-0.5"}`} />
                     </div>
                 </div>
             }
