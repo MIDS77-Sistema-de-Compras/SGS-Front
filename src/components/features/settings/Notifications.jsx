@@ -17,7 +17,7 @@ export default function Notifications() {
         <SettingsCard
             icon={<BellIcon />}
             title="Notificações"
-            description="Gerencie onde e como você irá receber as suas notificações"
+            description="Receber notificações por e-mail"
             action={
                 <div className="flex items-center gap-3">
                     <div className="text-right">
