@@ -1,5 +1,5 @@
 import "../globals.css";
-import Sidebar from "@/components/sidebar/index";
+import Sidebar from "@/components/layout/sidebar/index";
 
 export default function SistemaLayout({ children }) {
     return (
