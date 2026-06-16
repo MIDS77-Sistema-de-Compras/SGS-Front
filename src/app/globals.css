@@ -41,3 +41,28 @@ body {
 .animate-slide-in {
   animation: slide-in 0.35s ease-out forwards;
 }
+
+.profile-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out;
+}
+
+.profile-panel.open {
+  grid-template-rows: 1fr;
+}
+
+.profile-panel-inner {
+  overflow: hidden;
+}
+
+.profile-panel-content {
+  transform: translateY(-16px);
+  opacity: 0;
+  transition: transform 0.2s ease-out, opacity 0.35s ease-out;
+}
+
+.profile-panel.open .profile-panel-content {
+  transform: translateY(0);
+  opacity: 1;
+}
