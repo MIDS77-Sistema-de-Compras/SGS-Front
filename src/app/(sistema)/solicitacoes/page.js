@@ -1,4 +1,4 @@
-import RequestsContainer from "@/components/features/supervisor/requestsContainer";
+import RequestsContainer from "@/components/features/solicitacoes/requestsContainer";
 
 export default function TodasSolicitacoes() {
     const solicitacoes = [
