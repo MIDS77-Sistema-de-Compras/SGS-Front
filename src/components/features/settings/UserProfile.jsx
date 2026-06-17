@@ -73,8 +73,8 @@ export default function UserProfile() {
                                 <label className="text-xs font-semibold text-gray-500">Senha</label>
                                 <PasswordInput
                                 variant="form"
-                                defaultValue="eununcasoltoasaspas"
-                                className={readOnlyFieldClass}
+                                defaultValue="Senha@123"
+                                className={editableFieldClass}
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
