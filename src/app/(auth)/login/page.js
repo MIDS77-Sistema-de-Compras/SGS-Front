@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Input } from "@/components/ui/input/Input";
@@ -39,7 +39,24 @@ export default function LoginPage() {
                 sameSite: "strict"
             });
 
+            try {
+                const payloadBase64 = res.text.split('.')[1]
+                const decodedPayload = JSON.parse(atob(payloadBase64))
+
+                console.log("DADOS TOKEN ", decodedPayload)
+
+                const userRole = decodedPayload.role 
+                const userName = decodedPayload.name || decodedPayload.nome || "Usuário"
+
+                Cookies.set("role", userRole, { expires: 1 })
+                Cookies.set("name", userName, { expires: 1 })
+
+            } catch (decodeError) {
+                console.warn("Não foi possivel decodificar a role do token", decodeError)
+            }
             router.push('/')
+            router.refresh()
+
         }catch(error){
             setError(error.message || "Ocorreu um erro inesperado.");
         }
