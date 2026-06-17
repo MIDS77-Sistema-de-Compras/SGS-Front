@@ -43,9 +43,9 @@ export default function UserProfile() {
                 </svg>
             </div>
 
-            <div className={`profile-panel ${open ? "open" : ""}`}>
-                <div className="profile-panel-inner">
-                    <div className="profile-panel-content p-10 border-t border-gray-100 bg-gray-50/20">
+            <div className={`grid transition-all duration-300 ease-in-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                <div className="overflow-hidden">
+                    <div className="p-10 border-t border-gray-100 bg-gray-50/20">
                         <div className="grid grid-cols-2 gap-6 mb-6">
                             <div className="flex flex-col gap-2">
                                 <label className="text-xs font-semibold text-gray-500">Nome completo</label>
@@ -72,9 +72,9 @@ export default function UserProfile() {
                             <div className="flex flex-col gap-2">
                                 <label className="text-xs font-semibold text-gray-500">Senha</label>
                                 <PasswordInput
-                                    variant="form"
-                                    defaultValue="eununcasoltoasaspas"
-                                    className={editableFieldClass}
+                                variant="form"
+                                defaultValue="eununcasoltoasaspas"
+                                className={readOnlyFieldClass}
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
