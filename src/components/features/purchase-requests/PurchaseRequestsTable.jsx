@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import AdditionalInfoButton from '@/components/ui/additional-info-button/AdditionalInfoButton';
 
 const tableColumns = [
@@ -43,13 +44,13 @@ export default function PurchaseRequestsTable({ requests = [] }) {
               <div className="flex justify-center">
                 <AdditionalInfoButton status={request.additionalInfoStatus} />
               </div>
-              <button
-                type="button"
+              <Link
+                href={`/comprador/solicitacao/${request.id}`}
                 className="mx-auto text-3xl leading-none text-[#103D85]"
                 aria-label="Ver detalhes"
               >
                 ›
-              </button>
+              </Link>
             </div>
           ))}
         </div>
