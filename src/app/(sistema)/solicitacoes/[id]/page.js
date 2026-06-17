@@ -87,9 +87,9 @@ const solicitacoes = [
 ];
 
 const STATUS_CORES = {
-    "Em análise": "bg-[#FFC107]",
-    "Reprovado": "bg-[#E50012]",
-    "Parcial Aprovado": "bg-[#007BFF]",
+    "Em análise": "bg-[#EDAE28]",
+    "Reprovado": "bg-[#E30613]",
+    "Parcial Aprovado": "bg-[#0084FF]",
     "Aprovado": "bg-[#4CAF50]",
     "Auto-Aprovado": "bg-[#8E44AD]"
 };
@@ -179,29 +179,29 @@ export default function MyRequests() {
 
             <div className="w-full">
                 
-                <div className="bg-white rounded-3xl border border-gray-400 shadow-sm p-6 mb-6 min-h-[500px] flex flex-col">
+                <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
 
-                    <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center gap-3 px-5 py-3">
                         <Link href="/solicitacoes" className="text-[#103D85] hover:opacity-80 transition-opacity">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="m15 18-6-6 6-6" />
                             </svg>
                         </Link>
-                        <h3 className="text-3xl font-bold text-[#103D85] tracking-tight">Minhas solicitações</h3>
+                        <h3 className="text-[#103D85] font-bold text-[22px]">Minhas solicitações</h3>
                     </div>
 
-                    <hr className="border-gray-400 mb-6 -mx-6" />
+                    <hr className="border-gray-400 mb-6" />
 
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center justify-between mb-6 px-6">
                         <div className="flex items-baseline gap-4">
-                            <h4 className="text-2xl font-bold text-gray-900">
+                            <h4 className="text-[20px] font-bold text-gray-900">
                                 {solicitacao.codigo} : Lista de {localProducts.length} {localProducts.length === 1 ? "produto" : "produtos"}
                             </h4>
-                            <span className="text-gray-600 text-base font-medium">
+                            <span className="text-gray-600 text-base font-medium px-7 text-[16px]">
                                 Realizada em: {new Date(solicitacao.data).toLocaleDateString('pt-BR')}
                             </span>
                         </div>
-                        <span className={`inline-block text-center text-sm font-bold text-white px-6 py-1.5 rounded-full w-33 shadow-sm tracking-wide mr-10 ${corGeral}`}>
+                        <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 rounded-full min-w-[150px] shadow-sm tracking-wide mr-8 ${corGeral}`}>
                             {statusGeral}
                         </span>
                     </div>
@@ -215,10 +215,10 @@ export default function MyRequests() {
                     />
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-end pt-5">
                     <Link
                         href="/solicitacoes"
-                        className="bg-[#103D85] text-white font-bold text-sm px-6 py-3 rounded-xl hover:bg-[#0c2f66] transition-colors shadow-sm"
+                        className="bg-[#103D85] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] transition-colors shadow-sm"
                     >
                         Fechar produtos
                     </Link>
