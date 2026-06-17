@@ -53,3 +53,26 @@ export const admRoutes = [
         icon: "/images/config.png",
     },
 ]
+
+export const compradorRoutes = [
+    {
+        label: "Início",
+        href: "/comprador",
+        icon: "/images/icons/home.png",
+    },
+    {
+        label: "Solicitações de compra",
+        href: "/comprador/solicitacao",
+        icon: "/images/icons/request-compra.png",
+    },
+    {
+        label: "Notificações",
+        href: "/notificacoes",
+        icon: "/images/icons/notifications.png",
+    },
+    {
+        label: "Configurações",
+        href: "/configuracoes",
+        icon: "/images/icons/config.png",
+    },
+];

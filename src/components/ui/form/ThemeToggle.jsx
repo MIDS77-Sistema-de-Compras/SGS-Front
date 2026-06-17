@@ -2,11 +2,19 @@
 
 export default function ThemeToggle({ darkMode, onChange }) {
     return (
-        <div className="flex bg-[#103D85] p-1 rounded-full">
+        <div className="relative flex bg-[#103D85] p-1 rounded-full">
+            {/* Fundo branco que desliza entre os dois botões */}
+            <span
+                className={`absolute top-1 bottom-1 rounded-full bg-white shadow-sm transition-transform duration-300 ease-in-out ${
+                    darkMode ? "translate-x-full" : "translate-x-0"
+                }`}
+                style={{ left: "4px", width: "calc(50% - 4px)" }}
+            />
+
             <button
                 onClick={() => onChange(false)}
-                className={`px-5 py-2 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2 ${
-                    !darkMode ? "bg-white shadow-sm text-[#103D85]" : "text-white/70 hover:text-white"
+                className={`relative z-10 px-5 py-2 rounded-full text-xs font-bold transition-colors duration-300 flex items-center gap-2 ${
+                    !darkMode ? "text-[#103D85]" : "text-white/70 hover:text-white"
                 }`}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -20,8 +28,8 @@ export default function ThemeToggle({ darkMode, onChange }) {
             </button>
             <button
                 onClick={() => onChange(true)}
-                className={`px-5 py-2 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2 ${
-                    darkMode ? "bg-white shadow-sm text-[#103D85]" : "text-white/70 hover:text-white"
+                className={`relative z-10 px-5 py-2 rounded-full text-xs font-bold transition-colors duration-300 flex items-center gap-2 ${
+                    darkMode ? "text-[#103D85]" : "text-white/70 hover:text-white"
                 }`}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
