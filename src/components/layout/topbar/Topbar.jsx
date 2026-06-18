@@ -1,6 +1,13 @@
-import Image from "next/image"
+"use client";
 
-export default function Topbar(){
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+
+export default function Topbar() {
+    const pathname = usePathname();
+
+    if (pathname.includes("configuracoes")) return null;
+
     return (
         <div className="flex w-full mt-8 gap-10 items-center">
             <Image 

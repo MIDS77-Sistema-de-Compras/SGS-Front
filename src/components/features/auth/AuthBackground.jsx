@@ -31,7 +31,7 @@ export default function AuthLayout({
                 <div className="flex items-center gap-6 mt-10">
                     <Image
                         src="/images/logos/senai-orange.png"
-                        alt="Logo SENAI"
+                        alt="Logo Senai"
                         width={140}
                         height={35}
                         className="object-contain w-auto h-auto"

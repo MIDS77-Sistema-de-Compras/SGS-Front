@@ -3,25 +3,28 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { sidebarRoutes, admRoutes, coordenadorRoutes } from "@/app/config/navigation"
+import { admRoutes, coordenadorRoutes, docenteRoutes, supervisorRoutes, compradorRoutes } from "@/app/config/navigation"
 
-export function Navigation(){
+export function Navigation({ userRole }) {
     const pathname = usePathname()
 
-    let currentRoutes = sidebarRoutes
-    if (pathname.startsWith('/admin')) {
-        currentRoutes = admRoutes
-    } else if (pathname.startsWith('/coordenador')) {
-        currentRoutes = coordenadorRoutes
+    const routesMap = {
+        ADMIN: admRoutes,
+        COORDENADOR: coordenadorRoutes,
+        SUPERVISOR: supervisorRoutes,
+        COMPRADOR: compradorRoutes,
+        DOCENTE: docenteRoutes,
     }
+
+    const routes = routesMap[userRole] || []
 
     return (
         <nav>
             <ul className="flex flex-col gap-2">
-                {currentRoutes.map((route) => {
+                {routes.map((route) => {
                     const isActive = pathname === route.href
 
-                    return(
+                    return (
                         <li key={route.href}>
                             <Link
                                 href={route.href}
@@ -36,7 +39,7 @@ export function Navigation(){
                             >
                                 <div className={`transition-transform duration-200 group-hover:scale-105 
                                     ${isActive ? "opacity-100" : "opacity-80"}`}>
-                                    <Image 
+                                    <Image
                                         src={route.icon}
                                         alt={`Ícone ${route.label}`}
                                         width={22}
