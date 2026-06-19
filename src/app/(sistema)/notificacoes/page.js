@@ -1,9 +1,5 @@
-// src/app/(sistema)/notificacoes/page.js
-
-import Link from "next/link"
-import Image from "next/image"
 import ActivityItem from "@/components/features/home/ActivityItem"
-import Button from "@/components/ui/button/Button"
+import HomeFooter from "@/components/features/home/HomeFooter"
 
 const notificacoes = [
     {
@@ -82,60 +78,21 @@ const notificacoes = [
 
 export default function Notificacoes() {
     return (
-        <div className="p-6 flex flex-col gap-5">
+        <div className="flex flex-1 flex-col gap-10 min-h-0">
 
-            {/* Card da lista de notificações */}
-            <div className="border border-[#AAAAAA] rounded-xl p-5 shadow-lg">
-                <h2 className="text-[#103D85] font-bold text-[22px]">
+            <div className="flex flex-1 flex-col border border-[#AAAAAA] rounded-xl px-5 py-3 shadow-lg min-h-0">
+                <h2 className="text-[#103D85] font-bold text-[22px] shrink-0">
                     Notificações
                 </h2>
-                <div className="border-t border-[#AAAAAA] mt-2 mb-3 -mx-5" />
-                <ul className="flex flex-col gap-1 max-h-[400px] overflow-y-auto">
+                <div className="border-t border-[#AAAAAA] mt-2 mb-3 -mx-5 shrink-0" />
+                <ul className="flex-1 flex flex-col gap-1 overflow-y-auto min-h-0 pr-2">
                     {notificacoes.map((item) => (
                         <ActivityItem key={item.id} {...item} />
                     ))}
                 </ul>
             </div>
 
-            {/* Botões de ação */}
-            <div className="flex gap-3">
-                <Link href="/solicitacoes/criar" className="flex-1">
-                    <Button
-                        variant="primary"
-                        size="md"
-                        fullWidth
-                        leftIcon={
-                            <Image
-                                src="/images/home/novaSolicitacao.png"
-                                alt=""
-                                width={18}
-                                height={18}
-                            />
-                        }
-                    >
-                        Nova Solicitação
-                    </Button>
-                </Link>
-
-                <Link href="/solicitacoes" className="flex-1">
-                    <Button
-                        variant="outline"
-                        size="md"
-                        fullWidth
-                        leftIcon={
-                            <Image
-                                src="/images/home/minhasSolicitacoes.png"
-                                alt=""
-                                width={18}
-                                height={18}
-                            />
-                        }
-                    >
-                        Minhas Solicitações
-                    </Button>
-                </Link>
-            </div>
-
+            <HomeFooter />
         </div>
     )
 }
