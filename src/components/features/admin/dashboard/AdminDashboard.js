@@ -3,7 +3,7 @@ import AdminSummaryCard from "./AdminSummaryCard"
 import AdminFooter from "./AdminFooter"
 
 const TotalUsersIcon = () => (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="24" height="24" rx="6" fill="#EBF0F9"/>
         <circle cx="9" cy="8" r="2.5" stroke="#103D85" strokeWidth="1.3"/>
         <path d="M5 18V16.5C5 14.84 6.34 13.5 8 13.5H10C11.66 13.5 13 14.84 13 16.5V18" stroke="#103D85" strokeWidth="1.3" strokeLinecap="round"/>
@@ -15,8 +15,8 @@ const TotalUsersIcon = () => (
 const InactiveUsersIcon = ({ isLarge = false }) => {
     if (isLarge) {
         return (
-            <div className="w-[110px] h-[110px] rounded-2xl bg-[#FFF8E7] flex items-center justify-center">
-                <svg width="72" height="72" viewBox="0 0 48 48" fill="none">
+            <div className="w-14 h-14 rounded-lg bg-[#FFF8E7] flex items-center justify-center">
+                <svg width="38" height="38" viewBox="0 0 48 48" fill="none">
                     <circle cx="20" cy="16" r="6.5" stroke="#F59E0B" strokeWidth="3" />
                     <path d="M8 38V33.5C8 29.5 11.2 26 15.5 26H24.5C28.8 26 32 29.5 32 33.5V38" stroke="#F59E0B" strokeWidth="3" strokeLinecap="round" />
                     <path d="M35 30L43 38M43 30L35 38" stroke="#F59E0B" strokeWidth="3.5" strokeLinecap="round" />
@@ -25,7 +25,7 @@ const InactiveUsersIcon = ({ isLarge = false }) => {
         )
     }
     return (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="24" height="24" rx="6" fill="#FEF3C7"/>
             <circle cx="12" cy="8" r="3" stroke="#D97706" strokeWidth="1.3"/>
             <path d="M6 19V17C6 15.34 7.34 14 9 14H15C16.66 14 18 15.34 18 17V19" stroke="#D97706" strokeWidth="1.3" strokeLinecap="round"/>
@@ -36,7 +36,7 @@ const InactiveUsersIcon = ({ isLarge = false }) => {
 }
 
 const ActiveUsersIcon = () => (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="24" height="24" rx="6" fill="#DCFCE7"/>
         <circle cx="12" cy="8" r="3" stroke="#16A34A" strokeWidth="1.3"/>
         <path d="M6 19V17C6 15.34 7.34 14 9 14H15C16.66 14 18 15.34 18 17V19" stroke="#16A34A" strokeWidth="1.3" strokeLinecap="round"/>
@@ -45,7 +45,7 @@ const ActiveUsersIcon = () => (
 )
 
 const ActionsIcon = () => (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="24" height="24" rx="6" fill="#DCFCE7"/>
         <rect x="5" y="5" width="14" height="14" rx="2" stroke="#16A34A" strokeWidth="1.3"/>
         <path d="M16 3V7" stroke="#16A34A" strokeWidth="1.3" strokeLinecap="round"/>
@@ -56,7 +56,7 @@ const ActionsIcon = () => (
 )
 
 const LoginAttemptsIcon = () => (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="24" height="24" rx="6" fill="#EBF0F9"/>
         <circle cx="12" cy="12" r="5" stroke="#103D85" strokeWidth="1.3"/>
         <path d="M12 9V12L14.5 14.5" stroke="#103D85" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
@@ -70,13 +70,13 @@ const LoginAttemptsIcon = () => (
 const userItems = [
     {
         icon: <TotalUsersIcon />,
-        label: "Total de Usuários",
+        label: "Total de Usuarios",
         count: "20",
         barColor: "#103D85",
     },
     {
         icon: <InactiveUsersIcon isLarge={true} />,
-        label: "Usuários Inativos",
+        label: "Usuarios Inativos",
         count: "20",
         barColor: "#D97706",
         isLarge: true,
@@ -84,7 +84,7 @@ const userItems = [
     },
     {
         icon: <ActiveUsersIcon />,
-        label: "Usuários Ativos",
+        label: "Usuarios Ativos",
         count: "20",
         barColor: "#16A34A",
     },
@@ -93,7 +93,7 @@ const userItems = [
 const recordItems = [
     {
         icon: <ActionsIcon />,
-        label: "Ações de Hoje",
+        label: "Usuarios de Hoje",
         count: "20",
         barColor: "#16A34A",
     },
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
 
             <section className="flex gap-10 mt-10">
                 <AdminSummaryCard
-                    title="Resumo usuários"
+                    title="Resumo usuarios"
                     items={userItems}
                     variant="users"
                 />
