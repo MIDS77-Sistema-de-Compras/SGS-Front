@@ -10,6 +10,7 @@ import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 
 export default function RecuperarSenhaPage() {
     const [email, setEmail] = useState("");
+    const [error, setError] = useState("");
     const router = useRouter();
 
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
@@ -17,7 +18,11 @@ export default function RecuperarSenhaPage() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        router.push("/autenticacao");
+        try{
+
+        }catch(error){
+            setError(error.message || "Ocorreu um erro inesperado.");
+        }
     }
 
     return (
@@ -45,6 +50,8 @@ export default function RecuperarSenhaPage() {
                     iconSrc="/images/icons/user.png"
                     iconAlt="Icone de usuario"
                 />
+
+                <p className="text-red-500">{error}</p>
 
                 <div className="mt-8">
                     <Button

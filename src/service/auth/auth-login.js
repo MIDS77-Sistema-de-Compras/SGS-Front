@@ -9,6 +9,6 @@ export async function loginUser(email, password) {
 
     } catch(e){
         console.error("Erro tentando logar: ", e);
-        return null;
+        throw e;
     }
 }
