@@ -28,7 +28,7 @@ export function Search({
                     onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <div className="flex flex-col gap-5 flex-1 overflow-y-auto">
+                <div className="flex flex-col gap-5 flex-1 overflow-y-auto pr-2">
                     {loading && (
                         <div className="text-center text-gray-400 py-6">
                             Carregando CRs...

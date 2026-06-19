@@ -9,7 +9,7 @@ export default function HomeFooter() {
                 className="flex flex-1 rounded-xl bg-[#103D85] py-4 px-50 gap-3 items-center justify-center shadow-lg transition-all active:scale-[0.98] hover:bg-[#3366cc]"
             >
                 <Image
-                    src="/images/home/novaSolicitacao.png"
+                    src="/images/home/nova-solicitacao.png"
                     alt="Icone de Nova Solicitação"
                     width={25}
                     height={25}
