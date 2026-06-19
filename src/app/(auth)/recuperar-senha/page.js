@@ -7,21 +7,27 @@ import Button from "@/components/ui/button/Button";
 import FormCard from "@/components/features/auth/FormCard";
 import { ModalTermos } from "@/components/features/auth/ModalTermos";
 import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
+import { recoveryEmail } from "@/service/auth/auth-recovery";
 
 export default function RecuperarSenhaPage() {
     const [email, setEmail] = useState("");
-    const [error, setError] = useState("");
+    const [msg, setMsg] = useState("");
+    const [msgClass, setMsgClass] = useState("text-[#4B84F4]");
+
     const router = useRouter();
 
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
     const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
-    function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         try{
+            const res = await recoveryEmail(email);
+            setMsg(res.text);
 
         }catch(error){
-            setError(error.message || "Ocorreu um erro inesperado.");
+            setMsgClass("text-red-500");
+            setMsg(error.message || "Ocorreu um erro inesperado.");
         }
     }
 
@@ -51,7 +57,7 @@ export default function RecuperarSenhaPage() {
                     iconAlt="Icone de usuario"
                 />
 
-                <p className="text-red-500">{error}</p>
+                <p className={msgClass}>{msg}</p>
 
                 <div className="mt-8">
                     <Button

@@ -24,7 +24,6 @@ export default function LoginPage() {
         e.preventDefault();
         try{
             const res = await loginUser(email, password);
-            console.log(res);
             
             if(!res){
                 setError(res || "Login falhou. Tente novamente mais tarde.");
