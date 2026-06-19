@@ -30,7 +30,7 @@ export const docenteRoutes = [
 export const admRoutes = [
     {
         label: "Início",
-        href: "/",
+        href: "/admin",
         icon: "/images/icons/home.png",
     },
     {
@@ -40,7 +40,7 @@ export const admRoutes = [
     },
     {
         label: "Análise de Registros",
-        href: "/usuarios/admin", //arrumar
+        href: "/admin/auditoria",
         icon: "/images/icons/analise-registros.png",
     },
     {
@@ -125,23 +125,23 @@ export const coordenadorRoutes = [
     },
     {
         label: "Gerenciar Usuários",
-        href: "/comprador/solicitacao", //arrumar
+        href: "/coordenador/usuarios",
         icon: "/images/icons/gerenciar-users.png",
     },
     {
-        label: "Minhas Solicitações",
-        href: "/solicitacoes",
-        icon: "/images/icons/my-requests.png",
-    },
-    {
-        label: "Nova Solicitação",
-        href: "/solicitacoes/criar",
+        label: "Solicitações em análise",
+        href: "/coordenador/solicitacoes",
         icon: "/images/home/nova-solicitacao.png",
     },
     {
         label: "Monitoramento",
-        href: "/usuarios/supervisor", //arrumar
+        href: "/coordenador/monitoramento",
         icon: "/images/icons/monitoramento.png",
+    },
+    {
+        label: "Analítico",
+        href: "/coordenador/analitico",
+        icon: "/images/icons/my-requests.png",
     },
     {
         label: "Notificações",

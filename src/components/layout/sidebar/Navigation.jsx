@@ -3,8 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { admRoutes, coordenadorRoutes, docenteRoutes, supervisorRoutes } from "@/app/config/navigation"
-import { compradorRoutes } from "@/app/config/navigation"
+import { admRoutes, coordenadorRoutes, docenteRoutes, supervisorRoutes, compradorRoutes } from "@/app/config/navigation"
 
 export function Navigation({ userRole }) {
     const pathname = usePathname()
@@ -26,7 +25,6 @@ export function Navigation({ userRole }) {
                     const isActive = pathname === route.href
 
                     return (
-
                         <li key={route.href}>
                             <Link
                                 href={route.href}
