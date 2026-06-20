@@ -46,6 +46,7 @@ export default function RequestForm() {
                         crs.map((cr) => ({
                             value: String(cr.id),
                             label: `${cr.crCode} - ${cr.crName}`,
+                            branchName: cr.branchName ?? "",
                         }))
                     );
                     setUnitOptions(
@@ -62,6 +63,18 @@ export default function RequestForm() {
         loadData();
         return () => { cancelled = true; };
     }, []);
+
+    // useEffect(() => {
+    //     async function loadCurrentUser() {
+    //         try {
+    //             const me = await api.get("/me");
+    //             setRequester(me.name ?? "");
+    //             setPhone(me.extensionNumber ?? "");
+    //         } catch {
+    //         }
+    //     }
+    //     loadCurrentUser();
+    // }, []);
 
     function handleAddProduct() {
         setFormError("");
@@ -124,18 +137,6 @@ export default function RequestForm() {
         setFormError("");
         setSuccess(false);
 
-        if (!branch) {
-            setFormError("Selecione a filial pagadora.");
-            return;
-        }
-        if (!requester.trim()) {
-            setFormError("Informe o solicitante/destinatário.");
-            return;
-        }
-        if (!phone.trim()) {
-            setFormError("Informe o ramal.");
-            return;
-        }
         if (!crBranchId) {
             setFormError("Selecione o CR e Projeto.");
             return;
@@ -189,12 +190,12 @@ export default function RequestForm() {
                 <SectionHeader label="INFORMAÇÕES GERAIS" />
 
                 <FormField label="Filial Pagadora">
-                    <Select
-                        name="branch"
-                        options={["Senai", "SESI"]}
+                    <Input
+                        variant="form"
+                        placeholder="Definida pelo CR selecionado"
                         value={branch}
-                        onChange={(e) => setBranch(e.target.value)}
-                        isRequired
+                        readOnly
+                        disabled
                     />
                 </FormField>
 
@@ -202,19 +203,21 @@ export default function RequestForm() {
                     <SectionHeader label="IDENTIFICAÇÃO E CENTRO DE CUSTO" />
 
                     <div className="grid grid-cols-3 items-center gap-5">
-                        <FormField label="Solicitante/Destinatário" required className="col-span-2">
+                        <FormField label="Solicitante/Destinatário" className="col-span-2">
                             <Input
                                 variant="form"
-                                placeholder="Nome completo do docente..."
+                                placeholder="Preenchido automaticamente com o usuário logado"
                                 value={requester}
-                                onChange={(e) => setRequester(e.target.value)}
+                                readOnly
+                                disabled
                             />
                         </FormField>
-                        <FormField label="Ramal" required>
+                        <FormField label="Ramal">
                             <PhoneInput
-                                placeholder="3222"
+                                placeholder="Automático"
                                 value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
+                                readOnly
+                                disabled
                             />
                         </FormField>
                     </div>
@@ -225,7 +228,12 @@ export default function RequestForm() {
                             placeholder="Selecione o Centro de Resultado..."
                             options={crOptions}
                             value={crBranchId}
-                            onChange={(e) => setCrBranchId(e.target.value)}
+                            onChange={(e) => {
+                                const selectedId = e.target.value;
+                                setCrBranchId(selectedId);
+                                const selectedCr = crOptions.find((c) => c.value === selectedId);
+                                setBranch(selectedCr?.branchName ?? "");
+                            }}
                             isRequired
                         />
                     </FormField>

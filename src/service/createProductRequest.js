@@ -1,5 +1,7 @@
 import { api } from './api';
 
+const INITIAL_STATUS_NAME = 'Aguardando aprovação';
+
 export async function createFullRequest({ crBranchId, statusName, products }) {
     const createdRequest = await api.post('/requests', {
         crBranchId,
@@ -26,7 +28,16 @@ export async function createFullRequest({ crBranchId, statusName, products }) {
 
 export async function getInitialStatusName() {
     const statuses = await api.get('/status');
-    return statuses?.[0]?.name ?? null;
+
+    if (!Array.isArray(statuses) || statuses.length === 0) {
+        return null;
+    }
+
+    const initial = statuses.find(
+        (s) => s.name?.toLowerCase() === INITIAL_STATUS_NAME.toLowerCase()
+    );
+
+    return (initial ?? statuses[0]).name ?? null;
 }
 
 export async function getAllMeasurementUnits() {
