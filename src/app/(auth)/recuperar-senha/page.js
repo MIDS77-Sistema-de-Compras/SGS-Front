@@ -14,6 +14,8 @@ export default function RecuperarSenhaPage() {
     const [msg, setMsg] = useState("");
     const [msgClass, setMsgClass] = useState("text-[#4B84F4]");
 
+    const [disableBtn, setDisabled] = useState(false);
+
     const router = useRouter();
 
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
@@ -24,6 +26,7 @@ export default function RecuperarSenhaPage() {
         try{
             const res = await recoveryEmail(email);
             setMsg(res.text);
+            setDisabled(true); // this is a pretty dumb way to prevent spamming the button, and it needs to be enhanced
 
         }catch(error){
             setMsgClass("text-red-500");
@@ -65,6 +68,7 @@ export default function RecuperarSenhaPage() {
                         variant="auth"
                         size="lg"
                         fullWidth
+                        disabled={disableBtn}
                     >
                         Enviar instruções
                     </Button>
