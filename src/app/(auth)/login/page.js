@@ -25,11 +25,8 @@ export default function LoginPage() {
         try{
             const res = await loginUser(email, password);
             
-            // AVISO: a API retorna 2 estruturas diferentes pro login, o response de erro e o token normal, que é literalmente só um text,
-            // por isso, decidi usar res.status para verificação, já que é um campo que a mensagem de erro possuí.
-            // Se alguém achar uma forma melhor de fazer isso, fique a vontade para alterar o código
-            if(res.status){
-                setError(res.message || "Login falhou. Tente novamente mais tarde.");
+            if(!res){
+                setError(res || "Login falhou. Tente novamente mais tarde.");
                 return;
             }
 
