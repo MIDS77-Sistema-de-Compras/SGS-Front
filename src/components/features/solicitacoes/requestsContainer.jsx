@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,32 +11,32 @@ export default function RequestsContainer({ solicitacoesIniciais }) {
     const [status, setStatus] = useState("");
     const [data, setData] = useState("");
     const [busca, setBusca] = useState("");
-    const [abaAtiva, setAbaAtiva] = useState('todas');
+    const [abaAtiva, setAbaAtiva] = useState("todas");
     const router = useRouter();
 
     const statusDisponiveis = [
-        { id: 1, nome: "Em análise" },
+        { id: 1, nome: "Em an\u00e1lise" },
         { id: 2, nome: "Reprovado" },
         { id: 3, nome: "Parcial Aprovado" },
-        { id: 4, nome: "Aprovado" }
+        { id: 4, nome: "Aprovado" },
     ];
 
     const abas = [
-        { valor: 'todas', label: 'TODAS' },
-        { valor: 'pendentes', label: 'PENDENTES' },
-        { valor: 'concluidas', label: 'CONCLUÍDAS' },
+        { valor: "todas", label: "TODAS" },
+        { valor: "pendentes", label: "PENDENTES" },
+        { valor: "concluidas", label: "CONCLU\u00cdDAS" },
     ];
 
     const solicitacoesFiltradas = (solicitacoesIniciais || []).filter((item) => {
-        const statusSolicitacao = calcularStatusSolicitacao(item.produtos);
+        const statusSolicitacao = item.status || calcularStatusSolicitacao(item.produtos);
 
-        if (abaAtiva === "pendentes" && statusSolicitacao !== "Em análise") {
+        if (abaAtiva === "pendentes" && statusSolicitacao !== "Em an\u00e1lise") {
             return false;
         }
 
         if (
             abaAtiva === "concluidas" &&
-            (statusSolicitacao === "Em análise" || statusSolicitacao === "Reprovado")
+            (statusSolicitacao === "Em an\u00e1lise" || statusSolicitacao === "Reprovado")
         ) {
             return false;
         }
@@ -45,18 +45,17 @@ export default function RequestsContainer({ solicitacoesIniciais }) {
             return false;
         }
 
-        if (data && item.data !== data) {
+        if (data && item.data?.slice(0, 10) !== data) {
             return false;
         }
 
         if (busca) {
             const textoBusca = busca.toLowerCase();
-
             const textoPesquisavel = `
                 ${item.codigo}
                 ${statusSolicitacao}
-                Lista de ${item.produtos.length} ${item.produtos.length === 1 ? "produto" : "produtos"}
-                ${item.produtos.map((p) => p.nome).join(" ")}
+                ${item.produtos.length > 0 ? `Lista de ${item.produtos.length} ${item.produtos.length === 1 ? "produto" : "produtos"}` : ""}
+                ${item.produtos.map((produto) => produto.nome).join(" ")}
                 ${item.data}
             `.toLowerCase();
 
