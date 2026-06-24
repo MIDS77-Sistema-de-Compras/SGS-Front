@@ -4,21 +4,21 @@ export default function ProductTableRow({ item, isProfessor, statusCores, openMo
     return (
         <tr className="hover:bg-gray-50/40 transition-colors">
             <td 
-                className="py-5 px-6 text-left text-base text-gray-700 font-medium truncate w-[100px] cursor-pointer" 
+                className="py-3 pl-6 text-left text-base text-gray-700 font-medium truncate w-[100px] cursor-pointer" 
                 onClick={() => openModal(item)}
             >
                 {item.code} {item.nome}
             </td>
             <td 
-                className="py-5 px-10 text-left text-base text-gray-500 truncate w-[20px] cursor-pointer" 
+                className="py-3 pl-10 text-left text-base text-gray-500 truncate w-[20px] cursor-pointer" 
                 onClick={() => openModal(item)}
             >
                 {item.variation}
             </td>
-            <td className="py-5 px-4 text-center text-base text-gray-600 font-medium">
+            <td className="py-3 text-center text-base text-gray-600 font-medium">
                 {item.quantity} {item.unit?.toLowerCase()}
             </td>
-            <td className="py-5 px-4 text-center text-base">
+            <td className="py-3 pl-5 text-center text-base">
                 <button
                     onClick={() => openModal(item)}
                     className="text-gray-400 underline underline-offset-2 hover:text-gray-600 text-sm transition-colors"
@@ -26,8 +26,8 @@ export default function ProductTableRow({ item, isProfessor, statusCores, openMo
                     Ver mais
                 </button>
             </td>
-            <td className="py-5 px-6 text-center relative">
-                <span className={`inline-block text-center text-sm font-bold text-white px-5 py-1.5 rounded-full w-33 shadow-sm tracking-wide ${statusCores[item.status] || "bg-gray-400"}`}>
+            <td className="py-3 text-center relative">
+                <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 rounded-full min-w-[150px] shadow-sm tracking-wide ${statusCores[item.status] || "bg-gray-400"}`}>
                     {item.status}
                 </span>
                 {isProfessor && item.status === "Em análise" && (

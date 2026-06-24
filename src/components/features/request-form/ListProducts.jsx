@@ -9,7 +9,11 @@ export default function ListProducts({ products = [], onRemove }) {
                 iconVariant="white"
                 icon={fileBox}
                 iconAlt="File Box Icon"
-                title="Nenhum produto adicionado ainda"
+                title={
+                    tipo === "produto"
+                        ? "Nenhum produto adicionado ainda"
+                        : "Nenhum serviço adicionado ainda"
+                }
                 description="Utilize o campo abaixo para buscar e inserir itens."
             />
         );

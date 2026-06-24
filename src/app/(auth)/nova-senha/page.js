@@ -1,24 +1,51 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PasswordInput } from "@/components/ui/input/PasswordInput";
 import Button from "@/components/ui/button/Button";
 import FormCard from "@/components/features/auth/FormCard";
 import { ModalTermos } from "@/components/features/auth/ModalTermos";
 import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
+import { newPassword } from "@/service/auth/auth-recovery";
 
 export default function NovaSenhaPage() {
     const [senha, setSenha] = useState("");
     const [confirmar, setConfirmar] = useState("");
+    const [error, setError] = useState("");
+    const [isDisabled, setIsDisabled] = useState(false);
+
+    const token = useSearchParams().get('token');
+
     const router = useRouter();
 
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
     const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
-    function handleSubmit(e) {
+    useEffect(() => {
+        if(senha != confirmar){
+            setError("As senhas não são iguais");
+            setIsDisabled(true);
+        }else{
+            setError(null);
+            setIsDisabled(false);
+        }
+    }, [senha, confirmar]);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        router.push("/login");
+        // TODO: degeneralize the error "Dados Inválidos".
+        try{
+            const res = await newPassword(senha, token);
+            console.log(res);
+
+            if(res){
+                router.push("/login");
+            }
+
+        }catch(error){
+            setError(error.message || "Ocorreu um erro inesperado.");
+        }
     }
 
     return (
@@ -56,12 +83,15 @@ export default function NovaSenhaPage() {
                     />
                 </div>
 
+                <p className="text-red-500">{error}</p>
+
                 <div className="mt-8">
                     <Button
                         type="submit"
                         variant="auth"
                         size="lg"
                         fullWidth
+                        disabled={isDisabled}
                     >
                         Alterar senha
                     </Button>

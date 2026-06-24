@@ -181,10 +181,15 @@ export default function RequestForm() {
 
     return (
         <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
-
-            <div className="px-5 py-3 border border-transparent border-b-[#AAAAAA]">
-                <h1 className="text-[#103D85] font-bold text-[22px]">Nova Solicitação</h1>
+            <div className="">
+                    <SolicitacoesTabs
+                        titulo="Nova Solicitação"
+                        abaAtiva={abaAtiva}
+                        setAbaAtiva={setAbaAtiva}
+                        abas={abas}
+                    />
             </div>
+        
 
             <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5">
                 <SectionHeader label="INFORMAÇÕES GERAIS" />
@@ -294,7 +299,15 @@ export default function RequestForm() {
                             onClick={handleAddProduct}
                             className="w-11 h-11 flex items-center justify-center text-2xl shrink-0"
                         >
-                            +
+                            <span className="flex gap-5">
+                                FINALIZAR SOLICITAÇÃO
+                                <Image
+                                    src={send}
+                                    alt="Paper Plane Send Icon"
+                                    width={15}
+                                    height={21}
+                                />
+                            </span>
                         </Button>
                     </div>
                 </div>
