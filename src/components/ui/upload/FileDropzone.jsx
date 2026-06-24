@@ -67,11 +67,11 @@ export default function FileDropzone({
             <p className="text-[12px] text-[#747782]">{description}</p>
           )}
           {onFilesSelected && (
-            <label className="mt-4 cursor-pointer text-sm font-semibold text-[#103D85] hover:underline">
+            <label className="relative mt-4 cursor-pointer text-sm font-semibold text-[#103D85] hover:underline">
               Selecionar arquivos
               <input
                 type="file"
-                className="sr-only"
+                className="absolute w-0 h-0 p-0 m-0 opacity-0 overflow-hidden"
                 accept={accept}
                 multiple
                 onChange={handleInputChange}
