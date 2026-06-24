@@ -80,7 +80,7 @@ export default function RequestsContainer({ solicitacoesIniciais }) {
                 statusDisponiveis={statusDisponiveis}
             />
 
-            <div className="bg-white border border-[#797979] rounded-2xl overflow-hidden">
+            <div className="bg-white border border-[#AAAAAA] rounded-2xl overflow-hidden">
                 <SolicitacoesTabs
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}

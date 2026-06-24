@@ -22,7 +22,7 @@ export default function SolicitacoesFilter({
     };
 
     return (
-        <div className="bg-white rounded-xl border border-[#797979] flex flex-row items-center justify-between p-2 gap-3">
+        <div className="bg-white rounded-xl border border-[#AAAAAA] flex flex-row items-center justify-between p-2 gap-3">
             <div className="flex flex-row items-center px-4 gap-2">
                 <Image
                     src="/images/icons/filtrar.png"
@@ -32,7 +32,7 @@ export default function SolicitacoesFilter({
                     className="w-5 h-5"
                 />
 
-                <span className="text-xl text-[#133D87]">
+                <span className="text-[22px] text-[#133D87]">
                     Filtrar
                 </span>
             </div>
@@ -42,7 +42,7 @@ export default function SolicitacoesFilter({
                     <select
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
-                        className="appearance-none pl-3 w-full py-2 border border-[#797979] rounded-xl text-sm text-[#374151] bg-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#103D85]"
+                        className="appearance-none pl-3 w-full py-2 border border-[#AAAAAA] rounded-xl text-sm text-[#374151] bg-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#103D85]"
                     >
                         <option value="">Status</option>
                         {statusDisponiveis.map((item) => (
@@ -58,11 +58,11 @@ export default function SolicitacoesFilter({
                         type="date"
                         value={data}
                         onChange={(e) => setData(e.target.value)}
-                        className="!h-auto py-2 text-sm !border-[#797979]"
+                        className="!h-auto py-2 text-sm !border-[#AAAAAA]"
                     />
                 </div>
 
-                <div className="flex flex-row items-center w-[260px] px-3 border border-[#797979] rounded-xl text-sm focus-within:ring-1 focus-within:ring-[#103D85]">
+                <div className="flex flex-row items-center w-[260px] px-3 border border-[#AAAAAA] rounded-xl text-sm focus-within:ring-1 focus-within:ring-[#103D85]">
                     <Image
                         src="/images/icons/lupa.png"
                         alt="Ícone de lupa"

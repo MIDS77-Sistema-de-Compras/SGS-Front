@@ -20,7 +20,7 @@ export function getStatusCor(status) {
 
 export default function StatusBadge({ status, className = "w-[240px]" }) {
     return (
-        <button className={`${className} py-1 text-white font-medium rounded-full ${getStatusCor(status)}`}>
+        <button className={`${className} py-1 text-white font-medium text-[13px] rounded-full ${getStatusCor(status)}`}>
             {status}
         </button>
     );
