@@ -1,7 +1,7 @@
 import FileDropzone from '@/components/ui/upload/FileDropzone';
 import fileBox from '../../../../public/images/icons/fileBox.svg';
 
-export default function ListProducts({ products = [] }) {
+export default function ListProducts({ products = [], tipo }) {
     if (products.length === 0) {
         return (
             <FileDropzone
@@ -9,7 +9,11 @@ export default function ListProducts({ products = [] }) {
                 iconVariant="white"
                 icon={fileBox}
                 iconAlt="File Box Icon"
-                title="Nenhum produto adicionado ainda"
+                title={
+                    tipo === "produto"
+                        ? "Nenhum produto adicionado ainda"
+                        : "Nenhum serviço adicionado ainda"
+                }
                 description="Utilize o campo abaixo para buscar e inserir itens."
             />
         );

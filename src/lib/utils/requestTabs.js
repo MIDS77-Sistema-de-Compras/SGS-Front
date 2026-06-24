@@ -1,7 +1,7 @@
 export default function SolicitacoesTabs({ abaAtiva, setAbaAtiva, titulo, abas }) {
     return (
         <div className="flex justify-between items-end px-6 pt-4 border-b border-[#797979]">
-            <h2 className="text-4xl font-bold text-[#133D87] pb-3">
+            <h2 className="text-3xl font-bold text-[#133D87] pb-3">
                 {titulo}
             </h2>
 
