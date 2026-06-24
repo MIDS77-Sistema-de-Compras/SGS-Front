@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Input } from "@/components/ui/input/Input";
@@ -25,11 +25,8 @@ export default function LoginPage() {
         try{
             const res = await loginUser(email, password);
             
-            // AVISO: a API retorna 2 estruturas diferentes pro login, o response de erro e o token normal, que é literalmente só um text,
-            // por isso, decidi usar res.status para verificação, já que é um campo que a mensagem de erro possuí.
-            // Se alguém achar uma forma melhor de fazer isso, fique a vontade para alterar o código
-            if(res.status){
-                setError(res.message || "Login falhou. Tente novamente mais tarde.");
+            if(!res){
+                setError(res || "Login falhou. Tente novamente mais tarde.");
                 return;
             }
 
@@ -39,7 +36,24 @@ export default function LoginPage() {
                 sameSite: "strict"
             });
 
+            try {
+                const payloadBase64 = res.text.split('.')[1]
+                const decodedPayload = JSON.parse(atob(payloadBase64))
+
+                console.log("DADOS TOKEN ", decodedPayload)
+
+                const userRole = decodedPayload.role 
+                const userName = decodedPayload.name || decodedPayload.nome || "Usuário"
+
+                Cookies.set("role", userRole, { expires: 1 })
+                Cookies.set("name", userName, { expires: 1 })
+
+            } catch (decodeError) {
+                console.warn("Não foi possivel decodificar a role do token", decodeError)
+            }
             router.push('/')
+            router.refresh()
+
         }catch(error){
             setError(error.message || "Ocorreu um erro inesperado.");
         }

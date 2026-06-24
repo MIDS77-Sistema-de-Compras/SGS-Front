@@ -1,4 +1,4 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://sgs-back.onrender.com';
 
 function getToken() {
     if (typeof document === 'undefined') return null;
@@ -31,7 +31,7 @@ async function handleRequest(endpoint, options = {}) {
         throw error;
     }
 
-    return response.json().catch(() => ({}));
+    return response.json().catch(() => {});
 }
 
 export const api = {
