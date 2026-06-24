@@ -64,17 +64,17 @@ export default function RequestForm() {
         return () => { cancelled = true; };
     }, []);
 
-    // useEffect(() => {
-    //     async function loadCurrentUser() {
-    //         try {
-    //             const me = await api.get("/me");
-    //             setRequester(me.name ?? "");
-    //             setPhone(me.extensionNumber ?? "");
-    //         } catch {
-    //         }
-    //     }
-    //     loadCurrentUser();
-    // }, []);
+    useEffect(() => {
+    async function loadCurrentUser() {
+        try {
+            const me = await api.get("/users/me");
+            setRequester(me.name ?? "");
+            setPhone(me.extensionNumber ?? "");
+        } catch {
+        }
+    }
+    loadCurrentUser();
+    }, []);
 
     function handleAddProduct() {
         setFormError("");
