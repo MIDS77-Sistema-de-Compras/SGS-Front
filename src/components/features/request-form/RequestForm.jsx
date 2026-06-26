@@ -20,6 +20,7 @@ export default function RequestForm() {
         requester, setRequester, phone, setPhone,
         crBranchId, productName, setProductName,
         quantity, setQuantity, unit, setUnit,
+        additionalInfo, setAdditionalInfo,
         products, crOptions, unitOptions,
         submitting, formError, success,
         handleCrBranchChange, handleAddProduct,
@@ -152,6 +153,8 @@ export default function RequestForm() {
                                     <Input
                                         variant="form"
                                         placeholder="Informações adicionais do produto..."
+                                        value={additionalInfo}
+                                        onChange={(event) => setAdditionalInfo(event.target.value)}
                                     />
                                 </FormField>
                                 <Button

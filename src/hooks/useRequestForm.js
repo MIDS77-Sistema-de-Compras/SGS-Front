@@ -18,6 +18,7 @@ export function useRequestForm() {
     const [productName, setProductName] = useState("");
     const [quantity, setQuantity] = useState("");
     const [unit, setUnit] = useState("");
+    const [additionalInfo, setAdditionalInfo] = useState("");
     const [products, setProducts] = useState([]);
     const [crOptions, setCrOptions] = useState([]);
     const [unitOptions, setUnitOptions] = useState([]);
@@ -117,12 +118,13 @@ export function useRequestForm() {
                 name: productName.trim(),
                 quantity: Number(quantity),
                 measurementUnit: unit,
-                additionalInformations: "",
+                additionalInformations: additionalInfo.trim(),
             },
         ]);
         setProductName("");
         setQuantity("");
         setUnit("");
+        setAdditionalInfo("");
     }
 
     function handleRemoveProduct(productId) {
@@ -189,6 +191,8 @@ export function useRequestForm() {
         setQuantity,
         unit,
         setUnit,
+        additionalInfo,
+        setAdditionalInfo,
         products,
         crOptions,
         unitOptions,
