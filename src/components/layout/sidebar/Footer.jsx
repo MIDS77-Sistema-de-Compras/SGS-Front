@@ -3,14 +3,13 @@
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
+import { logoutAction } from "./actions"
 
 export function Footer(){
     const router = useRouter()
 
-    function handleLogout(){
-        Cookies.remove("jwt");
-        Cookies.remove("token")
-        router.push("/login")
+    const handleLogout = async () => {
+        await logoutAction();
     }
 
     return (
