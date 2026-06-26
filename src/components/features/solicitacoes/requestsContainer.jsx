@@ -1,25 +1,32 @@
 'use client';
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import SolicitacoesTabs from "@/lib/utils/requestTabs";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
+import { useRequestsList } from "@/hooks/useRequestsList";
 import SolicitacoesFilter from "./requestFilter";
 import SolicitacoesTable from "./requestTable";
 
-export default function RequestsContainer({ solicitacoesIniciais }) {
+export default function RequestsContainer({ solicitacoesIniciais = [] }) {
     const [status, setStatus] = useState("");
     const [data, setData] = useState("");
     const [busca, setBusca] = useState("");
     const [abaAtiva, setAbaAtiva] = useState('todas');
     const router = useRouter();
+    const { requests: solicitacoes, loading, error } = useRequestsList(solicitacoesIniciais);
 
-    const statusDisponiveis = [
-        { id: 1, nome: "Em análise" },
-        { id: 2, nome: "Reprovado" },
-        { id: 3, nome: "Parcial Aprovado" },
-        { id: 4, nome: "Aprovado" }
-    ];
+    const statusDisponiveis = useMemo(() => {
+        const baseStatuses = ["Em análise", "Reprovado", "Parcial Aprovado", "Aprovado"];
+        const apiStatuses = solicitacoes
+            .map((item) => item.status || calcularStatusSolicitacao(item.produtos || []))
+            .filter(Boolean);
+
+        return [...new Set([...baseStatuses, ...apiStatuses])].map((nome, index) => ({
+            id: index + 1,
+            nome,
+        }));
+    }, [solicitacoes]);
 
     const abas = [
         { valor: 'todas', label: 'TODAS' },
@@ -27,8 +34,9 @@ export default function RequestsContainer({ solicitacoesIniciais }) {
         { valor: 'concluidas', label: 'CONCLUÍDAS' },
     ];
 
-    const solicitacoesFiltradas = (solicitacoesIniciais || []).filter((item) => {
-        const statusSolicitacao = calcularStatusSolicitacao(item.produtos);
+    const solicitacoesFiltradas = solicitacoes.filter((item) => {
+        const produtos = item.produtos || [];
+        const statusSolicitacao = item.status || calcularStatusSolicitacao(produtos);
 
         if (abaAtiva === "pendentes" && statusSolicitacao !== "Em análise") {
             return false;
@@ -53,11 +61,11 @@ export default function RequestsContainer({ solicitacoesIniciais }) {
             const textoBusca = busca.toLowerCase();
 
             const textoPesquisavel = `
-                ${item.codigo}
-                ${statusSolicitacao}
-                Lista de ${item.produtos.length} ${item.produtos.length === 1 ? "produto" : "produtos"}
-                ${item.produtos.map((p) => p.nome).join(" ")}
-                ${item.data}
+                ${item.codigo || ""}
+                ${statusSolicitacao || ""}
+                Lista de ${produtos.length} ${produtos.length === 1 ? "produto" : "produtos"}
+                ${produtos.map((p) => p.nome).join(" ")}
+                ${item.data || ""}
             `.toLowerCase();
 
             if (!textoPesquisavel.includes(textoBusca)) {
@@ -88,11 +96,21 @@ export default function RequestsContainer({ solicitacoesIniciais }) {
                     abas={abas}
                 />
 
-                <div className="flex flex-1 flex-col mb-3 pr-2 m-2 overflow-y-auto bg-white">
-                    <SolicitacoesTable
-                        itens={solicitacoesFiltradas}
-                        onItemClick={(id) => router.push(`/solicitacoes/${id}`)}
-                    />
+                <div className="h-[550px] overflow-y-auto bg-white">
+                    {loading && (
+                        <div className="p-6 text-center text-sm text-gray-500">Carregando solicitações...</div>
+                    )}
+
+                    {!loading && error && (
+                        <div className="p-6 text-center text-sm font-semibold text-[#BA1A1A]">{error}</div>
+                    )}
+
+                    {!loading && !error && (
+                        <SolicitacoesTable
+                            itens={solicitacoesFiltradas}
+                            onItemClick={(id) => router.push(`/solicitacoes/${id}`)}
+                        />
+                    )}
                 </div>
             </div>
         </>

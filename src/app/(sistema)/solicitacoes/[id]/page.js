@@ -6,118 +6,44 @@ import { useParams } from "next/navigation";
 
 import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
-
-const solicitacoes = [
-    {
-        id: 1,
-        codigo: "CR-0013",
-        data: "2026-03-10",
-        produtos: [
-            { code: "MOU-001", nome: "Mouse Gamer RGB Wireless Pro Max Edição Limitada", status: "Reprovado", variation: "Mouse Ergonômico Sem Fio Recarregável Edition", quantity: 1, unit: "UNIDADE", additionalInfo: "Equipamento para estação de trabalho.", cr: "CR-Blumenau" },
-            { code: "TEC-001", nome: "Teclado", status: "Reprovado", variation: "Teclado Mecânico", quantity: 1, unit: "UNIDADE", additionalInfo: "Reposição de teclado danificado.", cr: "CR-Blumenau" },
-            { code: "MON-001", nome: "Monitor", status: "Reprovado", variation: "Monitor 24\" Full HD", quantity: 1, unit: "UNIDADE", additionalInfo: "Monitor para laboratório de informática.", cr: "CR-Blumenau" }
-        ]
-    },
-    {
-        id: 2,
-        codigo: "CR-1377",
-        data: "2026-03-12",
-        produtos: [
-            { code: "MOU-002", nome: "Mouse", status: "Em análise", variation: "Mouse Ergonômico", quantity: 2, unit: "UNIDADE", additionalInfo: "Equipamento para estação de trabalho.", cr: "CR-Florianópolis" },
-            { code: "TEC-002", nome: "Teclado", status: "Em análise", variation: "Teclado Sem Fio", quantity: 2, unit: "UNIDADE", additionalInfo: "Teclados para sala de reunião.", cr: "CR-Florianópolis" }
-        ]
-    },
-    {
-        id: 3,
-        codigo: "CR-2606",
-        data: "2026-04-12",
-        produtos: [
-            { code: "MOU-003", nome: "Mouse", status: "Aprovado", variation: "Mouse Ergonômico", quantity: 3, unit: "UNIDADE", additionalInfo: "Reposição de estoque.", cr: "CR-Joinville" },
-            { code: "TEC-003", nome: "Teclado", status: "Aprovado", variation: "Teclado Mecânico", quantity: 3, unit: "UNIDADE", additionalInfo: "Reposição de estoque.", cr: "CR-Joinville" }
-        ]
-    },
-    {
-        id: 4,
-        codigo: "CR-0020",
-        data: "2026-04-15",
-        produtos: [
-            { code: "MOU-004", nome: "Mouse", status: "Reprovado", variation: "Mouse USB", quantity: 1, unit: "UNIDADE", additionalInfo: "Substituição de equipamento com defeito.", cr: "CR-Blumenau" },
-            { code: "TEC-004", nome: "Teclado", status: "Reprovado", variation: "Teclado ABNT2", quantity: 1, unit: "UNIDADE", additionalInfo: "Substituição de equipamento com defeito.", cr: "CR-Blumenau" },
-            { code: "MON-002", nome: "Monitor", status: "Reprovado", variation: "Monitor 27\" 4K", quantity: 1, unit: "UNIDADE", additionalInfo: "Upgrade de monitor para designer.", cr: "CR-Blumenau" }
-        ]
-    },
-    {
-        id: 5,
-        codigo: "CR-1567",
-        data: "2026-04-30",
-        produtos: [
-            { code: "MOU-005", nome: "Mouse", status: "Em análise", variation: "Mouse Sem Fio", quantity: 2, unit: "UNIDADE", additionalInfo: "Uso em apresentações.", cr: "CR-Florianópolis" },
-            { code: "TEC-005", nome: "Teclado", status: "Em análise", variation: "Teclado Compacto", quantity: 2, unit: "UNIDADE", additionalInfo: "Uso em apresentações.", cr: "CR-Florianópolis" }
-        ]
-    },
-    {
-        id: 6,
-        codigo: "CR-2093",
-        data: "2026-05-01",
-        produtos: [
-            { code: "MOU-006", nome: "Mouse", status: "Aprovado", variation: "Mouse Ergonômico", quantity: 5, unit: "UNIDADE", additionalInfo: "Reposição geral de laboratório.", cr: "CR-Joinville" },
-            { code: "TEC-006", nome: "Teclado", status: "Aprovado", variation: "Teclado Mecânico", quantity: 5, unit: "UNIDADE", additionalInfo: "Reposição geral de laboratório.", cr: "CR-Joinville" },
-            { code: "MON-003", nome: "Monitor", status: "Aprovado", variation: "Monitor 24\" Full HD", quantity: 5, unit: "UNIDADE", additionalInfo: "Reposição geral de laboratório.", cr: "CR-Joinville" }
-        ]
-    },
-    {
-        id: 7,
-        codigo: "CR-3048",
-        data: "2026-05-05",
-        produtos: [
-            { code: "MOU-007", nome: "Mouse", status: "Aprovado", variation: "Mouse USB", quantity: 1, unit: "UNIDADE", additionalInfo: "Equipamento para novo colaborador.", cr: "CR-Blumenau" },
-            { code: "TEC-007", nome: "Teclado", status: "Reprovado", variation: "Teclado Gamer", quantity: 1, unit: "UNIDADE", additionalInfo: "Teclado gamer não se enquadra na política de compras.", cr: "CR-Blumenau" }
-        ]
-    },
-    {
-        id: 8,
-        codigo: "CR-4009",
-        data: "2026-05-12",
-        produtos: [
-            { code: "MOU-008", nome: "Mouse", status: "Reprovado", variation: "Mouse Vertical", quantity: 2, unit: "UNIDADE", additionalInfo: "Solicitação para ergonomia.", cr: "CR-Florianópolis" },
-            { code: "TEC-008", nome: "Teclado", status: "Aprovado", variation: "Teclado Sem Fio", quantity: 2, unit: "UNIDADE", additionalInfo: "Reposição aprovada.", cr: "CR-Florianópolis" },
-            { code: "MON-004", nome: "Monitor", status: "Aprovado", variation: "Monitor 22\" HD", quantity: 2, unit: "UNIDADE", additionalInfo: "Reposição aprovada.", cr: "CR-Florianópolis" }
-        ]
-    }
-];
+import { useRequestDetails } from "@/hooks/useRequestDetails";
+import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
 
 const STATUS_CORES = {
     "Em análise": "bg-[#EDAE28]",
+    "Aguardando aprovação": "bg-[#EDAE28]",
+    "Pendente": "bg-[#EDAE28]",
     "Reprovado": "bg-[#E30613]",
     "Parcial Aprovado": "bg-[#0084FF]",
     "Aprovado": "bg-[#4CAF50]",
-    "Auto-Aprovado": "bg-[#8E44AD]"
+    "Auto-Aprovado": "bg-[#8E44AD]",
+    "Sem produtos": "bg-gray-400",
 };
 
-function calcularStatusSolicitacao(produtos) {
-    if (produtos.every(p => p.status === "Aprovado")) return "Aprovado";
-    if (produtos.every(p => p.status === "Reprovado")) return "Reprovado";
-    if (produtos.every(p => p.status === "Em análise")) return "Em análise";
-    if (produtos.every(p => p.status === "Auto-Aprovado")) return "Auto-Aprovado";
-    return "Parcial Aprovado";
+function formatDisplayDate(date) {
+    if (!date) return "-";
+
+    const parsedDate = new Date(date);
+    if (Number.isNaN(parsedDate.getTime())) return "-";
+
+    return parsedDate.toLocaleDateString("pt-BR");
 }
 
 export default function MyRequests() {
     const { id } = useParams();
+    const { request: solicitacao, loading, error } = useRequestDetails(id);
 
     const isProfessor = true;
-    const isSupervisor = false;
-
-    const solicitacao = solicitacoes.find(s => s.id === Number(id));
 
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editing, setEditing] = useState(false);
     const [editedProduct, setEditedProduct] = useState(null);
     const [notification, setNotification] = useState(null);
-    const [localProducts, setLocalProducts] = useState(solicitacao?.produtos ?? []);
+    const [editedProductsByRequestId, setEditedProductsByRequestId] = useState({});
+    const localProducts = editedProductsByRequestId[id] || solicitacao?.produtos || [];
 
-    const statusGeral = calcularStatusSolicitacao(localProducts);
+    const statusGeral = solicitacao?.status || calcularStatusSolicitacao(localProducts);
     const corGeral = STATUS_CORES[statusGeral] || "bg-gray-400";
 
     const openModal = (item) => {
@@ -141,9 +67,10 @@ export default function MyRequests() {
 
     const handleSave = () => {
         try {
-            setLocalProducts(prev =>
-                prev.map(item => item.code === editedProduct.code ? editedProduct : item)
-            );
+            setEditedProductsByRequestId(prev => ({
+                ...prev,
+                [id]: localProducts.map(item => item.id === editedProduct.id ? editedProduct : item),
+            }));
             closeModal();
             setNotification({ type: "success", message: "Solicitação atualizada com sucesso!" });
             setTimeout(() => setNotification(null), 3000);
@@ -153,11 +80,19 @@ export default function MyRequests() {
         }
     };
 
-    if (!solicitacao) {
+    if (loading) {
+        return (
+            <div className="flex-1 flex items-center justify-center font-sans">
+                <p className="text-gray-500 text-lg">Carregando solicitação...</p>
+            </div>
+        );
+    }
+
+    if (error || !solicitacao) {
         return (
             <div className="flex-1 flex items-center justify-center font-sans">
                 <div className="text-center">
-                    <p className="text-gray-500 text-lg mb-4">Solicitação não encontrada.</p>
+                    <p className="text-gray-500 text-lg mb-4">{error || "Solicitação não encontrada."}</p>
                     <Link href="/solicitacoes" className="text-[#103D85] underline">
                         Voltar para solicitações
                     </Link>
@@ -172,15 +107,13 @@ export default function MyRequests() {
                 <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl text-white shadow-lg ${notification.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
                     <div className="flex items-center gap-3">
                         <span>{notification.message}</span>
-                        <button onClick={() => setNotification(null)} className="hover:opacity-80">✕</button>
+                        <button onClick={() => setNotification(null)} className="hover:opacity-80">×</button>
                     </div>
                 </div>
             )}
 
             <div className="w-full">
-                
                 <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
-
                     <div className="flex items-center gap-3 px-5 py-3">
                         <Link href="/solicitacoes" className="text-[#103D85] hover:opacity-80 transition-opacity">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -198,7 +131,7 @@ export default function MyRequests() {
                                 {solicitacao.codigo} : Lista de {localProducts.length} {localProducts.length === 1 ? "produto" : "produtos"}
                             </h4>
                             <span className="text-gray-600 text-base font-medium px-7 text-[16px]">
-                                Realizada em: {new Date(solicitacao.data).toLocaleDateString('pt-BR')}
+                                Realizada em: {formatDisplayDate(solicitacao.data)}
                             </span>
                         </div>
                         <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 rounded-full min-w-[150px] shadow-sm tracking-wide mr-8 ${corGeral}`}>

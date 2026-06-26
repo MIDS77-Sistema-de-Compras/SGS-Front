@@ -1,9 +1,11 @@
-import { calcularStatusSolicitacao } from '@/lib/utils/calculateRequestStatus';
-import StatusBadge from './statusBadge';
-
+import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
+import StatusBadge from "./statusBadge";
 
 export default function SolicitacaoRow({ item, onClick }) {
-    const statusSolicitacao = calcularStatusSolicitacao(item.produtos);
+    const produtos = item.produtos || [];
+    const statusSolicitacao = item.status || calcularStatusSolicitacao(produtos);
+    const quantidadeProdutos = produtos.length;
+    const dataFormatada = item.data ? new Date(item.data).toLocaleDateString("pt-BR") : "-";
 
     return (
         <div
@@ -12,12 +14,12 @@ export default function SolicitacaoRow({ item, onClick }) {
         >
             <div className="flex items-center gap-20 px-6">
                 <span className="font-bold text-[#333333] text-[16px]">
-                    {item.codigo}: Lista de {item.produtos.length}{" "}
-                    {item.produtos.length === 1 ? "produto" : "produtos"}
+                    {item.codigo}
+                    {quantidadeProdutos > 0 && `: Lista de ${quantidadeProdutos} ${quantidadeProdutos === 1 ? "produto" : "produtos"}`}
                 </span>
 
                 <span className="text-lg text-[#555555] px-6 text-[16px]">
-                    {new Date(item.data).toLocaleDateString('pt-BR')}
+                    {dataFormatada}
                 </span>
             </div>
 
