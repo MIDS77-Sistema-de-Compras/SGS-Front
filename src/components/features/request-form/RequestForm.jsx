@@ -20,6 +20,7 @@ export default function RequestForm() {
         requester, setRequester, phone, setPhone,
         crBranchId, productName, setProductName,
         quantity, setQuantity, unit, setUnit,
+        additionalInfo, setAdditionalInfo,
         products, crOptions, unitOptions,
         submitting, formError, success,
         handleCrBranchChange, handleAddProduct,
@@ -30,17 +31,17 @@ export default function RequestForm() {
     return (
         <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
             <div className="">
-                    <SolicitacoesTabs
-                        titulo="Nova Solicitação"
-                        abaAtiva={abaAtiva}
-                        setAbaAtiva={setAbaAtiva}
-                        abas={abas}
-                    />
+                <SolicitacoesTabs
+                    titulo="Nova Solicitação"
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    abas={abas}
+                />
             </div>
-        
+
             <form
                 onSubmit={handleSubmit}
-                className="flex-1 overflow-y-auto p-5"
+                className="flex-1 overflow-y-auto"
             >
                 <div className="flex-1 overflow-y-auto p-5">
                     <SectionHeader label="INFORMAÇÕES GERAIS" />
@@ -145,6 +146,17 @@ export default function RequestForm() {
                                     />
                                 </FormField>
 
+
+                            </div>
+                            <div className="flex w-full gap-5">
+                                <FormField label="Informações Adicionais" className="flex-1">
+                                    <Input
+                                        variant="form"
+                                        placeholder="Informações adicionais do produto..."
+                                        value={additionalInfo}
+                                        onChange={(event) => setAdditionalInfo(event.target.value)}
+                                    />
+                                </FormField>
                                 <Button
                                     type="button"
                                     variant="primary"
@@ -157,7 +169,7 @@ export default function RequestForm() {
                         </div>
 
                     ) : (
-                        
+
                         <div className="mt-10">
                             <SectionHeader label="SERVIÇOS" />
 
@@ -173,10 +185,10 @@ export default function RequestForm() {
                             </FormField>
 
                             <div className="flex gap-5 items-end">
-                                <FormField label="Descrição" required className="flex-1">
+                                <FormField label="Informações Adicionais" required className="flex-1">
                                     <Input
                                         variant="form"
-                                        placeholder="Descreva detalhadamente o serviço solicitado..."
+                                        placeholder="Informações adicionais do serviço..."
                                     />
                                 </FormField>
 
