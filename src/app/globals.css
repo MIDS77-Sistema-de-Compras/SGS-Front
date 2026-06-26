@@ -36,3 +36,12 @@ body {
 .animate-slide-in {
   animation: slide-in 0.35s ease-out forwards;
 }
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
