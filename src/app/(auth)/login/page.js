@@ -25,16 +25,29 @@ export default function LoginPage() {
         try{
             const res = await loginUser(email, password);
             
-            if(!res){
-                setError(res || "Login falhou. Tente novamente mais tarde.");
+            // AVISO: a API retorna 2 estruturas diferentes pro login, o response de erro e o token normal, que é literalmente só um text,
+            // por isso, decidi usar res.status para verificação, já que é um campo que a mensagem de erro possuí.
+            // Se alguém achar uma forma melhor de fazer isso, fique a vontade para alterar o código
+            if(!res || res.status){
+                setError(res?.message || "Login falhou. Tente novamente mais tarde.");
                 return;
             }
 
-            Cookies.set("token", res.text, {
+            const token = res.text || res.token || res.message;
+
+            if (!token) {
+                setError("Token não retornado pela API.");
+                return;
+            }
+
+            const cookieOptions = {
                 expires: 1,
-                secure: true,
+                secure: window.location.protocol === "https:",
                 sameSite: "strict"
-            });
+            };
+
+            Cookies.set("jwt", token, cookieOptions);
+            Cookies.set("token", token, cookieOptions);
 
             try {
                 const payloadBase64 = res.text.split('.')[1]

@@ -1,45 +1,62 @@
-import { api } from './api';
+import { api } from "@/service/api";
 
-const INITIAL_STATUS_NAME = 'Aguardando aprovação';
+const INITIAL_STATUS_CANDIDATES = ["Aguardando aprovação", "Pendente", "EM_ANDAMENTO"];
 
-export async function createFullRequest({ crBranchId, statusName, products }) {
-    const createdRequest = await api.post('/requests', {
-        crBranchId,
-        statusName,
-    });
+export async function getAllMeasurementUnits() {
+    return api.get("/measurement-unit");
+}
 
-    const requestId = createdRequest.id;
+export function getInitialStatusName() {
+    return INITIAL_STATUS_CANDIDATES[0];
+}
 
-    await Promise.all(
-        products.map((product) =>
-            api.post('/item-request-products', {
-                requestId,
-                productName: product.productName,
-                measurementUnit: product.measurementUnit,
-                quantity: product.quantity,
+async function createRequestWithAvailableStatus(crBranchId) {
+    let lastError;
+
+    for (const statusName of INITIAL_STATUS_CANDIDATES) {
+        try {
+            const request = await api.post("/requests", {
+                crBranchId: Number(crBranchId),
                 statusName,
-                additionalInformations: product.additionalInformations ?? '',
+                userIds: [],
+            });
+
+            return { request, statusName };
+        } catch (error) {
+            lastError = error;
+            if (error.status !== 404) {
+                throw error;
+            }
+        }
+    }
+
+    throw lastError;
+}
+
+export async function createFullRequest({ crBranchId, products, attachments = [] }) {
+    const { request, statusName } = await createRequestWithAvailableStatus(crBranchId);
+
+    const createdProducts = await Promise.all(
+        products.map((product) =>
+            api.post("/item-request-products", {
+                requestId: request.id,
+                productName: product.name,
+                measurementUnit: product.measurementUnit,
+                quantity: Number(product.quantity),
+                statusName,
+                additionalInformations: product.additionalInformations || "",
             })
         )
     );
 
-    return createdRequest;
-}
-
-export async function getInitialStatusName() {
-    const statuses = await api.get('/status');
-
-    if (!Array.isArray(statuses) || statuses.length === 0) {
-        return null;
+    if (attachments.length > 0) {
+        const formData = new FormData();
+        attachments.forEach((attachment) => formData.append("files", attachment));
+        await api.postFormData(`/requests/${request.id}/attachments`, formData);
     }
 
-    const initial = statuses.find(
-        (s) => s.name?.toLowerCase() === INITIAL_STATUS_NAME.toLowerCase()
-    );
-
-    return (initial ?? statuses[0]).name ?? null;
-}
-
-export async function getAllMeasurementUnits() {
-    return api.get('/measurement-unit');
+    return {
+        request,
+        products: createdProducts,
+    };
 }
