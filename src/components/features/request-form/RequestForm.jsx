@@ -12,17 +12,21 @@ import PhoneInput from "@/components/ui/input/PhoneInput";
 import SectionHeader from "@/components/ui/layout/SectionHeader";
 import Button from "@/components/ui/button/Button";
 import SolicitacoesTabs from "@/lib/utils/requestTabs";
-import { useState } from "react";
-
+import { useRequestForm } from "@/hooks/useRequestForm";
 
 export default function RequestForm() {
+    const {
+        abaAtiva, setAbaAtiva, abas, branch,
+        requester, setRequester, phone, setPhone,
+        crBranchId, productName, setProductName,
+        quantity, setQuantity, unit, setUnit,
+        products, crOptions, unitOptions,
+        submitting, formError, success,
+        handleCrBranchChange, handleAddProduct,
+        handleRemoveProduct, handleFilesSelected,
+        handleSubmit,
+    } = useRequestForm();
 
-    const [abaAtiva, setAbaAtiva] = useState('produto');
-    const abas = [
-        { valor: 'produto', label: 'PRODUTO' },
-        { valor: 'servico', label: 'SERVIÇO' }
-    ];
-    
     return (
         <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
             <div className="">
@@ -34,19 +38,21 @@ export default function RequestForm() {
                     />
             </div>
         
-
             <form
-                action={"won't do now since the API isn't done yet"}
+                onSubmit={handleSubmit}
                 className="flex-1 overflow-y-auto p-5"
             >
-                <form
-                    action={"won't do now since the API isn't done yet"}
-                    className="flex-1 overflow-y-auto p-5"
-                >
+                <div className="flex-1 overflow-y-auto p-5">
                     <SectionHeader label="INFORMAÇÕES GERAIS" />
 
                     <FormField label="Filial Pagadora">
-                        <Select name="branch" options={["Senai", "SESI"]} isRequired />
+                        <Input
+                            variant="form"
+                            placeholder="Definida pelo CR selecionado"
+                            value={branch}
+                            readOnly
+                            disabled
+                        />
                     </FormField>
 
                     <div className="mt-10">
@@ -61,11 +67,17 @@ export default function RequestForm() {
                                 <Input
                                     variant="form"
                                     placeholder="Nome completo do docente..."
+                                    value={requester}
+                                    onChange={(event) => setRequester(event.target.value)}
                                 />
                             </FormField>
 
                             <FormField label="Ramal" required>
-                                <PhoneInput placeholder="3222-0000" />
+                                <PhoneInput
+                                    placeholder="3222-0000"
+                                    value={phone}
+                                    onChange={(event) => setPhone(event.target.value)}
+                                />
                             </FormField>
                         </div>
 
@@ -73,7 +85,9 @@ export default function RequestForm() {
                             <Select
                                 name="cr_project"
                                 placeholder="Selecione o Centro de Resultado..."
-                                options={["Senai", "SESI"]}
+                                options={crOptions}
+                                value={crBranchId}
+                                onChange={handleCrBranchChange}
                                 isRequired
                             />
                         </FormField>
@@ -84,7 +98,7 @@ export default function RequestForm() {
                             <SectionHeader label="PRODUTOS" />
 
                             <div className="mt-5">
-                                <ListProducts products={[]} tipo={"produto"} />
+                                <ListProducts products={products} onRemove={handleRemoveProduct} tipo={"produto"} />
                             </div>
 
                             <div className="flex w-full gap-5">
@@ -96,6 +110,8 @@ export default function RequestForm() {
                                     <Input
                                         variant="form"
                                         placeholder="Não há produtos cadastrados..."
+                                        value={productName}
+                                        onChange={(event) => setProductName(event.target.value)}
                                     />
                                 </FormField>
 
@@ -108,6 +124,10 @@ export default function RequestForm() {
                                         type="number"
                                         variant="form"
                                         placeholder="Ex: 2"
+                                        min="0"
+                                        step="0.01"
+                                        value={quantity}
+                                        onChange={(event) => setQuantity(event.target.value)}
                                     />
                                 </FormField>
 
@@ -119,19 +139,25 @@ export default function RequestForm() {
                                     <Select
                                         name="unit"
                                         placeholder="Selecione..."
-                                        options={["L", "g"]}
+                                        options={unitOptions}
+                                        value={unit}
+                                        onChange={(event) => setUnit(event.target.value)}
                                     />
                                 </FormField>
 
                                 <Button
+                                    type="button"
                                     variant="primary"
                                     className="w-10 h-10 mt-auto flex items-center justify-center text-2xl"
+                                    onClick={handleAddProduct}
                                 >
                                     +
                                 </Button>
                             </div>
                         </div>
+
                     ) : (
+                        
                         <div className="mt-10">
                             <SectionHeader label="SERVIÇOS" />
 
@@ -155,6 +181,7 @@ export default function RequestForm() {
                                 </FormField>
 
                                 <Button
+                                    type="button"
                                     variant="primary"
                                     className="w-10 h-10 flex items-center justify-center text-2xl"
                                 >
@@ -173,15 +200,25 @@ export default function RequestForm() {
                                 iconAlt="File Icon"
                                 title="Arraste seus documentos aqui"
                                 description="Formatos aceitos: PDF, JPG, PNG e DOCX (máx 20MB)"
+                                accept=".pdf,.jpg,.jpeg,.png,.docx"
+                                onFilesSelected={handleFilesSelected}
                             />
                         </div>
                     </div>
 
                     <div className="flex flex-col items-end mt-5">
+                        {formError && (
+                            <p className="mb-3 text-sm font-semibold text-[#BA1A1A]">{formError}</p>
+                        )}
+                        {success && (
+                            <p className="mb-3 text-sm font-semibold text-[#2E7D32]">Solicitação criada com sucesso.</p>
+                        )}
+
                         <Button
                             type="submit"
                             variant="primary"
                             className="py-3 px-7 text-[14px] font-semibold"
+                            isLoading={submitting}
                         >
                             <span className="flex gap-5">
                                 FINALIZAR SOLICITAÇÃO
@@ -194,7 +231,7 @@ export default function RequestForm() {
                             </span>
                         </Button>
                     </div>
-                </form>
+                </div>
             </form>
         </div>
     )
