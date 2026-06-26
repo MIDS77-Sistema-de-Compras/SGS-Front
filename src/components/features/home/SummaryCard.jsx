@@ -26,7 +26,7 @@ const summaryItems = [
 
 export default function SummaryCard() {
     return (
-        <div className="border border-[#AAAAAA] rounded-xl p-5 shadow-lg">
+        <div className="border border-[#AAAAAA] rounded-xl px-5 py-3 shadow-lg">
             <div className="flex justify-between mb-7">
                 <h2 className="text-[#103D85] font-bold text-[22px]">
                     Resumo

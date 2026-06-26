@@ -37,7 +37,7 @@ async function handleRequest(endpoint, options = {}) {
         throw error;
     }
 
-    return response.json().catch(() => ({}));
+    return response.json().catch(() => {});
 }
 
 export const api = {

@@ -37,7 +37,7 @@ const activities = [
 
 export default function RecentActivity() {
     return (
-        <div className="flex-1 border border-[#AAAAAA] rounded-xl p-5 shadow-lg">
+        <div className="flex-1 border border-[#AAAAAA] rounded-xl px-5 py-3 shadow-lg">
             <h2 className="text-[#103D85] font-bold text-[22px]">
                 Atividade Recente
             </h2>
