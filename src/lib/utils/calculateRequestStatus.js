@@ -1,4 +1,6 @@
-export function calcularStatusSolicitacao(produtos) {
+export function calcularStatusSolicitacao(produtos = []) {
+    if (produtos.length === 0) return "Sem produtos";
+
     const todosAprovados = produtos.every(p => p.status === "Aprovado");
     const todosReprovados = produtos.every(p => p.status === "Reprovado");
     const todosEmAnalise = produtos.every(p => p.status === "Em análise");

@@ -19,7 +19,7 @@ export default function ProductTable({ localProducts, isProfessor, statusCores, 
                     {localProducts.length > 0 ? (
                         localProducts.map((item) => (
                             <ProductTableRow 
-                                key={item.code}
+                                key={item.id || item.code}
                                 item={item}
                                 isProfessor={isProfessor}
                                 statusCores={statusCores}

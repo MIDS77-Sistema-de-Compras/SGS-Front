@@ -1,7 +1,7 @@
 import FileDropzone from '@/components/ui/upload/FileDropzone';
 import fileBox from '../../../../public/images/icons/fileBox.svg';
 
-export default function ListProducts({ products = [], onRemove }) {
+export default function ListProducts({ products = [], onRemove, tipo = "produto" }) {
     if (products.length === 0) {
         return (
             <FileDropzone
