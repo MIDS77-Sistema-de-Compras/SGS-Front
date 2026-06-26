@@ -27,19 +27,19 @@ export default function ListProducts({ products = [], onRemove, tipo }) {
                     key={product.id}
                     className="flex items-center justify-between bg-white rounded-lg px-4 py-3"
                 >
-                    <div className="flex flex-col">
-                        <p className="font-bold text-[14px] text-gray-800">
+                    <div className="flex flex-col min-w-0 flex-1 mr-16">
+                        <p className="font-bold text-[14px] text-gray-800 break-words">
                             {product.name}
                         </p>
                         {product.additionalInformations && (
-                            <p className="text-[12px] text-neutral-500">
+                            <p className="text-[12px] text-neutral-500 break-all">
                                 {product.additionalInformations}
                             </p>
                         )}
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <span className="text-[13px] font-medium text-[#355C9C]">
+                    <div className="flex items-center gap-4 shrink-0">
+                        <span className="text-[13px] font-medium text-[#355C9C] whitespace-nowrap">
                             {product.quantity} {product.measurementUnit}
                         </span>
                         {onRemove && (
