@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Select from "@/components/ui/select/Select";
 import FileDropzone from "@/components/ui/upload/FileDropzone";
@@ -31,17 +30,17 @@ export default function RequestForm() {
     return (
         <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
             <div className="">
-                    <SolicitacoesTabs
-                        titulo="Nova Solicitação"
-                        abaAtiva={abaAtiva}
-                        setAbaAtiva={setAbaAtiva}
-                        abas={abas}
-                    />
+                <SolicitacoesTabs
+                    titulo="Nova Solicitação"
+                    abaAtiva={abaAtiva}
+                    setAbaAtiva={setAbaAtiva}
+                    abas={abas}
+                />
             </div>
-        
+
             <form
                 onSubmit={handleSubmit}
-                className="flex-1 overflow-y-auto p-5"
+                className="flex-1 overflow-y-auto"
             >
                 <div className="flex-1 overflow-y-auto p-5">
                     <SectionHeader label="INFORMAÇÕES GERAIS" />
@@ -94,22 +93,9 @@ export default function RequestForm() {
                         </FormField>
                     </div>
 
-                    <FormField label="CR e Projeto" required>
-                        <Select
-                            name="cr_project"
-                            placeholder="Selecione o Centro de Resultado..."
-                            options={crOptions}
-                            value={crBranchId}
-                            onChange={(e) => {
-                                const selectedId = e.target.value;
-                                setCrBranchId(selectedId);
-                                const selectedCr = crOptions.find((c) => c.value === selectedId);
-                                setBranch(selectedCr?.branchName ?? "");
-                            }}
-                            isRequired
-                        />
-                    </FormField>
-                </div>
+                    {abaAtiva === "produto" ? (
+                        <div className="mt-10">
+                            <SectionHeader label="PRODUTOS" />
 
                             <div className="mt-5">
                                 <ListProducts products={products} onRemove={handleRemoveProduct} tipo={"produto"} />
@@ -159,6 +145,15 @@ export default function RequestForm() {
                                     />
                                 </FormField>
 
+
+                            </div>
+                            <div className="flex w-full gap-5">
+                                <FormField label="Informações Adicionais" className="flex-1">
+                                    <Input
+                                        variant="form"
+                                        placeholder="Informações adicionais do produto..."
+                                    />
+                                </FormField>
                                 <Button
                                     type="button"
                                     variant="primary"
@@ -171,7 +166,7 @@ export default function RequestForm() {
                         </div>
 
                     ) : (
-                        
+
                         <div className="mt-10">
                             <SectionHeader label="SERVIÇOS" />
 
@@ -187,10 +182,10 @@ export default function RequestForm() {
                             </FormField>
 
                             <div className="flex gap-5 items-end">
-                                <FormField label="Descrição" required className="flex-1">
+                                <FormField label="Informações Adicionais" required className="flex-1">
                                     <Input
                                         variant="form"
-                                        placeholder="Descreva detalhadamente o serviço solicitado..."
+                                        placeholder="Informações adicionais do serviço..."
                                     />
                                 </FormField>
 
@@ -205,15 +200,8 @@ export default function RequestForm() {
                         </div>
                     )}
 
-                    <div className="flex w-full gap-5">
-                        <FormField label="Produto" required className="flex-2">
-                            <Input
-                                variant="form"
-                                placeholder="Nome do produto..."
-                                value={productName}
-                                onChange={(e) => setProductName(e.target.value)}
-                            />
-                        </FormField>
+                    <div className="mt-10">
+                        <SectionHeader label="ANEXOS" />
 
                         <div className="mt-5">
                             <FileDropzone
@@ -224,17 +212,7 @@ export default function RequestForm() {
                                 accept=".pdf,.jpg,.jpeg,.png,.docx"
                                 onFilesSelected={handleFilesSelected}
                             />
-                        </FormField>
-
-                        <FormField label="Unidade de Medida" required className="flex-1">
-                            <Select
-                                name="unit"
-                                placeholder="Selecione..."
-                                options={unitOptions}
-                                value={unit}
-                                onChange={(e) => setUnit(e.target.value)}
-                            />
-                        </FormField>
+                        </div>
                     </div>
 
                     <div className="flex flex-col items-end mt-5">
@@ -246,7 +224,7 @@ export default function RequestForm() {
                         )}
 
                         <Button
-                            type="button"
+                            type="submit"
                             variant="primary"
                             className="py-3 px-7 text-[14px] font-semibold"
                             isLoading={submitting}

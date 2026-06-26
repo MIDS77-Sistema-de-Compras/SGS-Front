@@ -80,7 +80,7 @@ export default function RequestsContainer({ solicitacoesIniciais }) {
                 statusDisponiveis={statusDisponiveis}
             />
 
-            <div className="bg-white border border-[#AAAAAA] rounded-2xl overflow-hidden">
+            <div className="flex flex-1 flex-col bg-white border border-[#AAAAAA] rounded-2xl overflow-hidden">
                 <SolicitacoesTabs
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
@@ -88,7 +88,7 @@ export default function RequestsContainer({ solicitacoesIniciais }) {
                     abas={abas}
                 />
 
-                <div className="h-[550px] overflow-y-auto bg-white">
+                <div className="flex flex-1 flex-col mb-3 pr-2 m-2 overflow-y-auto bg-white">
                     <SolicitacoesTable
                         itens={solicitacoesFiltradas}
                         onItemClick={(id) => router.push(`/solicitacoes/${id}`)}
