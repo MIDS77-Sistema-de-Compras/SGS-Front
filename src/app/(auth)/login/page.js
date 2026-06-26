@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,27 +9,68 @@ import Button from "@/components/ui/button/Button";
 import FormCard from "@/components/features/auth/FormCard";
 import { ModalTermos } from "@/components/features/auth/ModalTermos";
 import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
+import { loginUser } from "@/service/auth/auth-login";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
     const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
     const router = useRouter();
-    function handleLogin(e) {
+    const handleLogin = async (e) => {
         e.preventDefault();
+        try{
+            const res = await loginUser(email, password);
+            
+            // AVISO: a API retorna 2 estruturas diferentes pro login, o response de erro e o token normal, que é literalmente só um text,
+            // por isso, decidi usar res.status para verificação, já que é um campo que a mensagem de erro possuí.
+            // Se alguém achar uma forma melhor de fazer isso, fique a vontade para alterar o código
+            if(!res || res.status){
+                setError(res?.message || "Login falhou. Tente novamente mais tarde.");
+                return;
+            }
 
-        const tokenBackend = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...exampletoken";
-        Cookies.set("token", tokenBackend, {
-            expires: 1,
-            secure: true,
-            sameSite: "strict",
-        });
-        router.push("/");
+            const token = res.text || res.token || res.message;
+
+            if (!token) {
+                setError("Token não retornado pela API.");
+                return;
+            }
+
+            const cookieOptions = {
+                expires: 1,
+                secure: window.location.protocol === "https:",
+                sameSite: "strict"
+            };
+
+            Cookies.set("jwt", token, cookieOptions);
+            Cookies.set("token", token, cookieOptions);
+
+            try {
+                const payloadBase64 = res.text.split('.')[1]
+                const decodedPayload = JSON.parse(atob(payloadBase64))
+
+                console.log("DADOS TOKEN ", decodedPayload)
+
+                const userRole = decodedPayload.role 
+                const userName = decodedPayload.name || decodedPayload.nome || "Usuário"
+
+                Cookies.set("role", userRole, { expires: 1 })
+                Cookies.set("name", userName, { expires: 1 })
+
+            } catch (decodeError) {
+                console.warn("Não foi possivel decodificar a role do token", decodeError)
+            }
+            router.push('/')
+            router.refresh()
+
+        }catch(error){
+            setError(error.message || "Ocorreu um erro inesperado.");
+        }
     }
-
     return (
         <div>
             <FormCard
@@ -55,11 +96,12 @@ export default function LoginPage() {
                     <PasswordInput
                         variant="auth"
                         placeholder="Senha"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         iconSrc="/images/icons/password.png"
                         iconAlt="Icone da senha"
                     />
+                    <p className="text-red-500">{error}</p>
                 </div>
 
                 <div className="mt-20">

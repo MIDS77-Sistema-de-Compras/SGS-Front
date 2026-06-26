@@ -2,8 +2,6 @@
 
 import Cookies from "js-cookie"
 import { useRouter } from "next/navigation"
-import Image from "next/image"
-import Link from "next/link"
 import Header from "@/components/features/home/HomeHeader"
 import SummaryCard from "@/components/features/home/SummaryCard"
 import HomeFooter from "@/components/features/home/HomeFooter"
@@ -13,6 +11,7 @@ export default function Home(){
     const router = useRouter()
 
     function handleLogout(){
+        Cookies.remove("jwt");
         Cookies.remove("token")
         router.push("/login")
     }
