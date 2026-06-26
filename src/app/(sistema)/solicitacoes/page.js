@@ -37,11 +37,27 @@ export default function TodasSolicitacoes() {
             { id: 1, nome: "Mouse", status: "Reprovado" },
             { id: 2, nome: "Teclado", status: "Aprovado" },
             { id: 3, nome: "Monitor", status: "Aprovado" }
-        ]}
+        ]},
+        { id: 9, codigo: "CR-3048", data: "2026-05-05", produtos: [
+            { id: 1, nome: "Mouse", status: "Aprovado" },
+            { id: 2, nome: "Teclado", status: "Reprovado" }
+        ]},
+        { id: 10, codigo: "CR-3048", data: "2026-05-05", produtos: [
+            { id: 1, nome: "Mouse", status: "Aprovado" },
+            { id: 2, nome: "Teclado", status: "Reprovado" }
+        ]},
+        { id: 11, codigo: "CR-3048", data: "2026-05-05", produtos: [
+            { id: 1, nome: "Mouse", status: "Aprovado" },
+            { id: 2, nome: "Teclado", status: "Reprovado" }
+        ]},
+        { id: 12, codigo: "CR-3048", data: "2026-05-05", produtos: [
+            { id: 1, nome: "Mouse", status: "Aprovado" },
+            { id: 2, nome: "Teclado", status: "Reprovado" }
+        ]},
     ];
 
  return (
-        <div className="flex-1 bg-white pb-12 overflow-y-auto font-sans flex flex-col gap-6">
+        <div className="flex-1 bg-white overflow-y-auto font-sans flex flex-col gap-6">
             <RequestsContainer solicitacoesIniciais={solicitacoes} />
         </div>
     );

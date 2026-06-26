@@ -23,19 +23,9 @@ export default function SolicitacoesFilter({
 
     return (
         <div className="bg-white rounded-xl border border-[#AAAAAA] flex flex-row items-center justify-between p-2 gap-3">
-            <div className="flex flex-row items-center px-4 gap-2">
-                <Image
-                    src="/images/icons/filtrar.png"
-                    alt="Ícone de filtros"
-                    width={21}
-                    height={21}
-                    className="w-5 h-5"
-                />
-
-                <span className="text-[22px] text-[#133D87]">
-                    Filtrar
-                </span>
-            </div>
+            <span className="pl-3 text-[18px] text-[#133D87]">
+                Filtrar
+            </span>
 
             <div className="flex flex-row items-center gap-3">
                 <div className="relative w-[140px]">
