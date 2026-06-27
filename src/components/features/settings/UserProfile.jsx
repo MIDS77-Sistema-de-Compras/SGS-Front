@@ -4,6 +4,8 @@ import { useState } from "react";
 import Input from "@/components/ui/input/Input";
 import CpfInput from "@/components/ui/input/CpfInput";
 import PasswordInput from "@/components/ui/input/PasswordInput";
+import Button from "@/components/ui/button/Button";
+import Modal from "@/components/ui/overlay/Modal";
 
 const readOnlyFieldClass =
     "bg-[#D1D5DB]/40 border-gray-200 cursor-default select-none focus:border-gray-200 focus:ring-0";
@@ -12,7 +14,25 @@ const editableFieldClass =
     "bg-white border-[#103D85]/30 focus:border-[#103D85]";
 
 export default function UserProfile() {
+
     const [open, setOpen] = useState(false);
+    const [modal, openModal] = useState(false);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        openModal(true);
+    }
+
+    const handleUpdate = (e) => {
+        e.preventDefault();
+        // TODO endpoint for changing pwd that isn't the recovery one
+        try{
+            
+        }catch(error){
+            console.error(error);
+        }
+        openModal(false);
+    }
 
     return (
         <section className="bg-white rounded-2xl border border-gray-300 shadow-sm overflow-hidden transition-all">
@@ -71,11 +91,20 @@ export default function UserProfile() {
                         <div className="grid grid-cols-4 gap-6">
                             <div className="flex flex-col gap-2">
                                 <label className="text-xs font-semibold text-gray-500">Senha</label>
-                                <PasswordInput
-                                variant="form"
-                                defaultValue="Senha@123"
-                                className={editableFieldClass}
-                                />
+                                <form onSubmit={handleSubmit}>
+                                    <PasswordInput
+                                    variant="form"
+                                    placeholder="Altere sua senha aqui..."
+                                    className={editableFieldClass}
+                                    />
+                                    <Modal isOpen={modal} onClose={() => openModal(false)} title={"Confirmação"}>
+                                        <p>Deseja atualizar sua senha?</p>
+                                        <div className="flex gap-3">
+                                            <Button onClick={handleUpdate}>Sim</Button>
+                                            <Button onClick={() => openModal(false)} className="bg-transparent text-black hover:bg-neutral-200">Não</Button>
+                                        </div>
+                                    </Modal>
+                                </form>
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-xs font-semibold text-gray-500">Nível</label>
