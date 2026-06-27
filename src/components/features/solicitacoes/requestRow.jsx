@@ -5,7 +5,9 @@ export default function SolicitacaoRow({ item, onClick }) {
     const produtos = item.produtos || [];
     const statusSolicitacao = item.status || calcularStatusSolicitacao(produtos);
     const quantidadeProdutos = produtos.length;
-    const dataFormatada = item.data ? new Date(item.data).toLocaleDateString("pt-BR") : "-";
+    const dataFormatada = item.data
+        ? new Date(item.data).toLocaleDateString("pt-BR", { timeZone: "UTC" })
+        : "-";
 
     return (
         <div
