@@ -1,40 +1,33 @@
 import { api } from "@/service/api";
 
-const INITIAL_STATUS_CANDIDATES = ["Aguardando aprovação", "Pendente", "EM_ANDAMENTO"];
+const PREFERRED_INITIAL_STATUS = "Aguardando aprovação";
 
 export async function getAllMeasurementUnits() {
     return api.get("/measurement-unit");
 }
 
-export function getInitialStatusName() {
-    return INITIAL_STATUS_CANDIDATES[0];
-}
+async function resolveInitialStatusName() {
+    const statuses = await api.get("/status");
 
-async function createRequestWithAvailableStatus(crBranchId) {
-    let lastError;
-
-    for (const statusName of INITIAL_STATUS_CANDIDATES) {
-        try {
-            const request = await api.post("/requests", {
-                crBranchId: Number(crBranchId),
-                statusName,
-                userIds: [],
-            });
-
-            return { request, statusName };
-        } catch (error) {
-            lastError = error;
-            if (error.status !== 404) {
-                throw error;
-            }
-        }
+    if (!Array.isArray(statuses) || statuses.length === 0) {
+        throw new Error("Nenhum status cadastrado no sistema.");
     }
 
-    throw lastError;
+    const preferred = statuses.find(
+        (s) => s.name?.toLowerCase() === PREFERRED_INITIAL_STATUS.toLowerCase()
+    );
+
+    return (preferred ?? statuses[0]).name;
 }
 
 export async function createFullRequest({ crBranchId, products, attachments = [] }) {
-    const { request, statusName } = await createRequestWithAvailableStatus(crBranchId);
+    const statusName = await resolveInitialStatusName();
+
+    const request = await api.post("/requests", {
+        crBranchId: Number(crBranchId),
+        statusName,
+        userIds: [],
+    });
 
     const createdProducts = await Promise.all(
         products.map((product) =>
