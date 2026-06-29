@@ -21,6 +21,8 @@ export function useRequestForm() {
     const [quantity, setQuantity] = useState("");
     const [unit, setUnit] = useState("");
     const [additionalInfo, setAdditionalInfo] = useState("");
+    const [serviceName, setServiceName] = useState("");
+    const [serviceAdditionalInfo, setServiceAdditionalInfo] = useState("");
     const [products, setProducts] = useState([]);
     const [crOptions, setCrOptions] = useState([]);
     const [unitOptions, setUnitOptions] = useState([]);
@@ -200,6 +202,10 @@ export function useRequestForm() {
         setUnit,
         additionalInfo,
         setAdditionalInfo,
+        serviceName,
+        setServiceName,
+        serviceAdditionalInfo,
+        setServiceAdditionalInfo,
         products,
         crOptions,
         unitOptions,
