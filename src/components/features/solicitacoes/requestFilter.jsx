@@ -13,14 +13,6 @@ export default function SolicitacoesFilter({
     setBusca,
     statusDisponiveis,
 }) {
-    const temFiltroAtivo = status !== "" || data !== "" || busca !== "";
-
-    const limparFiltros = () => {
-        setStatus("");
-        setData("");
-        setBusca("");
-    };
-
     return (
         <div className="bg-white rounded-xl border border-[#AAAAAA] flex flex-row items-center justify-between p-2 gap-3">
             <span className="pl-3 text-[18px] text-[#133D87]">
@@ -69,7 +61,6 @@ export default function SolicitacoesFilter({
                         className="pl-2 w-full py-2 text-sm focus:outline-none focus:ring-0 border-none bg-transparent"
                     />
                 </div>
-
             </div>
         </div>
     );

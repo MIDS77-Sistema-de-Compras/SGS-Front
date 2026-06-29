@@ -49,6 +49,8 @@ body {
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
 .profile-panel {
   display: grid;
   grid-template-rows: 0fr;

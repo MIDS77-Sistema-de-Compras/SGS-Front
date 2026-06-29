@@ -30,7 +30,7 @@ export default function GerenciarUsuarios() {
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
-    <div className="flex flex-col w-full p-4 lg:p-6">
+    <div className="flex flex-col w-full">
 
       <div className="mb-4">
         <h1 className="text-2xl font-bold text-[#103D85] mb-1">Gerenciar usuários</h1>
@@ -112,7 +112,7 @@ export default function GerenciarUsuarios() {
             <button className="px-6 py-2 bg-[#E6F0FF] text-[#103D85] font-medium rounded-lg text-sm hover:bg-[#D4E5FF] transition-colors">
               Exportar
             </button>
-            <Link href="/usuarios/admin">
+            <Link href="/usuarios/admin/criar">
               <button className="px-6 py-2 bg-[#103D85] text-white font-medium rounded-lg text-sm hover:bg-[#0c2e63] transition-colors">
                 Criar Usuário
               </button>

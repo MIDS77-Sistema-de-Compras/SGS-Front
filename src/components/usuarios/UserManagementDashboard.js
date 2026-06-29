@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 
-// Mock user list matching the design and totals: 20 total, 19 active, 1 inactive, 5 roles spread
 const initialUsers = [
   { id: 1, nome: "Elis Jasper", email: "andrey.lombardo@edu.sc.senai.br", nivel: "Docente", status: "Ativo", ultimoAcesso: "04/05/2026 16:55", telefone: "(47) 99876-5432", ramal: "3222-0001" },
   { id: 2, nome: "Gabrielli Glowatski", email: "bruno.sebastiano@edu.sc.senai.br", nivel: "Docente", status: "Ativo", ultimoAcesso: "27/04/2026 08:27", telefone: "(47) 99876-5433", ramal: "3222-0002" },
@@ -34,11 +33,9 @@ export default function UserManagementDashboard() {
   const [sortField, setSortField] = useState("nome");
   const [sortDirection, setSortDirection] = useState("asc");
 
-  // Modal State
   const [modalOpen, setModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
 
-  // Form Fields State
   const [formNome, setFormNome] = useState("");
   const [formEmail, setFormEmail] = useState("");
   const [formTelefone, setFormTelefone] = useState("");
@@ -49,7 +46,6 @@ export default function UserManagementDashboard() {
 
   const itemsPerPage = 6;
 
-  // Open modal for creating a new user
   const handleOpenCreate = () => {
     setEditingUser(null);
     setFormNome("");
@@ -62,7 +58,6 @@ export default function UserManagementDashboard() {
     setModalOpen(true);
   };
 
-  // Open modal for editing an existing user
   const handleOpenEdit = (user) => {
     setEditingUser(user);
     setFormNome(user.nome);
@@ -71,11 +66,10 @@ export default function UserManagementDashboard() {
     setFormRamal(user.ramal || "");
     setFormNivel(user.nivel);
     setFormStatus(user.status);
-    setFormSenha(""); // Leave empty unless modifying
+    setFormSenha("");
     setModalOpen(true);
   };
 
-  // Handle Form Submit (Create or Edit)
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -85,24 +79,22 @@ export default function UserManagementDashboard() {
     }
 
     if (editingUser) {
-      // Edit mode
       setUsers(
         users.map((u) =>
           u.id === editingUser.id
             ? {
-                ...u,
-                nome: formNome,
-                email: formEmail,
-                telefone: formTelefone,
-                ramal: formRamal,
-                nivel: formNivel,
-                status: formStatus,
-              }
+              ...u,
+              nome: formNome,
+              email: formEmail,
+              telefone: formTelefone,
+              ramal: formRamal,
+              nivel: formNivel,
+              status: formStatus,
+            }
             : u
         )
       );
     } else {
-      // Create mode
       const now = new Date();
       const formattedDate = `${String(now.getDate()).padStart(2, "0")}/${String(
         now.getMonth() + 1
@@ -126,7 +118,6 @@ export default function UserManagementDashboard() {
     setModalOpen(false);
   };
 
-  // Handle Delete
   const handleDelete = (id) => {
     if (confirm("Tem certeza que deseja excluir este usuário?")) {
       setUsers(users.filter((u) => u.id !== id));
@@ -134,13 +125,11 @@ export default function UserManagementDashboard() {
     }
   };
 
-  // Summary Metrics calculations
   const totalCount = users.length;
   const activeCount = users.filter((u) => u.status === "Ativo").length;
   const inactiveCount = users.filter((u) => u.status === "Inativo").length;
-  const accessLevelCount = 5; // Fixed based on the 5 levels of access
+  const accessLevelCount = 5;
 
-  // Handle Sort
   const handleSort = (field) => {
     if (sortField === field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
@@ -150,7 +139,6 @@ export default function UserManagementDashboard() {
     }
   };
 
-  // Sort icon component
   const SortIcon = ({ field }) => {
     if (sortField !== field) {
       return (
@@ -166,7 +154,6 @@ export default function UserManagementDashboard() {
     );
   };
 
-  // Filter and Sort users list
   const filteredUsers = useMemo(() => {
     return users
       .filter((user) => {
@@ -192,21 +179,17 @@ export default function UserManagementDashboard() {
       });
   }, [users, searchQuery, statusFilter, sortField, sortDirection]);
 
-  // Pagination calculations
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage) || 1;
   const currentUsers = useMemo(() => {
-    // If page exceeds total pages after filtering, reset page to 1
     const adjustedPage = currentPage > totalPages ? 1 : currentPage;
     const startIndex = (adjustedPage - 1) * itemsPerPage;
     return filteredUsers.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredUsers, currentPage, totalPages]);
 
-  // Adjust page if it falls out of range
   if (currentPage > totalPages) {
     setCurrentPage(1);
   }
 
-  // Export to CSV Function
   const handleExport = () => {
     const headers = ["ID", "Nome", "E-mail", "Nível", "Status", "Último Acesso", "Telefone", "Ramal"];
     const rows = filteredUsers.map((u) => [
@@ -233,7 +216,6 @@ export default function UserManagementDashboard() {
     document.body.removeChild(link);
   };
 
-  // Get Initials for User Avatar
   const getInitials = (name) => {
     if (!name) return "";
     const parts = name.split(" ");
@@ -243,7 +225,6 @@ export default function UserManagementDashboard() {
     return name.slice(0, 2).toUpperCase();
   };
 
-  // Nivel badge style maps
   const getNivelStyle = (nivel) => {
     switch (nivel) {
       case "Docente":
@@ -264,7 +245,7 @@ export default function UserManagementDashboard() {
 
   return (
     <div className="w-full flex flex-col gap-6 select-none pb-12">
-      {/* Title block */}
+
       <div>
         <h1 className="text-[26px] font-bold text-[#103D85] tracking-tight">
           Gerenciar usuários
@@ -274,9 +255,7 @@ export default function UserManagementDashboard() {
         </p>
       </div>
 
-      {/* Summary Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-        {/* Total Users */}
         <div className="bg-white rounded-[18px] border border-gray-100 shadow-sm relative overflow-hidden flex items-center p-6 min-h-[105px]">
           <div className="absolute top-0 left-0 right-0 h-[4px] bg-[#3B6FCC]" />
           <div className="flex items-center gap-4 w-full">
@@ -297,7 +276,6 @@ export default function UserManagementDashboard() {
           </div>
         </div>
 
-        {/* Active Users */}
         <div className="bg-white rounded-[18px] border border-gray-100 shadow-sm relative overflow-hidden flex items-center p-6 min-h-[105px]">
           <div className="absolute top-0 left-0 right-0 h-[4px] bg-[#16A34A]" />
           <div className="flex items-center gap-4 w-full">
@@ -315,7 +293,6 @@ export default function UserManagementDashboard() {
           </div>
         </div>
 
-        {/* Inactive Users */}
         <div className="bg-white rounded-[18px] border border-gray-100 shadow-sm relative overflow-hidden flex items-center p-6 min-h-[105px]">
           <div className="absolute top-0 left-0 right-0 h-[4px] bg-[#D97706]" />
           <div className="flex items-center gap-4 w-full">
@@ -334,7 +311,6 @@ export default function UserManagementDashboard() {
           </div>
         </div>
 
-        {/* Access Levels */}
         <div className="bg-white rounded-[18px] border border-gray-100 shadow-sm relative overflow-hidden flex items-center p-6 min-h-[105px]">
           <div className="absolute top-0 left-0 right-0 h-[4px] bg-[#8B5CF6]" />
           <div className="flex items-center gap-4 w-full">
@@ -351,12 +327,9 @@ export default function UserManagementDashboard() {
         </div>
       </div>
 
-      {/* Main Table Card Wrapper */}
       <div className="bg-white border border-gray-200 rounded-[22px] shadow-sm overflow-hidden flex flex-col">
-        {/* Filter / Actions Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-6 border-b border-gray-100">
           <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
-            {/* Search Input */}
             <div className="relative min-w-[280px] w-full md:w-auto">
               <svg
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -381,7 +354,6 @@ export default function UserManagementDashboard() {
               />
             </div>
 
-            {/* Status Dropdown */}
             <div className="relative w-full md:w-auto">
               <select
                 value={statusFilter}
@@ -408,9 +380,7 @@ export default function UserManagementDashboard() {
             </div>
           </div>
 
-          {/* Action buttons */}
           <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-            {/* Exportar Button */}
             <button
               onClick={handleExport}
               className="flex items-center gap-2 bg-[#DCE4F2] hover:bg-[#CAD6EA] text-[#103D85] font-bold text-[14px] px-6 py-2.5 rounded-xl transition-all active:scale-[0.98]"
@@ -423,7 +393,6 @@ export default function UserManagementDashboard() {
               Exportar
             </button>
 
-            {/* Criar Usuário Button */}
             <button
               onClick={handleOpenCreate}
               className="flex items-center gap-2 bg-[#103D85] hover:bg-[#0c2e64] text-white font-bold text-[14px] px-6 py-2.5 rounded-xl transition-all active:scale-[0.98]"
@@ -433,7 +402,6 @@ export default function UserManagementDashboard() {
           </div>
         </div>
 
-        {/* Data Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -598,11 +566,10 @@ export default function UserManagementDashboard() {
                 <button
                   key={pageNum}
                   onClick={() => setCurrentPage(pageNum)}
-                  className={`px-3.5 py-1.5 text-[13px] transition-all font-medium border-r border-gray-200 ${
-                    isActive
+                  className={`px-3.5 py-1.5 text-[13px] transition-all font-medium border-r border-gray-200 ${isActive
                       ? "bg-[#103D85] text-white border-r-[#103D85] font-semibold"
                       : "text-gray-600 hover:bg-gray-50"
-                  }`}
+                    }`}
                 >
                   {pageNum}
                 </button>
@@ -755,11 +722,10 @@ export default function UserManagementDashboard() {
                           key={nivel}
                           type="button"
                           onClick={() => setFormNivel(nivel)}
-                          className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border text-[14px] font-medium transition-all active:scale-[0.98] ${
-                            formNivel === nivel
+                          className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border text-[14px] font-medium transition-all active:scale-[0.98] ${formNivel === nivel
                               ? "bg-[#103D85] border-[#103D85] text-white"
                               : "border-gray-200 text-gray-600 bg-white hover:bg-gray-50"
-                          }`}
+                            }`}
                         >
                           <span className={`w-2 h-2 rounded-full ${formNivel === nivel ? "bg-white" : "bg-gray-400"}`} />
                           {nivel}
