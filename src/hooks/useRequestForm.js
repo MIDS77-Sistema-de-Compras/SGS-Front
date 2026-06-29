@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { api } from "@/service/api";
 import { createFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
+import { useNotification } from "@/contexts/NotificationContext";
 
 const REQUEST_TABS = [
     { valor: "produto", label: "PRODUTO" },
@@ -9,6 +10,7 @@ const REQUEST_TABS = [
 ];
 
 export function useRequestForm() {
+    const { showNotification } = useNotification();
     const [abaAtiva, setAbaAtiva] = useState("produto");
     const [attachments, setAttachments] = useState([]);
     const [branch, setBranch] = useState("");
@@ -142,16 +144,19 @@ export function useRequestForm() {
 
         if (abaAtiva !== "produto") {
             setFormError("A criação de serviços ainda não está conectada à API.");
+            showNotification("A criação de serviços ainda não está conectada à API.", "error");
             return;
         }
 
         if (!crBranchId) {
             setFormError("Selecione o CR e Projeto.");
+            showNotification("Selecione o CR e Projeto antes de finalizar.", "error");
             return;
         }
 
         if (products.length === 0) {
             setFormError("Adicione pelo menos um produto antes de finalizar.");
+            showNotification("Adicione pelo menos um produto antes de finalizar.", "error");
             return;
         }
 
@@ -164,12 +169,14 @@ export function useRequestForm() {
             });
 
             setSuccess(true);
+            showNotification("Solicitação criada com sucesso!", "success");
             setBranch("");
             setCrBranchId("");
             setProducts([]);
             setAttachments([]);
         } catch (error) {
             setFormError(error.message || "Erro ao criar a solicitação.");
+            showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
         } finally {
             setSubmitting(false);
         }
