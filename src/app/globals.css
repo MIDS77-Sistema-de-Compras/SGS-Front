@@ -100,3 +100,26 @@ body {
   transform: translateY(0);
   opacity: 1;
 }
+
+.dark ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: #1A2233;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #303746;
+    border-radius: 9999px;
+    border: 2px solid #1A2233;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #3d4456;
+}
+
+.dark * {
+    scrollbar-color: #303746 #1A2233;
+}
