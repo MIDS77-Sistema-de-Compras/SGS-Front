@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export default function SummaryItem({ iconSrc, iconAlt, label, count }) {
     return (
-        <li className="flex p-4 shadow-lg rounded-xl items-center gap-40 hover:scale-[1.03]">
+        <li className="flex p-4 shadow-lg rounded-xl items-center gap-40 hover:scale-[1.03] dark:bg-[#303746] dark:border dark:border-white/10">
             <div className="flex gap-3 items-center">
                 <Image
                     src={iconSrc}
@@ -10,11 +10,11 @@ export default function SummaryItem({ iconSrc, iconAlt, label, count }) {
                     width={25}
                     height={25}
                 />
-                <p>
+                <p className="text-gray-800 dark:text-[#E2E2EA]">
                     {label}
                 </p>
             </div>
-            <p className="font-semibold text-[20px]">
+            <p className="font-semibold text-[20px] text-gray-800 dark:text-[#E2E2EA]">
                 {count}
             </p>
         </li>

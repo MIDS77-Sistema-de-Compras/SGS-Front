@@ -37,11 +37,11 @@ const activities = [
 
 export default function RecentActivity() {
     return (
-        <div className="flex-1 border border-[#AAAAAA] rounded-xl px-5 py-3 shadow-lg">
-            <h2 className="text-[#103D85] font-bold text-[22px]">
+        <div className="flex-1 border border-[#AAAAAA] dark:border-white/10 rounded-xl px-5 py-3 shadow-lg dark:bg-[#1A2233]">
+            <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
                 Atividade Recente
             </h2>
-            <div className="border-t border-[#AAAAAA] mt-2 mb-5 -mx-5" />
+            <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 mb-5 -mx-5" />
             <ul className="flex flex-col gap-1">
                 {activities.map((item) => (
                     <ActivityItem key={item.id} {...item} />
