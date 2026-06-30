@@ -23,7 +23,7 @@ export default function ProductModal({ isModalOpen, editing, selectedProduct, ed
                         {editing ? (
                             <input value={editedProduct.nome} onChange={(e) => setEditedProduct({ ...editedProduct, nome: e.target.value })} className="border rounded-lg px-3 py-2 w-full text-sm" />
                         ) : (
-                            <span className="text-sm text-gray-700">{selectedProduct.nome}</span>
+                            <span className="text-sm text-gray-700 break-all">{selectedProduct.nome}</span>
                         )}
                     </div>
 
@@ -65,7 +65,7 @@ export default function ProductModal({ isModalOpen, editing, selectedProduct, ed
                         {editing ? (
                             <textarea value={editedProduct.additionalInfo} onChange={(e) => setEditedProduct({ ...editedProduct, additionalInfo: e.target.value })} className="border rounded-lg px-3 py-2 w-full text-sm" rows={3} />
                         ) : (
-                            <p className="text-sm text-gray-600 leading-relaxed">{selectedProduct.additionalInfo}</p>
+                            <p className="text-sm text-gray-600 leading-relaxed break-all">{selectedProduct.additionalInfo}</p>
                         )}
                     </div>
 
