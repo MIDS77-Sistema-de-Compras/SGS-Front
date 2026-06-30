@@ -21,6 +21,8 @@ export default function RequestForm() {
         crBranchId, productName, setProductName,
         quantity, setQuantity, unit, setUnit,
         additionalInfo, setAdditionalInfo,
+        serviceName, setServiceName,
+        serviceAdditionalInfo, setServiceAdditionalInfo,
         products, crOptions, unitOptions,
         submitting, formError, success,
         handleCrBranchChange, handleAddProduct,
@@ -181,8 +183,8 @@ export default function RequestForm() {
                                 <Input
                                     variant="form"
                                     placeholder="Digite o título do serviço..."
-                                    value={""}
-                                    onChange={() => { }}
+                                    value={serviceName}
+                                    onChange={(event) => setServiceName(event.target.value)}
                                 />
                             </FormField>
 
@@ -191,8 +193,8 @@ export default function RequestForm() {
                                     <Input
                                         variant="form"
                                         placeholder="Informações adicionais do serviço..."
-                                        value={""}
-                                        onChange={() => { }}
+                                        value={serviceAdditionalInfo}
+                                        onChange={(event) => setServiceAdditionalInfo(event.target.value)}
                                     />
                                 </FormField>
 
