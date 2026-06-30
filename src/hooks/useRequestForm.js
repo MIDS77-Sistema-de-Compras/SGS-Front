@@ -135,8 +135,41 @@ export function useRequestForm() {
         setProducts((currentProducts) => currentProducts.filter((product) => product.id !== productId));
     }
 
+    const ALLOWED_TYPES = [
+        'image/png',
+        'image/jpeg',
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
+    const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'pdf', 'docx'];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+    function isFileAllowed(file) {
+        if (ALLOWED_TYPES.includes(file.type)) return true;
+        const ext = file.name.split('.').pop().toLowerCase();
+        return ALLOWED_EXTENSIONS.includes(ext);
+    }
+
     function handleFilesSelected(files) {
-        setAttachments(Array.from(files ?? []));
+        const fileArray = Array.from(files ?? []);
+
+        const wrongType = fileArray.filter((f) => !isFileAllowed(f));
+        const tooBig = fileArray.filter((f) => isFileAllowed(f) && f.size > MAX_FILE_SIZE);
+        const valid = fileArray.filter((f) => isFileAllowed(f) && f.size <= MAX_FILE_SIZE);
+
+        if (wrongType.length > 0) {
+            setFormError(`Formato não permitido: ${wrongType.map((f) => f.name).join(', ')}. Use PNG, JPEG, PDF ou DOCX.`);
+        } else if (tooBig.length > 0) {
+            setFormError(`Arquivo muito grande: ${tooBig.map((f) => f.name).join(', ')}. Máximo 10MB por arquivo.`);
+        }
+
+        if (valid.length > 0) {
+            setAttachments((prev) => [...prev, ...valid]);
+        }
+    }
+
+    function handleRemoveAttachment(index) {
+        setAttachments((prev) => prev.filter((_, i) => i !== index));
     }
 
     async function handleSubmit(event) {
@@ -216,6 +249,8 @@ export function useRequestForm() {
         handleAddProduct,
         handleRemoveProduct,
         handleFilesSelected,
+        handleRemoveAttachment,
         handleSubmit,
+        attachments,
     };
 }
