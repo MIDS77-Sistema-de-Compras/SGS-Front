@@ -3,16 +3,21 @@ const STATUS_CORES = {
     "Reprovado": "bg-[#E30613]",
     "Parcial Aprovado": "bg-[#0084FF]",
     "Aprovado": "bg-[#4CAF50]",
-    "Em atendimento": "bg-[#11B6D4]",
-    "Atrasada": "bg-[#EF4444]",
-    "Pedido Cancelado": "bg-[#71717A]",
-    "Recebimento Parcial": "bg-[#F97316]",
-    "Aguardando comprador": "bg-[#8B5CF6]",
-    "Solicitando orçamento": "bg-[#A855F7]",
-    "Fundo Rotativo": "bg-[#EC4899]",
-    "CD central": "bg-[#3B82F6]",
-    "Solicitado pelo portal": "bg-[#E1AD01]",
-    "Sem produtos": "bg-gray-400"
+    "Em atendimento": "bg-[#13BAD6]",
+    "Atrasada": "bg-[#F04E4E]",
+    "Pedido Cancelado": "bg-[#7C838C]",
+    "Recebimento Parcial": "bg-[#F97A22]",
+    "Aguardando comprador": "bg-[#9164F6]",
+    "Solicitando orçamento": "bg-[#B776F6]",
+    "Fundo Rotativo": "bg-[#ED519E]",
+    "CD central": "bg-[#68AAFA]",
+    "Solicitado pelo portal": "bg-[#EBB715]",
+    "Sem produtos": "bg-gray-400",
+    // Status reais da entidade Request (backend)
+    "Aguardando aprovação": "bg-[#EDAE28]",
+    "Recusado": "bg-[#E30613]",
+    "Cancelado": "bg-[#71717A]",
+    "Entregue": "bg-[#0084FF]"
 };
 
 export function getStatusCor(status) {

@@ -28,8 +28,15 @@ export default function RequestForm() {
         submitting, formError, success,
         handleCrBranchChange, handleAddProduct,
         handleRemoveProduct, handleFilesSelected,
-        handleSubmit,
+        handleRemoveAttachment, handleSubmit,
+        attachments,
     } = useRequestForm();
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return `${bytes} B`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
 
     return (
         <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
@@ -101,9 +108,6 @@ export default function RequestForm() {
                         <div className="mt-10">
                             <SectionHeader label="PRODUTOS" />
 
-                            <div className="mt-5">
-                                <ListProducts products={products} onRemove={handleRemoveProduct} tipo={"produto"} />
-                            </div>
 
                             <div className="flex w-full gap-5">
                                 <FormField
@@ -169,6 +173,10 @@ export default function RequestForm() {
                                     +
                                 </Button>
                             </div>
+
+                            <div className="mt-5">
+                                <ListProducts products={products} onRemove={handleRemoveProduct} tipo={"produto"} />
+                            </div>
                         </div>
 
                     ) : (
@@ -219,10 +227,37 @@ export default function RequestForm() {
                                 iconDark={fileWhite}
                                 iconAlt="File Icon"
                                 title="Arraste seus documentos aqui"
-                                description="Formatos aceitos: PDF, JPG, PNG e DOCX (máx 20MB)"
+                                description="Formatos aceitos: PDF, JPG, PNG e DOCX (máx 10MB)"
                                 accept=".pdf,.jpg,.jpeg,.png,.docx"
                                 onFilesSelected={handleFilesSelected}
                             />
+
+                            {attachments.length > 0 && (
+                                <ul className="mt-3 flex flex-col gap-2">
+                                    {attachments.map((f, index) => (
+                                        <li
+                                            key={index}
+                                            className="flex items-center justify-between rounded-lg border border-[#AAAAAA] px-4 py-2 text-sm"
+                                        >
+                                            <div className="flex items-center gap-3 min-w-0">
+                                                <span className="truncate font-medium text-[#103D85]">
+                                                    {f.name}
+                                                </span>
+                                                <span className="shrink-0 text-[#747782]">
+                                                    {formatFileSize(f.size)}
+                                                </span>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveAttachment(index)}
+                                                className="ml-3 shrink-0 font-bold text-[#BA1A1A] hover:opacity-70"
+                                            >
+                                                ×
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
                     </div>
 

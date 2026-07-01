@@ -1,98 +1,121 @@
-import ActivityItem from "@/components/features/home/ActivityItem"
-import HomeFooter from "@/components/features/home/HomeFooter"
+"use client";
 
-const notificacoes = [
-    {
-        id: 1,
-        iconSrc: "/images/home/aprovada.png",
-        iconAlt: "Solicitação aprovada",
-        title: "Solicitação #1234 aprovada",
-        subtitle: "Equipamentos de mecânica",
-        time: "Há 2 horas",
-    },
-    {
-        id: 2,
-        iconSrc: "/images/home/atualizacao.png",
-        iconAlt: "Novo comentário",
-        title: "Novo comentário em #1234",
-        subtitle: "Aguardando fornecedor terceiro",
-        time: "Há 2 horas",
-    },
-    {
-        id: 3,
-        iconSrc: "/images/home/recusada.png",
-        iconAlt: "Solicitação recusada",
-        title: "Solicitação #4321 recusada",
-        subtitle: "Equipamentos de mecânica",
-        time: "Há 2 horas",
-    },
-    {
-        id: 4,
-        iconSrc: "/images/home/atualizacao.png",
-        iconAlt: "Nova atualização",
-        title: "Nova atualização em #1234",
-        subtitle: "Equipamentos de mecânica",
-        time: "Há 2 horas",
-    },
-    {
-        id: 5,
-        iconSrc: "/images/home/aprovada.png",
-        iconAlt: "Solicitação aprovada",
-        title: "Solicitação #1234 aprovada",
-        subtitle: "Equipamentos de mecânica",
-        time: "Há 2 horas",
-    },
-    {
-        id: 6,
-        iconSrc: "/images/home/atualizacao.png",
-        iconAlt: "Novo comentário",
-        title: "Novo comentário em #1234",
-        subtitle: "Aguardando fornecedor terceiro",
-        time: "Há 2 horas",
-    },
-    {
-        id: 7,
-        iconSrc: "/images/home/recusada.png",
-        iconAlt: "Solicitação recusada",
-        title: "Solicitação #4321 recusada",
-        subtitle: "Equipamentos de mecânica",
-        time: "Há 2 horas",
-    },
-    {
-        id: 8,
-        iconSrc: "/images/home/atualizacao.png",
-        iconAlt: "Nova atualização",
-        title: "Nova atualização em #1234",
-        subtitle: "Equipamentos de mecânica",
-        time: "Há 2 horas",
-    },
-    {
-        id: 9,
-        iconSrc: "/images/home/aprovada.png",
-        iconAlt: "Solicitação aprovada",
-        title: "Solicitação #1234 aprovada",
-        subtitle: "Equipamentos de mecânica",
-        time: "Há 2 horas",
-    },
-]
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { ClipboardList, FilePlus2 } from "lucide-react";
+import NotificationsList from "@/components/features/notifications/NotificationsList";
+import { sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
+import { notificationsService } from "@/service/notifications";
 
 export default function Notificacoes() {
+    const [notifications, setNotifications] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [updatingId, setUpdatingId] = useState(null);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        async function loadNotifications() {
+            try {
+                const data = await notificationsService.findMine();
+
+                if (isMounted) {
+                    setNotifications(Array.isArray(data) ? data : []);
+                    setError("");
+                }
+            } catch {
+                if (isMounted) {
+                    setError("Nao foi possivel carregar as notificacoes.");
+                }
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        }
+
+        loadNotifications();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    async function handleMarkAsViewed(id) {
+        setUpdatingId(id);
+
+        try {
+            const updatedNotification = await notificationsService.markAsViewed(id);
+            setNotifications((currentNotifications) => (
+                currentNotifications.map((notification) => (
+                    notification.id === id
+                        ? { ...notification, ...updatedNotification, viewed: true }
+                        : notification
+                ))
+            ));
+        } catch {
+            setError("Nao foi possivel atualizar a notificacao.");
+        } finally {
+            setUpdatingId(null);
+        }
+    }
+
+    const orderedNotifications = useMemo(() => (
+        sortNotificationsByDate(notifications)
+    ), [notifications]);
+
     return (
         <div className="flex flex-1 flex-col gap-10 min-h-0">
 
-            <div className="flex flex-1 flex-col border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl px-5 py-3 shadow-lg min-h-0">
-                <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px] shrink-0">
-                    Notificações
-                </h2>
-                <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 mb-3 -mx-5 shrink-0" />
-                <ul className="flex-1 flex flex-col gap-1 overflow-y-auto min-h-0 pr-2">
-                    {notificacoes.map((item) => (
-                        <ActivityItem key={item.id} {...item} />
-                    ))}
-                </ul>
-            </div>
+            <section className="flex min-h-0 flex-1 flex-col rounded-xl border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl px-5 py-3 shadow-lg min-h-0">
+                <div className="shrink-0 px-5 py-3">
+                    <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
+                        Notificações
+                    </h2>
+                </div>
 
-            <HomeFooter />
+                <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 mb-3 -mx-5 shrink-0" />
+                <div className="min-h-0 flex-1 overflow-y-auto py-2 pr-1">
+                    {isLoading && (
+                        <div className="flex h-full items-center justify-center px-5 py-8 text-center text-sm text-[#666666]">
+                            Carregando notificacoes...
+                        </div>
+                    )}
+
+                    {!isLoading && error && (
+                        <div className="mx-5 mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                            {error}
+                        </div>
+                    )}
+
+                    {!isLoading && !error && (
+                        <NotificationsList
+                            notifications={orderedNotifications}
+                            onMarkAsViewed={handleMarkAsViewed}
+                            updatingId={updatingId}
+                        />
+                    )}
+                </div>
+            </section>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <Link
+                    href="/solicitacoes/criar"
+                    className="flex h-16 items-center justify-center gap-3 rounded-xl bg-[#103D85] text-sm font-bold text-white shadow-sm transition-all hover:bg-[#0b2a5c] active:scale-[0.99]"
+                >
+                    <FilePlus2 size={22} strokeWidth={2.2} />
+                    Nova Solicitação
+                </Link>
+
+                <Link
+                    href="/solicitacoes"
+                    className="flex h-16 items-center justify-center gap-3 rounded-xl border border-[#333333] bg-white text-sm font-bold text-black shadow-sm transition-all hover:bg-gray-50 active:scale-[0.99]"
+                >
+                    <ClipboardList size={22} strokeWidth={2.2} />
+                    Minhas Solicitações
+                </Link>
+            </div>
         </div>
-    )
+    );
 }

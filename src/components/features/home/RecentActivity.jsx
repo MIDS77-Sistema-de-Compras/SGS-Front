@@ -1,52 +1,85 @@
-import ActivityItem from "./ActivityItem"
+"use client";
 
-const activities = [
-    {
-        id: 1,
-        iconSrc: "/images/home/aprovada.png",
-        iconAlt: "Icone Aprovação",
-        title: "Solicitação #1234 aprovada",
-        subtitle: "Equipamentos de mecânica",
-        time: "Há 2 horas",
-    },
-    {
-        id: 2,
-        iconSrc: "/images/home/atualizacao.png",
-        iconAlt: "Icone Atualização",
-        title: "Novo comentário em #1234",
-        subtitle: "Aguardando fornecedor terceiro",
-        time: "Há 2 horas",
-    },
-    {
-        id: 3,
-        iconSrc: "/images/home/recusada.png",
-        iconAlt: "Icone Recusado",
-        title: "Solicitação #4321 recusada",
-        subtitle: "Equipamentos de mecânica",
-        time: "Há 2 horas",
-    },
-    {
-        id: 4,
-        iconSrc: "/images/home/atualizacao.png",
-        iconAlt: "Icone Atualização",
-        title: "Novo comentário em #1234",
-        subtitle: "Aguardando fornecedor terceiro",
-        time: "Há 2 horas",
-    },
-]
+import { useEffect, useMemo, useState } from "react";
+import ActivityItem from "./ActivityItem";
+import { notificationsService } from "@/service/notifications";
+import { formatRelativeTime, getNotificationIcon, sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
 
 export default function RecentActivity() {
+    const [notifications, setNotifications] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        let isMounted = true;
+
+        async function loadNotifications() {
+            try {
+                const data = await notificationsService.findMine();
+
+                if (isMounted) {
+                    setNotifications(Array.isArray(data) ? data : []);
+                    setError("");
+                }
+            } catch {
+                if (isMounted) {
+                    setError("Nao foi possivel carregar as atividades recentes.");
+                }
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        }
+
+        loadNotifications();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    const recentActivities = useMemo(() => (
+        sortNotificationsByDate(notifications).slice(0, 4)
+    ), [notifications]);
+
     return (
         <div className="flex-1 border border-[#AAAAAA] dark:border-white/10 rounded-xl px-5 py-3 shadow-lg dark:bg-[#1A2233]">
             <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
                 Atividade Recente
             </h2>
-            <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 mb-5 -mx-5" />
-            <ul className="flex flex-col gap-1">
-                {activities.map((item) => (
-                    <ActivityItem key={item.id} {...item} />
-                ))}
-            </ul>
+            <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 -mx-5" />
+
+            {isLoading && (
+                <p className="text-sm text-[#666666]">Carregando atividades...</p>
+            )}
+
+            {!isLoading && error && (
+                <p className="text-sm text-red-600">{error}</p>
+            )}
+
+            {!isLoading && !error && !recentActivities.length && (
+                <p className="text-sm text-[#666666]">Nenhuma atividade recente.</p>
+            )}
+
+            {!isLoading && !error && Boolean(recentActivities.length) && (
+                <ul className="flex flex-col gap-1">
+                    {recentActivities.map((notification) => {
+                        const icon = getNotificationIcon(notification);
+
+                        return (
+                            <ActivityItem
+                                key={notification.id}
+                                iconSrc={icon.src}
+                                iconAlt={icon.alt}
+                                title={notification.title || `Solicitacao #${notification.requestId}`}
+                                subtitle={notification.message || "Atualizacao de solicitacao"}
+                                time={formatRelativeTime(notification.createdAt)}
+                            />
+                        );
+                    })}
+                </ul>
+            )}
         </div>
-    )
+    );
 }
