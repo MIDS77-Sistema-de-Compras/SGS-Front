@@ -2,19 +2,14 @@
 
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import Cookies from "js-cookie"
+import { logoutAction } from "./actions"
 
 export function Footer() {
     const router = useRouter()
 
-    async function handleLogout() {
-        try {
-            await fetch("/api/auth/logout", { method: "POST" });
-            
-            router.push("/login");
-            router.refresh();
-        } catch (error) {
-            console.error("Erro ao deslogar:", error);
-        }
+    const handleLogout = async () => {
+        await logoutAction();
     }
 
     return (

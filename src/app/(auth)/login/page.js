@@ -51,7 +51,6 @@ export default function LoginPage() {
             }
 
             Cookies.set("jwt", token, cookieOptions);
-            Cookies.set("token", token, cookieOptions);
 
             try {
                 const payloadBase64 = res.text.split('.')[1]
