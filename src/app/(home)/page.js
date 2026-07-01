@@ -12,8 +12,8 @@ export default function Home(){
     const router = useRouter()
 
     function handleLogout(){
-        Cookies.remove("jwt");
         Cookies.remove("token")
+        Cookies.remove("jwt")
         router.push("/login")
     }
 

@@ -32,3 +32,11 @@ export default function NovaSenhaPage() {
         </div>
     );
 }
+
+export default function NovaSenhaPage() {
+    return (
+        <Suspense fallback={null}>
+            <NovaSenhaContent />
+        </Suspense>
+    );
+}

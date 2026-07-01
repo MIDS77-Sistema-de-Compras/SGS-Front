@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import SectionHeader from '@/components/ui/layout/SectionHeader';
 import Button from '@/components/ui/button/Button';
@@ -8,6 +10,8 @@ import UserIdentificationSection from '@/components/features/admin/UserIdentific
 import AccessLevelSelector from '@/components/features/admin/AccessLevelSelector';
 
 export default function EditarUsuarios({ params }) {
+
+    const router = useRouter();
 
     const [formData, setFormData] = useState({
         nome: "Emanuelle Cristina Hostin",
@@ -27,7 +31,18 @@ export default function EditarUsuarios({ params }) {
         <div className="flex flex-col w-full gap-5">
 
             <div className="bg-white px-5 py-3 rounded-xl shadow-sm border border-[#AAAAAA]">
-                <h1 className="text-[22px] font-bold text-[#103D85]">Editar Usuário</h1>
+                <div className="flex items-center">
+                    <button
+                        type="button"
+                        onClick={() => router.back()}
+                        className="text-[#103D85] hover:bg-gray-100 p-1 mr-1 rounded-full transition-colors flex items-center justify-center"
+                        title="Voltar"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                    <h1 className="text-[22px] font-bold text-[#103D85]">Editar Usuário</h1>
+                </div>
+
 
                 <div className="border-t border-[#AAAAAA] mt-2 mb-5 -mx-5" />
 

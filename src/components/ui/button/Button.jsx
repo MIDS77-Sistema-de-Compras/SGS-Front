@@ -7,6 +7,8 @@ const variantStyles = {
   primary: 'bg-[#103D85] hover:bg-[#0b2a5c] text-white border-[#103D85]',
   outline: 'bg-white text-[#103D85] border-gray-200 hover:bg-gray-100',
   auth: 'bg-[#5D8EF7] hover:bg-[#4B84F4] text-white border-[#5D8EF7] shadow-md active:scale-[0.98]',
+  success: 'bg-white text-[#4CAF50] border-[#4CAF50] hover:bg-[#4CAF50]/5',
+  danger: 'bg-white text-[#F44336] border-[#F44336] hover:bg-[#F44336]/5',
 };
 
 const sizeStyles = {

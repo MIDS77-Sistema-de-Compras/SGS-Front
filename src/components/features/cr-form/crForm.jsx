@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Select from "@/components/ui/select/Select";
 import send from "../../../../public/images/icons/send.svg";
@@ -7,6 +10,7 @@ import SectionHeader from "@/components/ui/layout/SectionHeader";
 import Button from "@/components/ui/button/Button";
 
 export default function RequestFormCR() {
+    const [isMaster, setIsMaster] = useState(true);
     
 const BLOCOS_RESPONSAVEIS = [
     "Diretoria de Operações",
@@ -15,7 +19,7 @@ const BLOCOS_RESPONSAVEIS = [
     "Setor de Compras e Logística"
 ];
     return (
-        <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
+         <div className="border border-[#AAAAAA] rounded-xl flex flex-col overflow-hidden">
 
             <div className="px-5 py-3 border border-transparent border-b-[#AAAAAA]">
                 <h1 className="text-[#103D85] font-bold text-[22px]">Cadastrar CR</h1>
@@ -38,13 +42,30 @@ const BLOCOS_RESPONSAVEIS = [
                     </FormField>
                     
                     <FormField label="CR Master" required>
-                        <Select 
-                            name="master" 
-                            placeholder="Cadastrar como CR Master?" 
-                            defaultValue="" 
-                            options={["Sim, cadastrar como CR Master", "Não cadastrar como CR Master"]} 
-                            isRequired 
-                        />
+                        <div className="flex items-center gap-3 py-2 select-none">
+                            <button
+                                type="button"
+                                onClick={() => setIsMaster(!isMaster)}
+                                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    isMaster ? 'bg-[#103D85]' : 'bg-gray-200'
+                                }`}
+                            >
+                                <span
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                        isMaster ? 'translate-x-5' : 'translate-x-0'
+                                    }`}
+                                />
+                            </button>
+                            <div className="flex flex-col text-left min-w-[100px]">
+                                <span className={`text-[13px] font-bold leading-none ${isMaster ? 'text-[#103D85]' : 'text-gray-500'}`}>
+                                    {isMaster ? 'Ativado' : 'Desativado'}
+                                </span>
+                                <span className="text-[10px] text-gray-400 font-normal">
+                                    {isMaster ? 'Clique para desativar' : 'Clique para ativar'}
+                                </span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="master" value={isMaster ? "true" : "false"} />
                     </FormField>
 
                     <FormField label="Bloco responsável" required>

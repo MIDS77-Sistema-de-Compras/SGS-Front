@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { getAllRequests } from "@/service/requests";
 
-export function useRequestsList(initialRequests = []) {
+export function useRequestsList(initialRequests = [], fetchRequests = getAllRequests) {
     const [requests, setRequests] = useState(initialRequests);
     const [loading, setLoading] = useState(initialRequests.length === 0);
     const [error, setError] = useState("");
@@ -14,7 +14,7 @@ export function useRequestsList(initialRequests = []) {
             try {
                 setLoading(true);
                 setError("");
-                const data = await getAllRequests();
+                const data = await fetchRequests();
                 if (!cancelled) setRequests(data);
             } catch (err) {
                 if (!cancelled) setError(err.message || "Erro ao carregar solicitações.");
@@ -28,7 +28,7 @@ export function useRequestsList(initialRequests = []) {
         return () => {
             cancelled = true;
         };
-    }, []);
+    }, [fetchRequests]);
 
     return { requests, loading, error };
 }
