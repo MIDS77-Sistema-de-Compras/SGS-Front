@@ -75,6 +75,7 @@ export default function LoginPage() {
             setError(error.message || "Ocorreu um erro inesperado.");
         }
     }
+    
     return (
         <div>
             <FormCard

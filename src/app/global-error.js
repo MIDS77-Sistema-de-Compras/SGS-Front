@@ -7,6 +7,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { globalErrorPossiblePhrases } from "@/lib/utils/errorPhraseLib";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -14,19 +15,11 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-// :)
-const possiblePhrases = [
-    "Algo deu terrívelmente errado!",
-    "Ocorreu um erro fatal no sistema!",
-    "Um erro interno acabou acontecendo.",
-    "Ops! Algo deu errado!"
-]
-
 export default function GlobalErrorPage(){
     const [index, setIndex] = useState(0);
 
     useEffect(() => {
-        setIndex(Math.floor(Math.random()*possiblePhrases.length))
+        setIndex(Math.floor(Math.random()*globalErrorPossiblePhrases.length))
     }, []);
 
     return (
@@ -38,7 +31,7 @@ export default function GlobalErrorPage(){
                 <div className="h-screen flex flex-col gap-4 items-center justify-center">
                     <div className="max-h-1/2 rounded-xl p-4 flex flex-col items-center gap-4">
                         <div className="flex flex-col items-center text-white">
-                            <strong>{possiblePhrases[index]}</strong>
+                            <strong>{globalErrorPossiblePhrases[index]}</strong>
                             <sub className="mt-2 mb-10">Recarregue a página e, se o erro persistir, contate a equipe de suporte através do email abaixo.</sub>
                             <Link href="mailto:suporte.senai.sgs@gmail.com" className="text-blue-300">suporte.senai.sgs@gmail.com</Link>
                         </div>
