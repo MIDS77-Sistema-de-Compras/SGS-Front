@@ -1,0 +1,66 @@
+export const purchaseRequestsMock = [
+  {
+    id: '1',
+    product: 'Aço 1020',
+    variation: 'MAT-ACO-1020-RED',
+    quantity: '7940 Aprendizagem - Tecnologia da Informação',
+    additionalInfoStatus: 'ajustes',
+    requestDate: '07/05/2026',
+    requester: 'Comprador',
+    description: 'Solicitação de compra aguardando ajustes do solicitante.',
+  },
+  {
+    id: '2',
+    product: 'Aço 1020',
+    variation: 'MAT-ACO-1020-RED',
+    quantity: '7940 Aprendizagem - Tecnologia da Informação',
+    additionalInfoStatus: 'entregue',
+    requestDate: '07/05/2026',
+    requester: 'Comprador',
+    description: 'Solicitação de compra entregue.',
+  },
+  {
+    id: '3',
+    product: 'Aço 1020',
+    variation: 'MAT-ACO-1020-RED',
+    quantity: '7940 Aprendizagem - Tecnologia da Informação',
+    additionalInfoStatus: 'atrasada',
+    requestDate: '07/05/2026',
+    requester: 'Comprador',
+    description: 'Solicitação de compra em atraso.',
+  },
+  {
+    id: '4',
+    product: 'Aço 1020',
+    variation: 'MAT-ACO-1020-RED',
+    quantity: '7940 Aprendizagem - Tecnologia da Informação',
+    additionalInfoStatus: 'cancelado',
+    requestDate: '07/05/2026',
+    requester: 'Comprador',
+    description: 'Solicitação de compra cancelada.',
+  },
+  {
+    id: '5',
+    product: 'Aço 1020',
+    variation: 'MAT-ACO-1020-RED',
+    quantity: '7940 Aprendizagem - Tecnologia da Informação',
+    additionalInfoStatus: 'parcial',
+    requestDate: '07/05/2026',
+    requester: 'Comprador',
+    description: 'Solicitação de compra com recebimento parcial.',
+  },
+  {
+    id: '6',
+    product: 'Aço 1020',
+    variation: 'MAT-ACO-1020-RED',
+    quantity: '7940 Aprendizagem - Tecnologia da Informação',
+    additionalInfoStatus: 'atendimento',
+    requestDate: '07/05/2026',
+    requester: 'Comprador',
+    description: 'Solicitação de compra em atendimento.',
+  },
+];
+
+export function findPurchaseRequestById(id) {
+  return purchaseRequestsMock.find((request) => request.id === String(id));
+}

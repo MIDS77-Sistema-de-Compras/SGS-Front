@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import AdditionalInfoButton from '@/components/ui/additional-info-button/AdditionalInfoButton';
 
 const tableColumns = [
@@ -9,13 +10,12 @@ const tableColumns = [
   'Quantidade',
   'Status',
   ' ',
-
 ];
 
 export default function PurchaseRequestsTable({ requests = [] }) {
   return (
     <section className="w-full overflow-hidden rounded-2xl border border-[#A3A3A3] bg-white">
-      <div className=" border-[#A3A3A3] px-6 py-2">
+      <div className="border-[#A3A3A3] px-6 py-2">
         <h1 className="text-[26px] font-semibold text-[#103D85]">
           Solicitações de compra
         </h1>
@@ -36,20 +36,20 @@ export default function PurchaseRequestsTable({ requests = [] }) {
               key={request.id}
               className="grid min-h-16 grid-cols-[0.9fr_1.2fr_1fr_1.7fr_260px_72px] items-center border-b border-[#A3A3A3] px-6 text-center text-xs text-[#111827]"
             >
-              <span>{request.data}</span>
+              <span>{request.data || request.requestDate}</span>
               <span>{request.product}</span>
               <span>{request.variation}</span>
               <span>{request.quantity}</span>
               <div className="flex justify-center">
                 <AdditionalInfoButton status={request.additionalInfoStatus} />
               </div>
-              <button
-                type="button"
+              <Link
+                href={`/comprador/solicitacao/${request.id}`}
                 className="mx-auto text-3xl leading-none text-[#103D85]"
                 aria-label="Ver detalhes"
               >
                 ›
-              </button>
+              </Link>
             </div>
           ))}
         </div>

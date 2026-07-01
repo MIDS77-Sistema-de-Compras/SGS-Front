@@ -8,7 +8,7 @@ const publicPaths = [
 ];
 
 export function proxy(request) {
-    const token = request.cookies.get("jwt")?.value ?? request.cookies.get("token")?.value;
+    const token = request.cookies.get("jwt")?.value;
     const { pathname } = request.nextUrl;
 
     if (publicPaths.includes(pathname)) {

@@ -1,7 +1,7 @@
 import { api } from "@/service/api";
 
 function formatRequestCode(crBranch) {
-    if (!crBranch?.crCode) return "Solicitação";
+    if (!crBranch?.crCode) return "SolicitaÃ§Ã£o";
 
     return String(crBranch.crCode).startsWith("CR-")
         ? crBranch.crCode
@@ -21,7 +21,7 @@ function normalizeProduct(item) {
         status: item.statusName,
         quantity: item.quantity,
         unit: item.measurementUnit,
-        additionalInfo: item.additionalInformations || "Sem informações adicionais.",
+        additionalInfo: item.additionalInformations || "Sem informaÃ§Ãµes adicionais.",
     };
 }
 
@@ -80,3 +80,7 @@ export async function getRequestById(id) {
 
     return normalizeRequest(request, requestProducts, crBranch);
 }
+
+export const requestsService = {
+    findMine: () => api.get("/requests/me"),
+};
