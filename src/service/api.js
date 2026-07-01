@@ -2,6 +2,7 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 function getToken() {
     if (typeof document === 'undefined') return null;
+
     const match = document.cookie
         .split('; ')
         .find((row) => row.startsWith('jwt='));
@@ -11,7 +12,6 @@ function getToken() {
 async function handleRequest(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const token = getToken();
-
     const isFormData = options.body instanceof FormData;
 
     const headers = {
@@ -21,14 +21,14 @@ async function handleRequest(endpoint, options = {}) {
     };
 
     const response = await fetch(url, {
+        credentials: 'include',
         ...options,
         headers,
-        credentials: 'include',
     });
 
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        const error = new Error(errorData.message || 'Erro na requisição');
+        const error = new Error(errorData.message || 'Erro na requisicao');
         error.status = response.status;
         error.details = errorData;
         throw error;
@@ -50,6 +50,12 @@ export const api = {
         ...options,
         method: 'PUT',
         body: JSON.stringify(body)
+    }),
+
+    patch: (endpoint, body, options) => handleRequest(endpoint, {
+        ...options,
+        method: 'PATCH',
+        body: body ? JSON.stringify(body) : undefined
     }),
 
     delete: (endpoint, options) => handleRequest(endpoint, { ...options, method: 'DELETE' }),
