@@ -55,7 +55,9 @@ export async function getAllRequests() {
         return acc;
     }, new Map());
 
-    return (requests || []).map((request) => {
+    const requestsList = Array.isArray(requests) ? requests : (requests?.content || []);
+
+    return requestsList.map((request) => {
         const crBranch = crBranchesById.get(request.crBranchId);
         const requestProducts = productsByRequestId.get(request.id) || [];
 
