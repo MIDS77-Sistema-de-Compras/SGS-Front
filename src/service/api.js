@@ -9,11 +9,7 @@ function getToken() {
 
     const match = document.cookie
         .split('; ')
-        .find((row) => row.startsWith('jwt='))
-        ?? document.cookie
-            .split('; ')
-            .find((row) => row.startsWith('token='));
-
+        .find((row) => row.startsWith('jwt='));
     return match ? decodeURIComponent(match.split('=')[1]) : null;
 }
 
