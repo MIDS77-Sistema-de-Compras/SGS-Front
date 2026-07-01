@@ -241,9 +241,7 @@ export default function MonitoramentoSolicitacoes() {
                         );
                     })()}
                 </div>
-
             </div>
-
         </div>
     );
 }

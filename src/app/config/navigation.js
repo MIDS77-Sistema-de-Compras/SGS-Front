@@ -27,6 +27,7 @@ export const docenteRoutes = [
     },
 ]
 
+//pronto
 export const admRoutes = [
     {
         label: "Início",
@@ -35,7 +36,7 @@ export const admRoutes = [
     },
     {
         label: "Gerenciar Usuários",
-        href: "/usuarios/admin/gerenciar",  
+        href: "/usuarios/gerenciar",  
         icon: "/images/icons/gerenciar-users.png",
     },
     {
@@ -64,7 +65,7 @@ export const compradorRoutes = [
     },
     {
         label: "Solicitações de compra",
-        href: "/usuarios/comprador/solicitacao",
+        href: "/solicitacoes-compra",
         icon: "/images/icons/request-compra.png",
     },
     {
@@ -86,11 +87,6 @@ export const supervisorRoutes = [
         icon: "/images/icons/home.png",
     },
     {
-        label: "Gerenciar Usuários",
-        href: "/usuarios/admin/gerenciar", //arrumar
-        icon: "/images/icons/gerenciar-users.png",
-    },
-    {
         label: "Minhas Solicitações",
         href: "/solicitacoes",
         icon: "/images/icons/my-requests.png",
@@ -99,6 +95,11 @@ export const supervisorRoutes = [
         label: "Nova Solicitação",
         href: "/solicitacoes/criar",
         icon: "/images/home/nova-solicitacao.png",
+    },
+    {
+        label: "Gerenciar Usuários",
+        href: "/usuarios/gerenciar", //arrumar
+        icon: "/images/icons/gerenciar-users.png",
     },
     {
         label: "Monitoramento",
@@ -124,22 +125,32 @@ export const coordenadorRoutes = [
         icon: "/images/icons/home.png",
     },
     {
-        label: "Gerenciar Usuários",
-        href: "/usuarios/admin/gerenciar",
-        icon: "/images/icons/gerenciar-users.png",
+        label: "Minhas Solicitações",
+        href: "/solicitacoes",
+        icon: "/images/icons/my-requests.png",
     },
     {
-        label: "Solicitações em análise",
-        href: "/coordenador/solicitacoes",
+        label: "Nova Solicitação",
+        href: "/solicitacoes/criar",
         icon: "/images/home/nova-solicitacao.png",
     },
     {
-        label: "Monitoramento",
+        label: "Cadastrar CR",
+        href: "/criar-cr",
+        icon: "/images/icons/add-cr.png",
+    },
+    {
+        label: "Gerenciar Usuários",
+        href: "/usuarios/gerenciar",
+        icon: "/images/icons/gerenciar-users.png",
+    },
+    {
+        label: "Monitoramento", //arrumar
         href: "/coordenador/monitoramento",
         icon: "/images/icons/monitoramento.png",
     },
     {
-        label: "Analítico",
+        label: "Analítico", //arrumar
         href: "/coordenador/analitico",
         icon: "/images/icons/my-requests.png",
     },

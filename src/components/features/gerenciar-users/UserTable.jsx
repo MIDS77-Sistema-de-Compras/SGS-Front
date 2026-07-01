@@ -69,7 +69,7 @@ export default function UserTable({ users }) {
                                     <td className="py-2.5 px-4 w-[15%] text-gray-500 truncate">{user.lastAccess}</td>
                                     <td className="py-2.5 px-4 w-[8%]">
                                         <div className="flex justify-center">
-                                            <Link href={`/usuarios/admin/editar/${user.id}`}>
+                                            <Link href={`/usuarios/editar/${user.id}`}>
                                                 <button className="text-[#103D85] hover:text-blue-800 p-1.5 rounded-lg hover:bg-blue-50 transition-colors">
                                                     <Pencil size={18} />
                                                 </button>

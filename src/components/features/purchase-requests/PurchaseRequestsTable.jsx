@@ -44,7 +44,7 @@ export default function PurchaseRequestsTable({ requests = [] }) {
                 <AdditionalInfoButton status={request.additionalInfoStatus} />
               </div>
               <Link
-                href={`/comprador/solicitacao/${request.id}`}
+                href={`/usuarios/comprador/solicitacao/${request.id}`}
                 className="mx-auto text-3xl leading-none text-[#103D85]"
                 aria-label="Ver detalhes"
               >

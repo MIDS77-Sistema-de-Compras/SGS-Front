@@ -1,5 +1,9 @@
+"use client";
+
 import Link from 'next/link';
 import AdditionalInfoButton from '@/components/ui/additional-info-button/AdditionalInfoButton';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
 
 function DetailItem({ label, value }) {
   return (
@@ -13,6 +17,9 @@ function DetailItem({ label, value }) {
 }
 
 export default function PurchaseRequestDetailPage({ request }) {
+
+  const router = useRouter();
+
   if (!request) {
     return (
       <section className="w-full rounded-2xl border border-[#A3A3A3] bg-white p-6">
@@ -32,16 +39,19 @@ export default function PurchaseRequestDetailPage({ request }) {
   return (
     <section className="w-full rounded-2xl border border-[#A3A3A3] bg-white">
       <div className="flex items-center justify-between border-b border-[#A3A3A3] px-6 py-4">
-        <h1 className="text-[26px] font-semibold text-[#103D85]">
-          Detalhe da solicitação
-        </h1>
-
-        <Link
-          href="/comprador/solicitacao"
-          className="text-sm font-semibold text-[#103D85] hover:underline"
-        >
-          Voltar
-        </Link>
+        <div className="flex items-center">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="text-[#103D85] hover:bg-gray-100 p-1 mr-1 rounded-full transition-colors flex items-center justify-center"
+            title="Voltar"
+          >
+            <ArrowLeft size={24} />
+          </button>
+          <h1 className="text-[26px] font-semibold text-[#103D85]">
+            Detalhe da solicitação
+          </h1>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-2">
