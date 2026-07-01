@@ -27,13 +27,13 @@ export default function GerenciarUsuarios() {
     }, []);
 
     async function loadUsers() {
-        try {
-            const response = await getAllUsers();
-            setUsers(response.content);
-        } catch (error) {
-            console.error("Erro ao buscar usuários:", error);
-        }
+    try {
+        const response = await getAllUsers();
+        setUsers(response.content);
+    } catch (error) {
+        console.error("Erro ao buscar usuários:", error);
     }
+}
 
     const filteredUsers = useMemo(() => {
         return users.filter((user) => {
@@ -57,7 +57,7 @@ export default function GerenciarUsuarios() {
     const totalUsers = users.length;
     const activeUsers = users.filter((u) => u.active).length;
     const inactiveUsers = users.filter((u) => !u.active).length;
-    const totalProfiles = new Set(users.map((u) => u.userProfile)).size;
+    const totalProfiles = new Set(users.map((u) => u.roleName).filter(Boolean)).size;
 
     return (
         <div className="flex flex-1 flex-col w-full h-full">

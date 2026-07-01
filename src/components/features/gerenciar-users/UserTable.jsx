@@ -111,12 +111,12 @@ export default function UserTable({ users }) {
                                     <td className="py-2.5 px-4 w-[15%]">
                                         <span
                                             className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap
-                                                ${user.userProfile === "DOCENTE"
+                                                ${user.roleName === "DOCENTE"
                                                     ? "bg-green-50 text-green-700"
                                                     : "bg-orange-50 text-orange-600"
                                                 }`}
                                         >
-                                            {formatProfile(user.userProfile)}
+                                            {formatProfile(user.roleName)}
                                         </span>
                                     </td>
 
