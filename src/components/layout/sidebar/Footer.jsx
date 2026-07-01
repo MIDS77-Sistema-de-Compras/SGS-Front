@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
 import { logoutAction } from "./actions"
 
-export function Footer(){
+export function Footer() {
     const router = useRouter()
 
     const handleLogout = async () => {

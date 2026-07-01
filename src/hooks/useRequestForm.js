@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { api } from "@/service/api";
 import { createFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
+import { useNotification } from "@/contexts/NotificationContext";
 
 const REQUEST_TABS = [
     { valor: "produto", label: "PRODUTO" },
@@ -9,6 +10,7 @@ const REQUEST_TABS = [
 ];
 
 export function useRequestForm() {
+    const { showNotification } = useNotification();
     const [abaAtiva, setAbaAtiva] = useState("produto");
     const [attachments, setAttachments] = useState([]);
     const [branch, setBranch] = useState("");
@@ -18,6 +20,9 @@ export function useRequestForm() {
     const [productName, setProductName] = useState("");
     const [quantity, setQuantity] = useState("");
     const [unit, setUnit] = useState("");
+    const [additionalInfo, setAdditionalInfo] = useState("");
+    const [serviceName, setServiceName] = useState("");
+    const [serviceAdditionalInfo, setServiceAdditionalInfo] = useState("");
     const [products, setProducts] = useState([]);
     const [crOptions, setCrOptions] = useState([]);
     const [unitOptions, setUnitOptions] = useState([]);
@@ -117,20 +122,54 @@ export function useRequestForm() {
                 name: productName.trim(),
                 quantity: Number(quantity),
                 measurementUnit: unit,
-                additionalInformations: "",
+                additionalInformations: additionalInfo.trim(),
             },
         ]);
         setProductName("");
         setQuantity("");
         setUnit("");
+        setAdditionalInfo("");
     }
 
     function handleRemoveProduct(productId) {
         setProducts((currentProducts) => currentProducts.filter((product) => product.id !== productId));
     }
 
+    const ALLOWED_TYPES = [
+        'image/png',
+        'image/jpeg',
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
+    const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'pdf', 'docx'];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+    function isFileAllowed(file) {
+        if (ALLOWED_TYPES.includes(file.type)) return true;
+        const ext = file.name.split('.').pop().toLowerCase();
+        return ALLOWED_EXTENSIONS.includes(ext);
+    }
+
     function handleFilesSelected(files) {
-        setAttachments(Array.from(files ?? []));
+        const fileArray = Array.from(files ?? []);
+
+        const wrongType = fileArray.filter((f) => !isFileAllowed(f));
+        const tooBig = fileArray.filter((f) => isFileAllowed(f) && f.size > MAX_FILE_SIZE);
+        const valid = fileArray.filter((f) => isFileAllowed(f) && f.size <= MAX_FILE_SIZE);
+
+        if (wrongType.length > 0) {
+            setFormError(`Formato não permitido: ${wrongType.map((f) => f.name).join(', ')}. Use PNG, JPEG, PDF ou DOCX.`);
+        } else if (tooBig.length > 0) {
+            setFormError(`Arquivo muito grande: ${tooBig.map((f) => f.name).join(', ')}. Máximo 10MB por arquivo.`);
+        }
+
+        if (valid.length > 0) {
+            setAttachments((prev) => [...prev, ...valid]);
+        }
+    }
+
+    function handleRemoveAttachment(index) {
+        setAttachments((prev) => prev.filter((_, i) => i !== index));
     }
 
     async function handleSubmit(event) {
@@ -140,16 +179,19 @@ export function useRequestForm() {
 
         if (abaAtiva !== "produto") {
             setFormError("A criação de serviços ainda não está conectada à API.");
+            showNotification("A criação de serviços ainda não está conectada à API.", "error");
             return;
         }
 
         if (!crBranchId) {
             setFormError("Selecione o CR e Projeto.");
+            showNotification("Selecione o CR e Projeto antes de finalizar.", "error");
             return;
         }
 
         if (products.length === 0) {
             setFormError("Adicione pelo menos um produto antes de finalizar.");
+            showNotification("Adicione pelo menos um produto antes de finalizar.", "error");
             return;
         }
 
@@ -162,12 +204,14 @@ export function useRequestForm() {
             });
 
             setSuccess(true);
+            showNotification("Solicitação criada com sucesso!", "success");
             setBranch("");
             setCrBranchId("");
             setProducts([]);
             setAttachments([]);
         } catch (error) {
             setFormError(error.message || "Erro ao criar a solicitação.");
+            showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
         } finally {
             setSubmitting(false);
         }
@@ -189,6 +233,12 @@ export function useRequestForm() {
         setQuantity,
         unit,
         setUnit,
+        additionalInfo,
+        setAdditionalInfo,
+        serviceName,
+        setServiceName,
+        serviceAdditionalInfo,
+        setServiceAdditionalInfo,
         products,
         crOptions,
         unitOptions,
@@ -199,6 +249,8 @@ export function useRequestForm() {
         handleAddProduct,
         handleRemoveProduct,
         handleFilesSelected,
+        handleRemoveAttachment,
         handleSubmit,
+        attachments,
     };
 }

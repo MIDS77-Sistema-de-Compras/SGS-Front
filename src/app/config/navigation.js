@@ -35,12 +35,12 @@ export const admRoutes = [
     },
     {
         label: "Gerenciar Usuários",
-        href: "/usuarios/admin",
+        href: "/usuarios/admin/gerenciar",  
         icon: "/images/icons/gerenciar-users.png",
     },
     {
         label: "Análise de Registros",
-        href: "/admin/auditoria",
+        href: "/auditoria",
         icon: "/images/icons/analise-registros.png",
     },
     {
@@ -87,7 +87,7 @@ export const supervisorRoutes = [
     },
     {
         label: "Gerenciar Usuários",
-        href: "/comprador/solicitacao", //arrumar
+        href: "/usuarios/admin/gerenciar", //arrumar
         icon: "/images/icons/gerenciar-users.png",
     },
     {
@@ -125,7 +125,7 @@ export const coordenadorRoutes = [
     },
     {
         label: "Gerenciar Usuários",
-        href: "/coordenador/usuarios",
+        href: "/usuarios/admin/gerenciar",
         icon: "/images/icons/gerenciar-users.png",
     },
     {

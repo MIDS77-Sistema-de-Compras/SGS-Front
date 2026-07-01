@@ -20,12 +20,22 @@ export default function RequestForm() {
         requester, setRequester, phone, setPhone,
         crBranchId, productName, setProductName,
         quantity, setQuantity, unit, setUnit,
+        additionalInfo, setAdditionalInfo,
+        serviceName, setServiceName,
+        serviceAdditionalInfo, setServiceAdditionalInfo,
         products, crOptions, unitOptions,
         submitting, formError, success,
         handleCrBranchChange, handleAddProduct,
         handleRemoveProduct, handleFilesSelected,
-        handleSubmit,
+        handleRemoveAttachment, handleSubmit,
+        attachments,
     } = useRequestForm();
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return `${bytes} B`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
 
     return (
         <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
@@ -49,7 +59,7 @@ export default function RequestForm() {
                         <Input
                             variant="form"
                             placeholder="Definida pelo CR selecionado"
-                            value={branch}
+                            value={branch || ""}
                             readOnly
                             disabled
                         />
@@ -67,7 +77,7 @@ export default function RequestForm() {
                                 <Input
                                     variant="form"
                                     placeholder="Nome completo do docente..."
-                                    value={requester}
+                                    value={requester || ""}
                                     onChange={(event) => setRequester(event.target.value)}
                                 />
                             </FormField>
@@ -75,7 +85,7 @@ export default function RequestForm() {
                             <FormField label="Ramal" required>
                                 <PhoneInput
                                     placeholder="3222-0000"
-                                    value={phone}
+                                    value={phone || ""}
                                     onChange={(event) => setPhone(event.target.value)}
                                 />
                             </FormField>
@@ -86,7 +96,7 @@ export default function RequestForm() {
                                 name="cr_project"
                                 placeholder="Selecione o Centro de Resultado..."
                                 options={crOptions}
-                                value={crBranchId}
+                                value={crBranchId || ""}
                                 onChange={handleCrBranchChange}
                                 isRequired
                             />
@@ -110,7 +120,7 @@ export default function RequestForm() {
                                     <Input
                                         variant="form"
                                         placeholder="Não há produtos cadastrados..."
-                                        value={productName}
+                                        value={productName || ""}
                                         onChange={(event) => setProductName(event.target.value)}
                                     />
                                 </FormField>
@@ -126,7 +136,7 @@ export default function RequestForm() {
                                         placeholder="Ex: 2"
                                         min="0"
                                         step="0.01"
-                                        value={quantity}
+                                        value={quantity || ""}
                                         onChange={(event) => setQuantity(event.target.value)}
                                     />
                                 </FormField>
@@ -140,7 +150,7 @@ export default function RequestForm() {
                                         name="unit"
                                         placeholder="Selecione..."
                                         options={unitOptions}
-                                        value={unit}
+                                        value={unit || ""}
                                         onChange={(event) => setUnit(event.target.value)}
                                     />
                                 </FormField>
@@ -152,6 +162,8 @@ export default function RequestForm() {
                                     <Input
                                         variant="form"
                                         placeholder="Informações adicionais do produto..."
+                                        value={additionalInfo || ""}
+                                        onChange={(event) => setAdditionalInfo(event.target.value)}
                                     />
                                 </FormField>
                                 <Button
@@ -178,6 +190,8 @@ export default function RequestForm() {
                                 <Input
                                     variant="form"
                                     placeholder="Digite o título do serviço..."
+                                    value={serviceName}
+                                    onChange={(event) => setServiceName(event.target.value)}
                                 />
                             </FormField>
 
@@ -186,6 +200,8 @@ export default function RequestForm() {
                                     <Input
                                         variant="form"
                                         placeholder="Informações adicionais do serviço..."
+                                        value={serviceAdditionalInfo}
+                                        onChange={(event) => setServiceAdditionalInfo(event.target.value)}
                                     />
                                 </FormField>
 
@@ -208,10 +224,37 @@ export default function RequestForm() {
                                 icon={file}
                                 iconAlt="File Icon"
                                 title="Arraste seus documentos aqui"
-                                description="Formatos aceitos: PDF, JPG, PNG e DOCX (máx 20MB)"
+                                description="Formatos aceitos: PDF, JPG, PNG e DOCX (máx 10MB)"
                                 accept=".pdf,.jpg,.jpeg,.png,.docx"
                                 onFilesSelected={handleFilesSelected}
                             />
+
+                            {attachments.length > 0 && (
+                                <ul className="mt-3 flex flex-col gap-2">
+                                    {attachments.map((f, index) => (
+                                        <li
+                                            key={index}
+                                            className="flex items-center justify-between rounded-lg border border-[#AAAAAA] px-4 py-2 text-sm"
+                                        >
+                                            <div className="flex items-center gap-3 min-w-0">
+                                                <span className="truncate font-medium text-[#103D85]">
+                                                    {f.name}
+                                                </span>
+                                                <span className="shrink-0 text-[#747782]">
+                                                    {formatFileSize(f.size)}
+                                                </span>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveAttachment(index)}
+                                                className="ml-3 shrink-0 font-bold text-[#BA1A1A] hover:opacity-70"
+                                            >
+                                                ×
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
                     </div>
 

@@ -13,6 +13,12 @@ export function proxy(request) {
 
     if (publicPaths.includes(pathname)) {
         if (pathname === "/login" && token) {
+            const usuario = getUsuarioPayload(token);
+            
+            if (usuario && usuario.role === "admin") {
+                return NextResponse.redirect(new URL("/admin", request.url)); 
+            }
+
             return NextResponse.redirect(new URL("/", request.url));
         }
         return NextResponse.next();
@@ -29,4 +35,4 @@ export const config = {
     matcher: [
         '/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.svg$).*)',
     ],
-}
+};

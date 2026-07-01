@@ -15,6 +15,7 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [keepConnected, setKeepConnected] = useState(false);
 
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
     const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
@@ -22,13 +23,13 @@ export default function LoginPage() {
     const router = useRouter();
     const handleLogin = async (e) => {
         e.preventDefault();
-        try{
+        try {
             const res = await loginUser(email, password);
-            
+
             // AVISO: a API retorna 2 estruturas diferentes pro login, o response de erro e o token normal, que é literalmente só um text,
             // por isso, decidi usar res.status para verificação, já que é um campo que a mensagem de erro possuí.
             // Se alguém achar uma forma melhor de fazer isso, fique a vontade para alterar o código
-            if(!res || res.status){
+            if (!res || res.status) {
                 setError(res?.message || "Login falhou. Tente novamente mais tarde.");
                 return;
             }
@@ -41,10 +42,13 @@ export default function LoginPage() {
             }
 
             const cookieOptions = {
-                expires: 1,
                 secure: window.location.protocol === "https:",
                 sameSite: "strict"
             };
+
+            if (keepConnected) {
+                cookieOptions.expires = 365;
+            }
 
             Cookies.set("jwt", token, cookieOptions);
 
@@ -52,13 +56,13 @@ export default function LoginPage() {
                 const payloadBase64 = res.text.split('.')[1]
                 const decodedPayload = JSON.parse(atob(payloadBase64))
 
-                console.log("DADOS TOKEN ", decodedPayload)
-
-                const userRole = decodedPayload.role 
+                const userRole = decodedPayload.role
                 const userName = decodedPayload.name || decodedPayload.nome || "Usuário"
 
-                Cookies.set("role", userRole, { expires: 1 })
-                Cookies.set("name", userName, { expires: 1 })
+                const extraCookieOptions = keepConnected ? { expires: 365 } : {};
+
+                Cookies.set("role", userRole, extraCookieOptions)
+                Cookies.set("name", userName, extraCookieOptions)
 
             } catch (decodeError) {
                 console.warn("Não foi possivel decodificar a role do token", decodeError)
@@ -66,7 +70,7 @@ export default function LoginPage() {
             router.push('/')
             router.refresh()
 
-        }catch(error){
+        } catch (error) {
             setError(error.message || "Ocorreu um erro inesperado.");
         }
     }
@@ -103,7 +107,7 @@ export default function LoginPage() {
                     <p className="text-red-500">{error}</p>
                 </div>
 
-                <div className="mt-20">
+                <div className="mt-15">
                     <Button
                         type="submit"
                         variant="auth"
@@ -120,6 +124,8 @@ export default function LoginPage() {
                             type="checkbox"
                             name="time"
                             className="accent-[#4B84F4] rounded bg-transparent border-white/40"
+                            checked={keepConnected}
+                            onChange={(e) => setKeepConnected(e.target.checked)}
                         />
                         <span>Mantenha-me conectado</span>
                     </label>
