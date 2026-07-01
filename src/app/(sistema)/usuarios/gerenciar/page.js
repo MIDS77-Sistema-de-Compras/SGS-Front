@@ -81,7 +81,7 @@ export default function GerenciarUsuarios() {
               Exportar
             </Button>
 
-            <Link href="/usuarios/admin/criar">
+            <Link href="/usuarios/criar">
               <Button variant="primary" leftIcon={<Plus size={18} />}>
                 Cadastrar Usuário
               </Button>

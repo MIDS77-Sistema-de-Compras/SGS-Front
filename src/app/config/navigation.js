@@ -27,6 +27,7 @@ export const docenteRoutes = [
     },
 ]
 
+//pronto
 export const admRoutes = [
     {
         label: "Início",
@@ -35,7 +36,7 @@ export const admRoutes = [
     },
     {
         label: "Gerenciar Usuários",
-        href: "/usuarios/admin/gerenciar",  
+        href: "/usuarios/gerenciar",  
         icon: "/images/icons/gerenciar-users.png",
     },
     {
@@ -64,7 +65,7 @@ export const compradorRoutes = [
     },
     {
         label: "Solicitações de compra",
-        href: "/usuarios/comprador/solicitacao",
+        href: "/solicitacoes-compra",
         icon: "/images/icons/request-compra.png",
     },
     {
@@ -97,7 +98,7 @@ export const supervisorRoutes = [
     },
     {
         label: "Gerenciar Usuários",
-        href: "/usuarios/admin/gerenciar", //arrumar
+        href: "/usuarios/gerenciar", //arrumar
         icon: "/images/icons/gerenciar-users.png",
     },
     {
@@ -135,18 +136,13 @@ export const coordenadorRoutes = [
     },
     {
         label: "Cadastrar CR",
-        href: "/usuarios/coordenador/cr",
+        href: "/criar-cr",
         icon: "/images/icons/add-cr.png",
     },
     {
         label: "Gerenciar Usuários",
-        href: "/usuarios/admin/gerenciar",
+        href: "/usuarios/gerenciar",
         icon: "/images/icons/gerenciar-users.png",
-    },
-    {
-        label: "Solicitações em análise", //arrumar
-        href: "/coordenador/solicitacoes",
-        icon: "/images/home/nova-solicitacao.png",
     },
     {
         label: "Monitoramento", //arrumar
