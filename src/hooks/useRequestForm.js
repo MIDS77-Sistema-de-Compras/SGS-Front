@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { api } from "@/service/api";
+import { api, getPageContent } from "@/service/api";
 import { createFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
 import { useNotification } from "@/contexts/NotificationContext";
 
@@ -36,14 +36,14 @@ export function useRequestForm() {
         async function loadData() {
             try {
                 const [crs, units] = await Promise.all([
-                    api.get("/cr-branches"),
+                    api.get("/cr-branches?size=1000"),
                     getAllMeasurementUnits(),
                 ]);
 
                 if (cancelled) return;
 
                 setCrOptions(
-                    crs.map((cr) => ({
+                    getPageContent(crs).map((cr) => ({
                         value: String(cr.id),
                         label: `${cr.crCode} - ${cr.crName}`,
                         branchName: cr.branchName ?? "",
@@ -51,7 +51,7 @@ export function useRequestForm() {
                 );
 
                 setUnitOptions(
-                    units.map((measurementUnit) => ({
+                    getPageContent(units).map((measurementUnit) => ({
                         value: measurementUnit.name,
                         label: measurementUnit.abbreviation
                             ? `${measurementUnit.name} (${measurementUnit.abbreviation})`

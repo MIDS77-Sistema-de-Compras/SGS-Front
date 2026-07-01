@@ -101,8 +101,8 @@ export const supervisorRoutes = [
         icon: "/images/home/nova-solicitacao.png",
     },
     {
-        label: "Monitoramento",
-        href: "/usuarios/supervisor", //arrumar
+        label: "Solicitações",
+        href: "/solicitacoes/gestao",
         icon: "/images/icons/monitoramento.png",
     },
     {
@@ -129,8 +129,8 @@ export const coordenadorRoutes = [
         icon: "/images/icons/gerenciar-users.png",
     },
     {
-        label: "Solicitações em análise",
-        href: "/coordenador/solicitacoes",
+        label: "Solicitações",
+        href: "/solicitacoes/gestao",
         icon: "/images/home/nova-solicitacao.png",
     },
     {

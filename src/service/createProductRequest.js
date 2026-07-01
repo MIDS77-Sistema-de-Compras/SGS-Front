@@ -1,9 +1,9 @@
-import { api } from "@/service/api";
+import { api, getPageContent } from "@/service/api";
 
 const INITIAL_STATUS = "EM_ANDAMENTO";
 
 export async function getAllMeasurementUnits() {
-    return api.get("/measurement-unit");
+    return api.get("/measurement-unit?size=1000").then(getPageContent);
 }
 
 export function getInitialStatusName() {

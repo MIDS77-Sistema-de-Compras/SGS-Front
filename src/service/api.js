@@ -1,5 +1,9 @@
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
+export function getPageContent(response) {
+    return Array.isArray(response) ? response : (response?.content ?? []);
+}
+
 function getToken() {
     if (typeof document === 'undefined') return null;
 
