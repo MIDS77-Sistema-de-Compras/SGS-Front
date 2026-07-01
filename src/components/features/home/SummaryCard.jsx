@@ -4,6 +4,7 @@ const summaryItems = [
     {
         id: 1,
         iconSrc: "/images/home/solPendente.png",
+        iconSrcDark: "/images/home/solPendente-darktheme.svg",
         iconAlt: "Icone Solicitações Pendentes",
         label: "Pendentes",
         count: "05",
@@ -11,6 +12,7 @@ const summaryItems = [
     {
         id: 2,
         iconSrc: "/images/home/solAprovada.png",
+        iconSrcDark: "/images/home/solAprovada-darktheme.svg",
         iconAlt: "Icone Solicitações Aprovadas",
         label: "Aprovadas",
         count: "05",
@@ -18,6 +20,7 @@ const summaryItems = [
     {
         id: 3,
         iconSrc: "/images/home/solRecusada.png",
+        iconSrcDark: "/images/home/solRecusada-darktheme.svg",
         iconAlt: "Icone Solicitações Recusadas",
         label: "Recusadas",
         count: "05",
