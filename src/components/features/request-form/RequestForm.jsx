@@ -6,6 +6,7 @@ import FileDropzone from "@/components/ui/upload/FileDropzone";
 import ListProducts from "./ListProducts";
 import send from "../../../../public/images/icons/send.svg";
 import file from "../../../../public/images/icons/file.svg";
+import fileWhite from "../../../../public/images/icons/fileWhite.svg";
 import FormField from "@/components/ui/form/FormField";
 import { Input } from "@/components/ui/input/Input";
 import PhoneInput from "@/components/ui/input/PhoneInput";
@@ -215,6 +216,7 @@ export default function RequestForm() {
                         <div className="mt-5">
                             <FileDropzone
                                 icon={file}
+                                iconDark={fileWhite}
                                 iconAlt="File Icon"
                                 title="Arraste seus documentos aqui"
                                 description="Formatos aceitos: PDF, JPG, PNG e DOCX (máx 20MB)"

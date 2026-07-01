@@ -1,5 +1,6 @@
 import FileDropzone from '@/components/ui/upload/FileDropzone';
 import fileBox from '../../../../public/images/icons/fileBox.svg';
+import fileBoxWhite from '../../../../public/images/icons/fileBoxWhite.svg';
 
 export default function ListProducts({ products = [], onRemove, tipo = "produto" }) {
     if (products.length === 0) {
@@ -8,7 +9,7 @@ export default function ListProducts({ products = [], onRemove, tipo = "produto"
                 variant="muted"
                 iconVariant="white"
                 icon={fileBox}
-                iconAlt="File Box Icon"
+                iconDark={fileBoxWhite}
                 title={
                     tipo === "produto"
                         ? "Nenhum produto adicionado ainda"

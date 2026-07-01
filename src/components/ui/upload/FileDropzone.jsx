@@ -5,6 +5,7 @@ import { cn } from '@/lib/cn';
 
 export default function FileDropzone({
   icon,
+  iconDark,
   iconAlt = '',
   title,
   description,
@@ -15,6 +16,7 @@ export default function FileDropzone({
   onFilesSelected,
   accept,
 }) {
+
   const handleDragOver = (event) => {
     if (!onFilesSelected) return;
     event.preventDefault();
@@ -35,7 +37,7 @@ export default function FileDropzone({
     <div
       className={cn(
         'flex flex-col items-center border border-[#00000020] dark:border-white/15 border-dashed rounded-xl pt-1 pb-5 px-2',
-        variant === 'muted' && 'bg-gray-100 dark:bg-[#303746]',
+        variant === 'muted' ? 'bg-gray-100 dark:bg-[#303746]' : 'dark:bg-[#303746]',
         className
       )}
       onDragOver={handleDragOver}
@@ -46,10 +48,15 @@ export default function FileDropzone({
           <div
             className={cn(
               'mb-2 rounded-full',
-              iconVariant === 'white' ? 'bg-white dark:bg-[#303746] p-4 mb-4' : 'bg-gray-100 dark:bg-[#303746] p-5'
+              iconVariant === 'white' ? 'bg-white dark:bg-[#E2E2EA]/25 p-4 mb-4' : 'bg-gray-100 dark:bg-[#E2E2EA]/25 p-5'
             )}
           >
-            {icon && <Image src={icon} alt={iconAlt} className="dark:invert dark:brightness-90" />}
+            {icon && (
+              <>
+                <Image src={icon} alt={iconAlt} className={iconDark ? "block dark:hidden" : "dark:invert dark:brightness-90"} />
+                {iconDark && <Image src={iconDark} alt={iconAlt} className="hidden dark:block" />}
+              </>
+            )}
           </div>
           {title && (
             <p

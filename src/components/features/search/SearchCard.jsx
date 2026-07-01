@@ -14,15 +14,15 @@ export function SearchCard({ cr }) {
 
             <div className="grid grid-cols-2 gap-2 text-[12px]">
                 <div>
-                    <p className="text-gray-400 dark:text-[#C3C6D3] font-semibold text-[10px] tracking-wider mb-0.5">FILIAL</p>
-                    <p className="text-[#355C9C] dark:text-[#5D8EF7] font-medium">
+                    <p className="text-gray-400 dark:text-[#E2E2EA] font-semibold text-[10px] tracking-wider mb-0.5">FILIAL</p>
+                    <p className="text-[#355C9C] dark:text-[#C3C6D3] font-medium">
                         {cr.branchName}
                     </p>
                 </div>
 
                 <div className="text-right">
-                    <p className="text-gray-400 dark:text-[#C3C6D3] font-semibold text-[10px] tracking-wider mb-0.5">SUPERVISOR</p>
-                    <p className="text-[#355C9C] dark:text-[#5D8EF7] font-medium">
+                    <p className="text-gray-400 dark:text-[#E2E2EA] font-semibold text-[10px] tracking-wider mb-0.5">SUPERVISOR</p>
+                    <p className="text-[#355C9C] dark:text-[#C3C6D3] font-medium">
                         {cr.responsibleUserName ?? 'Não atribuído'}
                     </p>
                 </div>
