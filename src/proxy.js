@@ -7,18 +7,29 @@ const publicPaths = [
     "/nova-senha",
 ];
 
+function getUsuarioPayload(token) {
+    try {
+        const payloadBase64 = token.split('.')[1];
+        const decodedJson = atob(payloadBase64);
+        return JSON.parse(decodedJson);
+    } catch (error) {
+        console.error("Erro ao decodificar o token JWT:", error);
+        return null;
+    }
+}
+
 export function proxy(request) {
     const token = request.cookies.get("jwt")?.value;
     const { pathname } = request.nextUrl;
 
     if (publicPaths.includes(pathname)) {
-        if (pathname === "/login" && token) {
+        if (token) {
             const usuario = getUsuarioPayload(token);
+            const role = usuario?.role?.toLowerCase(); 
             
-            if (usuario && usuario.role === "admin") {
+            if (role === "admin") {
                 return NextResponse.redirect(new URL("/admin", request.url)); 
             }
-
             return NextResponse.redirect(new URL("/", request.url));
         }
         return NextResponse.next();
@@ -26,6 +37,27 @@ export function proxy(request) {
 
     if (!token) {
         return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    const usuario = getUsuarioPayload(token);
+    const role = usuario?.role?.toLowerCase();
+
+    if (pathname === "/") {
+        if (role === "admin") {
+            return NextResponse.redirect(new URL("/admin", request.url));
+        }
+    }
+
+    if ((pathname.startsWith("/admin") || pathname.startsWith("/auditoria")) && role !== "admin") {
+        return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    if (pathname.startsWith("/solicitacoes-compra") && role !== "comprador") {
+        return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    if ((pathname.startsWith("/criar-cr") || pathname.startsWith("/coordenador")) && role !== "coordenador") {
+        return NextResponse.redirect(new URL("/", request.url));
     }
 
     return NextResponse.next();

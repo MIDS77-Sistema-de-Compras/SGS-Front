@@ -1,16 +1,16 @@
-import { api } from "./api";
+import { api, getPageContent } from "./api";
 
 export async function getAllCRBranches() {
     const [crBranches, crs] = await Promise.all([
-        api.get('/cr-branches'),
-        api.get('/cr'),
+        api.get('/cr-branches?size=1000'),
+        api.get('/cr?size=1000'),
     ]);
 
     const sectorMap = Object.fromEntries(
-        crs.map((cr) => [cr.code, cr.sector ?? ''])
+        getPageContent(crs).map((cr) => [cr.code, cr.sector ?? ''])
     );
 
-    return crBranches.map((crb) => ({
+    return getPageContent(crBranches).map((crb) => ({
         ...crb,
         sector: sectorMap[crb.crCode] ?? '',
     }));

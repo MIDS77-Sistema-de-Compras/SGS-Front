@@ -3,19 +3,22 @@
 import Image from 'next/image';
 import { Input } from '@/components/ui/input/Input';
 import { Select } from '@/components/ui/select/Select';
+import { STATUS_OPTIONS } from './requestStatusOptions';
 
-export default function MonitoringFilter({
+export default function RequestManagementFilters({
+    status,
+    setStatus,
     cr,
-    perfil,
-    busca,
     setCr,
-    setPerfil,
+    supervisor,
+    setSupervisor,
+    busca,
     setBusca,
     crs,
+    supervisores,
 }) {
-
     return (
-        <div className="bg-white rounded-xl border border-[#797979] flex flex-row items-center justify-between p-2 gap-3">
+        <div className="bg-white rounded-xl border border-[#797979] flex flex-row items-center justify-between p-2 gap-3 flex-wrap">
             <div className="flex flex-row items-center px-4 gap-2">
                 <Image
                     src="/images/icons/filtrar.png"
@@ -30,39 +33,50 @@ export default function MonitoringFilter({
                 </span>
             </div>
 
-            <div className="flex flex-row items-center gap-3">
-                <div className="w-[200px]">
+            <div className="flex flex-row items-center gap-3 flex-wrap">
+                <div className="w-[190px]">
                     <Select
                         variant="form"
-                        value={perfil}
-                        onChange={(e) => setPerfil(e.target.value)}
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
                         placeholder="Status"
-                        options={[
-                            { value: '', label: 'Todos os status' },
-                            { value: 'DOCENTE', label: 'Docente' },
-                            { value: 'SUPERVISOR', label: 'Supervisor' },
-                            { value: 'COORDENADOR', label: 'Coordenador' },
-                        ]}
+                        options={STATUS_OPTIONS}
                     />
                 </div>
 
-                <div className="w-[200px]">
+                <div className="w-[190px]">
                     <Select
                         variant="form"
                         value={cr}
                         onChange={(e) => setCr(e.target.value)}
+                        placeholder="CR"
                         options={[
                             { value: '', label: 'Todos os CRs' },
-                            ...crs.map((cr) => ({
-                                value: cr.id,
-                                label: cr.nome,
+                            ...crs.map((crBranch) => ({
+                                value: crBranch.id,
+                                label: crBranch.crCode,
                             })),
                         ]}
-                        placeholder="CRs"
                     />
                 </div>
 
-                <div className="w-[300px]">
+                <div className="w-[190px]">
+                    <Select
+                        variant="form"
+                        value={supervisor}
+                        onChange={(e) => setSupervisor(e.target.value)}
+                        placeholder="Supervisor"
+                        options={[
+                            { value: '', label: 'Todos os supervisores' },
+                            ...supervisores.map((nome) => ({
+                                value: nome,
+                                label: nome,
+                            })),
+                        ]}
+                    />
+                </div>
+
+                <div className="w-[260px]">
                     <Input
                         variant="form"
                         value={busca}
@@ -72,7 +86,6 @@ export default function MonitoringFilter({
                         onChange={(e) => setBusca(e.target.value)}
                     />
                 </div>
-                
             </div>
         </div>
     );
