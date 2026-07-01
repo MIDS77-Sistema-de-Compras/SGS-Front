@@ -31,7 +31,7 @@ export default function RequestForm() {
     } = useRequestForm();
 
     return (
-        <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
+        <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
             <div className="">
                 <SolicitacoesTabs
                     titulo="Nova Solicitação"
@@ -226,10 +226,10 @@ export default function RequestForm() {
 
                     <div className="flex flex-col items-end mt-5">
                         {formError && (
-                            <p className="mb-3 text-sm font-semibold text-[#BA1A1A]">{formError}</p>
+                            <p className="mb-3 text-sm font-semibold text-[#BA1A1A] dark:text-[#F87171]">{formError}</p>
                         )}
                         {success && (
-                            <p className="mb-3 text-sm font-semibold text-[#2E7D32]">Solicitação criada com sucesso.</p>
+                            <p className="mb-3 text-sm font-semibold text-[#2E7D32] dark:text-[#4ADE80]">Solicitação criada com sucesso.</p>
                         )}
 
                         <Button

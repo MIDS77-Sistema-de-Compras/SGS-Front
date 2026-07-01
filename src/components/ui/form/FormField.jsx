@@ -5,7 +5,7 @@ export default function FormField({ label, required, children, className, htmlFo
         <div className={cn(className)}>
             <label
                 htmlFor={htmlFor}
-                className="block text-[12px] font-bold text-[#103D85]/70 mb-2 pt-4 pb-px"
+                className="block text-[12px] font-bold text-[#103D85]/70 dark:text-[#C3C6D3] mb-2 pt-4 pb-px"
             >
                 {label}
                 {required && <span className="text-[#BA1A1A]"> *</span>}
