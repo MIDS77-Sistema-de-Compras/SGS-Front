@@ -15,7 +15,7 @@ export default function FormCreateUser() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className="bg-white p-5 rounded-xl shadow-sm border border-[#AAAAAA] flex flex-col justify-between">
+            <div className="bg-white px-5 py-3 rounded-xl shadow-sm border border-[#AAAAAA] flex flex-col justify-between">
                 <div>
                     <div className="flex items-center">
                         <button 

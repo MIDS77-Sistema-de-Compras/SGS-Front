@@ -1,9 +1,10 @@
 import { ChevronsUpDown, Pencil } from "lucide-react";
+import Link from "next/link";
 
 export default function UserTable({ users }) {
     return (
         <div className="flex-1 flex flex-col min-h-0 w-full bg-white">
-            
+
             <div className="w-full bg-[#F8FAFC] shadow-[0_1px_0_0_rgba(243,244,246,1)] z-10 pr-6">
                 <table className="w-full text-left border-collapse table-fixed">
                     <thead>
@@ -68,9 +69,12 @@ export default function UserTable({ users }) {
                                     <td className="py-2.5 px-4 w-[15%] text-gray-500 truncate">{user.lastAccess}</td>
                                     <td className="py-2.5 px-4 w-[8%]">
                                         <div className="flex justify-center">
-                                            <button className="text-[#103D85] hover:text-blue-800 p-1.5 rounded-lg hover:bg-blue-50 transition-colors">
-                                                <Pencil size={18} />
-                                            </button>
+                                            <Link href={`/usuarios/admin/editar/${user.id}`}>
+                                                <button className="text-[#103D85] hover:text-blue-800 p-1.5 rounded-lg hover:bg-blue-50 transition-colors">
+                                                    <Pencil size={18} />
+                                                </button>
+                                            </Link>
+
                                         </div>
                                     </td>
                                 </tr>
