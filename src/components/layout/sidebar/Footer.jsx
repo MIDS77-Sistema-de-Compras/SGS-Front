@@ -2,18 +2,24 @@
 
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import Cookies from "js-cookie"
 
 export function Footer() {
     const router = useRouter()
 
     async function handleLogout() {
+        Cookies.remove("token")
+        Cookies.remove("jwt")
+        Cookies.remove("role")
+        Cookies.remove("name")
+
         try {
-            await fetch("/api/auth/logout", { method: "POST" });
-            
-            router.push("/login");
-            router.refresh();
+            await fetch("/api/auth/logout", { method: "POST" })
         } catch (error) {
-            console.error("Erro ao deslogar:", error);
+            console.error("Erro ao deslogar:", error)
+        } finally {
+            router.push("/login")
+            router.refresh()
         }
     }
 
@@ -26,7 +32,7 @@ export function Footer() {
                 <div className="opacity-80 group-hover:opacity-100 transition-opacity">
                     <Image 
                         src="/images/icons/logout.png"
-                        alt="Ícone Sair"
+                        alt="Icone Sair"
                         width={22}
                         height={22}
                     />

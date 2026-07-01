@@ -3,57 +3,7 @@
 import { useState } from 'react';
 import PurchaseRequestsFilters from './PurchaseRequestsFilters';
 import PurchaseRequestsTable from './PurchaseRequestsTable';
-
-const mockRequests = [
-  {
-    id: 1,
-    data: '12/12/2001',
-    product: 'Aço 1020',
-    variation: 'MAT-ACO-1020-RED',
-    quantity: '20 unid.',
-    additionalInfoStatus: 'ajustes',
-  },
-  {
-    id: 2,
-    data: '12/12/2001',
-    product: 'Aço 1020',
-    variation: 'MAT-ACO-1020-RED',
-    quantity: '30 m²',
-    additionalInfoStatus: 'entregue',
-  },
-  {
-    id: 3,
-    data: '12/12/2001',
-    product: 'Aço 1020',
-    variation: 'MAT-ACO-1020-RED',
-    quantity: '10 caixas',
-    additionalInfoStatus: 'atrasada',
-  },
-  {
-    id: 4,
-    data: '12/12/2001',
-    product: 'Aço 1020',
-    variation: 'MAT-ACO-1020-RED',
-    quantity: '30 m²',
-    additionalInfoStatus: 'cancelado',
-  },
-  {
-    id: 5,
-    data: '12/12/2001',
-    product: 'Aço 1020',
-    variation: 'MAT-ACO-1020-RED',
-    quantity: '20 unid.',
-    additionalInfoStatus: 'parcial',
-  },
-  {
-    id: 6,
-    data: '12/12/2001',
-    product: 'Aço 1020',
-    variation: 'MAT-ACO-1020-RED',
-    quantity: '30 m²',
-    additionalInfoStatus: 'atendimento',
-  },
-];
+import { purchaseRequestsMock } from './purchaseRequestsMock';
 
 export default function PurchaseRequestsPage() {
   const [status, setStatus] = useState('');
@@ -68,7 +18,7 @@ export default function PurchaseRequestsPage() {
         onPeriodChange={setPeriod}
       />
 
-      <PurchaseRequestsTable requests={mockRequests} />
+      <PurchaseRequestsTable requests={purchaseRequestsMock} />
     </div>
   );
 }
