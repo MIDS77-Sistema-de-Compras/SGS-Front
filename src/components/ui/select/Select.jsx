@@ -50,11 +50,17 @@ const Select = forwardRef(function Select(
         <option value="" disabled hidden>
           {placeholderText}
         </option>
-        {normalizedOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
+        {normalizedOptions.length === 0 ? (
+          <option value="" disabled>
+            Nenhuma opção disponível
           </option>
-        ))}
+        ) : (
+          normalizedOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))
+        )}
       </select>
 
       <div className="absolute right-4 pointer-events-none opacity-40" aria-hidden="true">

@@ -1,35 +1,59 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PasswordInput } from "@/components/ui/input/PasswordInput";
 import Button from "@/components/ui/button/Button";
 import FormCard from "@/components/features/auth/FormCard";
 import { ModalTermos } from "@/components/features/auth/ModalTermos";
 import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
+import { newPassword } from "@/service/auth/auth-recovery";
 
-export default function NovaSenhaPage() {
+function NovaSenhaContent() {
     const [senha, setSenha] = useState("");
     const [confirmar, setConfirmar] = useState("");
+    const [error, setError] = useState("");
+    const [isDisabled, setIsDisabled] = useState(false);
+
+    const token = useSearchParams().get("token");
     const router = useRouter();
 
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
     const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
-    function handleSubmit(e) {
+    useEffect(() => {
+        if (senha !== confirmar) {
+            setError("As senhas nao sao iguais");
+            setIsDisabled(true);
+        } else {
+            setError("");
+            setIsDisabled(false);
+        }
+    }, [senha, confirmar]);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        router.push("/login");
-    }
+
+        try {
+            const res = await newPassword(senha, token);
+
+            if (res) {
+                router.push("/login");
+            }
+        } catch (submitError) {
+            setError(submitError.message || "Ocorreu um erro inesperado.");
+        }
+    };
 
     return (
         <div>
             <FormCard
                 onSubmit={handleSubmit}
-                showBackLink backHref="/login"
+                showBackLink
+                backHref="/login"
                 onTermosClick={() => setModalTermosOpen(true)}
                 onPoliticasClick={() => setModalPoliticasOpen(true)}
             >
-
                 <h2 className="text-white text-2xl font-bold mb-2">
                     Alterar senha
                 </h2>
@@ -56,17 +80,21 @@ export default function NovaSenhaPage() {
                     />
                 </div>
 
+                {error && (
+                    <p className="text-red-500">{error}</p>
+                )}
+
                 <div className="mt-8">
                     <Button
                         type="submit"
                         variant="auth"
                         size="lg"
                         fullWidth
+                        disabled={isDisabled}
                     >
                         Alterar senha
                     </Button>
                 </div>
-
             </FormCard>
 
             <ModalTermos
@@ -78,5 +106,13 @@ export default function NovaSenhaPage() {
                 onClose={() => setModalPoliticasOpen(false)}
             />
         </div>
+    );
+}
+
+export default function NovaSenhaPage() {
+    return (
+        <Suspense fallback={null}>
+            <NovaSenhaContent />
+        </Suspense>
     );
 }

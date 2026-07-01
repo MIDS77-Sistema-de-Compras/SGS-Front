@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+:root {
   --color-primary: #103D85;
   --color-primary-hover: #0b2a5c;
   --color-auth: #5D8EF7;
@@ -22,6 +22,11 @@ body {
     height: 100%;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) #fff;
+}
+
 @keyframes slide-in {
   from {
     transform: translateX(110%);
@@ -35,4 +40,38 @@ body {
 
 .animate-slide-in {
   animation: slide-in 0.35s ease-out forwards;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.profile-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out;
+}
+
+.profile-panel.open {
+  grid-template-rows: 1fr;
+}
+
+.profile-panel-inner {
+  overflow: hidden;
+}
+
+.profile-panel-content {
+  transform: translateY(-16px);
+  opacity: 0;
+  transition: transform 0.2s ease-out, opacity 0.35s ease-out;
+}
+
+.profile-panel.open .profile-panel-content {
+  transform: translateY(0);
+  opacity: 1;
 }
