@@ -125,7 +125,7 @@ export const coordenadorRoutes = [
     },
     {
         label: "Gerenciar Usuários",
-        href: "/coordenador/usuarios",
+        href: "/usuarios/admin/gerenciar",
         icon: "/images/icons/gerenciar-users.png",
     },
     {

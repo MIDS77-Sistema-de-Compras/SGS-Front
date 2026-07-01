@@ -24,45 +24,43 @@ export default function EditarUsuarios({ params }) {
     };
 
     return (
-        <div className="w-[1287px] space-y-6">
+        <div className="flex flex-col w-full gap-5">
 
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-[#797979]">
-                <h1 className="text-4xl font-bold text-[#103D85] pb-4">Editar Usuário</h1>
-                
-                <div className="border-b border-[#797979] mb-6" />
-                
-                <form className="space-y-8">
-                    <div>
-                        <SectionHeader label="IDENTIFICAÇÃO DE USUÁRIO" className="mb-4" />
-                        <UserIdentificationSection
-                            formData={formData}
-                            errors={{}}
-                            onChange={handleChange}
-                            onBlur={() => {}}
-                        />
-                    </div>
+            <div className="bg-white px-5 py-3 rounded-xl shadow-sm border border-[#AAAAAA]">
+                <h1 className="text-[22px] font-bold text-[#103D85]">Editar Usuário</h1>
 
-                    <div>
-                        <SectionHeader label="NÍVEL DE ACESSO" className="mb-4" />
-                        <AccessLevelSelector
-                            value={formData.nivelAcesso}
-                            onChange={(value) => handleChange('nivelAcesso', value)}
-                        />
-                    </div>
-                </form>
+                <div className="border-t border-[#AAAAAA] mt-2 mb-5 -mx-5" />
+
+                <div>
+                    <SectionHeader label="IDENTIFICAÇÃO DE USUÁRIO" />
+                    <UserIdentificationSection
+                        formData={formData}
+                        errors={{}}
+                        onChange={handleChange}
+                        onBlur={() => { }}
+                    />
+                </div>
+
+                <div>
+                    <SectionHeader label="NÍVEL DE ACESSO" className="mt-10" />
+                    <AccessLevelSelector
+                        value={formData.nivelAcesso}
+                        onChange={(value) => handleChange('nivelAcesso', value)}
+                    />
+                </div>
             </div>
 
             <div className="flex justify-between items-center w-full">
 
                 <div className="flex gap-4">
-                    <Button 
+                    <Button
                         className="w-[295px] bg-[#E30613] hover:bg-[#B8010C] text-white border-[#E30613]"
                         rightIcon={<Image src="/images/lixeira.png" alt="" width={16} height={16} />}
                     >
                         Excluir usuário
                     </Button>
 
-                    <Button 
+                    <Button
                         className="w-[295px] bg-[#7D7D7D] hover:bg-[#555555] text-white border-[#7D7D7D]"
                         rightIcon={<Image src="/images/desativar.png" alt="" width={16} height={16} />}
                     >
@@ -70,11 +68,11 @@ export default function EditarUsuarios({ params }) {
                     </Button>
                 </div>
 
-                <Button 
+                <Button
                     className="w-[295px]"
                     rightIcon={<Image src="/images/lapisEdicao.png" alt="" width={16} height={16} />}
                 >
-                    Salvar mudanças
+                    SALVAR MUDANÇAS
                 </Button>
 
             </div>
