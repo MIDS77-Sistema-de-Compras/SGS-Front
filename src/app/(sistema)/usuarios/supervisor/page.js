@@ -149,14 +149,14 @@ export default function MonitoramentoSolicitacoes() {
                 crs={crs}
             />
 
-            <div className="bg-white border border-[#797979] rounded-2xl overflow-hidden">
+            <div className="bg-white dark:bg-[#1A2233] border border-[#797979] dark:border-white/10 rounded-2xl overflow-hidden">
 
                 <MonitoramentoTabs
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
                 />
 
-                <div className="h-[500px] overflow-y-auto p-6 bg-white">
+                <div className="h-[500px] overflow-y-auto p-6 bg-white dark:bg-[#1A2233]">
                     {(() => {
                         const itensFiltrados = solicitacoes.filter((item) => {
 
@@ -186,7 +186,7 @@ export default function MonitoramentoSolicitacoes() {
 
                         if (itensFiltrados.length === 0) {
                             return (
-                                <div className="text-gray-400 text-center pt-10">
+                                <div className="text-gray-400 dark:text-[#C3C6D3] text-center pt-10">
                                     {abaAtiva === 'pendentes'
                                         ? 'Nenhuma solicitação pendente encontrada.'
                                         : 'Nenhuma solicitação em andamento encontrada.'}
@@ -211,12 +211,12 @@ export default function MonitoramentoSolicitacoes() {
                                                 />
 
                                                 <div className="flex flex-col">
-                                                    <span className="text-lg font-bold text-[#333333]">
+                                                    <span className="text-lg font-bold text-[#333333] dark:text-[#E2E2EA]">
                                                         {item.titulo}
                                                     </span>
 
                                                     {item.sub && (
-                                                        <span className="text-sm text-gray-400">
+                                                        <span className="text-sm text-gray-400 dark:text-[#C3C6D3]">
                                                             {item.sub}
                                                         </span>
                                                     )}
@@ -224,7 +224,7 @@ export default function MonitoramentoSolicitacoes() {
                                             </div>
 
                                             <div className="flex items-center gap-12">
-                                                <span className="text-xs text-gray-400 min-w-[60px] text-right">
+                                                <span className="text-xs text-gray-400 dark:text-[#C3C6D3] min-w-[60px] text-right">
                                                     {calcularTempoDecorrido(item.dataCriacao)}
                                                 </span>
 
