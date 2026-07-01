@@ -1,97 +1,167 @@
 "use client";
 
-import { Users, UserCheck, UserMinus, Shield, Search, ChevronDown, Plus } from "lucide-react";
+import {
+    Users,
+    UserCheck,
+    UserMinus,
+    Shield,
+    Search,
+    ChevronDown,
+    Plus,
+} from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import UserTable from "@/components/features/gerenciar-users/UserTable";
-
-const users = [
-  { id: 1, name: "Elis Jasper", email: "andrey.lombardo@edu.sc.senai.br", level: "Docente", status: "Ativo", lastAccess: "04/05/2026 16:55", initials: "EJ" },
-  { id: 2, name: "Gabrielli Glowatski", email: "bruno.sebastiano@edu.sc.senai.br", level: "Docente", status: "Ativo", lastAccess: "27/04/2026 08:27", initials: "GG" },
-  { id: 3, name: "André Miotto", email: "criciano.mendes@edu.sc.senai.br", level: "Docente", status: "Inativo", lastAccess: "10/02/2026 11:09", initials: "AM" },
-  { id: 4, name: "Maria Zabel", email: "daves.wegge@edu.sc.senai.br", level: "Supervisor", status: "Ativo", lastAccess: "30/04/2026 10:45", initials: "MZ" },
-  { id: 5, name: "Hugo Deleon", email: "enzo.tenure@edu.sc.senai.br", level: "Docente", status: "Ativo", lastAccess: "01/05/2026 10:45", initials: "HD" },
-  { id: 6, name: "José Torres", email: "eduardo.webber@edu.sc.senai.br", level: "Supervisor", status: "Ativo", lastAccess: "06/05/2026 10:45", initials: "JT" },
-  { id: 7, name: "José Torres", email: "eduardo.webber@edu.sc.senai.br", level: "Supervisor", status: "Ativo", lastAccess: "06/05/2026 10:45", initials: "JT" },
-  { id: 8, name: "José Torres", email: "eduardo.webber@edu.sc.senai.br", level: "Supervisor", status: "Ativo", lastAccess: "06/05/2026 10:45", initials: "JT" },
-  { id: 9, name: "José Torres", email: "eduardo.webber@edu.sc.senai.br", level: "Supervisor", status: "Ativo", lastAccess: "06/05/2026 10:45", initials: "JT" },
-  { id: 10, name: "José Torres", email: "eduardo.webber@edu.sc.senai.br", level: "Supervisor", status: "Ativo", lastAccess: "06/05/2026 10:45", initials: "JT" },
-  { id: 11, name: "José Torres", email: "eduardo.webber@edu.sc.senai.br", level: "Supervisor", status: "Ativo", lastAccess: "06/05/2026 10:45", initials: "JT" },
-  { id: 12, name: "José Torres", email: "eduardo.webber@edu.sc.senai.br", level: "Supervisor", status: "Ativo", lastAccess: "06/05/2026 10:45", initials: "JT" },
-  { id: 13, name: "José Torres", email: "eduardo.webber@edu.sc.senai.br", level: "Supervisor", status: "Ativo", lastAccess: "06/05/2026 10:45", initials: "JT" },
-];
+import { getAllUsers } from "@/service/users/usersSearch";
 
 export default function GerenciarUsuarios() {
-  const [searchTerm, setSearchTerm] = useState("");
+  
+    const [users, setUsers] = useState([]);
+      const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("Todos");
 
-  return (
-    <div className="flex flex-1 flex-col w-full h-full">
+    useEffect(() => {
+        loadUsers();
+    }, []);
 
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold text-[#103D85] mb-1">Gerenciar usuários</h1>
-        <p className="text-gray-500 text-sm">Cadastre edite e gerencie os usuários que possuem acesso ao sistema.</p>
-      </div>
+    async function loadUsers() {
+    try {
+        const response = await getAllUsers();
+        setUsers(response.content);
+    } catch (error) {
+        console.error("Erro ao buscar usuários:", error);
+    }
+}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+    const filteredUsers = useMemo(() => {
+        return users.filter((user) => {
 
-        <StatCard title="Total de Usuários" value="20" icon={Users} iconBg="bg-blue-100" iconColor="text-blue-600" />
-        <StatCard title="Usuários Ativos" value="19" icon={UserCheck} iconBg="bg-green-100" iconColor="text-green-600" />
-        <StatCard title="Usuários Inativos" value="1" icon={UserMinus} iconBg="bg-orange-100" iconColor="text-orange-500" />
-        <StatCard title="Nível de Acesso" value="5" icon={Shield} iconBg="bg-purple-100" iconColor="text-purple-600" />
-      </div>
+            const matchesSearch =
+                user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                user.email.toLowerCase().includes(searchTerm.toLowerCase());
 
-      <div className="flex flex-1 flex-col min-h-0 rounded-2xl shadow-sm border border-gray-100 mb-4 overflow-hidden">
+            const matchesStatus =
+                statusFilter === "Todos"
+                    ? true
+                    : statusFilter === "Ativos"
+                        ? user.active
+                        : !user.active;
 
-        <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+            return matchesSearch && matchesStatus;
+        });
 
-          <div className="flex w-full sm:w-auto items-center gap-4">
+    }, [users, searchTerm, statusFilter]);
 
-            <div className="relative w-full sm:w-80">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search size={18} className="text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Buscar pelo Nome, E-mail..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85]"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+    const totalUsers = users.length;
+    const activeUsers = users.filter((u) => u.active).length;
+    const inactiveUsers = users.filter((u) => !u.active).length;
+    const totalProfiles = new Set(users.map((u) => u.roleName).filter(Boolean)).size;
+
+    return (
+        <div className="flex flex-1 flex-col w-full h-full">
+
+            <div className="mb-4">
+                <h1 className="text-2xl font-bold text-[#103D85] mb-1">
+                    Gerenciar usuários
+                </h1>
+
+                <p className="text-gray-500 text-sm">
+                    Cadastre, edite e gerencie os usuários que possuem acesso ao sistema.
+                </p>
             </div>
 
-            <div className="relative">
-              <select className="appearance-none border border-gray-200 text-gray-700 py-2 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85]">
-                <option>Todos os status</option>
-                <option>Ativos</option>
-                <option>Inativos</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                <ChevronDown size={16} />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+
+                <StatCard
+                    title="Total de Usuários"
+                    value={totalUsers}
+                    icon={Users}
+                    iconBg="bg-blue-100"
+                    iconColor="text-blue-600"
+                />
+                <StatCard
+                    title="Usuários Ativos"
+                    value={activeUsers}
+                    icon={UserCheck}
+                    iconBg="bg-green-100"
+                    iconColor="text-green-600"
+                />
+                <StatCard
+                    title="Usuários Inativos"
+                    value={inactiveUsers}
+                    icon={UserMinus}
+                    iconBg="bg-orange-100"
+                    iconColor="text-orange-500"
+                />
+                <StatCard
+                    title="Níveis de Acesso"
+                    value={totalProfiles}
+                    icon={Shield}
+                    iconBg="bg-purple-100"
+                    iconColor="text-purple-600"
+                />
             </div>
-          </div>
 
-          <div className="flex w-full sm:w-auto items-center gap-3">
-            <Button
-              variant="outline"
-              className="bg-[#E6F0FF] text-[#103D85] border-transparent hover:bg-[#D4E5FF]"
-            >
-              Exportar
-            </Button>
+            <div className="flex flex-1 flex-col min-h-0 rounded-2xl shadow-sm border border-gray-100 mb-4 overflow-hidden">
+                <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div className="flex w-full sm:w-auto items-center gap-4">
+                        <div className="relative w-full sm:w-80">
 
-            <Link href="/usuarios/criar">
-              <Button variant="primary" leftIcon={<Plus size={18} />}>
-                Cadastrar Usuário
-              </Button>
-            </Link>
-          </div>
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <Search size={18} className="text-gray-400" />
+                            </div>
+
+                            <input
+                                type="text"
+                                placeholder="Buscar pelo Nome, E-mail..."
+                                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85]"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+
+                        </div>
+                        <div className="relative">
+
+                            <select
+                                className="appearance-none border border-gray-200 text-gray-700 py-2 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85]"
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                            >
+                                <option>Todos</option>
+                                <option>Ativos</option>
+                                <option>Inativos</option>
+                            </select>
+
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                <ChevronDown size={16} />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex w-full sm:w-auto items-center gap-3">
+
+                        <Button
+                            variant="outline"
+                            className="bg-[#E6F0FF] text-[#103D85] border-transparent hover:bg-[#D4E5FF]"
+                        >
+                            Exportar
+                        </Button>
+
+                        <Link href="/usuarios/admin/criar">
+                            <Button
+                                variant="primary"
+                                leftIcon={<Plus size={18} />}
+                            >
+                                Cadastrar Usuário
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+                
+                <UserTable users={filteredUsers} />
+            </div>
         </div>
-
-        <UserTable users={users} />
-
-      </div>
-    </div>
-  );
+    );
 }

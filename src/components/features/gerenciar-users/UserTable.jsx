@@ -2,6 +2,35 @@ import { ChevronsUpDown, Pencil } from "lucide-react";
 import Link from "next/link";
 
 export default function UserTable({ users }) {
+
+    const formatProfile = (profile) => {
+        if (!profile) return "-";
+
+        return profile
+            .toLowerCase()
+            .split("_")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+    };
+
+    const getInitials = (name) => {
+        if (!name) return "";
+
+        return name
+            .split(" ")
+            .filter(Boolean)
+            .map(word => word[0])
+            .join("")
+            .substring(0, 2)
+            .toUpperCase();
+    };
+
+    const formatDate = (date) => {
+        if (!date) return "-";
+
+        return new Date(date).toLocaleString("pt-BR");
+    };
+
     return (
         <div className="flex-1 flex flex-col min-h-0 w-full bg-white">
 
@@ -9,64 +38,111 @@ export default function UserTable({ users }) {
                 <table className="w-full text-left border-collapse table-fixed">
                     <thead>
                         <tr className="text-sm font-semibold text-gray-700">
+
                             <th className="py-3 px-4 font-medium w-[25%]">
-                                <div className="flex items-center gap-1 cursor-pointer hover:text-[#103D85]">
-                                    Nome <ChevronsUpDown size={14} className="text-gray-400" />
+                                <div className="flex items-center gap-1">
+                                    Nome
+                                    <ChevronsUpDown size={14} className="text-gray-400" />
                                 </div>
                             </th>
+
                             <th className="py-3 px-4 font-medium w-[25%]">
-                                <div className="flex items-center gap-1 cursor-pointer hover:text-[#103D85]">
-                                    E-mail <ChevronsUpDown size={14} className="text-gray-400" />
+                                <div className="flex items-center gap-1">
+                                    E-mail
+                                    <ChevronsUpDown size={14} className="text-gray-400" />
                                 </div>
                             </th>
+
                             <th className="py-3 px-4 font-medium w-[15%]">
-                                <div className="flex items-center gap-1 cursor-pointer hover:text-[#103D85]">
-                                    Nível <ChevronsUpDown size={14} className="text-gray-400" />
+                                <div className="flex items-center gap-1">
+                                    Nível
+                                    <ChevronsUpDown size={14} className="text-gray-400" />
                                 </div>
                             </th>
+
                             <th className="py-3 px-4 font-medium w-[12%]">
-                                <div className="flex items-center gap-1 cursor-pointer hover:text-[#103D85]">
-                                    Status <ChevronsUpDown size={14} className="text-gray-400" />
+                                <div className="flex items-center gap-1">
+                                    Status
+                                    <ChevronsUpDown size={14} className="text-gray-400" />
                                 </div>
                             </th>
+
                             <th className="py-3 px-4 font-medium w-[15%]">
-                                <div className="flex items-center gap-1 cursor-pointer hover:text-[#103D85]">
-                                    Último Acesso <ChevronsUpDown size={14} className="text-gray-400" />
+                                <div className="flex items-center gap-1">
+                                    Última Atualização
+                                    <ChevronsUpDown size={14} className="text-gray-400" />
                                 </div>
                             </th>
-                            <th className="py-3 px-4 font-medium w-[8%] text-center">Ações</th>
+
+                            <th className="py-3 px-4 font-medium w-[8%] text-center">
+                                Ações
+                            </th>
+
                         </tr>
                     </thead>
                 </table>
             </div>
-
             <div className="flex-1 flex flex-col min-h-0 w-full pr-2 pb-2">
                 <div className="flex-1 overflow-y-auto min-h-0 w-full">
                     <table className="w-full text-left border-collapse table-fixed">
+
                         <tbody className="text-sm bg-white">
+
                             {users.map((user) => (
-                                <tr key={user.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+                                <tr
+                                    key={user.id}
+                                    className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
+                                >
                                     <td className="py-2.5 px-4 w-[25%]">
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 shrink-0 rounded-full bg-[#103D85] text-white flex items-center justify-center text-xs font-bold">
-                                                {user.initials}
+                                                {getInitials(user.name)}
                                             </div>
-                                            <span className="font-medium text-gray-800 truncate">{user.name}</span>
+
+                                            <span className="font-medium text-gray-800 truncate">
+                                                {user.name}
+                                            </span>
                                         </div>
                                     </td>
-                                    <td className="py-2.5 px-4 w-[25%] text-gray-500 truncate">{user.email}</td>
+                                    <td className="py-2.5 px-4 w-[25%] text-gray-500 truncate">
+                                        {user.email}
+                                    </td>
+
                                     <td className="py-2.5 px-4 w-[15%]">
-                                        <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${user.level === "Docente" ? "bg-green-50 text-green-700" : "bg-orange-50 text-orange-600"}`}>
-                                            {user.level}
+                                        <span
+                                            className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap
+                                                ${user.roleName === "DOCENTE"
+                                                    ? "bg-green-50 text-green-700"
+                                                    : "bg-orange-50 text-orange-600"
+                                                }`}
+                                        >
+                                            {formatProfile(user.roleName)}
                                         </span>
                                     </td>
+
                                     <td className="py-2.5 px-4 w-[12%]">
-                                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${user.status === "Ativo" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
-                                            <span className={`w-1.5 h-1.5 shrink-0 rounded-full ${user.status === "Ativo" ? "bg-green-500" : "bg-red-500"}`}></span>
-                                            {user.status}
+                                        <span
+                                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap
+                                                ${user.active
+                                                    ? "bg-green-50 text-green-700"
+                                                    : "bg-red-50 text-red-700"
+                                                }`}
+                                        >
+                                            <span
+                                                className={`w-1.5 h-1.5 rounded-full
+                                                    ${user.active
+                                                        ? "bg-green-500"
+                                                        : "bg-red-500"
+                                                    }`}
+                                            />
+                                            {user.active ? "Ativo" : "Inativo"}
                                         </span>
                                     </td>
-                                    <td className="py-2.5 px-4 w-[15%] text-gray-500 truncate">{user.lastAccess}</td>
+
+                                    <td className="py-2.5 px-4 w-[15%] text-gray-500 truncate">
+                                        {formatDate(user.updatedAt)}
+                                    </td>
+
                                     <td className="py-2.5 px-4 w-[8%]">
                                         <div className="flex justify-center">
                                             <Link href={`/usuarios/editar/${user.id}`}>
@@ -74,7 +150,6 @@ export default function UserTable({ users }) {
                                                     <Pencil size={18} />
                                                 </button>
                                             </Link>
-
                                         </div>
                                     </td>
                                 </tr>
@@ -83,7 +158,6 @@ export default function UserTable({ users }) {
                     </table>
                 </div>
             </div>
-
         </div>
     );
 }
