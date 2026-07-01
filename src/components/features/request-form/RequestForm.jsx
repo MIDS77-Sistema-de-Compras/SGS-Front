@@ -107,9 +107,6 @@ export default function RequestForm() {
                         <div className="mt-10">
                             <SectionHeader label="PRODUTOS" />
 
-                            <div className="mt-5">
-                                <ListProducts products={products} onRemove={handleRemoveProduct} tipo={"produto"} />
-                            </div>
 
                             <div className="flex w-full gap-5">
                                 <FormField
@@ -174,6 +171,10 @@ export default function RequestForm() {
                                 >
                                     +
                                 </Button>
+                            </div>
+
+                            <div className="mt-5">
+                                <ListProducts products={products} onRemove={handleRemoveProduct} tipo={"produto"} />
                             </div>
                         </div>
 

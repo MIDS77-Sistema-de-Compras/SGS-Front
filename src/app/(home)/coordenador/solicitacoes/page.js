@@ -1,5 +1,5 @@
-import CoordinatorRequests from "@/components/features/coordenador/solicitacoes/CoordinatorRequests";
+import { redirect } from 'next/navigation';
 
 export default function SolicitacoesCoordenadorPage() {
-    return <CoordinatorRequests />;
+    redirect('/solicitacoes/gestao');
 }

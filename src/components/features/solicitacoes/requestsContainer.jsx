@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import SolicitacoesTabs from "@/lib/utils/requestTabs";
 import { useRequestsList } from "@/hooks/useRequestsList";
+import { getMyRequests } from "@/service/requests";
 import { useRequestsFilter } from "@/hooks/useMyCRList";
 import SolicitacoesFilter from "./requestFilter";
 import SolicitacoesTable from "./requestTable";
@@ -10,7 +11,7 @@ import SolicitacoesTable from "./requestTable";
 export default function RequestsContainer({ solicitacoesIniciais = [] }) {
     const router = useRouter();
     
-    const { requests: solicitacoes, loading, error } = useRequestsList(solicitacoesIniciais);
+    const { requests: solicitacoes, loading, error } = useRequestsList(solicitacoesIniciais, getMyRequests);
 
     const {
         filtros: { status, data, busca, abaAtiva },

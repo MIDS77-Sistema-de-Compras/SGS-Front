@@ -98,12 +98,12 @@ export const supervisorRoutes = [
     },
     {
         label: "Gerenciar Usuários",
-        href: "/usuarios/gerenciar", //arrumar
+        href: "/usuarios/gerenciar", 
         icon: "/images/icons/gerenciar-users.png",
     },
     {
         label: "Monitoramento",
-        href: "/usuarios/supervisor", //arrumar
+        href: "/solicitacoes/gestao",
         icon: "/images/icons/monitoramento.png",
     },
     {
@@ -145,8 +145,8 @@ export const coordenadorRoutes = [
         icon: "/images/icons/gerenciar-users.png",
     },
     {
-        label: "Monitoramento", //arrumar
-        href: "/coordenador/monitoramento",
+        label: "Monitoramento",
+        href: "/solicitacoes/gestao",
         icon: "/images/icons/monitoramento.png",
     },
     {
