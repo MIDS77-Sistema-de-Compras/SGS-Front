@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,17 +15,29 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [keepConnected, setKeepConnected] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
     const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
     const router = useRouter();
-    const handleLogin = async (e) => {
+
+    async function handleLogin(e) {
         e.preventDefault();
-        try{
-            const res = await loginUser(email, password);
-            
-            if(!res || res.status){
+        setError("");
+
+        if (!email.trim() || !password.trim()) {
+            setError("Informe seu e-mail/CPF e senha para entrar.");
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            const res = await loginUser(email.trim(), password);
+
+            if (!res || res.status) {
                 setError(res?.message || "Login falhou. Tente novamente mais tarde.");
                 return;
             }
@@ -33,40 +45,48 @@ export default function LoginPage() {
             const token = res.text || res.token || res.message;
 
             if (!token) {
-                setError("Token não retornado pela API.");
+                setError("Token nao retornado pela API.");
                 return;
             }
 
             const cookieOptions = {
-                expires: 1,
                 secure: window.location.protocol === "https:",
-                sameSite: "strict"
+                sameSite: "lax",
+                path: "/",
             };
+
+            if (keepConnected) {
+                cookieOptions.expires = 365;
+            }
 
             Cookies.set("jwt", token, cookieOptions);
 
             try {
-                const payloadBase64 = res.text.split('.')[1]
-                const decodedPayload = JSON.parse(atob(payloadBase64))
+                const payloadBase64 = token.split(".")[1];
+                const decodedPayload = JSON.parse(atob(payloadBase64));
 
-                console.log("DADOS TOKEN ", decodedPayload)
+                const userRole = decodedPayload.role;
+                const userName = decodedPayload.name || decodedPayload.nome || "Usuario";
+                const extraCookieOptions = keepConnected ? { expires: 365, path: "/" } : { path: "/" };
 
-                const userRole = decodedPayload.role 
-                const userName = decodedPayload.name || decodedPayload.nome || "Usuário"
+                if (userRole) {
+                    Cookies.set("role", userRole, extraCookieOptions);
+                }
 
-                Cookies.set("role", userRole, { expires: 1 })
-                Cookies.set("name", userName, { expires: 1 })
-
+                Cookies.set("name", userName, extraCookieOptions);
             } catch (decodeError) {
-                console.warn("Não foi possivel decodificar a role do token", decodeError)
+                console.warn("Nao foi possivel decodificar a role do token", decodeError);
             }
-            router.push('/')
-            router.refresh()
 
-        }catch(error){
-            setError(error.message || "Ocorreu um erro inesperado.");
+            router.push("/");
+            router.refresh();
+        } catch (loginError) {
+            setError(loginError.message || "Nao foi possivel entrar. Verifique suas credenciais e se a API esta online.");
+        } finally {
+            setIsLoading(false);
         }
     }
+
     return (
         <div>
             <FormCard
@@ -74,7 +94,6 @@ export default function LoginPage() {
                 onTermosClick={() => setModalTermosOpen(true)}
                 onPoliticasClick={() => setModalPoliticasOpen(true)}
             >
-
                 <p className="text-white text-[13px] font-medium opacity-90 text-left mb-6">
                     Insira suas credenciais para acessar o sistema
                 </p>
@@ -83,7 +102,7 @@ export default function LoginPage() {
                     <Input
                         type="text"
                         variant="auth"
-                        placeholder="E-mail ou número de CPF"
+                        placeholder="E-mail ou numero de CPF"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         iconSrc="/images/icons/user.png"
@@ -97,8 +116,13 @@ export default function LoginPage() {
                         iconSrc="/images/icons/password.png"
                         iconAlt="Icone da senha"
                     />
-                    <p className="text-red-500">{error}</p>
                 </div>
+
+                {error && (
+                    <p className="mt-4 text-xs font-medium text-red-100">
+                        {error}
+                    </p>
+                )}
 
                 <div className="mt-20">
                     <Button
@@ -106,6 +130,7 @@ export default function LoginPage() {
                         variant="auth"
                         size="lg"
                         fullWidth
+                        isLoading={isLoading}
                     >
                         Entrar
                     </Button>
@@ -116,6 +141,8 @@ export default function LoginPage() {
                         <input
                             type="checkbox"
                             name="time"
+                            checked={keepConnected}
+                            onChange={(e) => setKeepConnected(e.target.checked)}
                             className="accent-[#4B84F4] rounded bg-transparent border-white/40"
                         />
                         <span>Mantenha-me conectado</span>
@@ -128,7 +155,6 @@ export default function LoginPage() {
                         Esqueceu sua senha?
                     </button>
                 </div>
-
             </FormCard>
 
             <ModalTermos

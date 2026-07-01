@@ -11,7 +11,8 @@ const STATUS_CORES = {
     "Solicitando orçamento": "bg-[#A855F7]",
     "Fundo Rotativo": "bg-[#EC4899]",
     "CD central": "bg-[#3B82F6]",
-    "Solicitado pelo portal": "bg-[#E1AD01]"
+    "Solicitado pelo portal": "bg-[#E1AD01]",
+    "Sem produtos": "bg-gray-400"
 };
 
 export function getStatusCor(status) {

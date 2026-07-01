@@ -1,72 +1,29 @@
 'use client';
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SolicitacoesTabs from "@/lib/utils/requestTabs";
-import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
+import { useRequestsList } from "@/hooks/useRequestsList";
+import { useRequestsFilter } from "@/hooks/useMyCRList";
 import SolicitacoesFilter from "./requestFilter";
 import SolicitacoesTable from "./requestTable";
 
-export default function RequestsContainer({ solicitacoesIniciais }) {
-    const [status, setStatus] = useState("");
-    const [data, setData] = useState("");
-    const [busca, setBusca] = useState("");
-    const [abaAtiva, setAbaAtiva] = useState('todas');
+export default function RequestsContainer({ solicitacoesIniciais = [] }) {
     const router = useRouter();
+    
+    const { requests: solicitacoes, loading, error } = useRequestsList(solicitacoesIniciais);
 
-    const statusDisponiveis = [
-        { id: 1, nome: "Em análise" },
-        { id: 2, nome: "Reprovado" },
-        { id: 3, nome: "Parcial Aprovado" },
-        { id: 4, nome: "Aprovado" }
-    ];
+    const {
+        filtros: { status, data, busca, abaAtiva },
+        acoes: { setStatus, setData, setBusca, setAbaAtiva },
+        statusDisponiveis,
+        solicitacoesFiltradas
+    } = useRequestsFilter(solicitacoes);
 
     const abas = [
         { valor: 'todas', label: 'TODAS' },
         { valor: 'pendentes', label: 'PENDENTES' },
         { valor: 'concluidas', label: 'CONCLUÍDAS' },
     ];
-
-    const solicitacoesFiltradas = (solicitacoesIniciais || []).filter((item) => {
-        const statusSolicitacao = calcularStatusSolicitacao(item.produtos);
-
-        if (abaAtiva === "pendentes" && statusSolicitacao !== "Em análise") {
-            return false;
-        }
-
-        if (
-            abaAtiva === "concluidas" &&
-            (statusSolicitacao === "Em análise" || statusSolicitacao === "Reprovado")
-        ) {
-            return false;
-        }
-
-        if (status && statusSolicitacao !== status) {
-            return false;
-        }
-
-        if (data && item.data !== data) {
-            return false;
-        }
-
-        if (busca) {
-            const textoBusca = busca.toLowerCase();
-
-            const textoPesquisavel = `
-                ${item.codigo}
-                ${statusSolicitacao}
-                Lista de ${item.produtos.length} ${item.produtos.length === 1 ? "produto" : "produtos"}
-                ${item.produtos.map((p) => p.nome).join(" ")}
-                ${item.data}
-            `.toLowerCase();
-
-            if (!textoPesquisavel.includes(textoBusca)) {
-                return false;
-            }
-        }
-
-        return true;
-    });
 
     return (
         <>
@@ -88,11 +45,25 @@ export default function RequestsContainer({ solicitacoesIniciais }) {
                     abas={abas}
                 />
 
-                <div className="flex flex-1 flex-col mb-3 pr-2 m-2 overflow-y-auto bg-white">
-                    <SolicitacoesTable
-                        itens={solicitacoesFiltradas}
-                        onItemClick={(id) => router.push(`/solicitacoes/${id}`)}
-                    />
+                <div className="h-[550px] overflow-y-auto bg-white">
+                    {loading && (
+                        <div className="p-6 text-center text-sm text-gray-500">
+                            Carregando solicitações...
+                        </div>
+                    )}
+
+                    {!loading && error && (
+                        <div className="p-6 text-center text-sm font-semibold text-[#BA1A1A]">
+                            {error}
+                        </div>
+                    )}
+
+                    {!loading && !error && (
+                        <SolicitacoesTable
+                            itens={solicitacoesFiltradas}
+                            onItemClick={(id) => router.push(`/solicitacoes/${id}`)}
+                        />
+                    )}
                 </div>
             </div>
         </>

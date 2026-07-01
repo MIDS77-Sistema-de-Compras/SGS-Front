@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
 import { logoutAction } from "./actions"
 
-export function Footer(){
+export function Footer() {
     const router = useRouter()
 
     const handleLogout = async () => {
@@ -21,7 +21,7 @@ export function Footer(){
                 <div className="opacity-80 group-hover:opacity-100 transition-opacity">
                     <Image 
                         src="/images/icons/logout.png"
-                        alt="Ícone Sair"
+                        alt="Icone Sair"
                         width={22}
                         height={22}
                     />

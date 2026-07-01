@@ -36,14 +36,9 @@ async function proxyRequest(request, context) {
 
     const responseHeaders = new Headers();
     const contentType = upstreamResponse.headers.get("content-type");
-    const setCookie = upstreamResponse.headers.get("set-cookie");
 
     if (contentType) {
         responseHeaders.set("content-type", contentType);
-    }
-
-    if (setCookie) {
-        responseHeaders.set("set-cookie", setCookie);
     }
 
     return new Response(await upstreamResponse.arrayBuffer(), {
