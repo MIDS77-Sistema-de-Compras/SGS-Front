@@ -78,13 +78,13 @@ export default function Notificacoes() {
                 <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 mb-3 -mx-5 shrink-0" />
                 <div className="min-h-0 flex-1 overflow-y-auto py-2 pr-1">
                     {isLoading && (
-                        <div className="flex h-full items-center justify-center px-5 py-8 text-center text-sm text-[#666666]">
+                        <div className="flex h-full items-center justify-center px-5 py-8 text-center text-sm text-[#666666] dark:text-[#C3C6D3]">
                             Carregando notificacoes...
                         </div>
                     )}
 
                     {!isLoading && error && (
-                        <div className="mx-5 mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                        <div className="mx-5 mt-4 rounded-lg border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-4 text-sm text-red-700 dark:text-red-400">
                             {error}
                         </div>
                     )}
@@ -102,7 +102,7 @@ export default function Notificacoes() {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Link
                     href="/solicitacoes/criar"
-                    className="flex h-16 items-center justify-center gap-3 rounded-xl bg-[#103D85] text-sm font-bold text-white shadow-sm transition-all hover:bg-[#0b2a5c] active:scale-[0.99]"
+                    className="flex h-16 items-center justify-center gap-3 rounded-xl bg-[#103D85] dark:bg-[#1A4A9E] text-sm font-bold text-white shadow-sm transition-all hover:bg-[#0b2a5c] dark:hover:bg-[#2456b0] active:scale-[0.99]"
                 >
                     <FilePlus2 size={22} strokeWidth={2.2} />
                     Nova Solicitação
@@ -110,7 +110,7 @@ export default function Notificacoes() {
 
                 <Link
                     href="/solicitacoes"
-                    className="flex h-16 items-center justify-center gap-3 rounded-xl border border-[#333333] bg-white text-sm font-bold text-black shadow-sm transition-all hover:bg-gray-50 active:scale-[0.99]"
+                    className="flex h-16 items-center justify-center gap-3 rounded-xl border border-[#333333] dark:border-white/10 bg-white dark:bg-[#303746] text-sm font-bold text-black dark:text-[#E2E2EA] shadow-sm transition-all hover:bg-gray-50 dark:hover:bg-white/5 active:scale-[0.99]"
                 >
                     <ClipboardList size={22} strokeWidth={2.2} />
                     Minhas Solicitações

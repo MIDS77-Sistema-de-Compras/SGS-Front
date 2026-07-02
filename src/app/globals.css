@@ -49,6 +49,9 @@ body {
 
 * {
   scrollbar-width: thin;
+}
+
+:root:not(.dark) * {
   scrollbar-color: var(--color-primary) #fff;
 }
 
@@ -122,4 +125,8 @@ body {
 
 .dark * {
     scrollbar-color: #303746 #1A2233;
+}
+
+.dark ::-webkit-scrollbar-button {
+    display: none;
 }
