@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Select from "@/components/ui/select/Select";
 import send from "../../../../public/images/icons/send.svg";
@@ -8,16 +7,19 @@ import FormField from "@/components/ui/form/FormField";
 import { Input } from "@/components/ui/input/Input";
 import SectionHeader from "@/components/ui/layout/SectionHeader";
 import Button from "@/components/ui/button/Button";
+import { useCreateCr } from "@/hooks/useCreateCr";
 
 export default function RequestFormCR() {
-    const [isMaster, setIsMaster] = useState(true);
-    
-const BLOCOS_RESPONSAVEIS = [
-    "Diretoria de Operações",
-    "Gerência de Tecnologia da Informação",
-    "Núcleo de Educação Profissional",
-    "Setor de Compras e Logística"
-];
+    const {
+        formData,
+        errors,
+        isLoading,
+        sectors,
+        sectorsLoading,
+        handleChange,
+        handleSubmit,
+    } = useCreateCr();
+
     return (
          <div className="border border-[#AAAAAA] rounded-xl flex flex-col overflow-hidden">
 
@@ -26,56 +28,79 @@ const BLOCOS_RESPONSAVEIS = [
             </div>
 
             <form
-                action={"won't do now since the API isn't done yet"}
+                onSubmit={handleSubmit}
                 className="flex-1 overflow-y-auto p-5"
             >
                 <SectionHeader label="IDENTIFICAÇÃO DE CR" />
 
                 <FormField label="Nome do CR" required className="col-span-2">
-                    <Input variant="form" placeholder="Nome do CR" />
+                    <Input
+                        variant="form"
+                        placeholder="Nome do CR"
+                        value={formData.nome}
+                        onChange={(e) => handleChange('nome', e.target.value)}
+                        error={errors.nome}
+                    />
+                    {errors.nome && (
+                        <span className="text-[11px] text-[#BA1A1A] mt-1 block">{errors.nome}</span>
+                    )}
                 </FormField>
 
                 <div className="grid grid-cols-2 items-center gap-x-5">
 
                     <FormField label="Código" required className="col-span-1">
-                        <Input variant="form" placeholder="3333-7777" />
+                        <Input
+                            variant="form"
+                            placeholder="3333-7777"
+                            value={formData.codigo}
+                            onChange={(e) => handleChange('codigo', e.target.value)}
+                            error={errors.codigo}
+                        />
+                        {errors.codigo && (
+                            <span className="text-[11px] text-[#BA1A1A] mt-1 block">{errors.codigo}</span>
+                        )}
                     </FormField>
-                    
+
                     <FormField label="CR Master" required>
                         <div className="flex items-center gap-3 py-2 select-none">
                             <button
                                 type="button"
-                                onClick={() => setIsMaster(!isMaster)}
+                                onClick={() => handleChange('master', !formData.master)}
                                 className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    isMaster ? 'bg-[#103D85]' : 'bg-gray-200'
+                                    formData.master ? 'bg-[#103D85]' : 'bg-gray-200'
                                 }`}
                             >
                                 <span
                                     className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                        isMaster ? 'translate-x-5' : 'translate-x-0'
+                                        formData.master ? 'translate-x-5' : 'translate-x-0'
                                     }`}
                                 />
                             </button>
                             <div className="flex flex-col text-left min-w-[100px]">
-                                <span className={`text-[13px] font-bold leading-none ${isMaster ? 'text-[#103D85]' : 'text-gray-500'}`}>
-                                    {isMaster ? 'Ativado' : 'Desativado'}
+                                <span className={`text-[13px] font-bold leading-none ${formData.master ? 'text-[#103D85]' : 'text-gray-500'}`}>
+                                    {formData.master ? 'Ativado' : 'Desativado'}
                                 </span>
                                 <span className="text-[10px] text-gray-400 font-normal">
-                                    {isMaster ? 'Clique para desativar' : 'Clique para ativar'}
+                                    {formData.master ? 'Clique para desativar' : 'Clique para ativar'}
                                 </span>
                             </div>
                         </div>
-                        <input type="hidden" name="master" value={isMaster ? "true" : "false"} />
                     </FormField>
 
                     <FormField label="Bloco responsável" required>
-                        <Select 
-                            name="sector" 
-                            placeholder="Associar a um bloco responsável" 
-                            defaultValue="" 
-                            options={BLOCOS_RESPONSAVEIS} 
-                            isRequired 
+                        <Select
+                            name="sector"
+                            placeholder={sectorsLoading ? "Carregando blocos..." : "Associar a um bloco responsável"}
+                            value={formData.sectorName}
+                            onChange={(e) => handleChange('sectorName', e.target.value)}
+                            options={sectors.map((sector) => sector.name)}
+                            error={errors.sectorName}
+                            disabled={sectorsLoading}
+                            isRequired
                         />
+                        {errors.sectorName && (
+                            <span className="text-[11px] text-[#BA1A1A] mt-1 block">{errors.sectorName}</span>
+                        )}
                     </FormField>
 
                 </div>
@@ -85,8 +110,9 @@ const BLOCOS_RESPONSAVEIS = [
                         type="submit"
                         variant="primary"
                         className="py-3 px-7 text-[14px] font-semibold"
+                        isLoading={isLoading}
                     >
-                        <span className="flex gap-5">ATUALIZAR SOLICITAÇÃO
+                        <span className="flex gap-5">CADASTRAR CR
                             <Image
                                 src={send}
                                 alt="Paper Plane Send Icon"
