@@ -2,7 +2,8 @@ import Button from "@/components/ui/button/Button";
 import PasswordInput from "@/components/ui/input/PasswordInput";
 import { useEffect, useState } from "react";
 import FormCard from "./FormCard";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
+import { newPassword } from "@/service/auth/auth-recovery";
 
 export default function NewPasswordForm(){
     const [senha, setSenha] = useState("");
