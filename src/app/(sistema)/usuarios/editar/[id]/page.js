@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
@@ -8,28 +8,89 @@ import SectionHeader from '@/components/ui/layout/SectionHeader';
 import Button from '@/components/ui/button/Button';
 import UserIdentificationSection from '@/components/features/admin/UserIdentification';
 import AccessLevelSelector from '@/components/features/admin/AccessLevelSelector';
+import { getUserById, updateUser, deleteUser } from '@/service/users/usersSearch';
+import { useParams } from 'next/navigation';
 
-export default function EditarUsuarios({ params }) {
-
+export default function EditarUsuarios() {
     const router = useRouter();
+    const params = useParams();
+    const userId = params.id;
 
     const [formData, setFormData] = useState({
-        nome: "Emanuelle Cristina Hostin",
-        cpf: "000.000.000-00",
-        telefone: "+55 (47) 99999-9999",
-        ramal: "9999",
-        email: "emanuelle.hostin@gmail.com",
-        senha: "12345678",
-        nivelAcesso: "COORDENADOR"
+        nome: '',
+        cpf: '',
+        telefone: '',
+        ramal: '',
+        email: '',
+        senha: '',
+        nivelAcesso: ''
     });
+
+    useEffect(() => {
+        loadUser();
+    }, [userId]);
+
+    async function loadUser() {
+    try {
+        console.log("ID da rota:", userId);
+
+        const response = await getUserById(userId);
+
+        console.log("Usuario encontrado:", response);
+
+        setFormData({
+            nome: response.name ?? '',
+            cpf: '***.***.***-**',
+            telefone: '',
+            ramal: response.extensionNumber ?? '',
+            email: response.email ?? '',
+            senha: '',
+            nivelAcesso: response.roleName ?? ''
+        });
+    } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+    }
+}
 
     const handleChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
+    const cpf = formData.cpf === '***.***.***-**' ? '' : formData.cpf;
+
+    async function handleSave() {
+        try {
+            const payload = {
+                name: formData.nome,
+                cpf,
+                email: formData.email,
+                password: formData.senha,
+                extensionNumber: formData.ramal,
+                active: true,
+                nameRole: formData.nivelAcesso
+            };
+
+            console.log("Payload update:", payload);
+
+            await updateUser(userId, payload);
+
+            router.push('/usuarios/admin/gerenciar');
+        } catch (error) {
+            console.error('Erro ao atualizar usuário:', error);
+        }
+    }
+
+    async function handleDelete() {
+        try {
+            await deleteUser(userId);
+            router.push('/usuarios/admin/gerenciar');
+        } catch (error) {
+            console.error('Erro ao excluir usuário:', error);
+        }
+    }
+
     return (
         <div className="flex flex-col w-full gap-5">
-
             <div className="bg-white px-5 py-3 rounded-xl shadow-sm border border-[#AAAAAA]">
                 <div className="flex items-center">
                     <button
@@ -40,9 +101,11 @@ export default function EditarUsuarios({ params }) {
                     >
                         <ArrowLeft size={24} />
                     </button>
-                    <h1 className="text-[22px] font-bold text-[#103D85]">Editar Usuário</h1>
-                </div>
 
+                    <h1 className="text-[22px] font-bold text-[#103D85]">
+                        Editar Usuário
+                    </h1>
+                </div>
 
                 <div className="border-t border-[#AAAAAA] mt-2 mb-5 -mx-5" />
 
@@ -52,7 +115,7 @@ export default function EditarUsuarios({ params }) {
                         formData={formData}
                         errors={{}}
                         onChange={handleChange}
-                        onBlur={() => { }}
+                        onBlur={() => {}}
                     />
                 </div>
 
@@ -66,9 +129,9 @@ export default function EditarUsuarios({ params }) {
             </div>
 
             <div className="flex justify-between items-center w-full">
-
                 <div className="flex gap-4">
                     <Button
+                        onClick={handleDelete}
                         className="w-[295px] bg-[#E30613] hover:bg-[#B8010C] text-white border-[#E30613]"
                         rightIcon={<Image src="/images/lixeira.png" alt="" width={16} height={16} />}
                     >
@@ -84,14 +147,13 @@ export default function EditarUsuarios({ params }) {
                 </div>
 
                 <Button
+                    onClick={handleSave}
                     className="w-[295px]"
                     rightIcon={<Image src="/images/lapisEdicao.png" alt="" width={16} height={16} />}
                 >
                     SALVAR MUDANÇAS
                 </Button>
-
             </div>
-
         </div>
     );
 }
