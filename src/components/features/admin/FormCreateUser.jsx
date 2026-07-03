@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; 
 import { ArrowLeft } from 'lucide-react'; 
 import SectionHeader from '@/components/ui/layout/SectionHeader';
@@ -7,11 +8,23 @@ import AccessLevelSelector from './AccessLevelSelector';
 import UserIdentificationSection from './UserIdentification';
 import Button from '@/components/ui/button/Button';
 import { useCreateUser } from '@/hooks/useCreateUser';
+import { getUserRole } from '@/lib/utils/getUserRole';
 
 export default function FormCreateUser() {
     const { formData, errors, isLoading, handleChange, handleBlur, handleSubmit } = useCreateUser();
-    
     const router = useRouter();
+
+    const [isMounted, setIsMounted] = useState(false);
+    const [userRole, setUserRole] = useState(null);
+
+    useEffect(() => {
+        setIsMounted(true);
+        setUserRole(getUserRole());
+    }, []);
+
+    if (!isMounted) {
+        return null; 
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -44,6 +57,7 @@ export default function FormCreateUser() {
                         <AccessLevelSelector
                             value={formData.nivelAcesso}
                             onChange={(value) => handleChange('nivelAcesso', value)}
+                            roleAtual={userRole}
                         />
                     </div>
                 </div>

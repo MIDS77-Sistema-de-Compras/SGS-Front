@@ -47,7 +47,7 @@ export default function RecuperarSenhaPage() {
                     Recuperar senha
                 </h2>
                 <p className="text-white/60 text-[13px] mb-8">
-                    Insira seu e-mail ou CPF cadastrado para receber as instruções de redefinição.
+                    Insira seu e-mail para receber as instruções de redefinição.
                 </p>
 
                 <Input
