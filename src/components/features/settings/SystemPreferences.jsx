@@ -12,14 +12,18 @@ const GearIcon = () => (
 );
 
 export default function SystemPreferences() {
-    const { darkMode, setDarkMode } = useTheme();
+    const { darkMode, setDarkMode, mounted } = useTheme();
 
     return (
         <SettingsCard
             icon={<GearIcon />}
             title="Preferências do sistema"
             description="Personalize sua experiência no sistema"
-            action={<ThemeToggle darkMode={darkMode} onChange={setDarkMode} />}
+            action={
+                mounted
+                    ? <ThemeToggle darkMode={darkMode} onChange={setDarkMode} />
+                    : <div className="w-[176px] h-[42px] rounded-full bg-gray-200 dark:bg-white/10" aria-hidden="true" />
+            }
         />
     );
 }

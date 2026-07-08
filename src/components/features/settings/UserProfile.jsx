@@ -14,6 +14,9 @@ const readOnlyFieldClass =
 const editableFieldClass =
     "bg-white dark:bg-[#E2E2EA]/25 dark:text-[#E2E2EA] border-[#103D85]/30 dark:border-white/15 focus:border-[#103D85] dark:focus:border-[#1A4A9E]";
 
+const modalFieldClass =
+    "bg-white dark:bg-[#303746] dark:text-[#E2E2EA] border-gray-200 dark:border-white/15 focus:border-[#103D85] dark:focus:border-[#1A4A9E]";
+
 export default function UserProfile() {
 
     const [open, setOpen] = useState(false);
@@ -116,46 +119,53 @@ export default function UserProfile() {
                                     <Button onClick={() => openModal(true)} fullWidth>
                                         Alterar minha senha
                                     </Button>
-                                    <p className="text-sm text-red-500">{error}</p> {/* someone change this if it's needed */}
-                                    <Modal isOpen={modal} onClose={() => openModal(false)} title={"Confirmação"}>
-                                        <div className="flex flex-col gap-5">
-                                            <div>
-                                                <p>Digite a sua senha antiga.</p>
+                                    <p className="text-sm text-red-500 dark:text-[#F87171]">{error}</p> {/* someone change this if it's needed */}
+                                    <Modal isOpen={modal} onClose={() => openModal(false)} title={"Confirmação"} height="h-auto" maxWidth="max-w-[460px]">
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[13px] font-semibold text-gray-600 dark:text-[#C3C6D3]">Digite a sua senha antiga</label>
                                                 <PasswordInput
                                                     variant="form"
                                                     placeholder="Sua senha antiga..."
                                                     value={oldPassword}
                                                     onChange={(e) => setOldPassword(e.target.value)}
-                                                    className={editableFieldClass}
+                                                    className={modalFieldClass}
                                                 />
                                             </div>
-                                            <div>
-                                                <p>Digite a sua nova senha.</p>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[13px] font-semibold text-gray-600 dark:text-[#C3C6D3]">Digite a sua nova senha</label>
                                                 <PasswordInput
                                                     variant="form"
                                                     placeholder="Sua nova senha..."
                                                     value={newPassword}
                                                     onChange={(e) => setNewPassword(e.target.value)}
-                                                    className={editableFieldClass}
+                                                    className={modalFieldClass}
                                                 />
                                             </div>
-                                            <div>
-                                                <p>Confirme sua senha.</p>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[13px] font-semibold text-gray-600 dark:text-[#C3C6D3]">Confirme sua senha</label>
                                                 <PasswordInput
                                                     variant="form"
                                                     placeholder="Confirme sua senha..."
                                                     value={confirmPwd}
                                                     onChange={(e) => setConfirmPwd(e.target.value)}
-                                                    className={editableFieldClass}
+                                                    className={modalFieldClass}
                                                 />
                                             </div>
-                                            <p className="text-red-500">{error}</p>
+                                            {error && <p className="text-sm font-medium text-red-500 dark:text-[#F87171]">{error}</p>}
                                         </div>
-                                        <div className="flex flex-col items-center gap-4">
-                                            <p>Deseja mesmo atualizar sua senha?</p>
+
+                                        <div className="flex flex-col items-center gap-4 mt-6 pt-5 border-t border-gray-100 dark:border-white/10">
+                                            <p className="text-sm font-semibold text-gray-700 dark:text-[#E2E2EA]">Deseja mesmo atualizar sua senha?</p>
                                             <div className="flex gap-3">
-                                                <Button onClick={handleUpdate}>Sim</Button>
-                                                <Button onClick={() => openModal(false)} className="bg-transparent text-black hover:bg-neutral-200">Não</Button>
+                                                <Button onClick={handleUpdate} className="px-8">Sim</Button>
+                                                <Button
+                                                    variant="outline"
+                                                    onClick={() => openModal(false)}
+                                                    className="px-8"
+                                                >
+                                                    Não
+                                                </Button>
                                             </div>
                                         </div>
                                     </Modal>

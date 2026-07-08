@@ -6,6 +6,7 @@ const ThemeContext = createContext({
     darkMode: false,
     setDarkMode: () => {},
     toggleTheme: () => {},
+    mounted: false,
 });
 
 function getInitialTheme() {
@@ -17,6 +18,11 @@ function getInitialTheme() {
 
 export function ThemeProvider({ children }) {
     const [darkMode, setDarkMode] = useState(getInitialTheme);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         const root = document.documentElement;
@@ -32,7 +38,7 @@ export function ThemeProvider({ children }) {
     const toggleTheme = () => setDarkMode((prev) => !prev);
 
     return (
-        <ThemeContext.Provider value={{ darkMode, setDarkMode, toggleTheme }}>
+        <ThemeContext.Provider value={{ darkMode, setDarkMode, toggleTheme, mounted }}>
             {children}
         </ThemeContext.Provider>
     );
