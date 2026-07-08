@@ -1,8 +1,6 @@
 import Skeleton, { SkeletonCircle } from '@/components/ui/skeleton/Skeleton';
 
-/**
- * Skeleton do card de resumo. Espelha o layout de {@link SummaryItem}.
- */
+
 export default function SummaryCardSkeleton({ rows = 3 }) {
     return (
         <ul className="flex flex-col gap-4">

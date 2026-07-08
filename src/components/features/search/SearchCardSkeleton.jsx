@@ -1,8 +1,6 @@
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 
-/**
- * Skeleton da lista de CRs. Espelha o layout de {@link SearchCard}.
- */
+
 export default function SearchCardSkeleton({ cards = 4 }) {
     return (
         <>

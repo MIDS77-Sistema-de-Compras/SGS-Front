@@ -1,9 +1,6 @@
 import Skeleton, { SkeletonCircle } from '@/components/ui/skeleton/Skeleton';
 
-/**
- * Skeleton da lista de notificações. Espelha o grid de {@link NotificationCard}:
- * ícone | título/mensagem | tempo.
- */
+
 export default function NotificationsListSkeleton({ rows = 6 }) {
     return (
         <ul className="flex flex-col py-3">

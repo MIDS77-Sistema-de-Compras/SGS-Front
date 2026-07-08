@@ -1,9 +1,5 @@
 import Skeleton, { SkeletonCircle } from '@/components/ui/skeleton/Skeleton';
 
-/**
- * Skeleton da gestão de solicitações. Espelha o layout de {@link RequestManagementCard}:
- * indicador + título/subtítulo à esquerda e tempo + badge de status à direita.
- */
 export default function RequestManagementSkeleton({ rows = 5 }) {
     return (
         <div className="flex flex-col">

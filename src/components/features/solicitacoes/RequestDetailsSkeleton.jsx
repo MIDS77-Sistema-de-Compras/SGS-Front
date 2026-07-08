@@ -1,9 +1,6 @@
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 
-/**
- * Skeleton da tela de detalhes da solicitação. Espelha o cabeçalho e a
- * {@link ProductTable} (produto, variação, quantidade, informações, status).
- */
+
 export default function RequestDetailsSkeleton({ rows = 6 }) {
     return (
         <div className="flex-1 p-0 font-sans">

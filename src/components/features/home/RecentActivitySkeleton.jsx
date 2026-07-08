@@ -1,8 +1,6 @@
 import Skeleton, { SkeletonCircle } from '@/components/ui/skeleton/Skeleton';
 
-/**
- * Skeleton da lista de atividade recente. Espelha o layout de {@link ActivityItem}.
- */
+
 export default function RecentActivitySkeleton({ rows = 4 }) {
     return (
         <ul className="flex flex-col gap-1">

@@ -2,12 +2,7 @@
 
 import { cn } from '@/lib/cn';
 
-/**
- * Bloco base de skeleton. Reutilizável em qualquer tela.
- * Use as classes utilitárias para definir tamanho/formato:
- *   <Skeleton className="h-5 w-32" />
- *   <Skeleton className="h-8 w-[150px] rounded-full" />
- */
+
 export default function Skeleton({ className, ...props }) {
     return (
         <div

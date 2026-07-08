@@ -9,10 +9,7 @@ const COLUNAS = [
     { label: 'Ações', width: 'w-[8%]' },
 ];
 
-/**
- * Skeleton da tabela de usuários. Espelha o layout e larguras de coluna
- * de {@link UserTable}, mantendo o cabeçalho real para não "pular" no carregamento.
- */
+
 export default function UserTableSkeleton({ rows = 8 }) {
     return (
         <div className="flex-1 flex flex-col min-h-0 w-full bg-white">

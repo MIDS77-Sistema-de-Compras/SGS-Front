@@ -1,9 +1,6 @@
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 
-/**
- * Skeleton da listagem de solicitações. Espelha o layout de {@link SolicitacaoRow}:
- * (código + data) à esquerda e badge de status à direita.
- */
+
 export default function RequestsTableSkeleton({ rows = 6 }) {
     return (
         <div className="flex flex-col">
