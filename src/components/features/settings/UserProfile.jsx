@@ -7,12 +7,16 @@ import PasswordInput from "@/components/ui/input/PasswordInput";
 import Button from "@/components/ui/button/Button";
 import Modal from "@/components/ui/overlay/Modal";
 import { changeUserPassword } from "@/service/config/change-password";
+import { useLoggedUser } from "@/hooks/useLoggedUser";
 
 const readOnlyFieldClass =
     "bg-[#D1D5DB]/40 border-gray-200 cursor-default select-none focus:border-gray-200 focus:ring-0";
 
 const editableFieldClass =
     "bg-white border-[#103D85]/30 focus:border-[#103D85]";
+
+const formatRole = (role) =>
+    role ? role.charAt(0) + role.slice(1).toLowerCase() : "";
 
 export default function UserProfile() {
 
@@ -23,6 +27,7 @@ export default function UserProfile() {
 
     const [modal, openModal] = useState(false);
     const [error, setError] = useState("");
+    const { user, loading } = useLoggedUser();
 
     useEffect(() => {
         if(newPassword != confirmPwd && modal == true){
@@ -92,7 +97,8 @@ export default function UserProfile() {
                                 <label className="text-xs font-semibold text-gray-500">Nome completo</label>
                                 <Input
                                     variant="form"
-                                    defaultValue="Vinícius Trindade"
+                                    key={user?.name || "nome"}
+                                    defaultValue={user?.name || ""}
                                     readOnly
                                     className={readOnlyFieldClass}
                                 />
@@ -102,7 +108,8 @@ export default function UserProfile() {
                                 <Input
                                     variant="form"
                                     type="email"
-                                    defaultValue="vinicius.trindade@senai.br"
+                                    key={user?.email || "email"}
+                                    defaultValue={user?.email || ""}
                                     readOnly
                                     className={readOnlyFieldClass}
                                 />
@@ -165,7 +172,8 @@ export default function UserProfile() {
                                 <label className="text-xs font-semibold text-gray-500">Nível</label>
                                 <Input
                                     variant="form"
-                                    defaultValue="Supervisor"
+                                    key={user?.roleName || "nivel"}
+                                    defaultValue={formatRole(user?.roleName)}
                                     readOnly
                                     className={readOnlyFieldClass}
                                 />
@@ -173,7 +181,8 @@ export default function UserProfile() {
                             <div className="flex flex-col gap-2">
                                 <label className="text-xs font-semibold text-gray-500">CPF</label>
                                 <CpfInput
-                                    value="123.456.789-00"
+                                    key={user?.cpf || "cpf"}
+                                    value={user?.cpf || ""}
                                     readOnly
                                     className={readOnlyFieldClass}
                                 />
@@ -182,7 +191,8 @@ export default function UserProfile() {
                                 <label className="text-xs font-semibold text-gray-500">Ramal</label>
                                 <Input
                                     variant="form"
-                                    defaultValue="1432"
+                                    key={user?.extensionNumber || "ramal"}
+                                    defaultValue={user?.extensionNumber || ""}
                                     readOnly
                                     className={readOnlyFieldClass}
                                 />
