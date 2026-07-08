@@ -45,7 +45,7 @@ const AdditionalInfoButton = forwardRef(function AdditionalInfoButton(
   const currentStatus = options[status] ?? options.ajustes;
   const label = children ?? currentStatus.label;
   const baseClasses =
-    'inline-flex h-6 w-[210px] items-center justify-center rounded-xl px-4 text-center text-xs font-medium leading-none text-white transition-all duration-200';
+    'inline-flex w-[210px] items-center justify-center rounded-2xl px-4 py-2 text-center font-medium leading-none text-white transition-all duration-200';
 
   if (onStatusChange) {
     return (

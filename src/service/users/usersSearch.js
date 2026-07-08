@@ -1,0 +1,22 @@
+import { api } from "../api";
+
+
+export async function getAllUsers() {
+    return await api.get("/users");
+}
+
+export async function getUserById(id) {
+    return await api.get(`/users/userId/${id}`);
+}
+
+export async function createUser(user) {
+    return await api.post("/users", user);
+}
+
+export async function updateUser(id, user) {
+    return await api.put(`/users/userId/${id}`, user);
+}
+
+export async function deleteUser(id) {
+    return await api.delete(`/users/userId/${id}`);
+}
