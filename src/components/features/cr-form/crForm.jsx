@@ -11,7 +11,7 @@ import Button from "@/components/ui/button/Button";
 
 export default function RequestFormCR() {
     const [isMaster, setIsMaster] = useState(true);
-    
+
 const BLOCOS_RESPONSAVEIS = [
     "Diretoria de Operações",
     "Gerência de Tecnologia da Informação",
@@ -19,10 +19,10 @@ const BLOCOS_RESPONSAVEIS = [
     "Setor de Compras e Logística"
 ];
     return (
-         <div className="border border-[#AAAAAA] rounded-xl flex flex-col overflow-hidden">
+         <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col overflow-hidden">
 
-            <div className="px-5 py-3 border border-transparent border-b-[#AAAAAA]">
-                <h1 className="text-[#103D85] font-bold text-[22px]">Cadastrar CR</h1>
+            <div className="px-5 py-3 border border-transparent border-b-[#AAAAAA] dark:border-b-white/10">
+                <h1 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">Cadastrar CR</h1>
             </div>
 
             <form
@@ -40,14 +40,14 @@ const BLOCOS_RESPONSAVEIS = [
                     <FormField label="Código" required className="col-span-1">
                         <Input variant="form" placeholder="3333-7777" />
                     </FormField>
-                    
+
                     <FormField label="CR Master" required>
                         <div className="flex items-center gap-3 py-2 select-none">
                             <button
                                 type="button"
                                 onClick={() => setIsMaster(!isMaster)}
                                 className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    isMaster ? 'bg-[#103D85]' : 'bg-gray-200'
+                                    isMaster ? 'bg-[#103D85] dark:bg-[#1A4A9E]' : 'bg-gray-200 dark:bg-white/20'
                                 }`}
                             >
                                 <span
@@ -57,10 +57,10 @@ const BLOCOS_RESPONSAVEIS = [
                                 />
                             </button>
                             <div className="flex flex-col text-left min-w-[100px]">
-                                <span className={`text-[13px] font-bold leading-none ${isMaster ? 'text-[#103D85]' : 'text-gray-500'}`}>
+                                <span className={`text-[13px] font-bold leading-none ${isMaster ? 'text-[#103D85] dark:text-[#E2E2EA]' : 'text-gray-500 dark:text-[#C3C6D3]'}`}>
                                     {isMaster ? 'Ativado' : 'Desativado'}
                                 </span>
-                                <span className="text-[10px] text-gray-400 font-normal">
+                                <span className="text-[10px] text-gray-400 dark:text-[#C3C6D3] font-normal">
                                     {isMaster ? 'Clique para desativar' : 'Clique para ativar'}
                                 </span>
                             </div>
