@@ -21,10 +21,10 @@ export default function RequestFormCR() {
     } = useCreateCr();
 
     return (
-         <div className="border border-[#AAAAAA] rounded-xl flex flex-col overflow-hidden">
+         <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col overflow-hidden">
 
-            <div className="px-5 py-3 border border-transparent border-b-[#AAAAAA]">
-                <h1 className="text-[#103D85] font-bold text-[22px]">Cadastrar CR</h1>
+            <div className="px-5 py-3 border border-transparent border-b-[#AAAAAA] dark:border-b-white/10">
+                <h1 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">Cadastrar CR</h1>
             </div>
 
             <form
@@ -67,7 +67,7 @@ export default function RequestFormCR() {
                                 type="button"
                                 onClick={() => handleChange('master', !formData.master)}
                                 className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    formData.master ? 'bg-[#103D85]' : 'bg-gray-200'
+                                    formData.master ? 'bg-[#103D85] dark:bg-[#1A4A9E]' : 'bg-gray-200 dark:bg-white/20'
                                 }`}
                             >
                                 <span
@@ -77,10 +77,10 @@ export default function RequestFormCR() {
                                 />
                             </button>
                             <div className="flex flex-col text-left min-w-[100px]">
-                                <span className={`text-[13px] font-bold leading-none ${formData.master ? 'text-[#103D85]' : 'text-gray-500'}`}>
+                                <span className={`text-[13px] font-bold leading-none ${isMaster ? 'text-[#103D85] dark:text-[#E2E2EA]' : 'text-gray-500 dark:text-[#C3C6D3]'}`}>
                                     {formData.master ? 'Ativado' : 'Desativado'}
                                 </span>
-                                <span className="text-[10px] text-gray-400 font-normal">
+                                <span className="text-[10px] text-gray-400 dark:text-[#C3C6D3] font-normal">
                                     {formData.master ? 'Clique para desativar' : 'Clique para ativar'}
                                 </span>
                             </div>

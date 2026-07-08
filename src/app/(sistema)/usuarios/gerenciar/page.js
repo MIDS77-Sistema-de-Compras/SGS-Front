@@ -63,15 +63,51 @@ export default function GerenciarUsuarios() {
         <div className="flex flex-1 flex-col w-full h-full">
 
             <div className="mb-4">
-                <h1 className="text-2xl font-bold text-[#103D85] mb-1">
-                    Gerenciar usuários
-                </h1>
-
-                <p className="text-gray-500 text-sm">
-                    Cadastre, edite e gerencie os usuários que possuem acesso ao sistema.
-                </p>
+        <h1 className="text-2xl font-bold text-[#103D85] dark:text-[#E2E2EA] mb-1">Gerenciar usuários</h1>
+        <p className="text-gray-500 dark:text-[#C3C6D3] text-sm">Cadastre edite e gerencie os usuários que possuem acesso ao sistema.</p>
+      </div>
+<div className="flex flex-1 flex-col min-h-0 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 mb-4 overflow-hidden bg-white dark:bg-[#1A2233]">
+<div className="relative w-full sm:w-80">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search size={18} className="text-gray-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Buscar pelo Nome, E-mail..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
 
+            <div className="relative">
+              <select className="appearance-none border border-gray-200 dark:border-white/15 dark:bg-[#303746] text-gray-700 dark:text-[#E2E2EA] py-2 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]">
+                <option>Todos os status</option>
+                <option>Ativos</option>
+                <option>Inativos</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-[#C3C6D3]">
+                <ChevronDown size={16} />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex w-full sm:w-auto items-center gap-3">
+            <Button
+              variant="outline"
+              className="bg-[#E6F0FF] dark:bg-[#303746] text-[#103D85] dark:text-[#E2E2EA] border-transparent hover:bg-[#D4E5FF] dark:hover:bg-white/5"
+            >
+              Exportar
+            </Button>
+
+            <Link href="/usuarios/criar">
+              <Button variant="primary" leftIcon={<Plus size={18} />}>
+                Cadastrar Usuário
+              </Button>
+            </Link>
+          </div>
+        </div>
+        <div className="p-4 border-b border-gray-100 dark:border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
 
                 <StatCard
