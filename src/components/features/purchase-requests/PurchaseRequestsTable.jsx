@@ -14,27 +14,29 @@ const tableColumns = [
 
 export default function PurchaseRequestsTable({ requests = [] }) {
   return (
-    <section className="w-full overflow-hidden rounded-2xl border border-[#A3A3A3] bg-white">
-      <div className="border-[#A3A3A3] px-6 py-2">
-        <h1 className="text-[26px] font-semibold text-[#103D85]">
+    <section className="flex flex-col h-full w-full overflow-hidden min-h-0 rounded-xl border border-[#AAAAAA] px-5 py-2">
+      <div className="border-[#AAAAAA] pt-2 pb-3">
+        <h1 className="text-[#103D85] font-bold text-[22px]">
           Solicitações de compra
         </h1>
       </div>
 
-      <div className="px-5 py-2">
-        <div className="pr-4">
-          <div className="grid grid-cols-[0.9fr_1.2fr_1fr_1.7fr_260px_72px] items-center rounded-2xl bg-[#F0F0F0] px-6 py-3 text-center text-sm font-semibold text-[#103D85]">
-            {tableColumns.map((column) => (
-              <span key={column}>{column}</span>
-            ))}
-          </div>
-        </div>
+      <div className="grid grid-cols-[0.9fr_1.2fr_1fr_1.7fr_260px_72px] items-center rounded-xl bg-[#F0F0F0] py-3 text-center font-semibold text-[#103D85]">
+        {tableColumns.map((column) => (
+          <span key={column}>{column}</span>
+        ))}
+      </div>
 
-        <div className="max-h-[360px] overflow-y-auto pr-2">
-          {requests.map((request) => (
+      <div className="flex-1 overflow-y-auto pr-2 mt-2">
+        {requests.map((request) => (
+          <Link
+            href={`/solicitacoes-compra/${request.id}`}
+            className="mx-auto text-3xl leading-none text-[#103D85]"
+            aria-label="Ver detalhes"
+          >
             <div
               key={request.id}
-              className="grid min-h-16 grid-cols-[0.9fr_1.2fr_1fr_1.7fr_260px_72px] items-center border-b border-[#A3A3A3] px-6 text-center text-xs text-[#111827]"
+              className="grid min-h-16 grid-cols-[0.9fr_1.2fr_1fr_1.7fr_260px_72px] items-center border-b border-[#f0f0f0] text-center text-[14px] text-[#111827]"
             >
               <span>{request.data || request.requestDate}</span>
               <span>{request.product}</span>
@@ -43,16 +45,14 @@ export default function PurchaseRequestsTable({ requests = [] }) {
               <div className="flex justify-center">
                 <AdditionalInfoButton status={request.additionalInfoStatus} />
               </div>
-              <Link
-                href={`/usuarios/comprador/solicitacao/${request.id}`}
-                className="mx-auto text-3xl leading-none text-[#103D85]"
-                aria-label="Ver detalhes"
-              >
+              <span className="text-[26px] px-5 py-2">
                 ›
-              </Link>
+              </span>
+              
+
             </div>
-          ))}
-        </div>
+          </Link>
+        ))}
       </div>
     </section>
   );

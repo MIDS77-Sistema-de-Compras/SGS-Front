@@ -38,7 +38,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
                 statusDisponiveis={statusDisponiveis}
             />
 
-            <div className="flex flex-1 flex-col bg-white border border-[#AAAAAA] rounded-2xl overflow-hidden">
+            <div className="flex flex-1 flex-col bg-white border border-[#AAAAAA] rounded-xl overflow-hidden">
                 <SolicitacoesTabs
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
