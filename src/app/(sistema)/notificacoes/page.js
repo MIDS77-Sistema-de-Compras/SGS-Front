@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ClipboardList, FilePlus2 } from "lucide-react";
 import NotificationsList from "@/components/features/notifications/NotificationsList";
+import NotificationsListSkeleton from "@/components/features/notifications/NotificationsListSkeleton";
 import { sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
 import { notificationsService } from "@/service/notifications";
 
@@ -76,11 +77,7 @@ export default function Notificacoes() {
                 <div className="border-t border-[#AAAAAA]" />
 
                 <div className="min-h-0 flex-1 overflow-y-auto py-2 pr-1">
-                    {isLoading && (
-                        <div className="flex h-full items-center justify-center px-5 py-8 text-center text-sm text-[#666666]">
-                            Carregando notificacoes...
-                        </div>
-                    )}
+                    {isLoading && <NotificationsListSkeleton />}
 
                     {!isLoading && error && (
                         <div className="mx-5 mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">

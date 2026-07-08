@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 
 import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
+import RequestDetailsSkeleton from "@/components/features/solicitacoes/RequestDetailsSkeleton";
 import { useRequestDetails } from "@/hooks/useRequestDetails";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
 
@@ -81,11 +82,7 @@ export default function MyRequests() {
     };
 
     if (loading) {
-        return (
-            <div className="flex-1 flex items-center justify-center font-sans">
-                <p className="text-gray-500 text-lg">Carregando solicitação...</p>
-            </div>
-        );
+        return <RequestDetailsSkeleton />;
     }
 
     if (error || !solicitacao) {

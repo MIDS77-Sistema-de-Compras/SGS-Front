@@ -10,6 +10,7 @@ import { Modal } from '@/components/ui/overlay/Modal';
 import Button from '@/components/ui/button/Button';
 import RequestManagementFilters from './RequestManagementFilters';
 import RequestManagementCard from './RequestManagementCard';
+import RequestManagementSkeleton from './RequestManagementSkeleton';
 
 const ABAS = [
     { valor: 'pendentes', label: 'Pendentes' },
@@ -173,11 +174,7 @@ export default function RequestsManagement() {
                 />
 
                 <div className="h-[500px] overflow-y-auto px-6 bg-white">
-                    {loading && (
-                        <div className="text-gray-400 text-center pt-10">
-                            Carregando solicitações...
-                        </div>
-                    )}
+                    {loading && <RequestManagementSkeleton />}
 
                     {!loading && error && (
                         <div className="text-center pt-10 text-sm font-semibold text-[#BA1A1A]">
