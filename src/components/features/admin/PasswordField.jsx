@@ -22,8 +22,8 @@ export default function PasswordField({ value, onChange, error, ...rest }) {
     const strengthScore = calculateStrength(value)
 
     const getBarColor = (index) => {
-        if (index >= strengthScore) return 'bg-gray-200'
-        return 'bg-[#103D85]'
+        if (index >= strengthScore) return 'bg-gray-200 dark:bg-white/15'
+        return 'bg-[#103D85] dark:bg-[#5D8EF7]'
     }
 
     const strengthLabels = ['Nível de força', 'Muito Fraca', 'Razoável', 'Boa', 'Forte']
@@ -55,25 +55,25 @@ export default function PasswordField({ value, onChange, error, ...rest }) {
                     />
                 ))}
             </div>
-            <span className="text-[10px] text-gray-500 block pt-1.5 font-semibold">
+            <span className="text-[10px] text-gray-500 dark:text-[#C3C6D3] block pt-1.5 font-semibold">
                 {strengthLabels[strengthScore]}
             </span>
 
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 pt-3">
                 {criteria.map((criterion, index) => {
                     const isMet = criterion.test(value);
-                    let textColor = "text-gray-400"; 
+                    let textColor = "text-gray-400 dark:text-[#C3C6D3]"; 
 
                     if (isMet) {
-                        textColor = "text-[#34A853]"; 
+                        textColor = "text-[#34A853] dark:text-[#4ADE80]"; 
                     } else if (error) {
-                        textColor = "text-[#EA4335]"; 
+                        textColor = "text-[#EA4335] dark:text-[#F87171]"; 
                     }
 
                     return (
                         <React.Fragment key={index}>
                             {index > 0 && (
-                                <span className="text-gray-300 text-[10px] select-none">•</span>
+                                <span className="text-gray-300 dark:text-white/30 text-[10px] select-none">•</span>
                             )}
                             
                             <span

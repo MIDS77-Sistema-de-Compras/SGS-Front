@@ -6,6 +6,7 @@ import FileDropzone from "@/components/ui/upload/FileDropzone";
 import ListProducts from "./ListProducts";
 import send from "../../../../public/images/icons/send.svg";
 import file from "../../../../public/images/icons/file.svg";
+import fileWhite from "../../../../public/images/icons/fileWhite.svg";
 import FormField from "@/components/ui/form/FormField";
 import { Input } from "@/components/ui/input/Input";
 import PhoneInput from "@/components/ui/input/PhoneInput";
@@ -38,7 +39,7 @@ export default function RequestForm() {
     }
 
     return (
-        <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
+        <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
             <div className="">
                 <SolicitacoesTabs
                     titulo="Nova Solicitação"
@@ -223,6 +224,7 @@ export default function RequestForm() {
                         <div className="mt-5">
                             <FileDropzone
                                 icon={file}
+                                iconDark={fileWhite}
                                 iconAlt="File Icon"
                                 title="Arraste seus documentos aqui"
                                 description="Formatos aceitos: PDF, JPG, PNG e DOCX (máx 10MB)"
@@ -261,10 +263,10 @@ export default function RequestForm() {
 
                     <div className="flex flex-col items-end mt-5">
                         {formError && (
-                            <p className="mb-3 text-sm font-semibold text-[#BA1A1A]">{formError}</p>
+                            <p className="mb-3 text-sm font-semibold text-[#BA1A1A] dark:text-[#F87171]">{formError}</p>
                         )}
                         {success && (
-                            <p className="mb-3 text-sm font-semibold text-[#2E7D32]">Solicitação criada com sucesso.</p>
+                            <p className="mb-3 text-sm font-semibold text-[#2E7D32] dark:text-[#4ADE80]">Solicitação criada com sucesso.</p>
                         )}
 
                         <Button
