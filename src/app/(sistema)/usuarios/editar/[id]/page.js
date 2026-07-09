@@ -18,7 +18,7 @@ export default function EditarUsuarios() {
 
     const [formData, setFormData] = useState({
         nome: '',
-        cpf: '',
+        cpf: '***.***.***-**',
         telefone: '',
         ramal: '',
         email: '',
@@ -31,43 +31,47 @@ export default function EditarUsuarios() {
     }, [userId]);
 
     async function loadUser() {
-    try {
-        console.log("ID da rota:", userId);
+        try {
+            console.log("ID da rota:", userId);
 
-        const response = await getUserById(userId);
+            const response = await getUserById(userId);
 
-        console.log("Usuario encontrado:", response);
+            console.log("Usuario encontrado:", response);
 
-        setFormData({
-            nome: response.name ?? '',
-            cpf: '***.***.***-**',
-            telefone: '',
-            ramal: response.extensionNumber ?? '',
-            email: response.email ?? '',
-            senha: '',
-            nivelAcesso: response.roleName ?? ''
-        });
-    } catch (error) {
-        console.error('Erro ao buscar usuário:', error);
+            setFormData({
+                nome: response.name ?? '',
+                cpf: '***.***.***-**',
+                telefone: '',
+                ramal: response.extensionNumber ?? '',
+                email: response.email ?? '',
+                senha: '',
+                nivelAcesso: response.roleName ?? ''
+            });
+        } catch (error) {
+            console.error('Erro ao buscar usuário:', error);
+        }
     }
-}
 
     const handleChange = (field, value) => {
+        if (field === 'cpf') return; 
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
-    const cpf = formData.cpf === '***.***.***-**' ? '' : formData.cpf;
-
     async function handleSave() {
+        if (!formData.senha) {
+            alert('Digite a senha para confirmar a edição do usuário.');
+            return;
+        }
+
         try {
             const payload = {
                 name: formData.nome,
-                cpf,
                 email: formData.email,
                 password: formData.senha,
                 extensionNumber: formData.ramal,
                 active: true,
                 nameRole: formData.nivelAcesso
+                // CPF não é enviado: imutável após a criação do usuário
             };
 
             console.log("Payload update:", payload);
