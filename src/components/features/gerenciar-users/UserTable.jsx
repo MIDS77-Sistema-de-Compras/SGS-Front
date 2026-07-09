@@ -2,7 +2,6 @@ import { ChevronsUpDown, Pencil } from "lucide-react";
 import Link from "next/link";
 
 export default function UserTable({ users }) {
-
     const formatProfile = (profile) => {
         if (!profile) return "-";
 
@@ -33,7 +32,6 @@ export default function UserTable({ users }) {
 
     return (
         <div className="flex-1 flex flex-col min-h-0 w-full bg-white dark:bg-[#1A2233]">
-
             <div className="w-full bg-[#F8FAFC] dark:bg-[#303746] shadow-[0_1px_0_0_rgba(243,244,246,1)] dark:shadow-[0_1px_0_0_#303746] z-10 pr-6">
                 <table className="w-full text-left border-collapse table-fixed">
                     <thead>
@@ -72,6 +70,7 @@ export default function UserTable({ users }) {
                     </thead>
                 </table>
             </div>
+            
             <div className="flex-1 flex flex-col min-h-0 w-full pr-2 pb-2">
                 <div className="flex-1 overflow-y-auto min-h-0 w-full">
                     <table className="w-full text-left border-collapse table-fixed">
@@ -86,7 +85,9 @@ export default function UserTable({ users }) {
                                             <span className="font-medium text-gray-800 dark:text-[#E2E2EA] truncate">{user.name}</span>
                                         </div>
                                     </td>
+                                    
                                     <td className="py-2.5 px-4 w-[25%] text-gray-500 dark:text-[#C3C6D3] truncate">{user.email}</td>
+                                    
                                     <td className="py-2.5 px-4 w-[15%]">
                                         <span 
                                             className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap 
@@ -103,7 +104,7 @@ export default function UserTable({ users }) {
                                         <span
                                             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap
                                                 ${user.active
-                                                    ? "bg-green-50 dark:bg-green-500/15 text-green-700 dark:text-green-300""
+                                                    ? "bg-green-50 dark:bg-green-500/15 text-green-700 dark:text-green-300"
                                                     : "bg-red-50 dark:bg-red-500/15 text-red-700 dark:text-red-300"
                                                 }`}
                                         >
