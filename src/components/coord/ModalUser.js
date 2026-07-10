@@ -1,50 +1,64 @@
-import { Modal } from "../login/Modal";
-import Image from "next/image";
+import Modal from "../ui/overlay/Modal";
+import { Trash2, UserCheck, UserMinus } from 'lucide-react';
 
-export function ModalUser({ isOpen, onClose, userName = "Carregando...", isActive = true, onConfirm }) {
-
-    const acaoTexto = isActive ? "desativar" : "ativar";
-    const tituloModal = isActive ? "Desativar usuário" : "Ativar usuário";
+export function ModalUser({ isOpen, onClose, userName = "Carregando...", action = "desativar", onConfirm }) {
     
-    const botaoClasse = isActive
-        ? "px-18 py-2 border border-[#E30613] bg-[#E30613] hover:bg-[#9F0009] hover:border-[#9F0009] text-white font-medium rounded-xl transition-colors min-w-[110px]"
-        : "px-18 py-2 border border-[#10B981] bg-[#4CAF50] hover:bg-[#37823A] hover:border-[#047857] text-white font-medium rounded-xl transition-colors min-w-[110px]";
+    const isAtivar = action === "ativar";
+    const isExcluir = action === "excluir";
+    
+    const acaoTexto = action;
+    const tituloModal = isAtivar ? "Ativar usuário" : isExcluir ? "Excluir usuário" : "Desativar usuário";
+    const textoBotao = isAtivar ? "Ativar" : isExcluir ? "Excluir" : "Desativar";
 
-    const iconeSrc = isActive 
-        ? "/images/icons/desativarUser.png" 
-        : "/images/icons/ativarUser.png"; 
+    let botaoClasse = "";
+    if (isAtivar) {
+        botaoClasse = "py-2 border border-[#10B981] bg-[#4CAF50] hover:bg-[#37823A] hover:border-[#047857] text-white font-medium rounded-xl transition-colors";
+    } else if (isExcluir) {
+        botaoClasse = "py-2 border border-[#E30613] bg-[#E30613] hover:bg-[#9F0009] hover:border-[#9F0009] text-white font-medium rounded-xl transition-colors";
+    } else {
+        botaoClasse = "py-2 border border-[#7D7D7D] bg-[#7D7D7D] hover:bg-[#555555] hover:border-[#555555] text-white font-medium rounded-xl transition-colors";
+    }
 
-    const fundoBolinhaClasse = isActive 
-        ? "bg-[#FFCBCB] border-[#FFA3A3]" 
-        : "bg-[#C9FFCB] border-[#A3FFA6]"; 
+    let fundoBolinhaClasse = "";
+    if (isAtivar) {
+        fundoBolinhaClasse = "bg-[#C9FFCB] border-[#A3FFA6]"; 
+    } else if (isExcluir) {
+        fundoBolinhaClasse = "bg-[#FFCBCB] border-[#FFA3A3]"; 
+    } else {
+        fundoBolinhaClasse = "bg-gray-100 border-gray-300"; 
+    }
+
+    const renderizarIcone = () => {
+        if (isAtivar) return <UserCheck size={40} className="text-[#10B981]" />; 
+        if (isExcluir) return <Trash2 size={40} className="text-[#E30613]" />; 
+        return <UserMinus size={40} className="text-[#7D7D7D]" />; 
+    };
 
     return (
-        <Modal 
+        <Modal
             isOpen={isOpen}
             onClose={onClose}
             title={tituloModal}
+            height="h-auto" 
         >
-            <div className="flex flex-col justify-between items-center h-[300px] w-full">
-                <h1 className="text-[22px] text-center text-gray-900 font-normal pt-12">
-                    Tem certeza que deseja {acaoTexto} o usuário{" "}
-                    <span className="break-words font-bold">{userName}?</span>
-                </h1>
+            <div className="flex flex-col justify-center items-center gap-8 w-full">
+                <div className="flex flex-col items-center gap-4">
+                    <div className={`p-4 rounded-full ${fundoBolinhaClasse} border flex items-center justify-center shadow-sm`}>
+                        {renderizarIcone()}
+                    </div>
 
-                <div className={`w-18 h-18 rounded-full ${fundoBolinhaClasse} border flex items-center justify-center shadow-sm`}>
-                    <Image 
-                        src={iconeSrc} 
-                        alt={`Ícone ${tituloModal}`}
-                        width={40} 
-                        height={40}
-                        className="object-contain"
-                    />
+                    <h1 className="text-[18px] text-center text-gray-900 font-normal">
+                        Tem certeza que deseja {acaoTexto} o usuário{" "}
+                        <br/>
+                        <span className="break-words font-bold">{userName}?</span>
+                    </h1>
                 </div>
-                
-                <div className="flex justify-evenly w-full">
+
+                <div className="flex w-full gap-4">
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-18 py-2 border border-[#000000] hover:border-gray-400 text-gray-700 font-medium rounded-xl transition-colors min-w-[110px]"
+                        className="flex-1 py-2 border border-[#000000] hover:border-gray-400 text-gray-700 font-medium rounded-xl transition-colors"
                     >
                         Cancelar
                     </button>
@@ -52,12 +66,12 @@ export function ModalUser({ isOpen, onClose, userName = "Carregando...", isActiv
                     <button
                         type="button"
                         onClick={onConfirm}
-                        className={botaoClasse}
+                        className={`flex-1 ${botaoClasse}`}
                     >
-                        {isActive ? "Desativar" : "Ativar"}
+                        {textoBotao}
                     </button>
                 </div>
             </div>
-        </Modal>  
+        </Modal>
     );
 }
