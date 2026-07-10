@@ -13,7 +13,7 @@ export function useRequestForm() {
     const { showNotification } = useNotification();
     const [abaAtiva, setAbaAtiva] = useState("produto");
     const [attachments, setAttachments] = useState([]);
-    const [branch, setBranch] = useState("");
+    const [branchId, setBranchId] = useState("");
     const [requester, setRequester] = useState("");
     const [phone, setPhone] = useState("");
     const [crBranchId, setCrBranchId] = useState("");
@@ -25,6 +25,7 @@ export function useRequestForm() {
     const [serviceAdditionalInfo, setServiceAdditionalInfo] = useState("");
     const [products, setProducts] = useState([]);
     const [crOptions, setCrOptions] = useState([]);
+    const [branchOptions, setBranchOptions] = useState([]);
     const [unitOptions, setUnitOptions] = useState([]);
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState("");
@@ -35,8 +36,9 @@ export function useRequestForm() {
 
         async function loadData() {
             try {
-                const [crs, units] = await Promise.all([
+                const [crs, branches, units] = await Promise.all([
                     api.get("/cr-branches?size=1000"),
+                    api.get("/branches"),
                     getAllMeasurementUnits(),
                 ]);
 
@@ -47,6 +49,13 @@ export function useRequestForm() {
                         value: String(cr.id),
                         label: `${cr.crCode} - ${cr.crName}`,
                         branchName: cr.branchName ?? "",
+                    }))
+                );
+
+                setBranchOptions(
+                    getPageContent(branches).map((branch) => ({
+                        value: String(branch.id),
+                        label: branch.name,
                     }))
                 );
 
@@ -98,12 +107,30 @@ export function useRequestForm() {
         };
     }, []);
 
-    function handleCrBranchChange(event) {
-        const selectedCrBranchId = event.target.value;
-        const selectedCr = crOptions.find((cr) => cr.value === selectedCrBranchId);
+    const selectedBranchName = branchOptions.find(
+        (branchOption) => branchOption.value === branchId
+    )?.label ?? "";
 
-        setCrBranchId(selectedCrBranchId);
-        setBranch(selectedCr?.branchName ?? "");
+    const filteredCrOptions = branchId
+        ? crOptions.filter((cr) => cr.branchName === selectedBranchName)
+        : crOptions;
+
+    function handleBranchChange(event) {
+        const selectedBranchId = event.target.value;
+        setBranchId(selectedBranchId);
+
+        const newBranchName = branchOptions.find(
+            (branchOption) => branchOption.value === selectedBranchId
+        )?.label ?? "";
+
+        const currentCr = crOptions.find((cr) => cr.value === crBranchId);
+        if (currentCr && selectedBranchId && currentCr.branchName !== newBranchName) {
+            setCrBranchId("");
+        }
+    }
+
+    function handleCrBranchChange(event) {
+        setCrBranchId(event.target.value);
     }
 
     function handleAddProduct() {
@@ -183,6 +210,12 @@ export function useRequestForm() {
             return;
         }
 
+        if (!branchId) {
+            setFormError("Selecione a Filial Pagadora.");
+            showNotification("Selecione a Filial Pagadora antes de finalizar.", "error");
+            return;
+        }
+
         if (!crBranchId) {
             setFormError("Selecione o CR e Projeto.");
             showNotification("Selecione o CR e Projeto antes de finalizar.", "error");
@@ -205,7 +238,7 @@ export function useRequestForm() {
 
             setSuccess(true);
             showNotification("Solicitação criada com sucesso!", "success");
-            setBranch("");
+            setBranchId("");
             setCrBranchId("");
             setProducts([]);
             setAttachments([]);
@@ -221,7 +254,8 @@ export function useRequestForm() {
         abaAtiva,
         setAbaAtiva,
         abas: REQUEST_TABS,
-        branch,
+        branchId,
+        branchOptions,
         requester,
         setRequester,
         phone,
@@ -240,11 +274,12 @@ export function useRequestForm() {
         serviceAdditionalInfo,
         setServiceAdditionalInfo,
         products,
-        crOptions,
+        crOptions: filteredCrOptions,
         unitOptions,
         submitting,
         formError,
         success,
+        handleBranchChange,
         handleCrBranchChange,
         handleAddProduct,
         handleRemoveProduct,

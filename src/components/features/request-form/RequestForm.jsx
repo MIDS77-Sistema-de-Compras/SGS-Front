@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Select from "@/components/ui/select/Select";
+import SearchableSelect from "@/components/ui/select/SearchableSelect";
 import FileDropzone from "@/components/ui/upload/FileDropzone";
 import ListProducts from "./ListProducts";
 import send from "../../../../public/images/icons/send.svg";
@@ -17,7 +17,7 @@ import { useRequestForm } from "@/hooks/useRequestForm";
 
 export default function RequestForm() {
     const {
-        abaAtiva, setAbaAtiva, abas, branch,
+        abaAtiva, setAbaAtiva, abas, branchId, branchOptions,
         requester, setRequester, phone, setPhone,
         crBranchId, productName, setProductName,
         quantity, setQuantity, unit, setUnit,
@@ -26,7 +26,7 @@ export default function RequestForm() {
         serviceAdditionalInfo, setServiceAdditionalInfo,
         products, crOptions, unitOptions,
         submitting, formError, success,
-        handleCrBranchChange, handleAddProduct,
+        handleBranchChange, handleCrBranchChange, handleAddProduct,
         handleRemoveProduct, handleFilesSelected,
         handleRemoveAttachment, handleSubmit,
         attachments,
@@ -56,13 +56,14 @@ export default function RequestForm() {
                 <div className="flex-1 overflow-y-auto p-5">
                     <SectionHeader label="INFORMAÇÕES GERAIS" />
 
-                    <FormField label="Filial Pagadora">
-                        <Input
-                            variant="form"
-                            placeholder="Definida pelo CR selecionado"
-                            value={branch || ""}
-                            readOnly
-                            disabled
+                    <FormField label="Filial Pagadora" required>
+                        <SearchableSelect
+                            name="branch"
+                            placeholder="Digite para filtrar e selecione a Filial..."
+                            options={branchOptions}
+                            value={branchId || ""}
+                            onChange={handleBranchChange}
+                            isRequired
                         />
                     </FormField>
 
@@ -92,10 +93,15 @@ export default function RequestForm() {
                             </FormField>
                         </div>
 
-                        <FormField label="CR e Projeto">
-                            <Select
+                        <FormField label="CR e Projeto" required>
+                            <SearchableSelect
                                 name="cr_project"
-                                placeholder="Selecione o Centro de Resultado..."
+                                placeholder="Digite para filtrar e selecione o Centro de Resultado..."
+                                emptyMessage={
+                                    branchId
+                                        ? "Nenhum CR encontrado para a Filial selecionada"
+                                        : "Nenhuma opção encontrada"
+                                }
                                 options={crOptions}
                                 value={crBranchId || ""}
                                 onChange={handleCrBranchChange}
@@ -144,12 +150,13 @@ export default function RequestForm() {
                                     required
                                     className="col-span-2"
                                 >
-                                    <Select
+                                    <SearchableSelect
                                         name="unit"
-                                        placeholder="Selecione..."
+                                        placeholder="Digite para filtrar e selecione..."
                                         options={unitOptions}
                                         value={unit || ""}
                                         onChange={(event) => setUnit(event.target.value)}
+                                        isRequired
                                     />
                                 </FormField>
 
