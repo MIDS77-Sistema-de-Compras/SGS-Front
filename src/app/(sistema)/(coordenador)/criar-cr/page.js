@@ -1,6 +1,10 @@
 import RequestFormCR from "@/components/features/cr-form/crForm";
 import { Search } from "@/components/features/search/Search";
 
+export const metadata = {
+  title: "Cadastro de CR",
+};
+
 export default function CadastrarCR() {
     return (
         <div className="flex gap-10 flex-1 min-h-0">

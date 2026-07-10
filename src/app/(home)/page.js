@@ -1,5 +1,6 @@
 "use client"
 
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import Cookies from "js-cookie"
 import { useRouter } from "next/navigation"
 import Header from "@/components/features/home/HomeHeader"
@@ -9,6 +10,8 @@ import RecentActivity from "@/components/features/home/RecentActivity"
 import { useEffect } from "react"
 
 export default function Home(){
+    useDocumentTitle("Home");
+
     const router = useRouter()
 
     function handleLogout(){

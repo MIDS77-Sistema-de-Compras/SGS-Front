@@ -1,5 +1,6 @@
 'use client';
 
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
@@ -10,6 +11,7 @@ import UserIdentificationSection from '@/components/features/admin/UserIdentific
 import AccessLevelSelector from '@/components/features/admin/AccessLevelSelector';
 
 export default function EditarUsuarios({ params }) {
+    useDocumentTitle("Editar Usuário");
 
     const router = useRouter();
 
