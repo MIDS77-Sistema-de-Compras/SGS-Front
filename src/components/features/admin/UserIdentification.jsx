@@ -4,7 +4,7 @@ import PhoneInput from '@/components/ui/input/PhoneInput';
 import PasswordField from './PasswordField';
 import FieldError from '@/components/ui/notifications/FieldError';
 
-const INPUT_CLASS = "!h-auto py-2.5 !text-sm !border-gray-200 !rounded-xl !shadow-sm !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]";
+const INPUT_CLASS = "!h-auto py-2.5 !text-sm !border-gray-200 dark:!border-white/15 !rounded-xl !shadow-sm !bg-white dark:!bg-[#303746] dark:!text-[#E2E2EA] dark:placeholder:!text-[#C3C6D3] focus:!border-[#103D85] dark:focus:!border-[#1A4A9E] focus:!ring-0.5 focus:!ring-[#103D85] dark:focus:!ring-[#1A4A9E]";
 
 export default function UserIdentificationSection({ formData, errors, onChange, onBlur }) {
     return (
@@ -34,7 +34,7 @@ export default function UserIdentificationSection({ formData, errors, onChange, 
             <FormField label="Ramal" required>
                 <PhoneInput
                     placeholder="3344"
-                    className="!h-auto !text-sm !border-gray-200 !rounded-xl !shadow-sm !bg-white focus:!border-[#103D85] focus:!ring-0.5 focus:!ring-[#103D85]"
+                    className="!h-auto !text-sm !border-gray-200 dark:!border-white/15 !rounded-xl !shadow-sm !bg-white dark:!bg-[#303746] dark:!text-[#E2E2EA] focus:!border-[#103D85] dark:focus:!border-[#1A4A9E] focus:!ring-0.5 focus:!ring-[#103D85] dark:focus:!ring-[#1A4A9E]"
                     value={formData.ramal}
                     onChange={(e) => onChange('ramal', e.target.value)}
                     onBlur={() => onBlur('ramal', formData.ramal)}

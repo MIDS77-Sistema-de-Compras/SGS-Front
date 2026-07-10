@@ -83,7 +83,7 @@ export default function MyRequests() {
     if (loading) {
         return (
             <div className="flex-1 flex items-center justify-center font-sans">
-                <p className="text-gray-500 text-lg">Carregando solicitação...</p>
+                <p className="text-gray-500 dark:text-[#C3C6D3] text-lg">Carregando solicitação...</p>
             </div>
         );
     }
@@ -92,8 +92,8 @@ export default function MyRequests() {
         return (
             <div className="flex-1 flex items-center justify-center font-sans">
                 <div className="text-center">
-                    <p className="text-gray-500 text-lg mb-4">{error || "Solicitação não encontrada."}</p>
-                    <Link href="/solicitacoes" className="text-[#103D85] underline">
+                    <p className="text-gray-500 dark:text-[#C3C6D3] text-lg mb-4">{error || "Solicitação não encontrada."}</p>
+                    <Link href="/solicitacoes" className="text-[#103D85] dark:text-[#5D8EF7] underline">
                         Voltar para solicitações
                     </Link>
                 </div>
@@ -113,24 +113,24 @@ export default function MyRequests() {
             )}
 
             <div className="w-full">
-                <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
+                <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
                     <div className="flex items-center gap-3 px-5 py-3">
-                        <Link href="/solicitacoes" className="text-[#103D85] hover:opacity-80 transition-opacity">
+                        <Link href="/solicitacoes" className="text-[#103D85] dark:text-[#5D8EF7] hover:opacity-80 transition-opacity">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="m15 18-6-6 6-6" />
                             </svg>
                         </Link>
-                        <h3 className="text-[#103D85] font-bold text-[22px]">Minhas solicitações</h3>
+                        <h3 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">Minhas solicitações</h3>
                     </div>
 
-                    <hr className="border-gray-400 mb-6" />
+                    <hr className="border-gray-400 dark:border-white/10 mb-6" />
 
                     <div className="flex items-center justify-between mb-6 px-6">
                         <div className="flex items-baseline gap-4">
-                            <h4 className="text-[20px] font-bold text-gray-900">
+                            <h4 className="text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
                                 {solicitacao.codigo} : Lista de {localProducts.length} {localProducts.length === 1 ? "produto" : "produtos"}
                             </h4>
-                            <span className="text-gray-600 text-base font-medium px-7 text-[16px]">
+                            <span className="text-gray-600 dark:text-[#C3C6D3] text-base font-medium px-7 text-[16px]">
                                 Realizada em: {formatDisplayDate(solicitacao.data)}
                             </span>
                         </div>
@@ -151,7 +151,7 @@ export default function MyRequests() {
                 <div className="flex justify-end pt-5">
                     <Link
                         href="/solicitacoes"
-                        className="bg-[#103D85] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] transition-colors shadow-sm"
+                        className="bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
                     >
                         Fechar produtos
                     </Link>

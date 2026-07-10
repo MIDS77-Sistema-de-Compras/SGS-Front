@@ -32,7 +32,7 @@ export function Navigation({ userRole }) {
                                     flex items-center gap-5 px-4 py-3 rounded-xl font-medium text-[15px]
                                     transition-all duration-200 ease-in-out group active:scale-[0.98]                                         
                                     ${isActive
-                                        ? "bg-[#3366cc] text-white shadow-md font-semibold"
+                                        ? "bg-[#3366cc] dark:bg-[#1A4A9E] text-white shadow-md font-semibold"
                                         : "hover:bg-white/10 text-white/90"
                                     }
                                 `}
