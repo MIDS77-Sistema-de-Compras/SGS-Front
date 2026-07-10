@@ -4,7 +4,6 @@ import { api, getPageContent } from "@/service/api";
 import { createFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
 import { createFullServiceRequest } from "@/service/createServiceRequest";
 import { useNotification } from "@/contexts/NotificationContext";
-import ServiceAutocomplete from "./ServiceAutocomplete";
 
 const REQUEST_TABS = [
     { valor: "produto", label: "PRODUTO" },
