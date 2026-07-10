@@ -5,6 +5,7 @@ import { cn } from '@/lib/cn';
 
 export default function FileDropzone({
   icon,
+  iconDark,
   iconAlt = '',
   title,
   description,
@@ -15,6 +16,7 @@ export default function FileDropzone({
   onFilesSelected,
   accept,
 }) {
+
   const handleDragOver = (event) => {
     if (!onFilesSelected) return;
     event.preventDefault();
@@ -34,8 +36,8 @@ export default function FileDropzone({
   return (
     <div
       className={cn(
-        'flex flex-col items-center border border-[#00000020] border-dashed rounded-xl pt-1 pb-5 px-2',
-        variant === 'muted' && 'bg-gray-100',
+        'flex flex-col items-center border border-[#00000020] dark:border-white/15 border-dashed rounded-xl pt-1 pb-5 px-2',
+        variant === 'muted' ? 'bg-gray-100 dark:bg-[#303746]' : 'dark:bg-[#303746]',
         className
       )}
       onDragOver={handleDragOver}
@@ -46,15 +48,20 @@ export default function FileDropzone({
           <div
             className={cn(
               'mb-2 rounded-full',
-              iconVariant === 'white' ? 'bg-white p-4 mb-4' : 'bg-gray-100 p-5'
+              iconVariant === 'white' ? 'bg-white dark:bg-[#E2E2EA]/25 p-4 mb-4' : 'bg-gray-100 dark:bg-[#E2E2EA]/25 p-5'
             )}
           >
-            {icon && <Image src={icon} alt={iconAlt} />}
+            {icon && (
+              <>
+                <Image src={icon} alt={iconAlt} className={iconDark ? "block dark:hidden" : "dark:invert dark:brightness-90"} />
+                {iconDark && <Image src={iconDark} alt={iconAlt} className="hidden dark:block" />}
+              </>
+            )}
           </div>
           {title && (
             <p
               className={cn(
-                'text-[#103D85]',
+                'text-[#103D85] dark:text-[#E2E2EA]',
                 iconVariant === 'white'
                   ? 'font-semibold'
                   : 'font-bold text-[14px]'
@@ -64,10 +71,10 @@ export default function FileDropzone({
             </p>
           )}
           {description && (
-            <p className="text-[12px] text-[#747782]">{description}</p>
+            <p className="text-[12px] text-[#747782] dark:text-[#C3C6D3]">{description}</p>
           )}
           {onFilesSelected && (
-            <label className="relative mt-4 cursor-pointer text-sm font-semibold text-[#103D85] hover:underline">
+            <label className="relative mt-4 cursor-pointer text-sm font-semibold text-[#103D85] dark:text-[#C3C6D3] hover:underline">
               Selecionar arquivos
               <input
                 type="file"

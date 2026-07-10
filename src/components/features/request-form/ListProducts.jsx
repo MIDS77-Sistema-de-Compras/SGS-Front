@@ -1,5 +1,6 @@
 import FileDropzone from '@/components/ui/upload/FileDropzone';
 import fileBox from '../../../../public/images/icons/fileBox.svg';
+import fileBoxWhite from '../../../../public/images/icons/fileBoxWhite.svg';
 
 export default function ListProducts({ products = [], onRemove, tipo = "produto" }) {
     if (products.length === 0) {
@@ -8,7 +9,7 @@ export default function ListProducts({ products = [], onRemove, tipo = "produto"
                 variant="muted"
                 iconVariant="white"
                 icon={fileBox}
-                iconAlt="File Box Icon"
+                iconDark={fileBoxWhite}
                 title={
                     tipo === "produto"
                         ? "Nenhum produto adicionado ainda"
@@ -20,26 +21,26 @@ export default function ListProducts({ products = [], onRemove, tipo = "produto"
     }
 
     return (
-    <div className="border border-[#00000020] rounded-xl bg-gray-100 p-3">
+    <div className="border border-[#00000020] dark:border-white/10 rounded-xl bg-gray-100 dark:bg-[#1A2233] p-3">
         <div className="flex flex-col gap-2 w-full">
             {products.map((product) => (
                 <div
                     key={product.id}
-                    className="flex items-center justify-between bg-white rounded-lg px-4 py-3"
+                    className="flex items-center justify-between bg-white dark:bg-[#303746] rounded-lg px-4 py-3"
                 >
                     <div className="flex flex-col min-w-0 flex-1 mr-16">
-                        <p className="font-bold text-[14px] text-gray-800 break-words">
+                        <p className="font-bold text-[14px] text-gray-800 dark:text-[#E2E2EA] break-words">
                             {product.name}
                         </p>
                         {product.additionalInformations && (
-                            <p className="text-[12px] text-neutral-500 break-all">
+                            <p className="text-[12px] text-neutral-500 dark:text-[#C3C6D3] break-all">
                                 {product.additionalInformations}
                             </p>
                         )}
                     </div>
 
                     <div className="flex items-center gap-4 shrink-0">
-                        <span className="text-[13px] font-medium text-[#355C9C] whitespace-nowrap">
+                        <span className="text-[13px] font-medium text-[#355C9C] dark:text-[#5D8EF7] whitespace-nowrap">
                             {product.quantity} {product.measurementUnit}
                         </span>
                         {onRemove && (

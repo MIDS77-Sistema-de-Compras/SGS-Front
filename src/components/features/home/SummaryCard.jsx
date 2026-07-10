@@ -9,19 +9,22 @@ const summaryConfig = [
     {
         id: "pending",
         iconSrc: "/images/home/solPendente.png",
-        iconAlt: "Icone solicitações Pendentes",
+        iconSrcDark: "/images/home/solPendente-darktheme.svg",
+        iconAlt: "Icone Solicitações Pendentes",
         label: "Pendentes",
     },
     {
         id: "approved",
         iconSrc: "/images/home/solAprovada.png",
-        iconAlt: "Icone solicitações Aprovadas",
+        iconSrcDark: "/images/home/solAprovada-darktheme.svg",
+        iconAlt: "Icone Solicitações Aprovadas",
         label: "Aprovadas",
     },
     {
         id: "refused",
         iconSrc: "/images/home/solRecusada.png",
-        iconAlt: "Icone solicitações Recusadas",
+        iconSrcDark: "/images/home/solRecusada-darktheme.svg",
+        iconAlt: "Icone Solicitações Recusadas",
         label: "Recusadas",
     },
 ];
@@ -91,12 +94,12 @@ export default function SummaryCard() {
     const counts = useMemo(() => getSummaryCounts(requests), [requests]);
 
     return (
-        <div className="w-[430px] shrink-0 border border-[#AAAAAA] rounded-xl px-5 py-3 shadow-lg">
+        <div className="w-[430px] shrink-0 border border-[#AAAAAA] dark:border-white/10 rounded-xl px-5 py-3 shadow-lg dark:bg-[#1A2233]">
             <div className="flex justify-between mb-7">
-                <h2 className="text-[#103D85] font-bold text-[22px]">
+                <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
                     Resumo
                 </h2>
-                <p className="text-[#103D85] text-[12px]">
+                <p className="text-[#103D85] dark:text-[#C3C6D3] text-[12px]">
                     Minhas <br /> solicitações
                 </p>
             </div>

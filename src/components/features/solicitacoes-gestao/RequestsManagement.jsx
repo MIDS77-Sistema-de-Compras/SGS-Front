@@ -164,7 +164,7 @@ export default function RequestsManagement() {
                 supervisores={supervisores}
             />
 
-            <div className="bg-white border border-[#797979] rounded-2xl overflow-hidden">
+            <div className="bg-white dark:bg-[#1A2233] border border-[#797979] dark:border-white/10 rounded-2xl overflow-hidden">
                 <SolicitacoesTabs
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
@@ -172,21 +172,21 @@ export default function RequestsManagement() {
                     abas={ABAS}
                 />
 
-                <div className="h-[500px] overflow-y-auto px-6 bg-white">
+                <div className="h-[500px] overflow-y-auto px-6 bg-white dark:bg-[#1A2233]">
                     {loading && (
-                        <div className="text-gray-400 text-center pt-10">
+                        <div className="text-gray-400 dark:text-[#C3C6D3] text-center pt-10">
                             Carregando solicitações...
                         </div>
                     )}
 
                     {!loading && error && (
-                        <div className="text-center pt-10 text-sm font-semibold text-[#BA1A1A]">
+                        <div className="text-center pt-10 text-sm font-semibold text-[#BA1A1A] dark:text-[#F87171]">
                             {error}
                         </div>
                     )}
 
                     {!loading && !error && itensFiltrados.length === 0 && (
-                        <div className="text-gray-400 text-center pt-10">
+                        <div className="text-gray-400 dark:text-[#C3C6D3] text-center pt-10">
                             {MENSAGENS_VAZIO[abaAtiva]}
                         </div>
                     )}
@@ -214,7 +214,7 @@ export default function RequestsManagement() {
                 height="h-auto"
                 maxWidth="max-w-[480px]"
             >
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-[#C3C6D3]">
                     Informe o motivo da recusa da solicitação {rejectTarget?.codigo}.
                 </p>
 
@@ -223,11 +223,11 @@ export default function RequestsManagement() {
                     onChange={(e) => setJustificativa(e.target.value)}
                     rows={4}
                     placeholder="Descreva o motivo da recusa..."
-                    className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#103D85]"
+                    className="w-full border border-gray-300 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-xl p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#103D85] dark:focus:ring-[#1A4A9E]"
                 />
 
                 {justificativaErro && (
-                    <p className="text-xs font-medium text-[#BA1A1A]">{justificativaErro}</p>
+                    <p className="text-xs font-medium text-[#BA1A1A] dark:text-[#F87171]">{justificativaErro}</p>
                 )}
 
                 <div className="flex justify-end gap-3">

@@ -1,24 +1,39 @@
 'use client';
 
-import { useState } from 'react';
-import PurchaseRequestsFilters from './PurchaseRequestsFilters';
+import { useRequestsFilter } from '@/hooks/useMyCRList';
 import PurchaseRequestsTable from './PurchaseRequestsTable';
+import SolicitacoesFilter from '../solicitacoes/requestFilter';
 import { purchaseRequestsMock } from './purchaseRequestsMock';
 
-export default function PurchaseRequestsPage() {
-  const [status, setStatus] = useState('');
-  const [period, setPeriod] = useState('');
+export default function PurchaseRequestsPage({ solicitacoesIniciais = [] }) {
+  const solicitacoes = purchaseRequestsMock; 
+
+  const {
+    filtros: { status, data, busca },
+    acoes: { setStatus, setData, setBusca },
+    statusDisponiveis,
+    solicitacoesFiltradas
+  } = useRequestsFilter(solicitacoes);
 
   return (
-    <div className="flex w-full flex-col gap-5">
-      <PurchaseRequestsFilters
-        status={status}
-        period={period}
-        onStatusChange={setStatus}
-        onPeriodChange={setPeriod}
-      />
+    <div className="flex w-full h-full flex-1 flex-col gap-6 overflow-hidden">
+      
+      <div className="flex-none">
+        <SolicitacoesFilter
+          status={status}
+          setStatus={setStatus}
+          data={data}
+          setData={setData}
+          busca={busca}
+          setBusca={setBusca}
+          statusDisponiveis={statusDisponiveis}
+        />
+      </div>
 
-      <PurchaseRequestsTable requests={purchaseRequestsMock} />
+      <div className="flex-1 min-h-0">
+        <PurchaseRequestsTable requests={solicitacoesFiltradas} />
+      </div>
+      
     </div>
   );
 }
