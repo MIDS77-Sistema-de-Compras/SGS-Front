@@ -7,6 +7,7 @@ import AuditLogTable from "./AuditLogTable";
 import AuditPagination from "./AuditPagination";
 import AuditSummaryCards from "./AuditSummaryCards";
 import { auditActionOptions, auditLogs, auditStats } from "./auditData";
+import AuditDetailsModal from "./AuditDetailsModal";
 
 const LOGS_PER_PAGE = 6;
 
@@ -15,6 +16,7 @@ export default function AuditDashboard() {
     const [actionType, setActionType] = useState("");
     const [period, setPeriod] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedLog, setSelectedLog] = useState(null);
 
     const filteredLogs = useMemo(() => auditLogs.filter((log) => {
         const searchableContent = `${log.id} ${log.user} ${log.level} ${log.action} ${log.affectedUser} ${log.request} ${log.timestamp}`.toLowerCase();
@@ -40,9 +42,19 @@ export default function AuditDashboard() {
             <AuditSummaryCards stats={auditStats} />
             <section className="flex-1 bg-white border border-gray-300 rounded-[14px] shadow-sm overflow-hidden flex flex-col">
                 <AuditFilters searchTerm={searchTerm} actionType={actionType} period={period} actionOptions={auditActionOptions} onSearchChange={updateFilter(setSearchTerm)} onActionChange={updateFilter(setActionType)} onPeriodChange={updateFilter(setPeriod)} />
-                <div className="flex-1 overflow-x-auto overflow-y-auto"><AuditLogTable logs={paginatedLogs} /></div>
+                <div className="flex-1 overflow-x-auto overflow-y-auto">
+                    <AuditLogTable
+                        logs={paginatedLogs}
+                        onSelectLog={setSelectedLog}
+                    />
+                </div>
                 <AuditPagination currentPage={page} totalPages={totalPages} totalRecords={filteredLogs.length} pageSize={LOGS_PER_PAGE} onPageChange={setCurrentPage} />
             </section>
+            <AuditDetailsModal
+                open={!!selectedLog}
+                data={selectedLog}
+                onClose={() => setSelectedLog(null)}
+            />
         </div>
     );
 }
