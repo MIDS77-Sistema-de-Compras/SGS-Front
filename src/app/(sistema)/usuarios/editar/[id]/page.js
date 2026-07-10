@@ -61,42 +61,52 @@ export default function EditarUsuarios() {
     };
 
     async function handleSave() {
-    if (!formData.senha.trim()) {
-        setToast({
-            type: 'error',
-            message: 'Digite a senha para confirmar a edição.'
-        });
-
-        return;
-    }
-
-    try {
-        const payload = {
-            name: formData.nome,
-            email: formData.email,
-            password: formData.senha,
-            extensionNumber: formData.ramal,
-            active: true,
-            nameRole: formData.nivelAcesso
-        };
-
-        await updateUser(userId, payload);
-
-        setToast({
-            type: 'success',
-            message: 'Usuário atualizado com sucesso!'
-        });
-
-        setTimeout(() => {
-            router.push('/usuarios/gerenciar');
-        }, 2000);
-
-        } catch (error) {
+        if (!formData.senha.trim()) {
             setToast({
                 type: 'error',
-                message: 'Erro ao atualizar usuário.'
+                message: 'Digite a senha para confirmar a edição.'
             });
+
+            return;
         }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(formData.email)) {
+            setToast({
+                type: 'error',
+                message: 'Digite um e-mail válido.'
+            });
+            return;
+        }
+
+        try {
+            const payload = {
+                name: formData.nome,
+                email: formData.email,
+                password: formData.senha,
+                extensionNumber: formData.ramal,
+                active: true,
+                nameRole: formData.nivelAcesso
+            };
+
+            await updateUser(userId, payload);
+
+            setToast({
+                type: 'success',
+                message: 'Usuário atualizado com sucesso!'
+            });
+
+            setTimeout(() => {
+                router.push('/usuarios/gerenciar');
+            }, 2000);
+
+            } catch (error) {
+                setToast({
+                    type: 'error',
+                    message: 'Erro ao atualizar usuário.'
+                });
+            }
     }
 
     async function handleDelete() {
@@ -151,7 +161,7 @@ export default function EditarUsuarios() {
                     </div>
 
                     <div>
-                        <SectionHeader label="NÍVEL DE ACESSO" className="mt-10" />
+                        <SectionHeader label="NÍVEL DE ACESSO" className="mt-6" />
                         <AccessLevelSelector
                             value={formData.nivelAcesso}
                             onChange={(value) => handleChange('nivelAcesso', value)}
