@@ -77,7 +77,7 @@ export default function RequestFormCR() {
                                 />
                             </button>
                             <div className="flex flex-col text-left min-w-[100px]">
-                                <span className={`text-[13px] font-bold leading-none ${isMaster ? 'text-[#103D85] dark:text-[#E2E2EA]' : 'text-gray-500 dark:text-[#C3C6D3]'}`}>
+                                <span className={`text-[13px] font-bold leading-none ${formData.master ? 'text-[#103D85] dark:text-[#E2E2EA]' : 'text-gray-500 dark:text-[#C3C6D3]'}`}>
                                     {formData.master ? 'Ativado' : 'Desativado'}
                                 </span>
                                 <span className="text-[10px] text-gray-400 dark:text-[#C3C6D3] font-normal">
