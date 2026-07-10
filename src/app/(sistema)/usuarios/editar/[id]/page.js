@@ -28,23 +28,23 @@ export default function EditarUsuarios({ params }) {
     };
 
     return (
-        <div className="flex flex-col w-full gap-5">
+        <div className="flex flex-col w-full gap-5 flex-1 min-h-0 overflow-y-auto pl-1 pr-3 pb-4">
 
-            <div className="bg-white px-5 py-3 rounded-xl shadow-sm border border-[#AAAAAA]">
+            <div className="bg-white dark:bg-[#1A2233] px-5 py-3 rounded-xl shadow-sm border border-[#AAAAAA] dark:border-white/10">
                 <div className="flex items-center">
                     <button
                         type="button"
                         onClick={() => router.back()}
-                        className="text-[#103D85] hover:bg-gray-100 p-1 mr-1 rounded-full transition-colors flex items-center justify-center"
+                        className="text-[#103D85] dark:text-[#5D8EF7] hover:bg-gray-100 dark:hover:bg-white/5 p-1 mr-1 rounded-full transition-colors flex items-center justify-center"
                         title="Voltar"
                     >
                         <ArrowLeft size={24} />
                     </button>
-                    <h1 className="text-[22px] font-bold text-[#103D85]">Editar Usuário</h1>
+                    <h1 className="text-[22px] font-bold text-[#103D85] dark:text-[#E2E2EA]">Editar Usuário</h1>
                 </div>
 
 
-                <div className="border-t border-[#AAAAAA] mt-2 mb-5 -mx-5" />
+                <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 mb-5 -mx-5" />
 
                 <div>
                     <SectionHeader label="IDENTIFICAÇÃO DE USUÁRIO" />
@@ -69,15 +69,15 @@ export default function EditarUsuarios({ params }) {
 
                 <div className="flex gap-4">
                     <Button
-                        className="w-[295px] bg-[#E30613] hover:bg-[#B8010C] text-white border-[#E30613]"
-                        rightIcon={<Image src="/images/lixeira.png" alt="" width={16} height={16} />}
+                        className="w-[295px] bg-[#E30613] hover:bg-[#B8010C] text-white border-[#E30613] dark:bg-[#C62834] dark:hover:bg-[#A01F29] dark:border-[#C62834]"
+                        rightIcon={<Image src="/images/icons/lixeira.png" alt="" width={16} height={16} />}
                     >
                         Excluir usuário
                     </Button>
 
                     <Button
-                        className="w-[295px] bg-[#7D7D7D] hover:bg-[#555555] text-white border-[#7D7D7D]"
-                        rightIcon={<Image src="/images/desativar.png" alt="" width={16} height={16} />}
+                        className="w-[295px] bg-[#7D7D7D] hover:bg-[#555555] text-white border-[#7D7D7D] dark:bg-[#303746] dark:hover:bg-[#3d4456] dark:border-white/15"
+                        rightIcon={<Image src="/images/icons/desativar.png" alt="" width={16} height={16} />}
                     >
                         Desativar usuário
                     </Button>
@@ -85,7 +85,7 @@ export default function EditarUsuarios({ params }) {
 
                 <Button
                     className="w-[295px]"
-                    rightIcon={<Image src="/images/lapisEdicao.png" alt="" width={16} height={16} />}
+                    rightIcon={<Image src="/images/icons/lapisEdicao.png" alt="" width={16} height={16} />}
                 >
                     SALVAR MUDANÇAS
                 </Button>

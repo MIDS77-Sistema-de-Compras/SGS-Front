@@ -2,26 +2,26 @@
 
 export default function ProductTableRow({ item, isProfessor, statusCores, openModal, openEditModal }) {
     return (
-        <tr className="hover:bg-gray-50/40 transition-colors">
+        <tr className="hover:bg-gray-50/40 dark:hover:bg-white/5 transition-colors">
             <td 
-                className="py-3 pl-6 text-left text-base text-gray-700 font-medium truncate w-[100px] cursor-pointer" 
+                className="py-3 pl-6 text-left text-base text-gray-700 dark:text-[#E2E2EA] font-medium truncate w-[100px] cursor-pointer" 
                 onClick={() => openModal(item)}
             >
                 {item.code} {item.nome}
             </td>
             <td 
-                className="py-3 pl-10 text-left text-base text-gray-500 truncate w-[20px] cursor-pointer" 
+                className="py-3 pl-10 text-left text-base text-gray-500 dark:text-[#C3C6D3] truncate w-[20px] cursor-pointer" 
                 onClick={() => openModal(item)}
             >
                 {item.variation}
             </td>
-            <td className="py-3 text-center text-base text-gray-600 font-medium">
+            <td className="py-3 text-center text-base text-gray-600 dark:text-[#C3C6D3] font-medium">
                 {item.quantity} {item.unit?.toLowerCase()}
             </td>
             <td className="py-3 pl-5 text-center text-base">
                 <button
                     onClick={() => openModal(item)}
-                    className="text-gray-400 underline underline-offset-2 hover:text-gray-600 text-sm transition-colors"
+                    className="text-gray-400 dark:text-[#5D8EF7] underline underline-offset-2 hover:text-gray-600 dark:hover:text-[#7BA5F9] text-sm transition-colors"
                 >
                     Ver mais
                 </button>

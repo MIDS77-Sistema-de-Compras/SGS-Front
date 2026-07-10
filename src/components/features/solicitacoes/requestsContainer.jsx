@@ -38,7 +38,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
                 statusDisponiveis={statusDisponiveis}
             />
 
-            <div className="flex flex-1 flex-col bg-white border border-[#AAAAAA] rounded-2xl overflow-hidden">
+            <div className="flex flex-1 flex-col bg-white dark:bg-[#1A2233] border border-[#AAAAAA] dark:border-white/10 rounded-2xl overflow-hidden">
                 <SolicitacoesTabs
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
@@ -46,15 +46,15 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
                     abas={abas}
                 />
 
-                <div className="h-[550px] overflow-y-auto bg-white">
+                <div className="h-[550px] overflow-y-auto bg-white dark:bg-[#1A2233]">
                     {loading && (
-                        <div className="p-6 text-center text-sm text-gray-500">
+                        <div className="p-6 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
                             Carregando solicitações...
                         </div>
                     )}
 
                     {!loading && error && (
-                        <div className="p-6 text-center text-sm font-semibold text-[#BA1A1A]">
+                        <div className="p-6 text-center text-sm font-semibold text-[#BA1A1A] dark:text-[#F87171]">
                             {error}
                         </div>
                     )}

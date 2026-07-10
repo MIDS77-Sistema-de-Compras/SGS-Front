@@ -57,7 +57,7 @@ const PasswordInput = forwardRef(function PasswordInput(
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="w-6 h-6 text-gray-600"
+            className="w-6 h-6 text-gray-600 dark:text-[#E2E2EA]"
           >
             <path
               strokeLinecap="round"
@@ -77,7 +77,7 @@ const PasswordInput = forwardRef(function PasswordInput(
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="w-6 h-6 text-gray-600"
+            className="w-6 h-6 text-gray-600 dark:text-[#E2E2EA]"
           >
             <path
               strokeLinecap="round"

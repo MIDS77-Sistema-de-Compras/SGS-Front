@@ -6,6 +6,7 @@ import Header from "@/components/features/home/HomeHeader"
 import SummaryCard from "@/components/features/home/SummaryCard"
 import HomeFooter from "@/components/features/home/HomeFooter"
 import RecentActivity from "@/components/features/home/RecentActivity"
+import { useEffect } from "react"
 
 export default function Home(){
     const router = useRouter()
