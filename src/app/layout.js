@@ -10,10 +10,13 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: "SGS-Front",
+  title: {
+    default: "SGS | Home",
+    template: "SGS | %s",
+  },
   description: "Projeto Final - Sistema de Compras - FrontEnd",
   icons: {
-    icon: "/images/logos/sgc.png"
+    icon: "/images/logos/favicon-sgs.png"
   }
 };
 

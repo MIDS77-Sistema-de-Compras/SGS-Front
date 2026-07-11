@@ -1,5 +1,6 @@
 "use client";
 
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input/Input";
@@ -10,6 +11,8 @@ import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 import { recoveryEmail } from "@/service/auth/auth-recovery";
 
 export default function RecuperarSenhaPage() {
+    useDocumentTitle("Recuperar Senha");
+
     const [email, setEmail] = useState("");
     const [msg, setMsg] = useState("");
     const [msgClass, setMsgClass] = useState("text-[#4B84F4]");

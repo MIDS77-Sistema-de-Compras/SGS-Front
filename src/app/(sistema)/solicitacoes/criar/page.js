@@ -1,6 +1,9 @@
 import { Search } from "@/components/features/search/Search";
 import RequestForm from "@/components/features/request-form/RequestForm";
 
+export const metadata = {
+  title: "Cadastro de Solicitação",
+};
 
 export default function NovaSolicitacao() {
     return (

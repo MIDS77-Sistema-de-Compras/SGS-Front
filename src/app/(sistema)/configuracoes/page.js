@@ -1,10 +1,13 @@
 "use client";
 
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import UserProfile from "@/components/features/settings/UserProfile";
 import SystemPreferences from "@/components/features/settings/SystemPreferences";
 import Notifications from "@/components/features/settings/Notifications";
 
 export default function Settings() {
+    useDocumentTitle("Configurações");
+
     return (
         <div className="flex flex-col flex-1 min-h-0">
 
