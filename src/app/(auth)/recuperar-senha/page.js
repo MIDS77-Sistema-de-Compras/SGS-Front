@@ -15,6 +15,7 @@ export default function RecuperarSenhaPage() {
     const [msgClass, setMsgClass] = useState("text-[#4B84F4]");
 
     const [disableBtn, setDisabled] = useState(false);
+    const [load, setLoad] = useState(false);
 
     const router = useRouter();
 
@@ -24,12 +25,17 @@ export default function RecuperarSenhaPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try{
+            setLoad(true);
+
             const res = await recoveryEmail(email);
             setMsg(res.text);
-            setDisabled(true); // this is a pretty dumb way to prevent spamming the button, and it needs to be enhanced
+            setLoad(false);
+            setDisabled(true);
 
         }catch(error){
             setMsgClass("text-red-500");
+            setLoad(false);
+            setDisabled(false);
             setMsg(error.message || "Ocorreu um erro inesperado.");
         }
     }
@@ -69,6 +75,7 @@ export default function RecuperarSenhaPage() {
                         size="lg"
                         fullWidth
                         disabled={disableBtn}
+                        isLoading={load}
                     >
                         Enviar instruções
                     </Button>
