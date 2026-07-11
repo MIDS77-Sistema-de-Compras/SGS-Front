@@ -12,7 +12,7 @@ const VALIDATORS = {
     cpf: (v) => v.replace(/\D/g, '').length !== 11 ? 'CPF deve ter 11 dígitos.' : '',
     ramal: (v) => {
         const apenasNumeros = v.replace(/\D/g, '');
-        return apenasNumeros.length < 3 || apenasNumeros.length > 4
+        return apenasNumeros.length <= 3 || apenasNumeros.length > 4
             ? 'O ramal deve ter 4 números.'
             : '';
     },

@@ -107,9 +107,9 @@ export const supervisorRoutes = [
         icon: "/images/icons/monitoramento.png",
     },
     {
-        label: "Analítico",
+        label: "Analítico", //arrumar
         href: "/coordenador/analitico",
-        icon: "/images/icons/analise-registros.png",
+        icon: "/images/icons/my-requests.png",
     },
     {
         label: "Notificações",
