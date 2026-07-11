@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { api, getPageContent } from "@/service/api";
 import { createFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
+import { createFullServiceRequest } from "@/service/createServiceRequest";
 import { useNotification } from "@/contexts/NotificationContext";
 
 const REQUEST_TABS = [
@@ -22,8 +23,10 @@ export function useRequestForm() {
     const [unit, setUnit] = useState("");
     const [additionalInfo, setAdditionalInfo] = useState("");
     const [serviceName, setServiceName] = useState("");
+    const [serviceValue, setServiceValue] = useState("");
     const [serviceAdditionalInfo, setServiceAdditionalInfo] = useState("");
     const [products, setProducts] = useState([]);
+    const [services, setServices] = useState([]);
     const [crOptions, setCrOptions] = useState([]);
     const [branchOptions, setBranchOptions] = useState([]);
     const [unitOptions, setUnitOptions] = useState([]);
@@ -162,6 +165,33 @@ export function useRequestForm() {
         setProducts((currentProducts) => currentProducts.filter((product) => product.id !== productId));
     }
 
+    function handleAddService() {
+        setFormError("");
+        setSuccess(false);
+
+        if (!serviceName.trim() || !serviceValue || !serviceAdditionalInfo.trim()) {
+            setFormError("Preencha título, valor e informações adicionais do serviço antes de adicionar.");
+            return;
+        }
+
+        setServices((currentServices) => [
+            ...currentServices,
+            {
+                id: crypto.randomUUID(),
+                name: serviceName.trim(),
+                totalValue: Number(serviceValue),
+                additionalInformation: serviceAdditionalInfo.trim(),
+            },
+        ]);
+        setServiceName("");
+        setServiceValue("");
+        setServiceAdditionalInfo("");
+    }
+
+    function handleRemoveService(serviceId) {
+        setServices((currentServices) => currentServices.filter((service) => service.id !== serviceId));
+    }
+
     const ALLOWED_TYPES = [
         'image/png',
         'image/jpeg',
@@ -222,17 +252,47 @@ export function useRequestForm() {
             return;
         }
 
-        if (products.length === 0) {
-            setFormError("Adicione pelo menos um produto antes de finalizar.");
-            showNotification("Adicione pelo menos um produto antes de finalizar.", "error");
+        if (abaAtiva === "produto") {
+            if (products.length === 0) {
+                setFormError("Adicione pelo menos um produto antes de finalizar.");
+                showNotification("Adicione pelo menos um produto antes de finalizar.", "error");
+                return;
+            }
+
+            try {
+                setSubmitting(true);
+                await createFullRequest({
+                    crBranchId,
+                    products,
+                    attachments,
+                });
+
+                setSuccess(true);
+                showNotification("Solicitação criada com sucesso!", "success");
+                setBranch("");
+                setCrBranchId("");
+                setProducts([]);
+                setAttachments([]);
+            } catch (error) {
+                setFormError(error.message || "Erro ao criar a solicitação.");
+                showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
+            } finally {
+                setSubmitting(false);
+            }
+            return;
+        }
+
+        if (services.length === 0) {
+            setFormError("Adicione pelo menos um serviço antes de finalizar.");
+            showNotification("Adicione pelo menos um serviço antes de finalizar.", "error");
             return;
         }
 
         try {
             setSubmitting(true);
-            await createFullRequest({
+            await createFullServiceRequest({
                 crBranchId,
-                products,
+                services,
                 attachments,
             });
 
@@ -240,7 +300,7 @@ export function useRequestForm() {
             showNotification("Solicitação criada com sucesso!", "success");
             setBranchId("");
             setCrBranchId("");
-            setProducts([]);
+            setServices([]);
             setAttachments([]);
         } catch (error) {
             setFormError(error.message || "Erro ao criar a solicitação.");
@@ -271,10 +331,13 @@ export function useRequestForm() {
         setAdditionalInfo,
         serviceName,
         setServiceName,
+        serviceValue,
+        setServiceValue,
         serviceAdditionalInfo,
         setServiceAdditionalInfo,
         products,
         crOptions: filteredCrOptions,
+        services,
         unitOptions,
         submitting,
         formError,
@@ -283,6 +346,8 @@ export function useRequestForm() {
         handleCrBranchChange,
         handleAddProduct,
         handleRemoveProduct,
+        handleAddService,
+        handleRemoveService,
         handleFilesSelected,
         handleRemoveAttachment,
         handleSubmit,
