@@ -10,7 +10,7 @@ export default function AuthLayout({
     const titleLines = title.split("\n");
 
     return (
-        <main className="min-h-screen w-full bg-gradient-to-br from-[#002663] via-[#003C97] to-[#4B84F4] flex items-center justify-between px-16 lg:px-28 relative py-12">
+        <main className="force-light min-h-screen w-full bg-gradient-to-br from-[#002663] via-[#003C97] to-[#4B84F4] flex items-center justify-between px-16 lg:px-28 relative py-12">
 
             <div className="flex flex-col justify-between h-[580px] max-w-[800px]">
                 <div className="text-white mt-10">

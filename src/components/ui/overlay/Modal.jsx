@@ -44,7 +44,7 @@ export function Modal({
     >
       <div
         className={cn(
-          'bg-white text-gray-800 w-full rounded-xl shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ease-out',
+          'bg-white dark:bg-[#1A2233] text-gray-800 dark:text-[#E2E2EA] w-full rounded-xl shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ease-out',
           maxWidth,
           height,
           isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
@@ -54,14 +54,14 @@ export function Modal({
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50">
-          <h2 id="modal-title" className="text-base font-semibold text-gray-700 mx-auto">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-white/10 bg-gray-50 dark:bg-[#303746]">
+          <h2 id="modal-title" className="text-base font-semibold text-gray-700 dark:text-[#E2E2EA] mx-auto">
             {title}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 bg-gray-200/60 hover:bg-gray-200 w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-colors"
+            className="text-gray-400 dark:text-[#C3C6D3] hover:text-gray-600 dark:hover:text-[#E2E2EA] bg-gray-200/60 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-colors"
             aria-label="Fechar"
           >
             ✕
@@ -70,7 +70,7 @@ export function Modal({
 
         <div
           className={cn(
-            'flex-1 overflow-y-auto p-6 text-sm leading-relaxed text-gray-600 space-y-4 text-justify',
+            'flex-1 overflow-y-auto p-6 text-sm leading-relaxed text-gray-600 dark:text-[#C3C6D3] space-y-4 text-justify',
             contentClassName
           )}
         >

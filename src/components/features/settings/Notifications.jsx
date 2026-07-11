@@ -21,16 +21,16 @@ export default function Notifications() {
             action={
                 <div className="flex items-center gap-3">
                     <div className="text-right">
-                        <p className={`text-xs font-bold ${active ? "text-[#103D85]" : "text-gray-400"}`}>
+                        <p className={`text-xs font-bold ${active ? "text-[#103D85] dark:text-[#E2E2EA]" : "text-gray-400 dark:text-[#C3C6D3]"}`}>
                             {active ? "Ativado" : "Desativado"}
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-400 dark:text-[#C3C6D3]">
                             {active ? "Clique para desativar" : "Clique para ativar"}
                         </p>
                     </div>
                     <div
                         onClick={() => setActive(!active)}
-                        className={`w-11 h-6 rounded-full relative cursor-pointer flex items-center transition-colors duration-300 ${active ? "bg-[#103D85]" : "bg-gray-300"}`}
+                        className={`w-11 h-6 rounded-full relative cursor-pointer flex items-center transition-colors duration-300 ${active ? "bg-[#103D85] dark:bg-[#1A4A9E]" : "bg-gray-300 dark:bg-[#E2E2EA]/25"}`}
                     >
                         <div className={`bg-white w-5 h-5 rounded-full shadow-sm absolute transition-transform duration-300 ease-in-out ${active ? "translate-x-5.5" : "translate-x-0.5"}`} />
                     </div>

@@ -9,7 +9,7 @@ export default async function Sidebar(){
     const userName = cookieStore.get('name')?.value || "Usuário"
 
     return (
-        <aside className="w-72 bg-[#103D85] h-screen flex flex-col justify-between text-white py-8 px-4 shadow-xl select-none">
+        <aside className="w-72 bg-[#103D85] dark:bg-[#0D121F] h-screen flex flex-col justify-between text-white py-8 px-4 shadow-xl select-none">
             <div className="flex flex-col gap-8">
                 <Profile name={userName} role={userRole} />
                 <Navigation userRole={userRole} />

@@ -2,10 +2,9 @@
 
 export default function ThemeToggle({ darkMode, onChange }) {
     return (
-        <div className="relative flex bg-[#103D85] p-1 rounded-full">
-            {/* Fundo branco que desliza entre os dois botões */}
+        <div className="relative flex bg-[#103D85] dark:bg-[#E2E2EA]/25 p-1 rounded-full">
             <span
-                className={`absolute top-1 bottom-1 rounded-full bg-white shadow-sm transition-transform duration-300 ease-in-out ${
+                className={`absolute top-1 bottom-1 rounded-full bg-white dark:bg-[#E2E2EA] shadow-sm transition-transform duration-300 ease-in-out ${
                     darkMode ? "translate-x-full" : "translate-x-0"
                 }`}
                 style={{ left: "4px", width: "calc(50% - 4px)" }}
@@ -14,7 +13,7 @@ export default function ThemeToggle({ darkMode, onChange }) {
             <button
                 onClick={() => onChange(false)}
                 className={`relative z-10 px-5 py-2 rounded-full text-xs font-bold transition-colors duration-300 flex items-center gap-2 ${
-                    !darkMode ? "text-[#103D85]" : "text-white/70 hover:text-white"
+                    !darkMode ? "text-[#103D85] dark:text-[#1A2233]" : "text-white/70 hover:text-white dark:text-[#E2E2EA] dark:hover:text-[#E2E2EA]"
                 }`}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -29,7 +28,7 @@ export default function ThemeToggle({ darkMode, onChange }) {
             <button
                 onClick={() => onChange(true)}
                 className={`relative z-10 px-5 py-2 rounded-full text-xs font-bold transition-colors duration-300 flex items-center gap-2 ${
-                    darkMode ? "text-[#103D85]" : "text-white/70 hover:text-white"
+                    darkMode ? "text-[#103D85] dark:text-[#1A2233]" : "text-white/70 hover:text-white dark:text-[#E2E2EA] dark:hover:text-[#E2E2EA]"
                 }`}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
