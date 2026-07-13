@@ -33,7 +33,7 @@ export default function UserProfile() {
     const { user, loading } = useLoggedUser();
 
     useEffect(() => {
-        if(newPassword != confirmPwd && modal == true){
+        if (newPassword != confirmPwd && modal == true) {
             setError("As senhas não coincidem.");
         } else {
             setError("");
@@ -48,17 +48,17 @@ export default function UserProfile() {
     const handleUpdate = async (e) => {
         e.preventDefault();
         // TODO endpoint for changing pwd that isn't the recovery one
-        try{
+        try {
             const res = await changeUserPassword(oldPassword, newPassword);
 
-            if(!res || res.status){
+            if (!res || res.status) {
                 setError(res?.message || "Não foi possível alterar a sua senha.");
                 return;
             }
 
             openModal(false);
-            
-        }catch(error){
+
+        } catch (error) {
             setError(error.message);
         }
     }
@@ -67,13 +67,13 @@ export default function UserProfile() {
         <section className="bg-white dark:bg-[#303746] rounded-2xl border border-gray-300 dark:border-white/10 shadow-sm overflow-hidden transition-all">
             <div
                 onClick={() => setOpen(!open)}
-                className="p-8 flex items-center justify-between cursor-pointer hover:bg-gray-50/50 dark:hover:bg-white/5"
+                className="p-8 flex items-center justify-between cursor-pointer transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-white/5 active:bg-gray-100/50 dark:active:bg-white/10"
             >
                 <div className="flex items-center gap-5">
                     <div className="w-12 h-12 bg-gray-50 dark:bg-white/5 rounded-full flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] border border-gray-100 dark:border-white/10">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
                         </svg>
                     </div>
                     <div>
@@ -86,13 +86,20 @@ export default function UserProfile() {
                     width="24" height="24" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" strokeWidth="2"
                     strokeLinecap="round" strokeLinejoin="round"
-                    className={`text-gray-400 dark:text-[#C3C6D3] transition-transform duration-300 ${open ? "rotate-180" : "rotate-0"}`}
+                    className={`text-gray-400 dark:text-[#C3C6D3] transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${open ? "rotate-180" : "rotate-0"}`}
                 >
-                    <path d="m6 9 6 6 6-6"/>
+                    <path d="m6 9 6 6 6-6" />
                 </svg>
             </div>
 
-            <div className={`grid transition-all duration-300 ease-in-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+            <div
+                className="grid"
+                style={{
+                    gridTemplateRows: open ? "1fr" : "0fr",
+                    opacity: open ? 1 : 0,
+                    transition: "grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease",
+                }}
+            >
                 <div className="overflow-hidden">
                     <div className="p-10 border-t border-gray-100 dark:border-white/10 bg-gray-50/20 dark:bg-white/[0.02]">
                         <div className="grid grid-cols-2 gap-6 mb-6">

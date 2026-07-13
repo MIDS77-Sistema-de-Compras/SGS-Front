@@ -4,10 +4,13 @@ export default function ThemeToggle({ darkMode, onChange }) {
     return (
         <div className="relative flex bg-[#103D85] dark:bg-[#E2E2EA]/25 p-1 rounded-full">
             <span
-                className={`absolute top-1 bottom-1 rounded-full bg-white dark:bg-[#E2E2EA] shadow-sm transition-transform duration-300 ease-in-out ${
-                    darkMode ? "translate-x-full" : "translate-x-0"
-                }`}
-                style={{ left: "4px", width: "calc(50% - 4px)" }}
+                className="absolute top-1 bottom-1 rounded-full bg-white dark:bg-[#E2E2EA] shadow-sm"
+                style={{
+                    left: "4px",
+                    width: "calc(50% - 4px)",
+                    transform: darkMode ? "translateX(100%)" : "translateX(0)",
+                    transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
             />
 
             <button
