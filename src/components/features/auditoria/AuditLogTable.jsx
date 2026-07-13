@@ -23,7 +23,7 @@ function LevelBadge({ level }) {
     );
 }
 
-export default function AuditLogTable({ logs }) {
+export default function AuditLogTable({ logs, onSelectLog }) {
     return (
         <div className="flex-1 flex flex-col min-h-0 w-full bg-white dark:bg-[#1A2233]">
             
@@ -54,7 +54,8 @@ export default function AuditLogTable({ logs }) {
                             {logs.map((log) => (
                                 <tr 
                                     key={log.id} 
-                                    className="border-b border-gray-50 dark:border-white/5 hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors"
+                                    onClick={() => onSelectLog(log)}
+                                    className="border-b border-gray-50 dark:border-white/5 hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors cursor-pointer"
                                 >
                                     <td className="py-2.5 px-4 w-[8%] text-gray-700 dark:text-[#E2E2EA] font-medium">
                                         {log.id}

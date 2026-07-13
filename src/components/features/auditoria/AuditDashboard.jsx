@@ -10,6 +10,7 @@ import {
     ChevronDown
 } from "lucide-react";
 import AuditLogTable from "./AuditLogTable";
+import AuditDetailsModal from "./AuditDetailsModal";
 import { auditActionOptions, auditLogs, levelStyles } from "./auditData";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import Button from "@/components/ui/button/Button";
@@ -18,6 +19,8 @@ export default function AuditDashboard() {
     const [searchTerm, setSearchTerm] = useState("");
     const [actionType, setActionType] = useState("");
     const [period, setPeriod] = useState("");
+    
+    const [selectedLog, setSelectedLog] = useState(null);
 
     const totalUsers = 124;
     const activeUsers = 110;
@@ -37,7 +40,7 @@ export default function AuditDashboard() {
     }, [actionType, period, searchTerm]);
 
     return (
-        <div className="flex flex-1 flex-col w-full h-full">
+        <div className="flex flex-1 flex-col w-full h-full pb-4">
             <div className="mb-4">
                 <h1 className="text-2xl font-bold text-[#103D85] dark:text-[#E2E2EA] mb-1">
                     Auditoria
@@ -135,8 +138,19 @@ export default function AuditDashboard() {
                     </div>
                 </div>
 
-                <AuditLogTable logs={filteredLogs} />
+                <div className="flex-1 overflow-auto">
+                    <AuditLogTable 
+                        logs={filteredLogs} 
+                        onSelectLog={setSelectedLog} 
+                    />
+                </div>
             </div>
+            
+            <AuditDetailsModal
+                open={!!selectedLog}
+                data={selectedLog}
+                onClose={() => setSelectedLog(null)}
+            />
         </div>
     );
 }
