@@ -26,6 +26,10 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
         { valor: 'concluidas', label: 'CONCLUÍDAS' },
     ];
 
+    const solicitacoesOrdenadas = [...solicitacoesFiltradas].sort((a, b) => {
+        return new Date(b.data) - new Date(a.data);
+    });
+
     return (
         <>
             <SolicitacoesFilter
@@ -61,7 +65,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
 
                     {!loading && !error && (
                         <SolicitacoesTable
-                            itens={solicitacoesFiltradas}
+                            itens={solicitacoesOrdenadas} 
                             onItemClick={(id) => router.push(`/solicitacoes/${id}`)}
                         />
                     )}

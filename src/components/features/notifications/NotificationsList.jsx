@@ -10,7 +10,7 @@ export default function NotificationsList({ notifications, onMarkAsViewed, updat
     }
 
     return (
-        <ul className="flex flex-col py-3">
+        <ul className="flex flex-col">
             {notifications.map((notification) => (
                 <NotificationCard
                     key={notification.id}
