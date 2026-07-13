@@ -15,23 +15,35 @@ import Button from "@/components/ui/button/Button";
 import SolicitacoesTabs from "@/lib/utils/requestTabs";
 import { useRequestForm } from "@/hooks/useRequestForm";
 import ServiceAutocomplete from "./ServiceAutoComplete";
+import ProductAutocomplete from './ProductAutocomplete';
 
 export default function RequestForm() {
     const {
-        abaAtiva, setAbaAtiva, abas, branchId, branchOptions,
-        requester, setRequester, phone, setPhone,
-        crBranchId, productName, setProductName,
-        quantity, setQuantity, unit, setUnit,
+        abaAtiva, setAbaAtiva,
+        abas,
+        branchId, 
+        branchOptions,
+        requester, setRequester,
+        phone, setPhone,
+        crBranchId,
+        productName, setProductName,
+        quantity, setQuantity,
+        unit, setUnit,
         additionalInfo, setAdditionalInfo,
         serviceName, setServiceName,
         serviceValue, setServiceValue,
         serviceAdditionalInfo, setServiceAdditionalInfo,
-        products, services, crOptions, unitOptions,
-        submitting, formError, success,
-        handleBranchChange, handleCrBranchChange, handleAddProduct,
-        handleRemoveProduct, handleFilesSelected,
+        products,
+        services,
+        crOptions,
+        unitOptions,
+        submitting,
+        formError,
+        success,
+        handleBranchChange, handleCrBranchChange,
+        handleAddProduct, handleRemoveProduct,
         handleAddService, handleRemoveService,
-        handleRemoveAttachment, handleSubmit,
+        handleFilesSelected, handleRemoveAttachment, handleSubmit,
         attachments,
     } = useRequestForm();
 
@@ -124,11 +136,13 @@ export default function RequestForm() {
                                     required
                                     className="flex-2"
                                 >
-                                    <Input
-                                        variant="form"
-                                        placeholder="Não há produtos cadastrados..."
-                                        value={productName || ""}
-                                        onChange={(event) => setProductName(event.target.value)}
+                                    <ProductAutocomplete
+                                        value={productName}
+                                        onChange={setProductName}
+                                        onSelectProduct={(product) => {
+                                            setProductName(product.name);
+                                        }}
+                                        placeholder="Digite o nome do produto..."
                                     />
                                 </FormField>
 

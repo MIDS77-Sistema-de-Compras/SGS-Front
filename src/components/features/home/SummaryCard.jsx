@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import SummaryItem from "./SummaryItem";
+import SummaryCardSkeleton from "./SummaryCardSkeleton";
 import { requestsService } from "@/service/requests";
 import { normalizeText } from "@/components/features/notifications/notificationUtils";
 
@@ -104,9 +105,7 @@ export default function SummaryCard() {
                 </p>
             </div>
 
-            {isLoading && (
-                <p className="text-sm text-[#666666]">Carregando resumo...</p>
-            )}
+            {isLoading && <SummaryCardSkeleton />}
 
             {!isLoading && error && (
                 <p className="text-sm text-red-600">{error}</p>

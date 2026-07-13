@@ -7,6 +7,7 @@ import { getMyRequests } from "@/service/requests";
 import { useRequestsFilter } from "@/hooks/useMyCRList";
 import SolicitacoesFilter from "./requestFilter";
 import SolicitacoesTable from "./requestTable";
+import RequestsTableSkeleton from "./RequestsTableSkeleton";
 
 export default function RequestsContainer({ solicitacoesIniciais = [] }) {
     const router = useRouter();
@@ -25,6 +26,10 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
         { valor: 'pendentes', label: 'PENDENTES' },
         { valor: 'concluidas', label: 'CONCLUÍDAS' },
     ];
+
+    const solicitacoesOrdenadas = [...solicitacoesFiltradas].sort((a, b) => {
+        return new Date(b.data) - new Date(a.data);
+    });
 
     return (
         <>
@@ -47,11 +52,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
                 />
 
                 <div className="h-[550px] overflow-y-auto bg-white dark:bg-[#1A2233]">
-                    {loading && (
-                        <div className="p-6 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
-                            Carregando solicitações...
-                        </div>
-                    )}
+                    {loading && <RequestsTableSkeleton />}
 
                     {!loading && error && (
                         <div className="p-6 text-center text-sm font-semibold text-[#BA1A1A] dark:text-[#F87171]">
@@ -61,7 +62,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
 
                     {!loading && !error && (
                         <SolicitacoesTable
-                            itens={solicitacoesFiltradas}
+                            itens={solicitacoesOrdenadas} 
                             onItemClick={(id) => router.push(`/solicitacoes/${id}`)}
                         />
                     )}
