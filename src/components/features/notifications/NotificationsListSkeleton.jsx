@@ -7,7 +7,7 @@ export default function NotificationsListSkeleton({ rows = 6 }) {
             {Array.from({ length: rows }).map((_, index) => (
                 <li
                     key={index}
-                    className="grid min-h-16 grid-cols-[46px_1fr_116px] items-center gap-3 border-b border-[#AAAAAA]/35 px-7 py-4 last:border-b-0"
+                    className="grid min-h-16 grid-cols-[46px_1fr_116px] items-center gap-3 border-b border-[#AAAAAA]/35 dark:border-white/10 px-7 py-4 last:border-b-0"
                 >
                     <SkeletonCircle className="h-8 w-8" />
 

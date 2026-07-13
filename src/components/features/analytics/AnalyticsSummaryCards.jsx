@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   AlertCircle
 } from 'lucide-react';
+import { MetricValueSkeleton } from './AnalyticsSkeletons';
 
 export default function AnalyticsSummaryCards({
   advancedMetrics,
@@ -30,7 +31,7 @@ export default function AnalyticsSummaryCards({
             <FileText className="w-4 h-4 text-[#103D85] dark:text-[#5D8EF7]" />
             <span className="text-[10px] font-bold uppercase tracking-wider">Solicitações</span>
           </div>
-          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-2">{loading ? '...' : advancedMetrics.totalRequests}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-2">{loading ? <MetricValueSkeleton className='h-7 w-16' /> : advancedMetrics.totalRequests}</p>
           <p className="text-[10px] text-gray-400 dark:text-[#C3C6D3] mt-1">Registradas no total</p>
         </div>
 
@@ -40,7 +41,7 @@ export default function AnalyticsSummaryCards({
             <ShoppingCart className="w-4 h-4 text-indigo-500 dark:text-indigo-300" />
             <span className="text-[10px] font-bold uppercase tracking-wider">Itens Solicitados</span>
           </div>
-          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-2">{loading ? '...' : advancedMetrics.totalItemsQuantity}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-2">{loading ? <MetricValueSkeleton className='h-7 w-16' /> : advancedMetrics.totalItemsQuantity}</p>
           <p className="text-[10px] text-indigo-500 dark:text-indigo-300 mt-1 font-semibold">{advancedMetrics.itemsPerRequest} itens/solicitação</p>
         </div>
 
@@ -50,7 +51,7 @@ export default function AnalyticsSummaryCards({
             <Hourglass className="w-4 h-4 text-emerald-500 dark:text-emerald-300" />
             <span className="text-[10px] font-bold uppercase tracking-wider">Lead Time Médio</span>
           </div>
-          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-2">{loading ? '...' : `${advancedMetrics.averageLeadTime} dias`}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-2">{loading ? <MetricValueSkeleton className='h-7 w-24' /> : `${advancedMetrics.averageLeadTime} dias`}</p>
           <p className="text-[10px] text-gray-400 dark:text-[#C3C6D3] mt-1">Tempo médio de entrega</p>
         </div>
 
@@ -60,7 +61,7 @@ export default function AnalyticsSummaryCards({
             <Percent className="w-4 h-4 text-purple-500 dark:text-purple-300" />
             <span className="text-[10px] font-bold uppercase tracking-wider">Taxa Aprovação</span>
           </div>
-          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-2">{loading ? '...' : `${advancedMetrics.taxaAprovacao}%`}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-2">{loading ? <MetricValueSkeleton className='h-7 w-20' /> : `${advancedMetrics.taxaAprovacao}%`}</p>
           <p className="text-[10px] text-red-500 dark:text-[#F08B92] mt-1 font-semibold">{advancedMetrics.taxaRejeicao}% taxa de recusa</p>
         </div>
 
@@ -70,7 +71,7 @@ export default function AnalyticsSummaryCards({
             <Paperclip className="w-4 h-4 text-pink-500 dark:text-pink-300" />
             <span className="text-[10px] font-bold uppercase tracking-wider">Com Anexos</span>
           </div>
-          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-2">{loading ? '...' : advancedMetrics.requestsWithAttachments}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-2">{loading ? <MetricValueSkeleton className='h-7 w-12' /> : advancedMetrics.requestsWithAttachments}</p>
           <p className="text-[10px] text-gray-400 dark:text-[#C3C6D3] mt-1">{advancedMetrics.totalAttachments} arquivos anexados</p>
         </div>
       </div>
@@ -81,7 +82,7 @@ export default function AnalyticsSummaryCards({
             <Clock className="w-4 h-4 text-amber-500 dark:text-amber-300" />
             <span className="text-[9px] font-bold uppercase tracking-wider">Aguard. Aprovação</span>
           </div>
-          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-1">{loading ? '...' : advancedMetrics.pendentes}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-1">{loading ? <MetricValueSkeleton className='h-7 w-12' /> : advancedMetrics.pendentes}</p>
           <div className="w-full bg-gray-100 dark:bg-white/10 h-1.5 rounded-full mt-1.5">
             <div className="bg-amber-500 h-full rounded-full" style={{ width: getWidthPercentage(advancedMetrics.pendentes) }}></div>
           </div>
@@ -92,7 +93,7 @@ export default function AnalyticsSummaryCards({
             <TrendingUp className="w-4 h-4 text-blue-500 dark:text-blue-300" />
             <span className="text-[9px] font-bold uppercase tracking-wider">Em Andamento</span>
           </div>
-          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-1">{loading ? '...' : advancedMetrics.andamento}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-1">{loading ? <MetricValueSkeleton className='h-7 w-12' /> : advancedMetrics.andamento}</p>
           <div className="w-full bg-gray-100 dark:bg-white/10 h-1.5 rounded-full mt-1.5">
             <div className="bg-blue-500 h-full rounded-full" style={{ width: getWidthPercentage(advancedMetrics.andamento) }}></div>
           </div>
@@ -103,7 +104,7 @@ export default function AnalyticsSummaryCards({
             <CheckCircle2 className="w-4 h-4 text-violet-500 dark:text-violet-300" />
             <span className="text-[9px] font-bold uppercase tracking-wider">Aprovadas (Fila)</span>
           </div>
-          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-1">{loading ? '...' : advancedMetrics.aprovadas}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-1">{loading ? <MetricValueSkeleton className='h-7 w-12' /> : advancedMetrics.aprovadas}</p>
           <div className="w-full bg-gray-100 dark:bg-white/10 h-1.5 rounded-full mt-1.5">
             <div className="bg-violet-500 h-full rounded-full" style={{ width: getWidthPercentage(advancedMetrics.aprovadas) }}></div>
           </div>
@@ -114,7 +115,7 @@ export default function AnalyticsSummaryCards({
             <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-300" />
             <span className="text-[9px] font-bold uppercase tracking-wider">Entregues</span>
           </div>
-          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-1">{loading ? '...' : advancedMetrics.entregues}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-1">{loading ? <MetricValueSkeleton className='h-7 w-12' /> : advancedMetrics.entregues}</p>
           <div className="w-full bg-gray-100 dark:bg-white/10 h-1.5 rounded-full mt-1.5">
             <div className="bg-emerald-500 h-full rounded-full" style={{ width: getWidthPercentage(advancedMetrics.entregues) }}></div>
           </div>
@@ -125,7 +126,7 @@ export default function AnalyticsSummaryCards({
             <AlertCircle className="w-4 h-4 text-red-500 dark:text-red-300" />
             <span className="text-[9px] font-bold uppercase tracking-wider">Recusadas/Cancel.</span>
           </div>
-          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-1">{loading ? '...' : advancedMetrics.recusadas}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-[#E2E2EA] mt-1">{loading ? <MetricValueSkeleton className='h-7 w-12' /> : advancedMetrics.recusadas}</p>
           <div className="w-full bg-gray-100 dark:bg-white/10 h-1.5 rounded-full mt-1.5">
             <div className="bg-red-500 h-full rounded-full" style={{ width: getWidthPercentage(advancedMetrics.recusadas) }}></div>
           </div>

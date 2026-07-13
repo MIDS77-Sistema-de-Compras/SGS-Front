@@ -9,6 +9,13 @@ import {
   Users, 
   AlertCircle 
 } from 'lucide-react';
+import {
+  BarListSkeleton,
+  CompactListSkeleton,
+  MetricValueSkeleton,
+  RankedListSkeleton,
+  RequestersGridSkeleton
+} from './AnalyticsSkeletons';
 
 export default function AnalyticsRankings({
   loading,
@@ -33,7 +40,7 @@ export default function AnalyticsRankings({
           </div>
 
           {loading ? (
-            <div className="h-44 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Carregando...</div>
+            <BarListSkeleton rows={5} />
           ) : branchData.length === 0 ? (
             <div className="h-44 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Nenhum dado.</div>
           ) : (
@@ -63,7 +70,7 @@ export default function AnalyticsRankings({
           </div>
 
           {loading ? (
-            <div className="h-44 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Carregando...</div>
+            <BarListSkeleton rows={5} />
           ) : topCRs.length === 0 ? (
             <div className="h-44 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Nenhum dado.</div>
           ) : (
@@ -95,7 +102,7 @@ export default function AnalyticsRankings({
           </div>
 
           {loading ? (
-            <div className="h-48 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-xs">Carregando...</div>
+            <CompactListSkeleton rows={5} />
           ) : topProducts.length === 0 ? (
             <div className="h-48 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-xs">Nenhum dado.</div>
           ) : (
@@ -125,7 +132,7 @@ export default function AnalyticsRankings({
           </div>
 
           {loading ? (
-            <div className="h-48 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-xs">Carregando...</div>
+            <CompactListSkeleton rows={5} />
           ) : measurementUnitsData.length === 0 ? (
             <div className="h-48 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-xs">Nenhum dado.</div>
           ) : (
@@ -155,7 +162,7 @@ export default function AnalyticsRankings({
           </div>
 
           {loading ? (
-            <div className="h-48 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-xs">Carregando...</div>
+            <RankedListSkeleton rows={5} />
           ) : largestRequests.length === 0 ? (
             <div className="h-48 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-xs">Nenhum dado.</div>
           ) : (
@@ -187,7 +194,7 @@ export default function AnalyticsRankings({
           </div>
 
           {loading ? (
-            <div className="h-32 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Carregando...</div>
+            <RequestersGridSkeleton cards={4} />
           ) : topRequesters.length === 0 ? (
             <div className="h-32 flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Nenhum dado.</div>
           ) : (
@@ -220,7 +227,7 @@ export default function AnalyticsRankings({
             <div className="p-3 bg-blue-50/30 dark:bg-[#1A4A9E]/15 border border-blue-50/60 dark:border-[#1A4A9E]/30 rounded-xl">
               <span className="text-[10px] text-gray-400 dark:text-[#C3C6D3] font-bold uppercase tracking-wider block">Taxa de SLA Cumprido</span>
               <span className="text-lg font-black text-blue-800 dark:text-[#7FA9F5] mt-1 block">
-                {loading ? '...' : `${100 - (advancedMetrics.totalRequests > 0 ? Math.round((advancedMetrics.atrasadas / advancedMetrics.totalRequests) * 100) : 0)}%`}
+                {loading ? <MetricValueSkeleton className='h-6 w-16' /> : `${100 - (advancedMetrics.totalRequests > 0 ? Math.round((advancedMetrics.atrasadas / advancedMetrics.totalRequests) * 100) : 0)}%`}
               </span>
               <span className="text-[9px] text-gray-400 dark:text-[#C3C6D3] mt-0.5 block">{advancedMetrics.atrasadas} solicitações atrasadas atualmente</span>
             </div>
@@ -228,7 +235,7 @@ export default function AnalyticsRankings({
             <div className="p-3 bg-emerald-50/30 dark:bg-emerald-500/10 border border-emerald-50/60 dark:border-emerald-500/25 rounded-xl">
               <span className="text-[10px] text-gray-400 dark:text-[#C3C6D3] font-bold uppercase tracking-wider block">Sincronismo de Arquivos</span>
               <span className="text-lg font-black text-emerald-800 dark:text-emerald-300 mt-1 block">
-                {loading ? '...' : `${advancedMetrics.totalRequests > 0 ? Math.round((advancedMetrics.requestsWithAttachments / advancedMetrics.totalRequests) * 100) : 0}%`}
+                {loading ? <MetricValueSkeleton className='h-6 w-16' /> : `${advancedMetrics.totalRequests > 0 ? Math.round((advancedMetrics.requestsWithAttachments / advancedMetrics.totalRequests) * 100) : 0}%`}
               </span>
               <span className="text-[9px] text-gray-400 dark:text-[#C3C6D3] mt-0.5 block">Pedidos que contêm anexos de mídia</span>
             </div>
