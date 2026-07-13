@@ -1,5 +1,6 @@
 "use client";
 
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ClipboardList, FilePlus2 } from "lucide-react";
@@ -8,6 +9,8 @@ import { sortNotificationsByDate } from "@/components/features/notifications/not
 import { notificationsService } from "@/service/notifications";
 
 export default function Notificacoes() {
+    useDocumentTitle("Notificações");
+
     const [notifications, setNotifications] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");

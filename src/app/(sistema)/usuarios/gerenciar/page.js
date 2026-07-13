@@ -1,5 +1,6 @@
 "use client";
 
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import {
     Users,
     UserCheck,
@@ -17,6 +18,8 @@ import UserTable from "@/components/features/gerenciar-users/UserTable";
 import { getAllUsers } from "@/service/users/usersSearch";
 
 export default function GerenciarUsuarios() {
+    useDocumentTitle("Gerenciar Usuários");
+
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("Todos");

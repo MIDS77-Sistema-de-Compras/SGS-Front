@@ -1,5 +1,6 @@
 "use client";
 
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -12,6 +13,8 @@ import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 import { loginUser } from "@/service/auth/auth-login";
 
 export default function LoginPage() {
+    useDocumentTitle("Login");
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");

@@ -1,5 +1,6 @@
 "use client";
 
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -30,6 +31,8 @@ function formatDisplayDate(date) {
 }
 
 export default function MyRequests() {
+    useDocumentTitle("Detalhe da Solicitação");
+
     const { id } = useParams();
     const { request: solicitacao, loading, error } = useRequestDetails(id);
 
