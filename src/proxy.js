@@ -56,8 +56,18 @@ export function proxy(request) {
         return NextResponse.redirect(new URL("/", request.url));
     }
 
-    if ((pathname.startsWith("/criar-cr") || pathname.startsWith("/coordenador")) && role !== "coordenador") {
+    if (pathname.startsWith("/criar-cr") && role !== "coordenador") {
         return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    if (pathname.startsWith("/coordenador")) {
+        if (pathname.startsWith("/coordenador/analitico")) {
+            if (role !== "coordenador" && role !== "supervisor") {
+                return NextResponse.redirect(new URL("/", request.url));
+            }
+        } else if (role !== "coordenador") {
+            return NextResponse.redirect(new URL("/", request.url));
+        }
     }
 
     return NextResponse.next();
