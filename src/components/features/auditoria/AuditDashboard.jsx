@@ -6,14 +6,14 @@ import {
     Calendar, 
     LogIn, 
     ShieldAlert,
-    Search,
-    ChevronDown
+    Search
 } from "lucide-react";
 import AuditLogTable from "./AuditLogTable";
 import AuditDetailsModal from "./AuditDetailsModal";
-import { auditActionOptions, auditLogs, levelStyles } from "./auditData";
+import { auditActionOptions, auditLogs } from "./auditData";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import Button from "@/components/ui/button/Button";
+import Dropdown from "@/components/ui/select/Dropdown";
 
 export default function AuditDashboard() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -25,7 +25,7 @@ export default function AuditDashboard() {
     const totalUsers = 124;
     const activeUsers = 110;
     const inactiveUsers = 14;
-    const totalProfiles = Object.keys(levelStyles).length;
+    const totalProfiles = 4;
 
     const filteredLogs = useMemo(() => {
         return auditLogs.filter((log) => {
@@ -55,29 +55,29 @@ export default function AuditDashboard() {
                     title="Total de Registros"
                     value={totalUsers}
                     icon={ClipboardList}
-                    iconBg="bg-blue-100"
-                    iconColor="text-blue-600"
+                    iconBg="bg-blue-100 dark:bg-[#1A4A9E]/25"
+                    iconColor="text-blue-600 dark:text-[#7FA9F5]"
                 />
                 <StatCard
                     title="Ações de Hoje"
                     value={activeUsers}
                     icon={Calendar}
-                    iconBg="bg-green-100"
-                    iconColor="text-green-600"
+                    iconBg="bg-green-100 dark:bg-[#16A34A]/20"
+                    iconColor="text-green-600 dark:text-[#5FD68A]"
                 />
                 <StatCard
                     title="Tentativas de Login"
                     value={inactiveUsers}
                     icon={LogIn}
-                    iconBg="bg-orange-100"
-                    iconColor="text-orange-500"
+                    iconBg="bg-orange-100 dark:bg-[#D97706]/20"
+                    iconColor="text-orange-500 dark:text-[#F0B95B]"
                 />
                 <StatCard
                     title="Alertas Críticos"
                     value={totalProfiles}
                     icon={ShieldAlert}
-                    iconBg="bg-purple-100"
-                    iconColor="text-purple-600"
+                    iconBg="bg-purple-100 dark:bg-[#7C3AED]/20"
+                    iconColor="text-purple-600 dark:text-[#B48CF7]"
                 />
             </div>
             
@@ -99,29 +99,18 @@ export default function AuditDashboard() {
                             />
                         </div>
 
-                        <div className="relative w-full sm:w-44">
-                            <select
-                                className="w-full appearance-none border border-gray-200 dark:border-white/15 dark:bg-[#303746] text-gray-700 dark:text-[#E2E2EA] py-2 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
-                                value={actionType}
-                                onChange={(e) => setActionType(e.target.value)}
-                            >
-                                <option value="">Tipo de ação</option>
-                                {auditActionOptions.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-[#C3C6D3]">
-                                <ChevronDown size={16} />
-                            </div>
-                        </div>
+                        <Dropdown
+                            className="w-full sm:w-44"
+                            value={actionType}
+                            onChange={setActionType}
+                            placeholder="Tipo de ação"
+                            options={[{ value: "", label: "Tipo de ação" }, ...auditActionOptions]}
+                        />
 
                         <div className="relative w-full sm:w-40">
                             <input
                                 type="date"
-                                placeholder="Período"
-                                className="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
+                                className="w-full pl-4 pr-3 py-2 border border-gray-200 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E] dark:[color-scheme:dark]"
                                 value={period}
                                 onChange={(e) => setPeriod(e.target.value)}
                             />

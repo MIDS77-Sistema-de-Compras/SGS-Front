@@ -1,8 +1,8 @@
 'use client';
 
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import SectionHeader from '@/components/ui/layout/SectionHeader';
@@ -13,7 +13,7 @@ import { getUserById, updateUser, deleteUser } from '@/service/users/usersSearch
 import Toast from '@/components/ui/notifications/Toast';
 import { ModalUser } from '@/components/coord/ModalUser';
 
-export default function EditarUsuarios({ params }) {
+export default function EditarUsuarios() {
     useDocumentTitle("Editar Usuário");
 
     const router = useRouter();
