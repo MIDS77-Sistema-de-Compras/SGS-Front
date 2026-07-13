@@ -3,6 +3,7 @@
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useEffect, useMemo, useState } from "react";
 import NotificationsList from "@/components/features/notifications/NotificationsList";
+import NotificationsListSkeleton from "@/components/features/notifications/NotificationsListSkeleton";
 import { sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
 import { notificationsService } from "@/service/notifications";
 import HomeFooter from "@/components/features/home/HomeFooter";
@@ -78,12 +79,8 @@ export default function Notificacoes() {
                 </div>
 
                 <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 mb-3 -mx-5 shrink-0" />
-                <div className="min-h-0 flex-1 overflow-y-auto pr-2">
-                    {isLoading && (
-                        <div className="flex h-full items-center justify-center px-5 py-8 text-center text-sm text-[#666666] dark:text-[#C3C6D3]">
-                            Carregando notificacoes...
-                        </div>
-                    )}
+                <div className="min-h-0 flex-1 overflow-y-auto py-2 pr-1">
+                    {isLoading && <NotificationsListSkeleton />}
 
                     {!isLoading && error && (
                         <div className="mx-5 mt-4 rounded-lg border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-4 text-sm text-red-700 dark:text-red-400">

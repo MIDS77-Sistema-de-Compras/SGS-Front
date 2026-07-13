@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ActivityItem from "./ActivityItem";
+import RecentActivitySkeleton from "./RecentActivitySkeleton";
 import { notificationsService } from "@/service/notifications";
 import { formatRelativeTime, getNotificationIcon, sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
 
@@ -50,9 +51,7 @@ export default function RecentActivity() {
             </h2>
             <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 -mx-5" />
 
-            {isLoading && (
-                <p className="text-sm text-[#666666]">Carregando atividades...</p>
-            )}
+            {isLoading && <RecentActivitySkeleton />}
 
             {!isLoading && error && (
                 <p className="text-sm text-red-600">{error}</p>
