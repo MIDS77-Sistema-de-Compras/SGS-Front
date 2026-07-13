@@ -234,7 +234,6 @@ export function useRequestForm() {
         setFormError("");
         setSuccess(false);
 
-
         if (!branchId) {
             setFormError("Selecione a Filial Pagadora.");
             showNotification("Selecione a Filial Pagadora antes de finalizar.", "error");
