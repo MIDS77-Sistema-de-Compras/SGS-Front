@@ -65,7 +65,7 @@ export default function AnalyticsDashboard() {
       />
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-[#BA1A1A] p-4 rounded-xl text-sm font-medium flex items-center gap-2">
+        <div className="bg-red-50 dark:bg-[#C62834]/15 border border-red-200 dark:border-[#C62834]/40 text-[#BA1A1A] dark:text-[#F08B92] p-4 rounded-xl text-sm font-medium flex items-center gap-2">
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
           <span>{error}</span>
         </div>
