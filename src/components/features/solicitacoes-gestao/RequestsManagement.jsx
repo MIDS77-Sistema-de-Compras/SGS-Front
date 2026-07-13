@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import SolicitacoesTabs from '@/lib/utils/requestTabs';
 import { useRequestsList } from '@/hooks/useRequestsList';
 import { useCRSearch } from '@/hooks/useCRSearch';
-import { api } from '@/service/api';
+import { updateRequestStatus } from '@/service/requests';
 import ToastNotification from '@/components/ui/notifications/ToastNotification';
 import { Modal } from '@/components/ui/overlay/Modal';
 import Button from '@/components/ui/button/Button';
@@ -121,10 +121,7 @@ export default function RequestsManagement() {
         setOverrides((prev) => ({ ...prev, [item.id]: novoStatus }));
 
         try {
-            await api.patch(`/requests/${item.id}/status`, {
-                statusName: novoStatus,
-                justification,
-            });
+            await updateRequestStatus(item.id, novoStatus, justification);
 
             setNotification({
                 type: 'success',

@@ -8,15 +8,10 @@ function buildTargetUrl(path, search) {
 
 function buildForwardHeaders(request) {
     const headers = new Headers(request.headers);
-    const jwt = request.cookies.get("jwt")?.value ?? request.cookies.get("token")?.value;
 
     headers.delete("host");
     headers.delete("connection");
     headers.delete("content-length");
-
-    if (jwt) {
-        headers.set("cookie", `jwt=${jwt}`);
-    }
 
     return headers;
 }

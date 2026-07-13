@@ -1,5 +1,12 @@
 import { api, getPageContent } from "@/service/api";
 
+export async function updateRequestStatus(id, statusName, justification = null) {
+    return api.patch(`/requests/${id}/status`, {
+        statusName,
+        justification,
+    });
+}
+
 function formatRequestCode(crBranch) {
     if (!crBranch?.crCode) return "SolicitaÃ§Ã£o";
 
