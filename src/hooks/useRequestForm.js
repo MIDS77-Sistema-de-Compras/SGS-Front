@@ -234,12 +234,6 @@ export function useRequestForm() {
         setFormError("");
         setSuccess(false);
 
-        if (abaAtiva !== "produto") {
-            setFormError("A criação de serviços ainda não está conectada à API.");
-            showNotification("A criação de serviços ainda não está conectada à API.", "error");
-            return;
-        }
-
         if (!branchId) {
             setFormError("Selecione a Filial Pagadora.");
             showNotification("Selecione a Filial Pagadora antes de finalizar.", "error");
@@ -269,7 +263,7 @@ export function useRequestForm() {
 
                 setSuccess(true);
                 showNotification("Solicitação criada com sucesso!", "success");
-                setBranch("");
+                setBranchId("");
                 setCrBranchId("");
                 setProducts([]);
                 setAttachments([]);
