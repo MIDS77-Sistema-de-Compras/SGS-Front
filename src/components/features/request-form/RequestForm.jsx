@@ -30,9 +30,7 @@ export default function RequestForm() {
         submitting, formError, success,
         handleBranchChange, handleCrBranchChange, handleAddProduct,
         handleRemoveProduct, handleFilesSelected,
-        handleCrBranchChange, handleAddProduct,
-        handleRemoveProduct, handleAddService, handleRemoveService,
-        handleFilesSelected,
+        handleAddService, handleRemoveService,
         handleRemoveAttachment, handleSubmit,
         attachments,
     } = useRequestForm();
