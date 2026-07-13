@@ -247,17 +247,25 @@ export function useRequestForm() {
         }
 
         if (abaAtiva === "produto") {
+            if (productName.trim() || quantity || unit) {
+                setFormError("Você preencheu os campos, mas esqueceu de clicar no botão '+' para adicionar o produto.");
+                showNotification("Adicione o produto pendente à lista antes de finalizar.", "warning");
+                return;
+            }
+
             if (products.length === 0) {
                 setFormError("Adicione pelo menos um produto antes de finalizar.");
                 showNotification("Adicione pelo menos um produto antes de finalizar.", "error");
                 return;
             }
 
+            const payloadProducts = products.map(({ id, ...rest }) => rest);
+
             try {
                 setSubmitting(true);
                 await createFullRequest({
                     crBranchId,
-                    products,
+                    products: payloadProducts, 
                     attachments,
                 });
 
@@ -276,31 +284,42 @@ export function useRequestForm() {
             return;
         }
 
-        if (services.length === 0) {
-            setFormError("Adicione pelo menos um serviço antes de finalizar.");
-            showNotification("Adicione pelo menos um serviço antes de finalizar.", "error");
-            return;
-        }
+        if (abaAtiva === "servico") { 
 
-        try {
-            setSubmitting(true);
-            await createFullServiceRequest({
-                crBranchId,
-                services,
-                attachments,
-            });
+            if (serviceName.trim() || serviceValue || serviceAdditionalInfo.trim()) {
+                setFormError("Você preencheu os campos, mas esqueceu de clicar no botão '+' para adicionar o serviço.");
+                showNotification("Adicione o serviço pendente à lista antes de finalizar.", "warning");
+                return;
+            }
 
-            setSuccess(true);
-            showNotification("Solicitação criada com sucesso!", "success");
-            setBranchId("");
-            setCrBranchId("");
-            setServices([]);
-            setAttachments([]);
-        } catch (error) {
-            setFormError(error.message || "Erro ao criar a solicitação.");
-            showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
-        } finally {
-            setSubmitting(false);
+            if (services.length === 0) {
+                setFormError("Adicione pelo menos um serviço antes de finalizar.");
+                showNotification("Adicione pelo menos um serviço antes de finalizar.", "error");
+                return;
+            }
+
+            const payloadServices = services.map(({ id, ...rest }) => rest);
+
+            try {
+                setSubmitting(true);
+                await createFullServiceRequest({
+                    crBranchId,
+                    services: payloadServices, 
+                    attachments,
+                });
+
+                setSuccess(true);
+                showNotification("Solicitação criada com sucesso!", "success");
+                setBranchId("");
+                setCrBranchId("");
+                setServices([]);
+                setAttachments([]);
+            } catch (error) {
+                setFormError(error.message || "Erro ao criar a solicitação.");
+                showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
+            } finally {
+                setSubmitting(false);
+            }
         }
     }
 
