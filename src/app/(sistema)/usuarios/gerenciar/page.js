@@ -1,20 +1,13 @@
 "use client";
 
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import {
-    Users,
-    UserCheck,
-    UserMinus,
-    Shield,
-    Search,
-    ChevronDown,
-    Plus,
-} from "lucide-react";
+import { Users, UserCheck, UserMinus, Shield, Search, Plus } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import UserTable from "@/components/features/gerenciar-users/UserTable";
+import Dropdown from "@/components/ui/select/Dropdown";
 import UserTableSkeleton from "@/components/features/gerenciar-users/UserTableSkeleton";
 import { getAllUsers } from "@/service/users/usersSearch";
 
@@ -123,20 +116,12 @@ export default function GerenciarUsuarios() {
                             />
                         </div>
 
-                        <div className="relative">
-                            <select
-                                className="appearance-none border border-gray-200 dark:border-white/15 dark:bg-[#303746] text-gray-700 dark:text-[#E2E2EA] py-2 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
-                                value={statusFilter}
-                                onChange={(e) => setStatusFilter(e.target.value)}
-                            >
-                                <option>Todos</option>
-                                <option>Ativos</option>
-                                <option>Inativos</option>
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-[#C3C6D3]">
-                                <ChevronDown size={16} />
-                            </div>
-                        </div>
+                        <Dropdown
+                            className="w-36"
+                            value={statusFilter}
+                            onChange={setStatusFilter}
+                            options={["Todos", "Ativos", "Inativos"]}
+                        />
                     </div>
 
                     <div className="flex w-full sm:w-auto items-center gap-3">

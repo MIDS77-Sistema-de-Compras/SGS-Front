@@ -1,7 +1,7 @@
 'use client';
 
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
