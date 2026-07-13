@@ -5,50 +5,50 @@ export default function ProductModal({ isModalOpen, editing, selectedProduct, ed
 
     return (
         <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300 ${isModalOpen ? "opacity-100" : "opacity-0"}`}>
-            <div className={`bg-white p-8 rounded-2xl max-w-md w-full shadow-xl border border-gray-100 relative transition-all duration-300 transform ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
-                <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+            <div className={`bg-white dark:bg-[#303746] p-8 rounded-2xl max-w-md w-full shadow-xl border border-gray-100 dark:border-white/10 relative transition-all duration-300 transform ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
+                <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 dark:text-[#C3C6D3] hover:text-gray-600 dark:hover:text-[#E2E2EA] transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                     </svg>
                 </button>
 
-                <h3 className="text-xl font-bold text-[#103D85] mb-2">Informações Adicionais</h3>
-                <p className="text-sm text-gray-500 mb-4">
-                    Item: <span className="font-semibold text-gray-700">{selectedProduct.code} - {selectedProduct.nome}</span>
+                <h3 className="text-xl font-bold text-[#103D85] dark:text-[#E2E2EA] mb-2">Informações Adicionais</h3>
+                <p className="text-sm text-gray-500 dark:text-[#C3C6D3] mb-4">
+                    Item: <span className="font-semibold text-gray-700 dark:text-[#E2E2EA]">{selectedProduct.code} - {selectedProduct.nome}</span>
                 </p>
 
                 <div className="space-y-4 mb-6">
                     <div>
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Nome</label>
+                        <label className="text-xs font-bold text-gray-400 dark:text-[#C3C6D3] uppercase tracking-wider block mb-1">Nome</label>
                         {editing ? (
-                            <input value={editedProduct.nome} onChange={(e) => setEditedProduct({ ...editedProduct, nome: e.target.value })} className="border rounded-lg px-3 py-2 w-full text-sm" />
+                            <input value={editedProduct.nome} onChange={(e) => setEditedProduct({ ...editedProduct, nome: e.target.value })} className="border dark:border-white/15 dark:bg-[#1A2233] dark:text-[#E2E2EA] rounded-lg px-3 py-2 w-full text-sm" />
                         ) : (
-                            <span className="text-sm text-gray-700 break-all">{selectedProduct.nome}</span>
+                            <span className="text-sm text-gray-700 dark:text-[#E2E2EA] break-all">{selectedProduct.nome}</span>
                         )}
                     </div>
 
                     <div>
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block">Variação</label>
+                        <label className="text-xs font-bold text-gray-400 dark:text-[#C3C6D3] uppercase tracking-wider block">Variação</label>
                         {editing ? (
-                            <input value={editedProduct.variation} onChange={(e) => setEditedProduct({ ...editedProduct, variation: e.target.value })} className="border rounded-lg px-3 py-2 w-full text-sm" />
+                            <input value={editedProduct.variation} onChange={(e) => setEditedProduct({ ...editedProduct, variation: e.target.value })} className="border dark:border-white/15 dark:bg-[#1A2233] dark:text-[#E2E2EA] rounded-lg px-3 py-2 w-full text-sm" />
                         ) : (
-                            <span className="text-sm text-gray-700">{selectedProduct.variation}</span>
+                            <span className="text-sm text-gray-700 dark:text-[#E2E2EA]">{selectedProduct.variation}</span>
                         )}
                     </div>
 
                     <div>
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Quantidade</label>
+                        <label className="text-xs font-bold text-gray-400 dark:text-[#C3C6D3] uppercase tracking-wider block mb-1">Quantidade</label>
                         {editing ? (
-                            <input type="number" value={editedProduct.quantity} onChange={(e) => setEditedProduct({ ...editedProduct, quantity: Number(e.target.value) })} className="border rounded-lg px-3 py-2 w-full text-sm" />
+                            <input type="number" value={editedProduct.quantity} onChange={(e) => setEditedProduct({ ...editedProduct, quantity: Number(e.target.value) })} className="border dark:border-white/15 dark:bg-[#1A2233] dark:text-[#E2E2EA] rounded-lg px-3 py-2 w-full text-sm" />
                         ) : (
-                            <span className="text-sm text-gray-700">{selectedProduct.quantity}</span>
+                            <span className="text-sm text-gray-700 dark:text-[#E2E2EA]">{selectedProduct.quantity}</span>
                         )}
                     </div>
 
                     <div>
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Unidade de Medida</label>
+                        <label className="text-xs font-bold text-gray-400 dark:text-[#C3C6D3] uppercase tracking-wider block mb-1">Unidade de Medida</label>
                         {editing ? (
-                            <select value={editedProduct.unit} onChange={(e) => setEditedProduct({ ...editedProduct, unit: e.target.value })} className="border rounded-lg px-3 py-2 w-full text-sm">
+                            <select value={editedProduct.unit} onChange={(e) => setEditedProduct({ ...editedProduct, unit: e.target.value })} className="border dark:border-white/15 dark:bg-[#1A2233] dark:text-[#E2E2EA] rounded-lg px-3 py-2 w-full text-sm">
                                 <option value="UNIDADE">Unidade</option>
                                 <option value="CAIXA">Caixa</option>
                                 <option value="PACOTE">Pacote</option>
@@ -56,23 +56,23 @@ export default function ProductModal({ isModalOpen, editing, selectedProduct, ed
                                 <option value="LITRO">Litro</option>
                             </select>
                         ) : (
-                            <span className="text-sm text-gray-700">{selectedProduct.unit}</span>
+                            <span className="text-sm text-gray-700 dark:text-[#E2E2EA]">{selectedProduct.unit}</span>
                         )}
                     </div>
 
                     <div>
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Informações Adicionais</label>
+                        <label className="text-xs font-bold text-gray-400 dark:text-[#C3C6D3] uppercase tracking-wider block mb-1">Informações Adicionais</label>
                         {editing ? (
-                            <textarea value={editedProduct.additionalInfo} onChange={(e) => setEditedProduct({ ...editedProduct, additionalInfo: e.target.value })} className="border rounded-lg px-3 py-2 w-full text-sm" rows={3} />
+                            <textarea value={editedProduct.additionalInfo} onChange={(e) => setEditedProduct({ ...editedProduct, additionalInfo: e.target.value })} className="border dark:border-white/15 dark:bg-[#1A2233] dark:text-[#E2E2EA] rounded-lg px-3 py-2 w-full text-sm" rows={3} />
                         ) : (
-                            <p className="text-sm text-gray-600 leading-relaxed break-all">{selectedProduct.additionalInfo}</p>
+                            <p className="text-sm text-gray-600 dark:text-[#C3C6D3] leading-relaxed break-all">{selectedProduct.additionalInfo}</p>
                         )}
                     </div>
 
                     {!editing && (
-                        <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Motivo / Parecer do Supervisor:</h4>
-                            <p className="text-sm text-gray-600 leading-relaxed">
+                        <div className="bg-gray-50 dark:bg-[#1A2233] p-4 rounded-xl border border-gray-100 dark:border-white/10">
+                            <h4 className="text-xs font-bold text-gray-400 dark:text-[#C3C6D3] uppercase tracking-wider mb-1">Motivo / Parecer do Supervisor:</h4>
+                            <p className="text-sm text-gray-600 dark:text-[#C3C6D3] leading-relaxed">
                                 {selectedProduct.status === "Aprovado"
                                     ? "A solicitação cumpre com os requisitos técnicos da unidade e o orçamento está dentro do limite estipulado para o trimestre corrente."
                                     : selectedProduct.status === "Reprovado"
@@ -91,7 +91,7 @@ export default function ProductModal({ isModalOpen, editing, selectedProduct, ed
                             Concluir
                         </button>
                     )}
-                    <button onClick={closeModal} className="bg-[#103D85] text-white font-bold text-sm px-6 py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
+                    <button onClick={closeModal} className="bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-6 py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
                         {editing ? "Cancelar" : "Entendido"}
                     </button>
                 </div>

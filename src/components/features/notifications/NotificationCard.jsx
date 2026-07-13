@@ -14,10 +14,10 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
     return (
         <li
             onClick={handleClick}
-            className={`grid min-h-16 grid-cols-[46px_1fr_116px] items-center gap-3 border-b border-[#AAAAAA]/35 px-7 py-4 transition-colors last:border-b-0 ${canMarkAsViewed ? "cursor-pointer hover:bg-gray-50" : ""}`}
+            className={`grid min-h-16 grid-cols-[46px_1fr_116px] items-center gap-3 border-b border-[#AAAAAA]/35 dark:border-white/10 mb-2 py-4 transition-colors last:border-b-0 ${canMarkAsViewed ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5" : ""}`}
             title={canMarkAsViewed ? "Marcar como visualizada" : undefined}
         >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-[#303746]">
                 <Image
                     src={icon.src}
                     alt={icon.alt}
@@ -27,15 +27,15 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
             </div>
 
             <div className="min-w-0">
-                <p className="truncate text-[15px] font-bold leading-tight text-black">
+                <p className="truncate text-[15px] font-bold leading-tight text-black dark:text-[#E2E2EA]">
                     {notification.title || `Solicitacao #${notification.requestId || ""}`}
                 </p>
-                <p className="mt-0.5 truncate text-[12px] leading-tight text-black/70">
+                <p className="mt-0.5 truncate text-[12px] leading-tight text-black/70 dark:text-[#C3C6D3]">
                     {notification.message || "Atualizacao de solicitacao"}
                 </p>
             </div>
 
-            <p className="text-right text-[12px] leading-tight text-black/70">
+            <p className="text-right text-[12px] leading-tight text-black/70 dark:text-[#C3C6D3]">
                 {isUpdating ? "Atualizando..." : formatRelativeTime(notification.createdAt)}
             </p>
         </li>

@@ -11,10 +11,10 @@ export function Search({
     const { filteredCRs, search, setSearch, loading, error } = useCRSearch();
 
     return (
-        <div className="w-[380px] flex flex-col border border-[#AAAAAA] rounded-xl min-h-0">
+        <div className="w-[380px] flex flex-col border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl min-h-0">
 
-            <div className="flex items-center justify-between px-5 py-3 border-b border-[#AAAAAA]">
-                <h1 className="font-bold text-[#103D85] text-[22px]">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[#AAAAAA] dark:border-white/10">
+                <h1 className="font-bold text-[#103D85] dark:text-[#E2E2EA] text-[22px]">
                     Busca de CR
                 </h1>
             </div>
@@ -48,7 +48,7 @@ export function Search({
                     }
 
                     {!loading && !error && filteredCRs.length === 0 && (
-                        <div className="text-center text-gray-400 py-6">
+                        <div className="text-center text-gray-400 dark:text-[#C3C6D3] py-6">
                             Nenhum resultado encontrado
                         </div>
                     )}
@@ -57,9 +57,9 @@ export function Search({
             </div>
 
             <div className="flex justify-center items-center gap-2 mb-5">
-                <div className="w-10 h-2 bg-gray-300 rounded-full"></div>
-                <div className="w-3 h-2 bg-gray-300 rounded-full"></div>
-                <div className="w-10 h-2 bg-gray-300 rounded-full"></div>
+                <div className="w-10 h-2 bg-gray-300 dark:bg-white/20 rounded-full"></div>
+                <div className="w-3 h-2 bg-gray-300 dark:bg-white/20 rounded-full"></div>
+                <div className="w-10 h-2 bg-gray-300 dark:bg-white/20 rounded-full"></div>
             </div>
         </div>
     );

@@ -70,7 +70,7 @@ const Select = forwardRef(function Select(
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          className="w-5 h-5 text-gray-600"
+          className="w-5 h-5 text-gray-600 dark:text-[#E2E2EA]"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
         </svg>

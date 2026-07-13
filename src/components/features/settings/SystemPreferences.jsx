@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import SettingsCard from "@/components/ui/layout/SettingsCard";
 import ThemeToggle from "@/components/ui/form/ThemeToggle";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const GearIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -12,14 +12,18 @@ const GearIcon = () => (
 );
 
 export default function SystemPreferences() {
-    const [darkMode, setDarkMode] = useState(false);
+    const { darkMode, setDarkMode, mounted } = useTheme();
 
     return (
         <SettingsCard
             icon={<GearIcon />}
             title="Preferências do sistema"
             description="Personalize sua experiência no sistema"
-            action={<ThemeToggle darkMode={darkMode} onChange={setDarkMode} />}
+            action={
+                mounted
+                    ? <ThemeToggle darkMode={darkMode} onChange={setDarkMode} />
+                    : <div className="w-[176px] h-[42px] rounded-full bg-gray-200 dark:bg-white/10" aria-hidden="true" />
+            }
         />
     );
 }

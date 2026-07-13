@@ -19,17 +19,17 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
     const podeDecidir = item.status === STATUS_AGUARDANDO_APROVACAO;
 
     return (
-        <div className="flex items-center justify-between gap-6 py-4 border-b border-gray-100 last:border-b-0">
+        <div className="flex items-center justify-between gap-6 py-4 border-b border-gray-100 dark:border-white/10 last:border-b-0">
             <div className="flex items-center gap-4 min-w-0">
                 <div className={`w-7 h-7 rounded-full shrink-0 ${getStatusCor(item.status)}`} />
 
                 <div className="flex flex-col min-w-0">
-                    <span className="text-lg font-bold text-[#333333] truncate">
+                    <span className="text-lg font-bold text-[#333333] dark:text-[#E2E2EA] truncate">
                         {titulo}
                     </span>
 
                     {subtitulo && (
-                        <span className="text-sm text-gray-400 truncate">
+                        <span className="text-sm text-gray-400 dark:text-[#C3C6D3] truncate">
                             {subtitulo}
                         </span>
                     )}
@@ -37,7 +37,7 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
             </div>
 
             <div className="flex items-center gap-6 shrink-0">
-                <span className="text-xs text-gray-400 min-w-[70px] text-right whitespace-nowrap">
+                <span className="text-xs text-gray-400 dark:text-[#C3C6D3] min-w-[70px] text-right whitespace-nowrap">
                     {calcularTempoDecorrido(item.requestDate)}
                 </span>
 

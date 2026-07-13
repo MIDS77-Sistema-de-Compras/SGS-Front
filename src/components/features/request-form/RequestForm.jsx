@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import Select from "@/components/ui/select/Select";
+import SearchableSelect from "@/components/ui/select/SearchableSelect";
 import FileDropzone from "@/components/ui/upload/FileDropzone";
 import ListProducts from "./ListProducts";
 import send from "../../../../public/images/icons/send.svg";
 import file from "../../../../public/images/icons/file.svg";
+import fileWhite from "../../../../public/images/icons/fileWhite.svg";
 import FormField from "@/components/ui/form/FormField";
 import { Input } from "@/components/ui/input/Input";
 import PhoneInput from "@/components/ui/input/PhoneInput";
@@ -13,21 +14,36 @@ import SectionHeader from "@/components/ui/layout/SectionHeader";
 import Button from "@/components/ui/button/Button";
 import SolicitacoesTabs from "@/lib/utils/requestTabs";
 import { useRequestForm } from "@/hooks/useRequestForm";
+import ServiceAutocomplete from "./ServiceAutoComplete";
+import ProductAutocomplete from './ProductAutocomplete';
 
 export default function RequestForm() {
     const {
-        abaAtiva, setAbaAtiva, abas, branch,
-        requester, setRequester, phone, setPhone,
-        crBranchId, productName, setProductName,
-        quantity, setQuantity, unit, setUnit,
+        abaAtiva, setAbaAtiva,
+        abas,
+        branchId, 
+        branchOptions,
+        requester, setRequester,
+        phone, setPhone,
+        crBranchId,
+        productName, setProductName,
+        quantity, setQuantity,
+        unit, setUnit,
         additionalInfo, setAdditionalInfo,
         serviceName, setServiceName,
+        serviceValue, setServiceValue,
         serviceAdditionalInfo, setServiceAdditionalInfo,
-        products, crOptions, unitOptions,
-        submitting, formError, success,
-        handleCrBranchChange, handleAddProduct,
-        handleRemoveProduct, handleFilesSelected,
-        handleRemoveAttachment, handleSubmit,
+        products,
+        services,
+        crOptions,
+        unitOptions,
+        submitting,
+        formError,
+        success,
+        handleBranchChange, handleCrBranchChange,
+        handleAddProduct, handleRemoveProduct,
+        handleAddService, handleRemoveService,
+        handleFilesSelected, handleRemoveAttachment, handleSubmit,
         attachments,
     } = useRequestForm();
 
@@ -38,7 +54,7 @@ export default function RequestForm() {
     }
 
     return (
-        <div className="border border-[#AAAAAA] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
+        <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
             <div className="">
                 <SolicitacoesTabs
                     titulo="Nova Solicitação"
@@ -55,13 +71,14 @@ export default function RequestForm() {
                 <div className="flex-1 overflow-y-auto p-5">
                     <SectionHeader label="INFORMAÇÕES GERAIS" />
 
-                    <FormField label="Filial Pagadora">
-                        <Input
-                            variant="form"
-                            placeholder="Definida pelo CR selecionado"
-                            value={branch || ""}
-                            readOnly
-                            disabled
+                    <FormField label="Filial Pagadora" required>
+                        <SearchableSelect
+                            name="branch"
+                            placeholder="Digite para filtrar e selecione a Filial..."
+                            options={branchOptions}
+                            value={branchId || ""}
+                            onChange={handleBranchChange}
+                            isRequired
                         />
                     </FormField>
 
@@ -91,10 +108,15 @@ export default function RequestForm() {
                             </FormField>
                         </div>
 
-                        <FormField label="CR e Projeto">
-                            <Select
+                        <FormField label="CR e Projeto" required>
+                            <SearchableSelect
                                 name="cr_project"
-                                placeholder="Selecione o Centro de Resultado..."
+                                placeholder="Digite para filtrar e selecione o Centro de Resultado..."
+                                emptyMessage={
+                                    branchId
+                                        ? "Nenhum CR encontrado para a Filial selecionada"
+                                        : "Nenhuma opção encontrada"
+                                }
                                 options={crOptions}
                                 value={crBranchId || ""}
                                 onChange={handleCrBranchChange}
@@ -114,11 +136,13 @@ export default function RequestForm() {
                                     required
                                     className="flex-2"
                                 >
-                                    <Input
-                                        variant="form"
-                                        placeholder="Não há produtos cadastrados..."
-                                        value={productName || ""}
-                                        onChange={(event) => setProductName(event.target.value)}
+                                    <ProductAutocomplete
+                                        value={productName}
+                                        onChange={setProductName}
+                                        onSelectProduct={(product) => {
+                                            setProductName(product.name);
+                                        }}
+                                        placeholder="Digite o nome do produto..."
                                     />
                                 </FormField>
 
@@ -143,12 +167,13 @@ export default function RequestForm() {
                                     required
                                     className="col-span-2"
                                 >
-                                    <Select
+                                    <SearchableSelect
                                         name="unit"
-                                        placeholder="Selecione..."
+                                        placeholder="Digite para filtrar e selecione..."
                                         options={unitOptions}
                                         value={unit || ""}
                                         onChange={(event) => setUnit(event.target.value)}
+                                        isRequired
                                     />
                                 </FormField>
 
@@ -184,17 +209,34 @@ export default function RequestForm() {
                             <SectionHeader label="SERVIÇOS" />
 
                             <div className="mt-5">
-                                <ListProducts products={[]} tipo={"serviço"} />
+                                <ListProducts products={services} onRemove={handleRemoveService} tipo={"serviço"} />
                             </div>
 
-                            <FormField label="Título do Serviço" required>
-                                <Input
-                                    variant="form"
-                                    placeholder="Digite o título do serviço..."
-                                    value={serviceName}
-                                    onChange={(event) => setServiceName(event.target.value)}
-                                />
-                            </FormField>
+                            <div className="flex w-full gap-5">
+                                <FormField label="Título do Serviço" required className="flex-2">
+                                    <ServiceAutocomplete
+                                        placeholder="Digite para buscar um serviço..."
+                                        value={serviceName}
+                                        onChange={setServiceName}
+                                        onSelectProvision={(provision) => {
+                                            setServiceValue(String(provision.totalValue ?? ""));
+                                            setServiceAdditionalInfo(provision.description ?? "");
+                                        }}
+                                    />
+                                </FormField>
+
+                                <FormField label="Valor" required className="flex-1">
+                                    <Input
+                                        type="number"
+                                        variant="form"
+                                        placeholder="Ex: 150.00"
+                                        min="0"
+                                        step="0.01"
+                                        value={serviceValue || ""}
+                                        onChange={(event) => setServiceValue(event.target.value)}
+                                    />
+                                </FormField>
+                            </div>
 
                             <div className="flex gap-5 items-end">
                                 <FormField label="Informações Adicionais" required className="flex-1">
@@ -210,6 +252,7 @@ export default function RequestForm() {
                                     type="button"
                                     variant="primary"
                                     className="w-10 h-10 flex items-center justify-center text-2xl"
+                                    onClick={handleAddService}
                                 >
                                     +
                                 </Button>
@@ -223,6 +266,7 @@ export default function RequestForm() {
                         <div className="mt-5">
                             <FileDropzone
                                 icon={file}
+                                iconDark={fileWhite}
                                 iconAlt="File Icon"
                                 title="Arraste seus documentos aqui"
                                 description="Formatos aceitos: PDF, JPG, PNG e DOCX (máx 10MB)"
@@ -261,10 +305,10 @@ export default function RequestForm() {
 
                     <div className="flex flex-col items-end mt-5">
                         {formError && (
-                            <p className="mb-3 text-sm font-semibold text-[#BA1A1A]">{formError}</p>
+                            <p className="mb-3 text-sm font-semibold text-[#BA1A1A] dark:text-[#F87171]">{formError}</p>
                         )}
                         {success && (
-                            <p className="mb-3 text-sm font-semibold text-[#2E7D32]">Solicitação criada com sucesso.</p>
+                            <p className="mb-3 text-sm font-semibold text-[#2E7D32] dark:text-[#4ADE80]">Solicitação criada com sucesso.</p>
                         )}
 
                         <Button
