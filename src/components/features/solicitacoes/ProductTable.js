@@ -2,7 +2,7 @@
 
 import ProductTableRow from "./ProductTableRow";
 
-export default function ProductTable({ localProducts, isProfessor, statusCores, openModal, openEditModal }) {
+export default function ProductTable({ localProducts, isProfessor, openModal, openEditModal }) {
     return (
         <div className="w-full flex-1 overflow-y-auto px-5">
             <table className="w-full border-collapse table-fixed">
@@ -18,11 +18,10 @@ export default function ProductTable({ localProducts, isProfessor, statusCores, 
                 <tbody className="divide-y divide-gray-200 dark:divide-white/10">
                     {localProducts.length > 0 ? (
                         localProducts.map((item) => (
-                            <ProductTableRow 
+                            <ProductTableRow
                                 key={item.id || item.code}
                                 item={item}
                                 isProfessor={isProfessor}
-                                statusCores={statusCores}
                                 openModal={openModal}
                                 openEditModal={openEditModal}
                             />
