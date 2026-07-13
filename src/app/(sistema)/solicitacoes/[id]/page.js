@@ -36,7 +36,6 @@ export default function MyRequests() {
 
     const { id } = useParams();
     const { request: solicitacao, loading, error } = useRequestDetails(id);
-
     const isProfessor = true;
 
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -46,6 +45,8 @@ export default function MyRequests() {
     const [notification, setNotification] = useState(null);
     const [editedProductsByRequestId, setEditedProductsByRequestId] = useState({});
     const localProducts = editedProductsByRequestId[id] || solicitacao?.produtos || [];
+    const localServices = solicitacao?.servicos || [];
+    const isServiceRequest = localProducts.length === 0 && localServices.length > 0;
 
     const statusGeral = solicitacao?.status || calcularStatusSolicitacao(localProducts);
     const corGeral = STATUS_CORES[statusGeral] || "bg-gray-400";
@@ -128,7 +129,11 @@ export default function MyRequests() {
                     <div className="flex items-center justify-between mb-6 px-6">
                         <div className="flex items-baseline gap-4">
                             <h4 className="text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
-                                {solicitacao.codigo} : Lista de {localProducts.length} {localProducts.length === 1 ? "produto" : "produtos"}
+                                {solicitacao.codigo} : Lista de{" "}
+                                {isServiceRequest ? localServices.length : localProducts.length}{" "}
+                                {isServiceRequest
+                                    ? localServices.length === 1 ? "serviço" : "serviços"
+                                    : localProducts.length === 1 ? "produto" : "produtos"}
                             </h4>
                             <span className="text-gray-600 dark:text-[#C3C6D3] text-base font-medium px-7 text-[16px]">
                                 Realizada em: {formatDisplayDate(solicitacao.data)}
@@ -140,11 +145,12 @@ export default function MyRequests() {
                     </div>
 
                     <ProductTable 
-                        localProducts={localProducts}
+                        localProducts={isServiceRequest ? localServices : localProducts}
                         isProfessor={isProfessor}
                         statusCores={STATUS_CORES}
                         openModal={openModal}
                         openEditModal={openEditModal}
+                        isServiceRequest={isServiceRequest}
                     />
                 </div>
 
@@ -153,7 +159,7 @@ export default function MyRequests() {
                         href="/solicitacoes"
                         className="bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
                     >
-                        Fechar produtos
+                        Fechar solicitação
                     </Link>
                 </div>
             </div>
