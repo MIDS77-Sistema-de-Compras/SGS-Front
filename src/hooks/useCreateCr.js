@@ -4,15 +4,21 @@ import { useNotification } from '@/contexts/NotificationContext';
 
 import { createCr, getSectorsSimple } from '@/service/createCr';
 
+const DESCRIPTION_MAX_LENGTH = 255;
+
 const VALIDATORS = {
     nome: (v) => v.trim().length === 0 ? 'O nome do CR é obrigatório.' : '',
     codigo: (v) => v.trim().length === 0 ? 'O código do CR é obrigatório.' : '',
+    descricao: (v) => v.trim().length > DESCRIPTION_MAX_LENGTH
+        ? `A descrição não pode ter mais de ${DESCRIPTION_MAX_LENGTH} caracteres.`
+        : '',
     sectorName: (v) => v.trim().length === 0 ? 'Selecione um bloco responsável.' : '',
 };
 
 const INITIAL_FORM_STATE = {
     nome: '',
     codigo: '',
+    descricao: '',
     master: true,
     sectorName: '',
 };
@@ -67,6 +73,7 @@ export function useCreateCr() {
         const payload = {
             name: formData.nome.trim(),
             code: formData.codigo.trim(),
+            description: formData.descricao.trim(),
             master: formData.master,
             sectorName: formData.sectorName,
         };

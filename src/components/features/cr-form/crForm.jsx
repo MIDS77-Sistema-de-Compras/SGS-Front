@@ -46,6 +46,19 @@ export default function RequestFormCR() {
                     )}
                 </FormField>
 
+                <FormField label="Descrição" className="col-span-2">
+                    <Input
+                        variant="form"
+                        placeholder="Descrição do CR (opcional)"
+                        value={formData.descricao}
+                        onChange={(e) => handleChange('descricao', e.target.value)}
+                        error={errors.descricao}
+                    />
+                    {errors.descricao && (
+                        <span className="text-[11px] text-[#BA1A1A] mt-1 block">{errors.descricao}</span>
+                    )}
+                </FormField>
+
                 <div className="grid grid-cols-2 items-center gap-x-5">
 
                     <FormField label="Código" required className="col-span-1">
