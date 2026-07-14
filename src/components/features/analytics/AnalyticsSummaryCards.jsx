@@ -25,7 +25,7 @@ export default function AnalyticsSummaryCards({
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-white dark:bg-[#303746] p-4 border border-[#E2E8F0] dark:border-white/10 rounded-xl shadow-sm hover:shadow transition relative overflow-hidden group">
+        <div className="bg-white dark:bg-[#303746] p-4 border border-gray-100 dark:border-white/10 rounded-xl shadow-sm hover:shadow transition relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-16 h-16 bg-blue-50/50 dark:bg-blue-500/10 rounded-full translate-x-4 -translate-y-4"></div>
           <div className="flex items-center gap-2 text-gray-400 dark:text-[#C3C6D3]">
             <FileText className="w-4 h-4 text-[#103D85] dark:text-[#5D8EF7]" />
@@ -35,7 +35,7 @@ export default function AnalyticsSummaryCards({
           <p className="text-[10px] text-gray-400 dark:text-[#C3C6D3] mt-1">Registradas no total</p>
         </div>
 
-        <div className="bg-white dark:bg-[#303746] p-4 border border-[#E2E8F0] dark:border-white/10 rounded-xl shadow-sm hover:shadow transition relative overflow-hidden group">
+        <div className="bg-white dark:bg-[#303746] p-4 border border-gray-100 dark:border-white/10 rounded-xl shadow-sm hover:shadow transition relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-50/50 dark:bg-indigo-500/10 rounded-full translate-x-4 -translate-y-4"></div>
           <div className="flex items-center gap-2 text-gray-400 dark:text-[#C3C6D3]">
             <ShoppingCart className="w-4 h-4 text-indigo-500 dark:text-indigo-300" />
@@ -45,7 +45,7 @@ export default function AnalyticsSummaryCards({
           <p className="text-[10px] text-indigo-500 dark:text-indigo-300 mt-1 font-semibold">{advancedMetrics.itemsPerRequest} itens/solicitação</p>
         </div>
 
-        <div className="bg-white dark:bg-[#303746] p-4 border border-[#E2E8F0] dark:border-white/10 rounded-xl shadow-sm hover:shadow transition relative overflow-hidden group">
+        <div className="bg-white dark:bg-[#303746] p-4 border border-gray-100 dark:border-white/10 rounded-xl shadow-sm hover:shadow transition relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-16 h-16 bg-emerald-50/50 dark:bg-emerald-500/10 rounded-full translate-x-4 -translate-y-4"></div>
           <div className="flex items-center gap-2 text-gray-400 dark:text-[#C3C6D3]">
             <Hourglass className="w-4 h-4 text-emerald-500 dark:text-emerald-300" />

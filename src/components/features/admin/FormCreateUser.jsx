@@ -28,7 +28,7 @@ export default function FormCreateUser() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className="bg-white dark:bg-[#1A2233] px-5 py-3 rounded-xl shadow-sm border border-[#AAAAAA] dark:border-white/10 flex flex-col justify-between">
+            <div className="bg-white dark:bg-[#1A2233] px-5 py-3 rounded-xl shadow-sm border border-gray-100 shadow-sm dark:border-white/10 flex flex-col justify-between">
                 <div>
                     <div className="flex items-center">
                         <button 
@@ -42,7 +42,7 @@ export default function FormCreateUser() {
                         <h1 className="text-[22px] font-bold text-[#103D85] dark:text-[#E2E2EA]">Cadastrar Usuário</h1>
                     </div>
                     
-                    <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 mb-5 -mx-5" />
+                    <div className="border-t border-gray-100 dark:border-white/10 mt-2 mb-5 -mx-5" />
 
                     <SectionHeader label="IDENTIFICAÇÃO DE USUÁRIO" />
                     <UserIdentificationSection

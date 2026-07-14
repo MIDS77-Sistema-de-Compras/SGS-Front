@@ -15,7 +15,7 @@ export default function ProductTable({
             <table className="w-full border-collapse table-fixed">
                 <thead className="sticky top-0 z-10">
                     <tr className="bg-[#EEF2F6] dark:bg-[#303746]">
-                        <th className="py-3 pl-6 text-left text-base font-bold text-[#103D85] dark:text-[#E2E2EA] rounded-l-xl w-1/3">
+                        <th className="py-3 pl-6 text-left text-base font-bold text-[#103D85] dark:text-[#E2E2EA] rounded-xl w-1/3">
                             {isServiceRequest ? "Serviço" : "Produto"}
                         </th>
 
