@@ -12,7 +12,7 @@ export default function SolicitacoesTabs({ abaAtiva, setAbaAtiva, titulo, abas }
                         onClick={() => setAbaAtiva(aba.valor)}
                         className={`py-2 min-w-[150px] rounded-t-[18px] mb-[-1px] border text-sm
                             ${abaAtiva === aba.valor
-                                ? 'border-[#103D85] border-b-white dark:border-b-[#303746] text-[#133D87] dark:text-[#E2E2EA] font-semibold bg-white dark:bg-[#303746]'
+                                ? 'border-[#103D85] border-b-white dark:border-b-[#303746] text-[#133D87] dark:text-[#E2E2EA] dark:border-white/10 font-semibold bg-white dark:bg-[#303746]'
                                 : 'border-gray-100 border-b-[#103D85] dark:border-white/10 text-gray-500 dark:text-[#C3C6D3] bg-white dark:bg-[#1A2233]'
                             }`}
                     >

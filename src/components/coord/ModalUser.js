@@ -58,7 +58,7 @@ export function ModalUser({ isOpen, onClose, userName = "Carregando...", action 
                     <button
                         type="button"
                         onClick={onClose}
-                        className="flex-1 py-2 border border-[#000000] hover:border-gray-400 dark:border-white/20 dark:hover:border-white/40 text-gray-700 dark:text-[#E2E2EA] dark:hover:bg-white/5 font-medium rounded-xl transition-colors"
+                        className="flex-1 py-2 border border-gray-100 hover:border-gray-400 dark:border-white/20 dark:hover:border-white/40 text-gray-700 dark:text-[#E2E2EA] dark:hover:bg-white/5 font-medium rounded-xl transition-colors"
                     >
                         Cancelar
                     </button>

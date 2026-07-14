@@ -86,7 +86,7 @@ export default function MyRequests() {
 
     if (loading) {
         return (
-            <div className="flex-1 flex items-center justify-center font-sans">
+            <div className="flex-1 flex items-center justify-center">
                 <p className="text-gray-500 dark:text-[#C3C6D3] text-lg">Carregando solicitação...</p>
             </div>
         );
@@ -94,7 +94,7 @@ export default function MyRequests() {
 
     if (error || !solicitacao) {
         return (
-            <div className="flex-1 flex items-center justify-center font-sans">
+            <div className="flex-1 flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-gray-500 dark:text-[#C3C6D3] text-lg mb-4">{error || "Solicitação não encontrada."}</p>
                     <Link href="/solicitacoes" className="text-[#103D85] dark:text-[#5D8EF7] underline">
@@ -106,9 +106,9 @@ export default function MyRequests() {
     }
 
     return (
-        <div className="flex-1 p-0 font-sans">
+        <div className="flex-1 p-0">
             {notification && (
-                <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl text-white shadow-lg ${notification.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
+                <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl text-white shadow-sm ${notification.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
                     <div className="flex items-center gap-3">
                         <span>{notification.message}</span>
                         <button onClick={() => setNotification(null)} className="hover:opacity-80">×</button>
@@ -117,7 +117,7 @@ export default function MyRequests() {
             )}
 
             <div className="w-full">
-                <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
+                <div className="border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
                     <div className="flex items-center gap-3 px-5 py-3">
                         <Link href="/solicitacoes-compra" className="text-[#103D85] dark:text-[#5D8EF7] hover:opacity-80 transition-opacity">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -127,7 +127,7 @@ export default function MyRequests() {
                         <h3 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">Detalhes Solicitação</h3>
                     </div>
 
-                    <hr className="border-gray-400 dark:border-white/10 mb-6" />
+                    <hr className="border-gray-100 dark:border-white/10 mb-6" />
 
                     <div className="flex items-center justify-between mb-6 px-6">
                         <div className="flex items-baseline gap-4">

@@ -49,7 +49,7 @@ export default function Dropdown({
         aria-required={isRequired || undefined}
         className={cn(
           'flex w-full items-center justify-between gap-2 rounded-xl px-4 py-2.5 text-sm outline-none transition-all',
-          'bg-white border border-gray-200 shadow-sm text-gray-800',
+          'bg-white border border-gray-100 shadow-sm text-gray-800',
           'focus:border-[#103D85] focus:ring-0.5 focus:ring-[#103D85]',
           'dark:bg-[#303746] dark:border-white/15 dark:text-[#E2E2EA]',
           'dark:focus:border-[#1A4A9E] dark:focus:ring-[#1A4A9E]',

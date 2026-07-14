@@ -12,6 +12,7 @@ import AccessLevelSelector from '@/components/features/admin/AccessLevelSelector
 import { getUserById, updateUser, deleteUser } from '@/service/users/usersSearch';
 import Toast from '@/components/ui/notifications/Toast';
 import { ModalUser } from '@/components/coord/ModalUser';
+import { Lock, Unlock } from 'lucide-react';
 
 export default function EditarUsuarios() {
     useDocumentTitle("Editar Usuário");
@@ -58,7 +59,7 @@ export default function EditarUsuarios() {
                 email: response.email ?? '',
                 senha: '',
                 nivelAcesso: response.roleName ?? '',
-                ativo: response.active ?? true 
+                ativo: response.active ?? true
             });
         } catch (error) {
             console.error('Erro ao buscar usuário:', error);
@@ -66,7 +67,7 @@ export default function EditarUsuarios() {
     }
 
     const handleChange = (field, value) => {
-        if (field === 'cpf') return; 
+        if (field === 'cpf') return;
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
@@ -94,7 +95,7 @@ export default function EditarUsuarios() {
                 email: formData.email,
                 password: formData.senha,
                 extensionNumber: formData.ramal,
-                active: formData.ativo, 
+                active: formData.ativo,
                 nameRole: formData.nivelAcesso
             };
 
@@ -132,13 +133,13 @@ export default function EditarUsuarios() {
 
     const handleConfirmarAcao = async () => {
         if (modalConfig.action === 'excluir') {
-            await handleDelete(); 
+            await handleDelete();
         } else if (modalConfig.action === 'desativar') {
-            setFormData(prev => ({ ...prev, ativo: false })); 
+            setFormData(prev => ({ ...prev, ativo: false }));
         } else if (modalConfig.action === 'ativar') {
             setFormData(prev => ({ ...prev, ativo: true }));
         }
-        
+
         setModalConfig({ ...modalConfig, isOpen: false });
     };
 
@@ -160,7 +161,7 @@ export default function EditarUsuarios() {
             )}
 
             <div className="flex flex-col w-full gap-5 flex-1 min-h-0 overflow-y-auto pl-1 pr-3 pb-4">
-                <div className="bg-white dark:bg-[#1A2233] px-5 py-3 rounded-xl shadow-sm border border-[#AAAAAA] dark:border-white/10">
+                <div className="bg-white dark:bg-[#1A2233] px-5 py-3 rounded-xl shadow-sm border border-gray-100 dark:border-white/10">
                     <div className="flex items-center">
                         <button
                             type="button"
@@ -173,7 +174,7 @@ export default function EditarUsuarios() {
                         <h1 className="text-[22px] font-bold text-[#103D85] dark:text-[#E2E2EA]">Editar Usuário</h1>
                     </div>
 
-                    <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 mb-5 -mx-5" />
+                    <div className="border-t border-gray-100 dark:border-white/10 mt-2 mb-5 -mx-5" />
 
                     <div>
                         <SectionHeader label="IDENTIFICAÇÃO DE USUÁRIO" />
@@ -207,17 +208,12 @@ export default function EditarUsuarios() {
                         <Button
                             onClick={() => abrirModal(formData.ativo ? 'desativar' : 'ativar')}
                             className={
-                                formData.ativo 
+                                formData.ativo
                                     ? "w-[295px] bg-[#7D7D7D] hover:bg-[#555555] text-white border-[#7D7D7D] dark:bg-[#303746] dark:hover:bg-[#3d4456] dark:border-white/15"
                                     : "w-[295px] bg-[#4CAF50] hover:bg-[#37823A] text-white border-[#10B981] dark:bg-[#37823A] dark:hover:bg-[#2b652e] dark:border-[#10B981]"
                             }
                             rightIcon={
-                                <Image 
-                                    src={formData.ativo ? "/images/icons/desativar.png" : "/images/icons/ativarUser.png"} 
-                                    alt="" 
-                                    width={16} 
-                                    height={16} 
-                                />
+                                formData.ativo ? <Lock size={16} /> : <Unlock size={16} />
                             }
                         >
                             {formData.ativo ? "Desativar usuário" : "Ativar usuário"}
@@ -233,7 +229,7 @@ export default function EditarUsuarios() {
                     </Button>
                 </div>
 
-                <ModalUser 
+                <ModalUser
                     isOpen={modalConfig.isOpen}
                     onClose={() => setModalConfig({ ...modalConfig, isOpen: false })}
                     userName={formData.nome}

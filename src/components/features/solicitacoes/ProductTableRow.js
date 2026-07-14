@@ -30,7 +30,7 @@ export default function ProductTableRow({
 
                 <td className="py-3 text-center">
                     <span
-                        className={`inline-block text-center text-[13px] font-semibold text-white py-1 rounded-full min-w-[150px] shadow-sm tracking-wide ${
+                        className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide ${
                             statusCores[item.status] || "bg-gray-400"
                         }`}
                     >
@@ -67,7 +67,7 @@ export default function ProductTableRow({
                 </button>
             </td>
             <td className="py-3 text-center relative">
-                <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 rounded-full min-w-[150px] shadow-sm tracking-wide ${statusCores[item.status] || "bg-gray-400"}`}>
+                <span className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide ${statusCores[item.status] || "bg-gray-400"}`}>
                     {item.status}
                 </span>
                 {isProfessor && item.status === "Em análise" && (
