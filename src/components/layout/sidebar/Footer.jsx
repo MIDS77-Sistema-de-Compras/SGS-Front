@@ -1,13 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import { useRouter } from "next/navigation"
-import Cookies from "js-cookie"
 import { logoutAction } from "./actions"
 
 export function Footer() {
-    const router = useRouter()
-
     const handleLogout = async () => {
         await logoutAction();
     }

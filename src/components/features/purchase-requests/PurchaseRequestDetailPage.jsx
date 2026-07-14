@@ -8,17 +8,7 @@ import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
 import { useRequestDetails } from "@/hooks/useRequestDetails";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
-
-const STATUS_CORES = {
-    "Em análise": "bg-[#EDAE28]",
-    "Aguardando aprovação": "bg-[#EDAE28]",
-    "Pendente": "bg-[#EDAE28]",
-    "Reprovado": "bg-[#E30613]",
-    "Parcial Aprovado": "bg-[#0084FF]",
-    "Aprovado": "bg-[#4CAF50]",
-    "Auto-Aprovado": "bg-[#8E44AD]",
-    "Sem produtos": "bg-gray-400",
-};
+import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
 
 function formatDisplayDate(date) {
     if (!date) return "-";
@@ -42,9 +32,13 @@ export default function MyRequests() {
     const [notification, setNotification] = useState(null);
     const [editedProductsByRequestId, setEditedProductsByRequestId] = useState({});
     const localProducts = editedProductsByRequestId[id] || solicitacao?.produtos || [];
+    const localServices = solicitacao?.servicos || [];
 
-    const statusGeral = solicitacao?.status || calcularStatusSolicitacao(localProducts);
-    const corGeral = STATUS_CORES[statusGeral] || "bg-gray-400";
+    const isServiceRequest =
+    localProducts.length === 0 && localServices.length > 0;
+
+    const statusGeral = getStatusLabel(solicitacao?.status || calcularStatusSolicitacao(localProducts));
+    const corGeral = getStatusColor(statusGeral);
 
     const openModal = (item) => {
         setSelectedProduct(item);
@@ -82,7 +76,7 @@ export default function MyRequests() {
 
     if (loading) {
         return (
-            <div className="flex-1 flex items-center justify-center font-sans">
+            <div className="flex-1 flex items-center justify-center">
                 <p className="text-gray-500 dark:text-[#C3C6D3] text-lg">Carregando solicitação...</p>
             </div>
         );
@@ -90,7 +84,7 @@ export default function MyRequests() {
 
     if (error || !solicitacao) {
         return (
-            <div className="flex-1 flex items-center justify-center font-sans">
+            <div className="flex-1 flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-gray-500 dark:text-[#C3C6D3] text-lg mb-4">{error || "Solicitação não encontrada."}</p>
                     <Link href="/solicitacoes" className="text-[#103D85] dark:text-[#5D8EF7] underline">
@@ -102,9 +96,9 @@ export default function MyRequests() {
     }
 
     return (
-        <div className="flex-1 p-0 font-sans">
+        <div className="flex-1 p-0">
             {notification && (
-                <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl text-white shadow-lg ${notification.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
+                <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl text-white shadow-sm ${notification.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
                     <div className="flex items-center gap-3">
                         <span>{notification.message}</span>
                         <button onClick={() => setNotification(null)} className="hover:opacity-80">×</button>
@@ -113,7 +107,7 @@ export default function MyRequests() {
             )}
 
             <div className="w-full">
-                <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
+                <div className="border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
                     <div className="flex items-center gap-3 px-5 py-3">
                         <Link href="/solicitacoes-compra" className="text-[#103D85] dark:text-[#5D8EF7] hover:opacity-80 transition-opacity">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -123,28 +117,36 @@ export default function MyRequests() {
                         <h3 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">Detalhes Solicitação</h3>
                     </div>
 
-                    <hr className="border-gray-400 dark:border-white/10 mb-6" />
+                    <hr className="border-gray-100 dark:border-white/10 mb-6" />
 
                     <div className="flex items-center justify-between mb-6 px-6">
                         <div className="flex items-baseline gap-4">
                             <h4 className="text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
-                                {solicitacao.codigo} : Lista de {localProducts.length} {localProducts.length === 1 ? "produto" : "produtos"}
+                                {solicitacao.codigo} : Lista de{" "}
+                                {isServiceRequest ? localServices.length : localProducts.length}{" "}
+                                {isServiceRequest
+                                    ? localServices.length === 1
+                                        ? "serviço"
+                                        : "serviços"
+                                    : localProducts.length === 1
+                                        ? "produto"
+                                        : "produtos"}
                             </h4>
                             <span className="text-gray-600 dark:text-[#C3C6D3] text-base font-medium px-7 text-[16px]">
                                 Realizada em: {formatDisplayDate(solicitacao.data)}
                             </span>
                         </div>
-                        <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 rounded-full min-w-[150px] shadow-sm tracking-wide mr-8 ${corGeral}`}>
+                        <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide mr-8 ${corGeral}`}>
                             {statusGeral}
                         </span>
                     </div>
 
                     <ProductTable 
-                        localProducts={localProducts}
+                        localProducts={isServiceRequest ? localServices : localProducts}
                         isProfessor={isProfessor}
-                        statusCores={STATUS_CORES}
                         openModal={openModal}
                         openEditModal={openEditModal}
+                        isServiceRequest={isServiceRequest}
                     />
                 </div>
 

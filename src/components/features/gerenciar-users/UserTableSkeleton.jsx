@@ -9,14 +9,13 @@ const COLUNAS = [
     { label: 'Ações', width: 'w-[8%]' },
 ];
 
-
 export default function UserTableSkeleton({ rows = 8 }) {
     return (
-        <div className="flex-1 flex flex-col min-h-0 w-full bg-white">
-            <div className="w-full bg-[#F8FAFC] shadow-[0_1px_0_0_rgba(243,244,246,1)] z-10 pr-6">
+        <div className="flex-1 flex flex-col min-h-0 w-full bg-white dark:bg-[#1A2233]">
+            <div className="w-full bg-[#F8FAFC] dark:bg-[#303746] shadow-[0_1px_0_0_rgba(243,244,246,1)] dark:shadow-[0_1px_0_0_#303746] z-10 pr-6">
                 <table className="w-full text-left border-collapse table-fixed">
                     <thead>
-                        <tr className="text-sm font-semibold text-gray-700">
+                        <tr className="text-sm font-semibold text-gray-700 dark:text-[#E2E2EA]">
                             {COLUNAS.map((coluna) => (
                                 <th
                                     key={coluna.label}
@@ -33,9 +32,9 @@ export default function UserTableSkeleton({ rows = 8 }) {
             <div className="flex-1 flex flex-col min-h-0 w-full pr-2 pb-2">
                 <div className="flex-1 overflow-y-auto min-h-0 w-full">
                     <table className="w-full text-left border-collapse table-fixed">
-                        <tbody className="text-sm bg-white">
+                        <tbody className="text-sm bg-white dark:bg-[#1A2233]">
                             {Array.from({ length: rows }).map((_, index) => (
-                                <tr key={index} className="border-b border-gray-50">
+                                <tr key={index} className="border-b border-gray-50 dark:border-white/5">
                                     <td className="py-2.5 px-4 w-[25%]">
                                         <div className="flex items-center gap-3">
                                             <SkeletonCircle className="w-8 h-8 shrink-0" />

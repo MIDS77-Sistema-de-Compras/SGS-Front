@@ -1,6 +1,8 @@
 "use client";
 
-export default function ProductTableRow({ item, isProfessor, statusCores, openModal, openEditModal }) {
+import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
+
+export default function ProductTableRow({ item, isProfessor, openModal, openEditModal }) {
     return (
         <tr className="hover:bg-gray-50/40 dark:hover:bg-white/5 transition-colors">
             <td 
@@ -27,10 +29,10 @@ export default function ProductTableRow({ item, isProfessor, statusCores, openMo
                 </button>
             </td>
             <td className="py-3 text-center relative">
-                <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 rounded-full min-w-[150px] shadow-sm tracking-wide ${statusCores[item.status] || "bg-gray-400"}`}>
-                    {item.status}
+                <span className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide ${getStatusColor(item.status)}`}>
+                    {getStatusLabel(item.status)}
                 </span>
-                {isProfessor && item.status === "Em análise" && (
+                {isProfessor && getStatusLabel(item.status) === "Aguardando aprovação" && (
                     <button
                         onClick={() => openEditModal(item)}
                         title="Editar solicitação"

@@ -43,7 +43,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
                 statusDisponiveis={statusDisponiveis}
             />
 
-            <div className="flex flex-1 flex-col bg-white dark:bg-[#1A2233] border border-[#AAAAAA] dark:border-white/10 rounded-2xl overflow-hidden">
+            <div className="flex flex-1 flex-col bg-white dark:bg-[#1A2233] border border-gray-100 shadow-sm dark:border-white/10 rounded-xl overflow-hidden">
                 <SolicitacoesTabs
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
@@ -51,7 +51,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
                     abas={abas}
                 />
 
-                <div className="h-[550px] overflow-y-auto bg-white dark:bg-[#1A2233]">
+                <div className="overflow-y-auto mr-2 pr-2 bg-white dark:bg-[#1A2233]">
                     {loading && <RequestsTableSkeleton />}
 
                     {!loading && error && (
