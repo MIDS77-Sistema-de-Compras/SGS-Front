@@ -1,6 +1,5 @@
 import Skeleton, { SkeletonCircle } from '@/components/ui/skeleton/Skeleton';
 
-
 export default function NotificationsListSkeleton({ rows = 6 }) {
     return (
         <ul className="flex flex-col py-3">

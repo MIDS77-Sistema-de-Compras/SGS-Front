@@ -1,6 +1,5 @@
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 
-
 export default function RequestsTableSkeleton({ rows = 6 }) {
     return (
         <div className="flex flex-col">

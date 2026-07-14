@@ -7,6 +7,20 @@ const publicPaths = [
     "/nova-senha",
 ];
 
+const routePermissions = [
+    { path: "/admin", roles: ["admin"] },
+    { path: "/auditoria", roles: ["admin"] },
+    { path: "/usuarios", roles: ["admin", "supervisor", "coordenador"] },
+    { path: "/solicitacoes-compra", roles: ["comprador"] },
+    { path: "/criar-cr", roles: ["coordenador"] },
+    { path: "/solicitacoes/gestao", roles: ["supervisor", "coordenador"] },
+    { path: "/solicitacoes/criar", roles: ["docente", "supervisor", "coordenador"] },
+    { path: "/solicitacoes", roles: ["docente", "supervisor", "coordenador"] },
+    { path: "/analitico", roles: ["supervisor", "coordenador"] },
+    { path: "/notificacoes", roles: ["docente", "admin", "comprador", "supervisor", "coordenador"] },
+    { path: "/configuracoes", roles: ["docente", "admin", "comprador", "supervisor", "coordenador"] },
+];
+
 function getUsuarioPayload(token) {
     try {
         const payloadBase64 = token.split('.')[1];
@@ -46,27 +60,15 @@ export function proxy(request) {
         if (role === "admin") {
             return NextResponse.redirect(new URL("/admin", request.url));
         }
+        return NextResponse.next();
     }
 
-    if ((pathname.startsWith("/admin") || pathname.startsWith("/auditoria")) && role !== "admin") {
-        return NextResponse.redirect(new URL("/", request.url));
-    }
+    const matchedRoute = routePermissions.find(r => pathname.startsWith(r.path));
 
-    if (pathname.startsWith("/solicitacoes-compra") && role !== "comprador") {
-        return NextResponse.redirect(new URL("/", request.url));
-    }
-
-    if (pathname.startsWith("/criar-cr") && role !== "coordenador") {
-        return NextResponse.redirect(new URL("/", request.url));
-    }
-
-    if (pathname.startsWith("/coordenador")) {
-        if (pathname.startsWith("/coordenador/analitico")) {
-            if (role !== "coordenador" && role !== "supervisor") {
-                return NextResponse.redirect(new URL("/", request.url));
-            }
-        } else if (role !== "coordenador") {
-            return NextResponse.redirect(new URL("/", request.url));
+    if (matchedRoute) {
+        if (!matchedRoute.roles.includes(role)) {
+            const fallbackUrl = role === "admin" ? "/admin" : "/";
+            return NextResponse.redirect(new URL(fallbackUrl, request.url));
         }
     }
 

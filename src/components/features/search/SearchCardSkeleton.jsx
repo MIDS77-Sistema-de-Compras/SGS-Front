@@ -1,6 +1,5 @@
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 
-
 export default function SearchCardSkeleton({ cards = 4 }) {
     return (
         <>
