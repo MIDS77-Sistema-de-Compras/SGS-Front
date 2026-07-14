@@ -17,7 +17,7 @@ export default function GerenciarUsuarios() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState("Todos");
+    const [statusFilter, setStatusFilter] = useState("Ativos");
 
     useEffect(() => {
         loadUsers();
