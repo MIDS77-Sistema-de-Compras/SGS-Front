@@ -17,7 +17,7 @@ export default function GerenciarUsuarios() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState("Todos");
+    const [statusFilter, setStatusFilter] = useState("Ativos");
 
     useEffect(() => {
         loadUsers();
@@ -27,7 +27,7 @@ export default function GerenciarUsuarios() {
         try {
             setLoading(true);
             const response = await getAllUsers();
-            setUsers(response.content);
+            setUsers(response.content ?? []);
         } catch (error) {
             console.error("Erro ao buscar usuários:", error);
         } finally {

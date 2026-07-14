@@ -1,6 +1,5 @@
 import { api } from "../api";
 
-
 export async function getAllUsers() {
     return await api.get("/users");
 }
@@ -19,4 +18,8 @@ export async function updateUser(id, user) {
 
 export async function deleteUser(id) {
     return await api.delete(`/users/userId/${id}`);
+}
+
+export async function getLoggedUser() {
+    return await api.get('/users/me');
 }

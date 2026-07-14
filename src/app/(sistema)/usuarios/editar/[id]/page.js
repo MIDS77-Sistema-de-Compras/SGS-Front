@@ -9,10 +9,12 @@ import SectionHeader from '@/components/ui/layout/SectionHeader';
 import Button from '@/components/ui/button/Button';
 import UserIdentificationSection from '@/components/features/admin/UserIdentification';
 import AccessLevelSelector from '@/components/features/admin/AccessLevelSelector';
-import { getUserById, updateUser, deleteUser } from '@/service/users/usersSearch';
+import { getUserById, updateUser, deleteUser, getLoggedUser } from '@/service/users/usersSearch';
 import Toast from '@/components/ui/notifications/Toast';
 import { ModalUser } from '@/components/coord/ModalUser';
 import { Lock, Unlock } from 'lucide-react';
+
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,30}$/;
 
 export default function EditarUsuarios() {
     useDocumentTitle("Editar Usuário");
@@ -20,6 +22,19 @@ export default function EditarUsuarios() {
     const router = useRouter();
     const params = useParams();
     const userId = params.id;
+    const [userRole, setUserRole] = useState(null);
+
+    useEffect(() => {
+        async function loadRole() {
+            try {
+                const me = await getLoggedUser();
+                setUserRole(me?.roleName?.toUpperCase() ?? null);
+            } catch (error) {
+                console.error('Erro ao buscar role do usuário logado:', error);
+            }
+        }
+        loadRole();
+    }, []);
 
     const [formData, setFormData] = useState({
         nome: '',
@@ -63,6 +78,10 @@ export default function EditarUsuarios() {
             });
         } catch (error) {
             console.error('Erro ao buscar usuário:', error);
+            setToast({
+                type: 'error',
+                message: error.message || 'Erro ao carregar usuário.'
+            });
         }
     }
 
@@ -76,6 +95,14 @@ export default function EditarUsuarios() {
             setToast({
                 type: 'error',
                 message: 'Digite a senha para confirmar a edição.'
+            });
+            return;
+        }
+
+        if (!PASSWORD_REGEX.test(formData.senha)) {
+            setToast({
+                type: 'error',
+                message: 'A senha deve ter 8-30 caracteres, com maiúscula, minúscula, número e um dos símbolos @$!%*#?&.'
             });
             return;
         }
@@ -113,7 +140,7 @@ export default function EditarUsuarios() {
         } catch (error) {
             setToast({
                 type: 'error',
-                message: 'Erro ao atualizar usuário.'
+                message: error.message || 'Erro ao atualizar usuário.'
             });
         }
     }
@@ -126,7 +153,56 @@ export default function EditarUsuarios() {
             console.error('Erro ao excluir usuário:', error);
             setToast({
                 type: 'error',
-                message: 'Erro ao excluir usuário.'
+                message: error.message || 'Erro ao excluir usuário.'
+            });
+        }
+    }
+
+    async function handleDeactivate() {
+        try {
+            await deleteUser(userId);
+            setFormData(prev => ({ ...prev, ativo: false }));
+            setToast({
+                type: 'success',
+                message: 'Usuário desativado com sucesso!'
+            });
+        } catch (error) {
+            setToast({
+                type: 'error',
+                message: error.message || 'Erro ao desativar usuário.'
+            });
+        }
+    }
+
+    async function handleActivate() {
+        if (!PASSWORD_REGEX.test(formData.senha || '')) {
+            setFormData(prev => ({ ...prev, ativo: true }));
+            setToast({
+                type: 'error',
+                message: 'Para reativar é preciso informar uma senha nova válida (o backend exige isso). Digite a senha abaixo e clique em "Ativar usuário" de novo, ou em SALVAR MUDANÇAS.'
+            });
+            return;
+        }
+
+        try {
+            const payload = {
+                name: formData.nome,
+                email: formData.email,
+                password: formData.senha,
+                extensionNumber: formData.ramal,
+                active: true,
+                nameRole: formData.nivelAcesso
+            };
+            await updateUser(userId, payload);
+            setFormData(prev => ({ ...prev, ativo: true }));
+            setToast({
+                type: 'success',
+                message: 'Usuário ativado com sucesso!'
+            });
+        } catch (error) {
+            setToast({
+                type: 'error',
+                message: error.message || 'Erro ao ativar usuário.'
             });
         }
     }
@@ -135,9 +211,9 @@ export default function EditarUsuarios() {
         if (modalConfig.action === 'excluir') {
             await handleDelete();
         } else if (modalConfig.action === 'desativar') {
-            setFormData(prev => ({ ...prev, ativo: false }));
+            await handleDeactivate();
         } else if (modalConfig.action === 'ativar') {
-            setFormData(prev => ({ ...prev, ativo: true }));
+            await handleActivate();
         }
 
         setModalConfig({ ...modalConfig, isOpen: false });
@@ -191,6 +267,7 @@ export default function EditarUsuarios() {
                         <AccessLevelSelector
                             value={formData.nivelAcesso}
                             onChange={(value) => handleChange('nivelAcesso', value)}
+                            roleAtual={userRole}
                         />
                     </div>
                 </div>
