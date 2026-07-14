@@ -6,7 +6,7 @@ export const metadata = {
 
 export default function TodasSolicitacoes() {
     return (
-        <div className="flex-1 bg-white dark:bg-[#1A2233] pb-12 overflow-y-auto font-sans flex flex-col gap-6">
+        <div className="flex flex-col flex-1 bg-white dark:bg-[#1A2233] overflow-y-auto flex flex-col gap-6">
             <RequestsContainer />
         </div>
     );

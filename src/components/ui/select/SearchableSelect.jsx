@@ -146,7 +146,7 @@ const SearchableSelect = forwardRef(function SearchableSelect(
         onBlur={handleBlur}
         className={cn(
           'rounded-xl outline-none transition-all w-full px-4 pr-16 h-auto py-2.5 text-sm',
-          'bg-white border border-gray-200 shadow-sm text-gray-800',
+          'bg-white border border-gray-100 shadow-sm text-gray-800',
           'focus:border-[#103D85] focus:ring-0.5 focus:ring-[#103D85]',
           'dark:bg-[#303746] dark:border-white/15 dark:text-[#E2E2EA]',
           'dark:focus:border-[#1A4A9E] dark:focus:ring-[#1A4A9E]',
@@ -184,12 +184,12 @@ const SearchableSelect = forwardRef(function SearchableSelect(
       </div>
 
       {isOpen && !disabled && (
-        <ul
+        <ul 
           ref={listRef}
           id={listboxId}
           role="listbox"
           onMouseDown={(event) => event.preventDefault()}
-          className="absolute left-0 top-full z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg dark:border-white/15 dark:bg-[#303746]"
+          className="absolute left-0 top-full z-20 mt-1 max-h-56 w-full overflow-y-auto scrollbar-thin rounded-xl border border-gray-200 bg-white shadow-lg dark:border-white/15 dark:bg-[#303746]"
         >
           {filteredOptions.length === 0 ? (
             <li className="px-4 py-2.5 text-sm text-gray-400 dark:text-[#8A8FA3]">

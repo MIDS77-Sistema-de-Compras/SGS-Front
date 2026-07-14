@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 
 import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
+import RequestDetailsSkeleton from "@/components/features/solicitacoes/RequestDetailsSkeleton";
 import { useRequestDetails } from "@/hooks/useRequestDetails";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
 import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
@@ -17,7 +18,7 @@ function formatDisplayDate(date) {
     const parsedDate = new Date(date);
     if (Number.isNaN(parsedDate.getTime())) return "-";
 
-    return parsedDate.toLocaleDateString("pt-BR");
+    return parsedDate.toLocaleDateString("pt-BR", { timeZone: "UTC" });
 }
 
 export default function MyRequests() {
@@ -25,7 +26,6 @@ export default function MyRequests() {
 
     const { id } = useParams();
     const { request: solicitacao, loading, error } = useRequestDetails(id);
-
     const isProfessor = true;
 
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -35,6 +35,8 @@ export default function MyRequests() {
     const [notification, setNotification] = useState(null);
     const [editedProductsByRequestId, setEditedProductsByRequestId] = useState({});
     const localProducts = editedProductsByRequestId[id] || solicitacao?.produtos || [];
+    const localServices = solicitacao?.servicos || [];
+    const isServiceRequest = localProducts.length === 0 && localServices.length > 0;
 
     const statusGeral = getStatusLabel(solicitacao?.status || calcularStatusSolicitacao(localProducts));
     const corGeral = getStatusColor(statusGeral);
@@ -74,11 +76,7 @@ export default function MyRequests() {
     };
 
     if (loading) {
-        return (
-            <div className="flex-1 flex items-center justify-center font-sans">
-                <p className="text-gray-500 dark:text-[#C3C6D3] text-lg">Carregando solicitação...</p>
-            </div>
-        );
+        return <RequestDetailsSkeleton />;
     }
 
     if (error || !solicitacao) {
@@ -121,7 +119,11 @@ export default function MyRequests() {
                     <div className="flex items-center justify-between mb-6 px-6">
                         <div className="flex items-baseline gap-4">
                             <h4 className="text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
-                                {solicitacao.codigo} : Lista de {localProducts.length} {localProducts.length === 1 ? "produto" : "produtos"}
+                                {solicitacao.codigo} : Lista de{" "}
+                                {isServiceRequest ? localServices.length : localProducts.length}{" "}
+                                {isServiceRequest
+                                    ? localServices.length === 1 ? "serviço" : "serviços"
+                                    : localProducts.length === 1 ? "produto" : "produtos"}
                             </h4>
                             <span className="text-gray-600 dark:text-[#C3C6D3] text-base font-medium px-7 text-[16px]">
                                 Realizada em: {formatDisplayDate(solicitacao.data)}
@@ -132,11 +134,12 @@ export default function MyRequests() {
                         </span>
                     </div>
 
-                    <ProductTable
-                        localProducts={localProducts}
+                    <ProductTable 
+                        localProducts={isServiceRequest ? localServices : localProducts}
                         isProfessor={isProfessor}
                         openModal={openModal}
                         openEditModal={openEditModal}
+                        isServiceRequest={isServiceRequest}
                     />
                 </div>
 
@@ -145,7 +148,7 @@ export default function MyRequests() {
                         href="/solicitacoes"
                         className="bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
                     >
-                        Fechar produtos
+                        Fechar solicitação
                     </Link>
                 </div>
             </div>

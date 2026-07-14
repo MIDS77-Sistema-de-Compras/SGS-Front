@@ -11,6 +11,7 @@ import Button from '@/components/ui/button/Button';
 import RequestManagementFilters from './RequestManagementFilters';
 import RequestManagementCard from './RequestManagementCard';
 import { getStatusLabel } from '@/lib/utils/requestStatus';
+import RequestManagementSkeleton from './RequestManagementSkeleton';
 
 const ABAS = [
     { valor: 'pendentes', label: 'Pendentes' },
@@ -19,8 +20,6 @@ const ABAS = [
     { valor: 'concluidas', label: 'Concluídas' },
 ];
 
-// Cada valor aqui é o label canônico devolvido por getStatusLabel() — ver
-// src/lib/utils/requestStatus.js (fonte única de verdade para status de solicitação).
 const STATUS_POR_ABA = {
     pendentes: ['Aguardando aprovação'],
     andamento: ['Em atendimento'],
@@ -86,6 +85,13 @@ export default function RequestsManagement() {
 
             return true;
         });
+
+        return filtrados.sort((a, b) => {
+            const dataA = new Date(a.data || 0).getTime();
+            const dataB = new Date(b.data || 0).getTime();
+            
+            return dataB - dataA; 
+        });
     }, [itensComOverrides, abaAtiva, status, cr, supervisor, busca]);
 
     function openRejectModal(item) {
@@ -144,7 +150,7 @@ export default function RequestsManagement() {
     }
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 h-full min-h-0">
             <ToastNotification notification={notification} setNotification={setNotification} />
 
             <RequestManagementFilters
@@ -160,7 +166,7 @@ export default function RequestsManagement() {
                 supervisores={supervisores}
             />
 
-            <div className="bg-white dark:bg-[#1A2233] border border-[#797979] dark:border-white/10 rounded-2xl overflow-hidden">
+            <div className="flex flex-col flex-1 min-h-0 dark:bg-[#1A2233] border border-gray-100 shadow-sm dark:border-white/10 rounded-xl overflow-hidden">
                 <SolicitacoesTabs
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
@@ -168,12 +174,8 @@ export default function RequestsManagement() {
                     abas={ABAS}
                 />
 
-                <div className="h-[500px] overflow-y-auto px-6 bg-white dark:bg-[#1A2233]">
-                    {loading && (
-                        <div className="text-gray-400 dark:text-[#C3C6D3] text-center pt-10">
-                            Carregando solicitações...
-                        </div>
-                    )}
+                <div className="flex-1 mr-2 overflow-y-auto px-5 bg-white dark:bg-[#1A2233]">
+                    {loading && <RequestManagementSkeleton />}
 
                     {!loading && error && (
                         <div className="text-center pt-10 text-sm font-semibold text-[#BA1A1A] dark:text-[#F87171]">

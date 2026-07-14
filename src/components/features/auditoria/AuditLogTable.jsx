@@ -1,5 +1,5 @@
 import { ChevronsUpDown } from "lucide-react";
-import { levelStyles } from "./auditData";
+import LevelBadge from "./LevelBadge";
 
 const columns = [
     { label: "ID", width: "w-[8%]", sortable: true },
@@ -11,19 +11,7 @@ const columns = [
     { label: "Timestamp", width: "w-[13%]", sortable: true },
 ];
 
-function LevelBadge({ level }) {
-    const style = levelStyles[level] || { color: "#666", background: "#eee" };
-    return (
-        <span 
-            className="inline-block px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap" 
-            style={{ color: style.color, backgroundColor: style.background }}
-        >
-            {level}
-        </span>
-    );
-}
-
-export default function AuditLogTable({ logs }) {
+export default function AuditLogTable({ logs, onSelectLog }) {
     return (
         <div className="flex-1 flex flex-col min-h-0 w-full bg-white dark:bg-[#1A2233]">
             
@@ -54,7 +42,8 @@ export default function AuditLogTable({ logs }) {
                             {logs.map((log) => (
                                 <tr 
                                     key={log.id} 
-                                    className="border-b border-gray-50 dark:border-white/5 hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors"
+                                    onClick={() => onSelectLog(log)}
+                                    className="border-b border-gray-50 dark:border-white/5 hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors cursor-pointer"
                                 >
                                     <td className="py-2.5 px-4 w-[8%] text-gray-700 dark:text-[#E2E2EA] font-medium">
                                         {log.id}

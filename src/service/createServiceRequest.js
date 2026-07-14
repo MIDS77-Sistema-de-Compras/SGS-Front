@@ -1,7 +1,5 @@
 import { api } from "@/service/api";
 
-const INITIAL_STATUS = "EM_ANDAMENTO";
-
 async function getStatusIdByName(statusName) {
     const status = await api.get(`/status/statusName/${statusName}`);
     return status.id;

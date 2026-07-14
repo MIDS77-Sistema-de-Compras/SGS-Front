@@ -155,9 +155,9 @@ export const coordenadorRoutes = [
         icon: "/images/icons/monitoramento.png",
     },
     {
-        label: "Analítico", //arrumar
+        label: "Analítico",
         href: "/coordenador/analitico",
-        icon: "/images/icons/my-requests.png",
+        icon: "/images/icons/analise-registros.png",
     },
     {
         label: "Notificações",

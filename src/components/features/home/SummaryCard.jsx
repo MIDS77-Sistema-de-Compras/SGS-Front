@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import SummaryItem from "./SummaryItem";
+import SummaryCardSkeleton from "./SummaryCardSkeleton";
 import { requestsService } from "@/service/requests";
 import { resolveRequestStatus } from "@/lib/utils/requestStatus";
 
@@ -94,7 +95,7 @@ export default function SummaryCard() {
     const counts = useMemo(() => getSummaryCounts(requests), [requests]);
 
     return (
-        <div className="w-[430px] shrink-0 border border-[#AAAAAA] dark:border-white/10 rounded-xl px-5 py-3 shadow-lg dark:bg-[#1A2233]">
+        <div className="w-[430px] shrink-0 border border-gray-100 dark:border-white/10 rounded-xl px-5 py-3 shadow-sm dark:bg-[#1A2233]">
             <div className="flex justify-between mb-7">
                 <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
                     Resumo
@@ -104,9 +105,7 @@ export default function SummaryCard() {
                 </p>
             </div>
 
-            {isLoading && (
-                <p className="text-sm text-[#666666]">Carregando resumo...</p>
-            )}
+            {isLoading && <SummaryCardSkeleton />}
 
             {!isLoading && error && (
                 <p className="text-sm text-red-600">{error}</p>

@@ -18,10 +18,3 @@ export const auditLogs = [
     { id: 1243, user: "andrey.lombardo\n@edu.sc.senai.br", level: "ADM", action: "Deletou\nsolicitação", actionId: "delete-request", affectedUser: "—", request: "ABC-123", timestamp: "04/05/2026\n16:55", date: "04/05/2026" },
     { id: 1244, user: "andrey.lombardo\n@edu.sc.senai.br", level: "ADM", action: "Deletou\nsolicitação", actionId: "delete-request", affectedUser: "—", request: "ABC-123", timestamp: "04/05/2026\n16:55", date: "04/05/2026" },
 ];
-
-export const levelStyles = {
-    Docente: { color: "#3B6FCC", background: "#EBF0F9" },
-    Coordenador: { color: "#D97706", background: "#FEF3C7" },
-    Supervisor: { color: "#16A34A", background: "#DCFCE7" },
-    ADM: { color: "#DC2626", background: "#FEE2E2" },
-};

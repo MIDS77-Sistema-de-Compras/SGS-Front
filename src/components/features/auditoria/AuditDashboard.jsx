@@ -6,23 +6,26 @@ import {
     Calendar, 
     LogIn, 
     ShieldAlert,
-    Search,
-    ChevronDown
+    Search
 } from "lucide-react";
 import AuditLogTable from "./AuditLogTable";
-import { auditActionOptions, auditLogs, levelStyles } from "./auditData";
+import AuditDetailsModal from "./AuditDetailsModal";
+import { auditActionOptions, auditLogs } from "./auditData";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import Button from "@/components/ui/button/Button";
+import Dropdown from "@/components/ui/select/Dropdown";
 
 export default function AuditDashboard() {
     const [searchTerm, setSearchTerm] = useState("");
     const [actionType, setActionType] = useState("");
     const [period, setPeriod] = useState("");
+    
+    const [selectedLog, setSelectedLog] = useState(null);
 
     const totalUsers = 124;
     const activeUsers = 110;
     const inactiveUsers = 14;
-    const totalProfiles = Object.keys(levelStyles).length;
+    const totalProfiles = 4;
 
     const filteredLogs = useMemo(() => {
         return auditLogs.filter((log) => {
@@ -37,7 +40,7 @@ export default function AuditDashboard() {
     }, [actionType, period, searchTerm]);
 
     return (
-        <div className="flex flex-1 flex-col w-full h-full">
+        <div className="flex flex-1 flex-col w-full h-full pb-4">
             <div className="mb-4">
                 <h1 className="text-2xl font-bold text-[#103D85] dark:text-[#E2E2EA] mb-1">
                     Auditoria
@@ -52,29 +55,29 @@ export default function AuditDashboard() {
                     title="Total de Registros"
                     value={totalUsers}
                     icon={ClipboardList}
-                    iconBg="bg-blue-100"
-                    iconColor="text-blue-600"
+                    iconBg="bg-blue-100 dark:bg-[#1A4A9E]/25"
+                    iconColor="text-blue-600 dark:text-[#7FA9F5]"
                 />
                 <StatCard
                     title="Ações de Hoje"
                     value={activeUsers}
                     icon={Calendar}
-                    iconBg="bg-green-100"
-                    iconColor="text-green-600"
+                    iconBg="bg-green-100 dark:bg-[#16A34A]/20"
+                    iconColor="text-green-600 dark:text-[#5FD68A]"
                 />
                 <StatCard
                     title="Tentativas de Login"
                     value={inactiveUsers}
                     icon={LogIn}
-                    iconBg="bg-orange-100"
-                    iconColor="text-orange-500"
+                    iconBg="bg-orange-100 dark:bg-[#D97706]/20"
+                    iconColor="text-orange-500 dark:text-[#F0B95B]"
                 />
                 <StatCard
                     title="Alertas Críticos"
                     value={totalProfiles}
                     icon={ShieldAlert}
-                    iconBg="bg-purple-100"
-                    iconColor="text-purple-600"
+                    iconBg="bg-purple-100 dark:bg-[#7C3AED]/20"
+                    iconColor="text-purple-600 dark:text-[#B48CF7]"
                 />
             </div>
             
@@ -96,29 +99,18 @@ export default function AuditDashboard() {
                             />
                         </div>
 
-                        <div className="relative w-full sm:w-44">
-                            <select
-                                className="w-full appearance-none border border-gray-200 dark:border-white/15 dark:bg-[#303746] text-gray-700 dark:text-[#E2E2EA] py-2 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
-                                value={actionType}
-                                onChange={(e) => setActionType(e.target.value)}
-                            >
-                                <option value="">Tipo de ação</option>
-                                {auditActionOptions.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-[#C3C6D3]">
-                                <ChevronDown size={16} />
-                            </div>
-                        </div>
+                        <Dropdown
+                            className="w-full sm:w-44"
+                            value={actionType}
+                            onChange={(e) => setActionType(e.target.value)}
+                            placeholder="Tipo de ação"
+                            options={[{ value: "", label: "Tipo de ação" }, ...auditActionOptions]}
+                        />
 
                         <div className="relative w-full sm:w-40">
                             <input
                                 type="date"
-                                placeholder="Período"
-                                className="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
+                                className="w-full pl-4 pr-3 py-2 border border-gray-200 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E] dark:[color-scheme:dark]"
                                 value={period}
                                 onChange={(e) => setPeriod(e.target.value)}
                             />
@@ -135,8 +127,19 @@ export default function AuditDashboard() {
                     </div>
                 </div>
 
-                <AuditLogTable logs={filteredLogs} />
+                <div className="flex-1 overflow-auto">
+                    <AuditLogTable 
+                        logs={filteredLogs} 
+                        onSelectLog={setSelectedLog} 
+                    />
+                </div>
             </div>
+            
+            <AuditDetailsModal
+                open={!!selectedLog}
+                data={selectedLog}
+                onClose={() => setSelectedLog(null)}
+            />
         </div>
     );
 }
