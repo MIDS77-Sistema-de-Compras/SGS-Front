@@ -21,10 +21,12 @@ export default function RequestFormCR() {
     } = useCreateCr();
 
     return (
-         <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col overflow-hidden">
+         <div className="shadow-sm border border-gray-100 dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col overflow-hidden">
 
-            <div className="px-5 py-3 border border-transparent border-b-[#AAAAAA] dark:border-b-white/10">
-                <h1 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">Cadastrar CR</h1>
+            <div className="px-5 py-3 border border-transparent border-b-gray-100 dark:border-b-white/10">
+                <h1 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
+                    Cadastrar CR
+                </h1>
             </div>
 
             <form
@@ -51,7 +53,7 @@ export default function RequestFormCR() {
                     <FormField label="Código" required className="col-span-1">
                         <Input
                             variant="form"
-                            placeholder="3333-7777"
+                            placeholder="1234"
                             value={formData.codigo}
                             onChange={(e) => handleChange('codigo', e.target.value)}
                             error={errors.codigo}
@@ -112,7 +114,7 @@ export default function RequestFormCR() {
                         className="py-3 px-7 text-[14px] font-semibold"
                         isLoading={isLoading}
                     >
-                        <span className="flex gap-5">CADASTRAR CR
+                        <span className="flex gap-5">Cadastrar CR
                             <Image
                                 src={send}
                                 alt="Paper Plane Send Icon"

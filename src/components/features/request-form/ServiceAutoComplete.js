@@ -64,7 +64,7 @@ export default function ServiceAutocomplete({ value, onChange, onSelectProvision
             />
 
             {isOpen && (
-                <div className="absolute z-20 mt-1 w-full max-h-60 overflow-y-auto rounded-xl border border-[#AAAAAA] bg-white shadow-sm dark:bg-[#1A2233] dark:border-white/10">
+                <div className="absolute z-20 mt-1 w-full max-h-60 overflow-y-auto rounded-xl border border-gray-100 bg-white shadow-sm dark:bg-[#1A2233] dark:border-white/10">
                     {loading && (
                         <div className="px-4 py-2 text-sm text-[#747782]">Buscando...</div>
                     )}

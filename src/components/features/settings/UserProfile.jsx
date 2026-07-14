@@ -64,7 +64,7 @@ export default function UserProfile() {
     }
 
     return (
-        <section className="bg-white dark:bg-[#303746] rounded-2xl border border-gray-300 dark:border-white/10 shadow-sm overflow-hidden transition-all">
+        <section className="bg-white dark:bg-[#303746] rounded-xl border border-gray-100 dark:border-white/10 shadow-sm overflow-hidden transition-all">
             <div
                 onClick={() => setOpen(!open)}
                 className="p-8 flex items-center justify-between cursor-pointer transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-white/5 active:bg-gray-100/50 dark:active:bg-white/10"

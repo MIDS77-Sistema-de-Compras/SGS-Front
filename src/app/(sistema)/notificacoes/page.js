@@ -71,14 +71,14 @@ export default function Notificacoes() {
     return (
         <div className="flex flex-1 flex-col gap-10 min-h-0">
 
-            <section className="flex min-h-0 flex-1 flex-col rounded-xl border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl px-5 py-3 shadow-lg min-h-0">
+            <section className="flex min-h-0 flex-1 flex-col rounded-xl border border-gray-100 dark:border-white/10 dark:bg-[#1A2233] rounded-xl px-5 py-3 shadow-sm min-h-0">
                 <div className="shrink-0">
                     <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
                         Notificações
                     </h2>
                 </div>
 
-                <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 mb-3 -mx-5 shrink-0" />
+                <div className="border-t border-gray-100 dark:border-white/10 mt-2 mb-3 -mx-5 shrink-0" />
                 <div className="min-h-0 flex-1 overflow-y-auto py-2 pr-1">
                     {isLoading && <NotificationsListSkeleton />}
 

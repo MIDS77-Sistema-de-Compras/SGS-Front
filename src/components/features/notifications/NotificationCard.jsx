@@ -14,7 +14,7 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
     return (
         <li
             onClick={handleClick}
-            className={`grid min-h-16 grid-cols-[46px_1fr_116px] items-center gap-3 border-b border-[#AAAAAA]/35 dark:border-white/10 mb-2 py-4 transition-colors last:border-b-0 ${canMarkAsViewed ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5" : ""}`}
+            className={`grid min-h-16 grid-cols-[46px_1fr_116px] items-center gap-3 border-b border-gray-100 dark:border-white/10 mb-2 py-4 transition-colors last:border-b-0 ${canMarkAsViewed ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5" : ""}`}
             title={canMarkAsViewed ? "Marcar como visualizada" : undefined}
         >
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-[#303746]">

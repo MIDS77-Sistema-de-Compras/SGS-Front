@@ -24,7 +24,7 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
                 <div className={`w-7 h-7 rounded-full shrink-0 ${getStatusCor(item.status)}`} />
 
                 <div className="flex flex-col min-w-0">
-                    <span className="text-lg font-bold text-[#333333] dark:text-[#E2E2EA] truncate">
+                    <span className="font-bold text-[#333333] dark:text-[#E2E2EA] truncate">
                         {titulo}
                     </span>
 
@@ -47,7 +47,7 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
                     <div className="flex gap-3">
                         <Button
                             variant="success"
-                            className="rounded-full px-6"
+                            className="rounded-full px-6 max-h-[30px]"
                             isLoading={isDeciding}
                             onClick={() => onApprove(item)}
                         >
@@ -55,7 +55,7 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
                         </Button>
                         <Button
                             variant="danger"
-                            className="rounded-full px-6"
+                            className="rounded-full px-6 max-h-[30px]"
                             isLoading={isDeciding}
                             onClick={() => onReject(item)}
                         >

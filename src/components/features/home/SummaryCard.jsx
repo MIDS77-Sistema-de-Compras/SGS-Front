@@ -95,7 +95,7 @@ export default function SummaryCard() {
     const counts = useMemo(() => getSummaryCounts(requests), [requests]);
 
     return (
-        <div className="w-[430px] shrink-0 border border-[#AAAAAA] dark:border-white/10 rounded-xl px-5 py-3 shadow-lg dark:bg-[#1A2233]">
+        <div className="w-[430px] shrink-0 border border-gray-100 dark:border-white/10 rounded-xl px-5 py-3 shadow-sm dark:bg-[#1A2233]">
             <div className="flex justify-between mb-7">
                 <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
                     Resumo

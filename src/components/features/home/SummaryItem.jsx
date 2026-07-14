@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function SummaryItem({ iconSrc, iconSrcDark, iconAlt, label, count }) {
     return (
-        <li className="flex w-full items-center justify-between rounded-xl p-4 shadow-lg transition-all hover:scale-[1.03] dark:bg-[#303746] dark:border dark:border-white/10">
+        <li className="flex w-full items-center justify-between rounded-xl p-4 shadow-sm transition-all hover:scale-[1.03] dark:bg-[#303746] dark:border dark:border-white/10">
             <div className="flex min-w-0 items-center gap-3">
                 <Image
                     src={iconSrc}

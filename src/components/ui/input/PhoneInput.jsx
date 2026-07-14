@@ -12,7 +12,7 @@ const PhoneInput = forwardRef(function PhoneInput(
   return (
     <div
       className={cn(
-        'flex rounded-xl border border-gray-200 shadow-sm overflow-hidden',
+        'flex rounded-xl border border-gray-100 shadow-sm overflow-hidden',
         'dark:border-white/15',
         'focus-within:border-[#103D85] focus-within:ring-0.5 focus-within:ring-[#103D85]',
         'dark:focus-within:border-[#1A4A9E] dark:focus-within:ring-[#1A4A9E]',
@@ -20,7 +20,7 @@ const PhoneInput = forwardRef(function PhoneInput(
         className
       )}
     >
-      <div className="bg-gray-50 dark:bg-[#E2E2EA]/25 px-3 flex items-center justify-center border-r border-gray-200 dark:border-transparent text-gray-400 dark:text-[#C3C6D3] text-sm shrink-0">
+      <div className="bg-gray-50 dark:bg-[#E2E2EA]/25 px-3 flex items-center justify-center border-r border-gray-100 dark:border-transparent text-gray-400 dark:text-[#C3C6D3] text-sm shrink-0">
         <Image
           src="/images/adm/telefone.png"
           alt="Ícone de telefone"

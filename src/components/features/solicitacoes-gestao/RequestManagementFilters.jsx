@@ -17,7 +17,7 @@ export default function RequestManagementFilters({
     supervisores,
 }) {
     return (
-        <div className="bg-white dark:bg-[#1A2233] rounded-xl border border-[#797979] dark:border-white/10 flex flex-row items-center justify-between p-2 gap-3 flex-wrap">
+        <div className="bg-white dark:bg-[#1A2233] rounded-xl border border-gray-100 shadow-sm dark:border-white/10 flex flex-row items-center justify-between p-2 gap-3 flex-wrap">
             <div className="flex flex-row items-center px-4 gap-2">
                 <span className="text-xl text-[#133D87] dark:text-[#E2E2EA]">
                     Filtrar
