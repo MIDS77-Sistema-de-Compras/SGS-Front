@@ -16,9 +16,18 @@ export default function RequestFormCR() {
         isLoading,
         sectors,
         sectorsLoading,
+        branches,
+        branchesLoading,
+        supervisors,
+        supervisorsLoading,
         handleChange,
         handleSubmit,
     } = useCreateCr();
+
+    const supervisorOptions = (excludeId) =>
+        supervisors
+            .filter((supervisor) => String(supervisor.id) !== String(excludeId))
+            .map((supervisor) => ({ value: String(supervisor.id), label: supervisor.name }));
 
     return (
          <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col overflow-hidden">
@@ -114,6 +123,44 @@ export default function RequestFormCR() {
                         {errors.sectorName && (
                             <span className="text-[11px] text-[#BA1A1A] mt-1 block">{errors.sectorName}</span>
                         )}
+                    </FormField>
+
+                    <FormField label="Filial" required className="col-span-2">
+                        <Select
+                            name="branch"
+                            placeholder={branchesLoading ? "Carregando filiais..." : "Selecione a filial vinculada"}
+                            value={formData.branchId}
+                            onChange={(e) => handleChange('branchId', e.target.value)}
+                            options={branches.map((branch) => ({ value: String(branch.id), label: branch.name }))}
+                            error={errors.branchId}
+                            disabled={branchesLoading}
+                            isRequired
+                        />
+                        {errors.branchId && (
+                            <span className="text-[11px] text-[#BA1A1A] mt-1 block">{errors.branchId}</span>
+                        )}
+                    </FormField>
+
+                    <FormField label="Supervisor responsável 1">
+                        <Select
+                            name="responsibleUserId1"
+                            placeholder={supervisorsLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
+                            value={formData.responsibleUserId1}
+                            onChange={(e) => handleChange('responsibleUserId1', e.target.value)}
+                            options={supervisorOptions(formData.responsibleUserId2)}
+                            disabled={supervisorsLoading}
+                        />
+                    </FormField>
+
+                    <FormField label="Supervisor responsável 2">
+                        <Select
+                            name="responsibleUserId2"
+                            placeholder={supervisorsLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
+                            value={formData.responsibleUserId2}
+                            onChange={(e) => handleChange('responsibleUserId2', e.target.value)}
+                            options={supervisorOptions(formData.responsibleUserId1)}
+                            disabled={supervisorsLoading}
+                        />
                     </FormField>
 
                 </div>
