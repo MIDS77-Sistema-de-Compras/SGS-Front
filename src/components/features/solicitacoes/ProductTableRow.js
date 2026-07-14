@@ -1,6 +1,6 @@
 "use client";
 
-import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
+import {    getStatusLabel } from "@/lib/utils/requestStatus";
 
 export default function ProductTableRow({ item, isProfessor, openModal, openEditModal }) {
     return (
@@ -29,7 +29,7 @@ export default function ProductTableRow({ item, isProfessor, openModal, openEdit
                 </button>
             </td>
             <td className="py-3 text-center relative">
-                <span className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide ${statusCores[item.status] || "bg-gray-400"}`}>
+                <span className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide || "bg-gray-400"}`}>
                     {item.status}
                 </span>
                 {isProfessor && getStatusLabel(item.status) === "Aguardando aprovação" && (

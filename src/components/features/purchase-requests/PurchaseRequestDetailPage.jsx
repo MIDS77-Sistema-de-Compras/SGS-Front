@@ -136,7 +136,7 @@ export default function MyRequests() {
                                 Realizada em: {formatDisplayDate(solicitacao.data)}
                             </span>
                         </div>
-                        <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 rounded-full min-w-[150px] shadow-sm tracking-wide mr-8 ${corGeral}`}>
+                        <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide mr-8 ${corGeral}`}>
                             {statusGeral}
                         </span>
                     </div>
