@@ -11,6 +11,10 @@ import RequestDetailsSkeleton from "@/components/features/solicitacoes/RequestDe
 import { useRequestDetails } from "@/hooks/useRequestDetails";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
 import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
+import { getUserRole } from "@/lib/utils/getUserRole";
+import { updateItemRequestProduct } from "@/service/requests";
+
+const CARGOS_QUE_PODEM_EDITAR = ["DOCENTE", "SUPERVISOR", "COORDENADOR", "COMPRADOR", "ADMIN"];
 
 function formatDisplayDate(date) {
     if (!date) return "-";
@@ -26,7 +30,7 @@ export default function MyRequests() {
 
     const { id } = useParams();
     const { request: solicitacao, loading, error } = useRequestDetails(id);
-    const isProfessor = true;
+    const isProfessor = CARGOS_QUE_PODEM_EDITAR.includes(getUserRole());
 
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,8 +64,17 @@ export default function MyRequests() {
         setTimeout(() => setSelectedProduct(null), 300);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         try {
+            await updateItemRequestProduct(editedProduct.id, {
+                requestId: Number(id),
+                productName: editedProduct.nome,
+                measurementUnit: editedProduct.unit,
+                quantity: Number(editedProduct.quantity),
+                statusName: editedProduct.status,
+                additionalInformations: editedProduct.additionalInfo,
+            });
+
             setEditedProductsByRequestId(prev => ({
                 ...prev,
                 [id]: localProducts.map(item => item.id === editedProduct.id ? editedProduct : item),
@@ -69,8 +82,8 @@ export default function MyRequests() {
             closeModal();
             setNotification({ type: "success", message: "Solicitação atualizada com sucesso!" });
             setTimeout(() => setNotification(null), 3000);
-        } catch {
-            setNotification({ type: "error", message: "Erro ao editar solicitação" });
+        } catch (err) {
+            setNotification({ type: "error", message: err.message || "Erro ao editar solicitação" });
             setTimeout(() => setNotification(null), 3000);
         }
     };

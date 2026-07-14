@@ -1,9 +1,11 @@
+import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/button/Button';
 import StatusBadge from '@/components/features/solicitacoes/statusBadge';
 import { calcularTempoDecorrido } from '@/lib/utils/calculateTime';
 import { getStatusColor, getStatusLabel } from '@/lib/utils/requestStatus';
 
 export default function RequestManagementCard({ item, onApprove, onReject, isDeciding = false }) {
+    const router = useRouter();
     const quantidadeProdutos = item.produtos?.length || 0;
     const titulo = `${item.codigo}${quantidadeProdutos > 0
         ? `: Lista de ${quantidadeProdutos} ${quantidadeProdutos === 1 ? 'produto' : 'produtos'}`
@@ -18,7 +20,10 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
     const podeDecidir = getStatusLabel(item.status) === 'Aguardando aprovação';
 
     return (
-        <div className="flex items-center justify-between gap-6 py-4 border-b border-gray-100 dark:border-white/10 last:border-b-0">
+        <div
+            className="flex items-center justify-between gap-6 py-4 border-b border-gray-100 dark:border-white/10 last:border-b-0 cursor-pointer hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors"
+            onClick={() => router.push(`/solicitacoes/${item.id}`)}
+        >
             <div className="flex items-center gap-4 min-w-0">
                 <div className={`w-7 h-7 rounded-full shrink-0 ${getStatusColor(item.status)}`} />
 
@@ -48,7 +53,7 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
                             variant="success"
                             className="rounded-full px-6 max-h-[30px]"
                             isLoading={isDeciding}
-                            onClick={() => onApprove(item)}
+                            onClick={(e) => { e.stopPropagation(); onApprove(item); }}
                         >
                             Aprovar
                         </Button>
@@ -56,7 +61,7 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
                             variant="danger"
                             className="rounded-full px-6 max-h-[30px]"
                             isLoading={isDeciding}
-                            onClick={() => onReject(item)}
+                            onClick={(e) => { e.stopPropagation(); onReject(item); }}
                         >
                             Recusar
                         </Button>
