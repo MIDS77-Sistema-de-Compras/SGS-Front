@@ -10,34 +10,53 @@ import {
 } from "lucide-react";
 import AuditLogTable from "./AuditLogTable";
 import AuditDetailsModal from "./AuditDetailsModal";
-import { auditActionOptions, auditLogs } from "./auditData";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import Button from "@/components/ui/button/Button";
 import Dropdown from "@/components/ui/select/Dropdown";
+import { useAuditLogs } from "@/hooks/useAuditLogs";
 
 export default function AuditDashboard() {
+    const { logs, loading, error } = useAuditLogs();
+
     const [searchTerm, setSearchTerm] = useState("");
     const [actionType, setActionType] = useState("");
     const [period, setPeriod] = useState("");
-    
+
     const [selectedLog, setSelectedLog] = useState(null);
 
-    const totalUsers = 124;
-    const activeUsers = 110;
-    const inactiveUsers = 14;
-    const totalProfiles = 4;
+    const actionOptions = useMemo(() => {
+        const seen = new Map();
+        logs.forEach((log) => {
+            if (log.actionId && !seen.has(log.actionId)) {
+                seen.set(log.actionId, log.action);
+            }
+        });
+        return Array.from(seen, ([value, label]) => ({ value, label }));
+    }, [logs]);
+
+    const stats = useMemo(() => {
+        const today = new Date();
+        const todayISO = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+        return {
+            total: logs.length,
+            today: logs.filter((log) => log.date === todayISO).length,
+            logins: logs.filter((log) => log.actionId.toUpperCase().includes("LOGAR")).length,
+            critical: logs.filter((log) => /DESATI|EXCLU|REMOV|ATUALI/.test(log.actionId.toUpperCase())).length,
+        };
+    }, [logs]);
 
     const filteredLogs = useMemo(() => {
-        return auditLogs.filter((log) => {
+        return logs.filter((log) => {
             const searchableContent = `${log.id} ${log.user} ${log.level} ${log.action} ${log.affectedUser} ${log.request} ${log.timestamp}`.toLowerCase();
-            
+
             const matchesSearch = !searchTerm || searchableContent.includes(searchTerm.toLowerCase());
             const matchesAction = !actionType || log.actionId === actionType;
-            const matchesPeriod = !period || log.date.includes(period);
+            const matchesPeriod = !period || log.date === period;
 
             return matchesSearch && matchesAction && matchesPeriod;
         });
-    }, [actionType, period, searchTerm]);
+    }, [logs, actionType, period, searchTerm]);
 
     return (
         <div className="flex flex-1 flex-col w-full h-full pb-4">
@@ -53,28 +72,28 @@ export default function AuditDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <StatCard
                     title="Total de Registros"
-                    value={totalUsers}
+                    value={stats.total}
                     icon={ClipboardList}
                     iconBg="bg-blue-100 dark:bg-[#1A4A9E]/25"
                     iconColor="text-blue-600 dark:text-[#7FA9F5]"
                 />
                 <StatCard
                     title="Ações de Hoje"
-                    value={activeUsers}
+                    value={stats.today}
                     icon={Calendar}
                     iconBg="bg-green-100 dark:bg-[#16A34A]/20"
                     iconColor="text-green-600 dark:text-[#5FD68A]"
                 />
                 <StatCard
                     title="Tentativas de Login"
-                    value={inactiveUsers}
+                    value={stats.logins}
                     icon={LogIn}
                     iconBg="bg-orange-100 dark:bg-[#D97706]/20"
                     iconColor="text-orange-500 dark:text-[#F0B95B]"
                 />
                 <StatCard
                     title="Alertas Críticos"
-                    value={totalProfiles}
+                    value={stats.critical}
                     icon={ShieldAlert}
                     iconBg="bg-purple-100 dark:bg-[#7C3AED]/20"
                     iconColor="text-purple-600 dark:text-[#B48CF7]"
@@ -104,7 +123,7 @@ export default function AuditDashboard() {
                             value={actionType}
                             onChange={setActionType}
                             placeholder="Tipo de ação"
-                            options={[{ value: "", label: "Tipo de ação" }, ...auditActionOptions]}
+                            options={[{ value: "", label: "Tipo de ação" }, ...actionOptions]}
                         />
 
                         <div className="relative w-full sm:w-40">
@@ -128,10 +147,20 @@ export default function AuditDashboard() {
                 </div>
 
                 <div className="flex-1 overflow-auto">
-                    <AuditLogTable 
-                        logs={filteredLogs} 
-                        onSelectLog={setSelectedLog} 
-                    />
+                    {loading ? (
+                        <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
+                            Carregando registros...
+                        </p>
+                    ) : error ? (
+                        <p className="px-6 py-8 text-center text-sm text-red-500 dark:text-[#F08B92]">
+                            {error}
+                        </p>
+                    ) : (
+                        <AuditLogTable
+                            logs={filteredLogs}
+                            onSelectLog={setSelectedLog}
+                        />
+                    )}
                 </div>
             </div>
             
