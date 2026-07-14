@@ -11,6 +11,9 @@ const STATUS_OPTIONS = [
   { value: 'RECUSADO', label: 'Recusada/Cancelada' },
 ];
 
+const FILTER_BUTTON_CLASS =
+  'rounded-xl bg-gray-50/50 dark:bg-[#1A2233] border-gray-200 dark:border-white/15 dark:text-[#E2E2EA] py-2 px-3';
+
 export default function AnalyticsFilters({
   startDate,
   setStartDate,
@@ -81,10 +84,10 @@ export default function AnalyticsFilters({
           <label className="text-xs font-semibold text-gray-500 dark:text-[#C3C6D3]">Status da Solicitação</label>
           <Dropdown
             value={selectedStatus}
-            onChange={setSelectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
             placeholder="Todos os Status"
             options={STATUS_OPTIONS}
-            buttonClassName="rounded-xl bg-gray-50/50 dark:bg-[#1A2233] border-gray-200 dark:border-white/15 dark:text-[#E2E2EA] py-2 px-3"
+            buttonClassName={FILTER_BUTTON_CLASS}
           />
         </div>
 
@@ -92,10 +95,10 @@ export default function AnalyticsFilters({
           <label className="text-xs font-semibold text-gray-500 dark:text-[#C3C6D3]">Filial (Branch)</label>
           <Dropdown
             value={selectedFilial}
-            onChange={setSelectedFilial}
+            onChange={(e) => setSelectedFilial(e.target.value)}
             placeholder="Todas as Filiais"
             options={[{ value: '', label: 'Todas as Filiais' }, ...filiais.map((fil) => ({ value: fil, label: fil }))]}
-            buttonClassName="rounded-xl bg-gray-50/50 dark:bg-[#1A2233] border-gray-200 dark:border-white/15 dark:text-[#E2E2EA] py-2 px-3"
+            buttonClassName={FILTER_BUTTON_CLASS}
           />
         </div>
 
@@ -103,10 +106,10 @@ export default function AnalyticsFilters({
           <label className="text-xs font-semibold text-gray-500 dark:text-[#C3C6D3]">Centro de Resultado (CR)</label>
           <Dropdown
             value={selectedCR}
-            onChange={setSelectedCR}
+            onChange={(e) => setSelectedCR(e.target.value)}
             placeholder="Todos os CRs"
             options={[{ value: '', label: 'Todos os CRs' }, ...crs.map((crb) => ({ value: crb.id, label: `${crb.crCode} - ${crb.crName}${crb.branchName ? ` (${crb.branchName})` : ''}` }))]}
-            buttonClassName="rounded-xl bg-gray-50/50 dark:bg-[#1A2233] border-gray-200 dark:border-white/15 dark:text-[#E2E2EA] py-2 px-3"
+            buttonClassName={FILTER_BUTTON_CLASS}
           />
         </div>
 
@@ -114,10 +117,10 @@ export default function AnalyticsFilters({
           <label className="text-xs font-semibold text-gray-500 dark:text-[#C3C6D3]">Supervisor Responsável</label>
           <Dropdown
             value={selectedSupervisor}
-            onChange={setSelectedSupervisor}
+            onChange={(e) => setSelectedSupervisor(e.target.value)}
             placeholder="Todos os Supervisores"
             options={[{ value: '', label: 'Todos os Supervisores' }, ...supervisores.map((sup) => ({ value: sup, label: sup }))]}
-            buttonClassName="rounded-xl bg-gray-50/50 dark:bg-[#1A2233] border-gray-200 dark:border-white/15 dark:text-[#E2E2EA] py-2 px-3"
+            buttonClassName={FILTER_BUTTON_CLASS}
           />
         </div>
 
@@ -125,10 +128,10 @@ export default function AnalyticsFilters({
           <label className="text-xs font-semibold text-gray-500 dark:text-[#C3C6D3]">Nome do Solicitante</label>
           <Dropdown
             value={selectedRequester}
-            onChange={setSelectedRequester}
+            onChange={(e) => setSelectedRequester(e.target.value)}
             placeholder="Todos os Solicitantes"
             options={[{ value: '', label: 'Todos os Solicitantes' }, ...requesters.map((reqName) => ({ value: reqName, label: reqName }))]}
-            buttonClassName="rounded-xl bg-gray-50/50 dark:bg-[#1A2233] border-gray-200 dark:border-white/15 dark:text-[#E2E2EA] py-2 px-3"
+            buttonClassName={FILTER_BUTTON_CLASS}
           />
         </div>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import Input from '@/components/ui/input/Input';
+import Dropdown from '@/components/ui/select/Dropdown';
 import Image from 'next/image';
 
 
@@ -20,19 +21,21 @@ export default function SolicitacoesFilter({
             </span>
 
             <div className="flex flex-row items-center gap-3">
-                <div className="relative w-[140px]">
-                    <select
+                <div className="w-[140px]">
+                    <Dropdown
+                        name="status"
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
-                        className="appearance-none pl-3 w-full py-2 border border-[#AAAAAA] dark:border-white/15 rounded-xl text-sm text-[#374151] dark:text-[#E2E2EA] bg-white dark:bg-[#303746] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#103D85] dark:focus:ring-[#1A4A9E]"
-                    >
-                        <option value="">Status</option>
-                        {statusDisponiveis.map((item) => (
-                            <option key={item.id} value={item.nome}>
-                                {item.nome}
-                            </option>
-                        ))}
-                    </select>
+                        placeholder="Status"
+                        options={[
+                            { value: '', label: 'Status' },
+                            ...statusDisponiveis.map((item) => ({
+                                value: item.nome,
+                                label: item.nome,
+                            })),
+                        ]}
+                        buttonClassName="py-2 border-[#AAAAAA]"
+                    />
                 </div>
 
                 <div className="w-[140px]">
