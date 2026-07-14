@@ -52,7 +52,7 @@ export default function FormCreateUser() {
                         onBlur={handleBlur}
                     />
 
-                    <div className="mt-5">
+                    <div className="mt-10">
                         <SectionHeader label="NÍVEL DE ACESSO" />
                         <AccessLevelSelector
                             value={formData.nivelAcesso}
