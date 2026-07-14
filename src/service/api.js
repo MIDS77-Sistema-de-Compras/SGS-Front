@@ -1,4 +1,4 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+export const API_BASE_URL = 'http://localhost:8081';
 
 export function getPageContent(response) {
     return Array.isArray(response) ? response : (response?.content ?? []);

@@ -24,14 +24,15 @@ export default function GerenciarUsuarios() {
     }, []);
 
     async function loadUsers() {
-    try {
-        setLoading(true);
-        const response = await getAllUsers();
-        setUsers(response.content);
-    } catch (error) {
-        console.error("Erro ao buscar usuários:", error);
-    } finally {
-        setLoading(false);
+        try {
+            setLoading(true);
+            const response = await getAllUsers();
+            setUsers(response.content ?? []);
+        } catch (error) {
+            console.error("Erro ao buscar usuários:", error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const filteredUsers = useMemo(() => {
@@ -99,9 +100,9 @@ export default function GerenciarUsuarios() {
             </div>
 
             <div className="flex flex-1 flex-col min-h-0 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 mb-4 overflow-hidden bg-white dark:bg-[#1A2233]">
-                
+
                 <div className="p-4 border-b border-gray-100 dark:border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    
+
                     <div className="flex w-full sm:w-auto items-center gap-4">
                         <div className="relative w-full sm:w-80">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -141,7 +142,7 @@ export default function GerenciarUsuarios() {
                         </Link>
                     </div>
                 </div>
-                
+
                 {loading ? (
                     <UserTableSkeleton />
                 ) : (

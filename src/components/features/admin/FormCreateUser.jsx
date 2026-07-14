@@ -8,7 +8,7 @@ import AccessLevelSelector from './AccessLevelSelector';
 import UserIdentificationSection from './UserIdentification';
 import Button from '@/components/ui/button/Button';
 import { useCreateUser } from '@/hooks/useCreateUser';
-import { getUserRole } from '@/lib/utils/getUserRole';
+import { getLoggedUser } from '@/service/users/usersSearch';
 
 export default function FormCreateUser() {
     const { formData, errors, isLoading, handleChange, handleBlur, handleSubmit } = useCreateUser();
@@ -19,7 +19,16 @@ export default function FormCreateUser() {
 
     useEffect(() => {
         setIsMounted(true);
-        setUserRole(getUserRole());
+
+        async function loadRole() {
+            try {
+                const me = await getLoggedUser();
+                setUserRole(me?.roleName?.toUpperCase() ?? null);
+            } catch (error) {
+                console.error('Erro ao buscar role do usuário logado:', error);
+            }
+        }
+        loadRole();
     }, []);
 
     if (!isMounted) {
