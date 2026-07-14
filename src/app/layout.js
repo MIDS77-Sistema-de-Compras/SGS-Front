@@ -11,7 +11,7 @@ const montserrat = Montserrat({
 
 export const metadata = {
   title: {
-    default: "SGS | Home",
+    default: "SGS",
     template: "SGS | %s",
   },
   description: "Projeto Final - Sistema de Compras - FrontEnd",
