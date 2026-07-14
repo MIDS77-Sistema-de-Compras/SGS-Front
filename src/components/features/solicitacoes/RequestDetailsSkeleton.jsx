@@ -1,6 +1,5 @@
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 
-
 export default function RequestDetailsSkeleton({ rows = 6 }) {
     return (
         <div className="flex-1 p-0 font-sans">

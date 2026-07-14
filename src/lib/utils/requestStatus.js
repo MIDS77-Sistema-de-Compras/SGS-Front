@@ -1,21 +1,3 @@
-// Fonte unica de verdade para status de Request/ItemRequestProduct/ItemRequestProvision.
-//
-// O back-end (Status e uma entidade livre, cadastrada via CRUD em /status) hoje usa,
-// na pratica, os seguintes nomes reais (ver RequestBusinessRuleValidator,
-// CreateRequestServiceImpl e os StatusIntrf em domain/strategy):
-//   - "EM_ANDAMENTO"     -> status inicial atribuido na criacao da solicitacao
-//   - "Em analise"       -> sinonimo de inicial usado em outras validacoes
-//   - "Aprovado"
-//   - "Recusado"
-//   - "Em atendimento"
-//   - "Entregue"
-//   - "Cancelado"
-//
-// A normalizacao abaixo (sem acento, minusculo, "_" tratado como espaco) segue o mesmo
-// criterio usado no back-end (RequestBusinessRuleValidator.normalize /
-// ItemStatusEmailMessageFactory.normalize), para que qualquer uma dessas variacoes
-// caia no mesmo status canonico no front.
-
 function normalizeStatusName(value = "") {
     return String(value ?? "")
         .normalize("NFD")
@@ -75,8 +57,6 @@ const STATUS_CATALOG = [
         selectable: true,
         aliases: ["entregue"],
     },
-    // Pseudo-status: nunca vem da API, existem so para agregacao client-side
-    // (ex.: quando uma solicitacao tem produtos com status diferentes entre si).
     {
         key: "parcial_aprovado",
         label: "Parcial Aprovado",

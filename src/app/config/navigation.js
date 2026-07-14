@@ -1,3 +1,5 @@
+import { Bell } from "lucide-react";
+
 //pronto
 export const docenteRoutes = [
     {
@@ -18,7 +20,7 @@ export const docenteRoutes = [
     {
         label: "Notificações",
         href: "/notificacoes",
-        icon: "/images/icons/notifications.png",
+        icon: Bell,   
     },
     {
         label: "Configurações",
@@ -47,7 +49,7 @@ export const admRoutes = [
     {
         label: "Notificações",
         href: "/notificacoes",
-        icon: "/images/icons/notifications.png",
+        icon: Bell, 
     },
     {
         label: "Configurações",
@@ -71,7 +73,7 @@ export const compradorRoutes = [
     {
         label: "Notificações",
         href: "/notificacoes",
-        icon: "/images/icons/notifications.png",
+        icon: Bell,
     },
     {
         label: "Configurações",
@@ -107,14 +109,14 @@ export const supervisorRoutes = [
         icon: "/images/icons/monitoramento.png",
     },
     {
-        label: "Analítico", //arrumar
-        href: "/coordenador/analitico",
+        label: "Analítico", 
+        href: "/analitico",
         icon: "/images/icons/my-requests.png",
     },
     {
         label: "Notificações",
         href: "/notificacoes",
-        icon: "/images/icons/notifications.png",
+        icon: Bell, 
     },
     {
         label: "Configurações",
@@ -156,13 +158,13 @@ export const coordenadorRoutes = [
     },
     {
         label: "Analítico",
-        href: "/coordenador/analitico",
+        href: "/analitico",
         icon: "/images/icons/analise-registros.png",
     },
     {
         label: "Notificações",
         href: "/notificacoes",
-        icon: "/images/icons/notifications.png",
+        icon: Bell, 
     },
     {
         label: "Configurações",

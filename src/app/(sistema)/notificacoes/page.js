@@ -7,6 +7,9 @@ import NotificationsListSkeleton from "@/components/features/notifications/Notif
 import { sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
 import { notificationsService } from "@/service/notifications";
 import HomeFooter from "@/components/features/home/HomeFooter";
+import { getUserRole } from "@/lib/utils/getUserRole";
+import AdmFooter from "@/components/features/admin/dashboard/AdminFooter";
+import CompradorFooter from "@/components/features/home/CompradorFooter";
 
 export default function Notificacoes() {
     useDocumentTitle("Notificações");
@@ -15,9 +18,18 @@ export default function Notificacoes() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [updatingId, setUpdatingId] = useState(null);
+    
+    const [role, setRole] = useState(null);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
+
+        const userRole = getUserRole();
+        if (isMounted) {
+            setRole(userRole);
+            setMounted(true);
+        }
 
         async function loadNotifications() {
             try {
@@ -71,7 +83,7 @@ export default function Notificacoes() {
     return (
         <div className="flex flex-1 flex-col gap-10 min-h-0">
 
-            <section className="flex min-h-0 flex-1 flex-col rounded-xl border border-gray-100 dark:border-white/10 dark:bg-[#1A2233] rounded-xl px-5 py-3 shadow-sm min-h-0">
+            <section className="flex min-h-0 flex-1 flex-col rounded-xl border border-gray-100 dark:border-white/10 dark:bg-[#1A2233] px-5 py-3 shadow-sm">
                 <div className="shrink-0">
                     <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
                         Notificações
@@ -98,7 +110,15 @@ export default function Notificacoes() {
                 </div>
             </section>
 
-            <HomeFooter />
+            {mounted ? (
+                role === "ADMIN" 
+                    ? <AdmFooter />
+                    : role === "COMPRADOR"
+                        ? <CompradorFooter />
+                        : <HomeFooter />
+            ) : (
+                <div className="min-h-[72px]" />
+            )}
         </div>
     );
 }

@@ -1,6 +1,5 @@
 import Skeleton, { SkeletonCircle } from '@/components/ui/skeleton/Skeleton';
 
-
 export default function SummaryCardSkeleton({ rows = 3 }) {
     return (
         <ul className="flex flex-col gap-4">

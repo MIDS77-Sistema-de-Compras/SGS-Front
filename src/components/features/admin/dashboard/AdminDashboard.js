@@ -1,7 +1,7 @@
 import AdminSummaryCard from "./AdminSummaryCard"
 import Header from "../../home/HomeHeader"
 import AdminUserResume from "./AdminUserResume"
-import HomeFooter from "../../home/HomeFooter"
+import AdmFooter from "./AdminFooter"
 
 const TotalUsersIcon = () => (
     <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#103D85] dark:text-[#5D8EF7]">
@@ -99,7 +99,7 @@ export default function AdminDashboard() {
                     items={userItems}
                 />
             </section>
-            <HomeFooter />
+            <AdmFooter />
         </div>
     )
 }
