@@ -82,7 +82,7 @@ export default function ProductAutocomplete({
             />
 
             {isOpen && (
-                <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto scrollbar-thin rounded-xl border border-gray-200 bg-white shadow-lg dark:border-white/15 dark:bg-[#303746]">
+                <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto scrollbar-thin rounded-xl border border-gray-100 bg-white shadow-sm dark:border-white/15 dark:bg-[#303746]">
                     {loading && (
                         <div className="px-4 py-2.5 text-sm text-gray-400 dark:text-[#8A8FA3]">
                             Buscando...

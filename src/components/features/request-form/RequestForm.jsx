@@ -21,7 +21,7 @@ export default function RequestForm() {
     const {
         abaAtiva, setAbaAtiva,
         abas,
-        branchId, 
+        branchId,
         branchOptions,
         requester, setRequester,
         phone, setPhone,
@@ -54,15 +54,13 @@ export default function RequestForm() {
     }
 
     return (
-        <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
-            <div className="">
-                <SolicitacoesTabs
-                    titulo="Nova Solicitação"
-                    abaAtiva={abaAtiva}
-                    setAbaAtiva={setAbaAtiva}
-                    abas={abas}
-                />
-            </div>
+        <div className="border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
+            <SolicitacoesTabs
+                titulo="Nova Solicitação"
+                abaAtiva={abaAtiva}
+                setAbaAtiva={setAbaAtiva}
+                abas={abas}
+            />
 
             <form
                 onSubmit={handleSubmit}
@@ -208,10 +206,6 @@ export default function RequestForm() {
                         <div className="mt-10">
                             <SectionHeader label="SERVIÇOS" />
 
-                            <div className="mt-5">
-                                <ListProducts products={services} onRemove={handleRemoveService} tipo={"serviço"} />
-                            </div>
-
                             <div className="flex w-full gap-5">
                                 <FormField label="Título do Serviço" required className="flex-2">
                                     <ServiceAutocomplete
@@ -256,6 +250,10 @@ export default function RequestForm() {
                                 >
                                     +
                                 </Button>
+                            </div>
+
+                            <div className="mt-5">
+                                <ListProducts products={services} onRemove={handleRemoveService} tipo={"serviço"} />
                             </div>
                         </div>
                     )}

@@ -21,7 +21,7 @@ export default function HomeFooter() {
             </Link>
             <Link
                 href="/solicitacoes"
-                className="flex flex-1 rounded-xl border border-[#AAAAAA] dark:border-transparent bg-white dark:bg-[#E2E2EA] py-4 px-50 gap-3 justify-center items-center shadow-lg transition-all active:scale-[0.98] hover:bg-gray-100 dark:hover:bg-[#d2d2da] text-gray-800 dark:text-[#1A2233]"
+                className="flex flex-1 rounded-xl border border-gray-100 dark:border-transparent bg-white dark:bg-[#E2E2EA] py-4 px-50 gap-3 justify-center items-center shadow-sm transition-all active:scale-[0.98] hover:bg-gray-100 dark:hover:bg-[#d2d2da] text-gray-800 dark:text-[#1A2233]"
             >
                 <ClipboardList size={22} strokeWidth={2.2} className="shrink-0" />
                 <p className="font-bold">

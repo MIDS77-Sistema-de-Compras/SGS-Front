@@ -14,7 +14,7 @@ const tableColumns = [
 
 export default function PurchaseRequestsTable({ requests = [] }) {
   return (
-    <section className="flex flex-col h-full w-full overflow-hidden min-h-0 rounded-xl border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] px-5 py-2">
+    <section className="flex flex-col h-full w-full overflow-hidden min-h-0 rounded-xl border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] px-5 py-2">
       <div className="border-[#AAAAAA] pt-2 pb-3">
         <h1 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
           Solicitações de compra

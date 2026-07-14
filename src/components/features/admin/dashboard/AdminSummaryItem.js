@@ -3,7 +3,7 @@
 export default function AdminSummaryItem({ icon, label, count, className = "" }) {
     return (
         <li
-            className={`flex w-full items-center justify-between rounded-xl p-4 shadow-lg transition-all hover:scale-[1.01] dark:bg-[#303746] dark:border dark:border-white/10 ${className}`}
+            className={`flex w-full items-center justify-between rounded-xl p-4 shadow-sm transition-all hover:scale-[1.01] dark:bg-[#303746] dark:border dark:border-white/10 ${className}`}
         >
             <div className="flex min-w-0 items-center gap-3">
                 {icon}
