@@ -119,7 +119,7 @@ export default function AuditLogTable({ logs, onSelectLog }) {
                                     </td>
 
                                     <td className="py-2.5 px-4 w-[15%] text-gray-600 dark:text-[#C3C6D3] truncate">
-                                        {log.action}
+                                        {(log.action)}
                                     </td>
 
                                     <td className="py-2.5 px-4 w-[18%] text-gray-500 dark:text-[#C3C6D3] truncate">

@@ -15,6 +15,12 @@ import Button from "@/components/ui/button/Button";
 import Dropdown from "@/components/ui/select/Dropdown";
 import { useAuditLogs } from "@/hooks/useAuditLogs";
 
+function formatActionType(action) {
+    if (!action || action.length <= 20) return action;
+
+    return action.trim().replace(/\s+\S*$/, "");
+}
+
 export default function AuditDashboard() {
     const { logs, loading, error } = useAuditLogs();
 
@@ -28,7 +34,7 @@ export default function AuditDashboard() {
         const seen = new Map();
         logs.forEach((log) => {
             if (log.actionId && !seen.has(log.actionId)) {
-                seen.set(log.actionId, log.action);
+                seen.set(log.actionId, formatActionType(log.action));
             }
         });
         return Array.from(seen, ([value, label]) => ({ value, label }));
