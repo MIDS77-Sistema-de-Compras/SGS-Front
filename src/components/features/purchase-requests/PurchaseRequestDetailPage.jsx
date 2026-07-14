@@ -8,17 +8,7 @@ import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
 import { useRequestDetails } from "@/hooks/useRequestDetails";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
-
-const STATUS_CORES = {
-    "Em análise": "bg-[#EDAE28]",
-    "Aguardando aprovação": "bg-[#EDAE28]",
-    "Pendente": "bg-[#EDAE28]",
-    "Reprovado": "bg-[#E30613]",
-    "Parcial Aprovado": "bg-[#0084FF]",
-    "Aprovado": "bg-[#4CAF50]",
-    "Auto-Aprovado": "bg-[#8E44AD]",
-    "Sem produtos": "bg-gray-400",
-};
+import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
 
 function formatDisplayDate(date) {
     if (!date) return "-";
@@ -47,8 +37,8 @@ export default function MyRequests() {
     const isServiceRequest =
     localProducts.length === 0 && localServices.length > 0;
 
-    const statusGeral = solicitacao?.status || calcularStatusSolicitacao(localProducts);
-    const corGeral = STATUS_CORES[statusGeral] || "bg-gray-400";
+    const statusGeral = getStatusLabel(solicitacao?.status || calcularStatusSolicitacao(localProducts));
+    const corGeral = getStatusColor(statusGeral);
 
     const openModal = (item) => {
         setSelectedProduct(item);
@@ -154,7 +144,6 @@ export default function MyRequests() {
                     <ProductTable 
                         localProducts={isServiceRequest ? localServices : localProducts}
                         isProfessor={isProfessor}
-                        statusCores={STATUS_CORES}
                         openModal={openModal}
                         openEditModal={openEditModal}
                         isServiceRequest={isServiceRequest}

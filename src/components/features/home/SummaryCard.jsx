@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import SummaryItem from "./SummaryItem";
 import SummaryCardSkeleton from "./SummaryCardSkeleton";
 import { requestsService } from "@/service/requests";
-import { normalizeText } from "@/components/features/notifications/notificationUtils";
+import { resolveRequestStatus } from "@/lib/utils/requestStatus";
 
 const summaryConfig = [
     {
@@ -32,17 +32,17 @@ const summaryConfig = [
 
 function getSummaryCounts(requests) {
     return requests.reduce((counts, request) => {
-        const status = normalizeText(request.statusName || "").replace(/_/g, " ");
+        const { key } = resolveRequestStatus(request.statusName);
 
-        if (status.includes("aprov")) {
+        if (key === "aprovado") {
             return { ...counts, approved: counts.approved + 1 };
         }
 
-        if (status.includes("recus")) {
+        if (key === "recusado") {
             return { ...counts, refused: counts.refused + 1 };
         }
 
-        if (status.includes("pend") || status.includes("aguard") || status.includes("andamento") || status.includes("atendimento")) {
+        if (key === "aguardando_aprovacao" || key === "em_atendimento") {
             return { ...counts, pending: counts.pending + 1 };
         }
 

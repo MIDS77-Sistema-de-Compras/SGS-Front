@@ -1,47 +1,9 @@
 "use client";
 
-export default function ProductTableRow({
-    item,
-    isProfessor,
-    statusCores,
-    openModal,
-    openEditModal,
-    isServiceRequest = false,
-}) {
+import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
 
-    if (isServiceRequest) {
-        return (
-            <tr className="hover:bg-gray-50/40 dark:hover:bg-white/5 transition-colors">
-                <td className="py-3 pl-6 text-left text-base text-gray-700 dark:text-[#E2E2EA] font-medium">
-                    {item.nome}
-                </td>
-
-                <td className="py-3 pl-10 text-left text-base text-gray-500 dark:text-[#C3C6D3]">
-                    SERV-{item.provisionId}
-                </td>
-
-                <td className="py-3 text-center text-base text-gray-600 dark:text-[#C3C6D3]">
-                    {item.additionalInfo}
-                </td>
-
-                <td className="py-3 pl-5 text-center text-base text-gray-600 dark:text-[#C3C6D3]">
-                    {item.additionalInfo}
-                </td>
-
-                <td className="py-3 text-center">
-                    <span
-                        className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide ${
-                            statusCores[item.status] || "bg-gray-400"
-                        }`}
-                    >
-                        {item.status}
-                    </span>
-                </td>
-            </tr>
-        );
-    }
-
-        return (
+export default function ProductTableRow({ item, isProfessor, openModal, openEditModal }) {
+    return (
         <tr className="hover:bg-gray-50/40 dark:hover:bg-white/5 transition-colors">
             <td 
                 className="py-3 pl-6 text-left text-base text-gray-700 dark:text-[#E2E2EA] font-medium truncate w-[100px] cursor-pointer" 
@@ -70,7 +32,7 @@ export default function ProductTableRow({
                 <span className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide ${statusCores[item.status] || "bg-gray-400"}`}>
                     {item.status}
                 </span>
-                {isProfessor && item.status === "Em análise" && (
+                {isProfessor && getStatusLabel(item.status) === "Aguardando aprovação" && (
                     <button
                         onClick={() => openEditModal(item)}
                         title="Editar solicitação"

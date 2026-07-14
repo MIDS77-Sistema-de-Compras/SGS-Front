@@ -10,6 +10,7 @@ import { Modal } from '@/components/ui/overlay/Modal';
 import Button from '@/components/ui/button/Button';
 import RequestManagementFilters from './RequestManagementFilters';
 import RequestManagementCard from './RequestManagementCard';
+import { getStatusLabel } from '@/lib/utils/requestStatus';
 import RequestManagementSkeleton from './RequestManagementSkeleton';
 
 const ABAS = [
@@ -21,18 +22,9 @@ const ABAS = [
 
 const STATUS_POR_ABA = {
     pendentes: ['Aguardando aprovação'],
-    andamento: [
-        'Em atendimento',
-        'Atrasada',
-        'Aguardando comprador',
-        'Solicitando orçamento',
-        'Recebimento Parcial',
-        'Fundo Rotativo',
-        'CD central',
-        'Solicitado pelo portal',
-    ],
+    andamento: ['Em atendimento'],
     aprovadas: ['Aprovado'],
-    concluidas: ['Entregue', 'Cancelado', 'Recusado', 'Pedido Cancelado'],
+    concluidas: ['Entregue', 'Cancelado', 'Recusado'],
 };
 
 const MENSAGENS_VAZIO = {
@@ -74,9 +66,11 @@ export default function RequestsManagement() {
     const itensFiltrados = useMemo(() => {
         const statusPermitidos = STATUS_POR_ABA[abaAtiva] || [];
 
-        const filtrados = itensComOverrides.filter((item) => {
-            if (!statusPermitidos.includes(item.status)) return false;
-            if (status && item.status !== status) return false;
+        return itensComOverrides.filter((item) => {
+            const statusLabel = getStatusLabel(item.status);
+
+            if (!statusPermitidos.includes(statusLabel)) return false;
+            if (status && statusLabel !== status) return false;
             if (cr && String(item.crBranchId) !== String(cr)) return false;
 
             if (supervisor && !(item.crBranch?.responsibleUsersName || []).includes(supervisor)) {
@@ -85,7 +79,7 @@ export default function RequestsManagement() {
 
             if (busca) {
                 const texto = busca.toLowerCase();
-                const pesquisavel = `${item.codigo || ''} ${item.requesterName || ''} ${item.status || ''}`.toLowerCase();
+                const pesquisavel = `${item.codigo || ''} ${item.requesterName || ''} ${statusLabel || ''}`.toLowerCase();
                 if (!pesquisavel.includes(texto)) return false;
             }
 
