@@ -27,7 +27,7 @@ export default function RecuperarSenhaPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try{
+        try {
             setLoad(true);
 
             const res = await recoveryEmail(email);
@@ -35,7 +35,7 @@ export default function RecuperarSenhaPage() {
             setLoad(false);
             setDisabled(true);
 
-        }catch(error){
+        } catch (error) {
             setMsgClass("text-red-500");
             setLoad(false);
             setDisabled(false);
@@ -44,7 +44,7 @@ export default function RecuperarSenhaPage() {
     }
 
     return (
-        <div>
+        <div className="w-full max-w-[440px] sm:max-w-[480px] lg:max-w-[540px] min-[1350px]:max-w-[580px] flex justify-center">
             <FormCard
                 onSubmit={handleSubmit}
                 showBackLink backHref="/login"

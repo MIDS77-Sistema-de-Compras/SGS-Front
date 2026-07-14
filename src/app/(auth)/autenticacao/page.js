@@ -9,7 +9,7 @@ import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 
 export default function AutenticacaoPage() {
     useDocumentTitle("Autenticação");
-    
+
     const [codigo, setCodigo] = useState(["", "", "", "", "", ""]);
     const router = useRouter();
 
@@ -33,7 +33,7 @@ export default function AutenticacaoPage() {
     }
 
     return (
-        <div>
+        <div className="w-full max-w-[440px] sm:max-w-[480px] lg:max-w-[540px] min-[1350px]:max-w-[580px] flex justify-center">
             <FormCard
                 onSubmit={handleSubmit}
                 showBackLink backHref="/login"
