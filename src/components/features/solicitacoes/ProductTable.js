@@ -44,7 +44,6 @@ export default function ProductTable({
                                 key={item.id || item.code}
                                 item={item}
                                 isProfessor={isProfessor}
-                                statusCores={statusCores}
                                 openModal={openModal}
                                 openEditModal={openEditModal}
                                 isServiceRequest={isServiceRequest}
