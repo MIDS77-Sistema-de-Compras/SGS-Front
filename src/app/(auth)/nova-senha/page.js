@@ -8,12 +8,12 @@ import NewPasswordForm from "@/components/features/auth/NewPasswordForm";
 
 export default function NovaSenhaPage() {
     useDocumentTitle("Nova Senha");
-    
+
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
     const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
     return (
-        <div>
+        <div className="w-full max-w-[440px] sm:max-w-[480px] lg:max-w-[540px] min-[1350px]:max-w-[580px] flex justify-center">
             <Suspense fallback={<div>Carregando..</div>}>
                 <NewPasswordForm />
             </Suspense>

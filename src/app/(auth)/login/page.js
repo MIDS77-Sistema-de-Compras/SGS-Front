@@ -91,13 +91,13 @@ export default function LoginPage() {
     }
 
     return (
-        <div>
+        <div className="w-full max-w-[440px] sm:max-w-[480px] lg:max-w-[540px] min-[1350px]:max-w-[580px] flex justify-center">
             <FormCard
                 onSubmit={handleLogin}
                 onTermosClick={() => setModalTermosOpen(true)}
                 onPoliticasClick={() => setModalPoliticasOpen(true)}
             >
-                <p className="text-white text-[13px] font-medium opacity-90 text-left mb-6">
+                <p className="text-white text-[13px] font-medium opacity-90 text-center sm:text-left mb-6">
                     Insira suas credenciais para acessar o sistema
                 </p>
 
@@ -110,6 +110,7 @@ export default function LoginPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         iconSrc="/images/icons/user.png"
                         iconAlt="Icone de usuario"
+                        className="max-sm:h-12 max-sm:text-base"
                     />
                     <PasswordInput
                         variant="auth"
@@ -118,6 +119,7 @@ export default function LoginPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         iconSrc="/images/icons/password.png"
                         iconAlt="Icone da senha"
+                        className="max-sm:h-12 max-sm:text-base"
                     />
                 </div>
 
@@ -127,19 +129,20 @@ export default function LoginPage() {
                     </p>
                 )}
 
-                <div className="mt-20">
+                <div className="mt-8 sm:mt-10 min-[1350px]:mt-20">
                     <Button
                         type="submit"
                         variant="auth"
                         size="lg"
                         fullWidth
                         isLoading={isLoading}
+                        className="max-sm:h-12"
                     >
                         Entrar
                     </Button>
                 </div>
 
-                <div className="flex justify-between items-center text-xs text-white mt-4">
+                <div className="flex flex-col items-start gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-4 sm:gap-y-2 text-xs text-white mt-4">
                     <label className="flex items-center gap-2 cursor-pointer select-none opacity-80 hover:opacity-100">
                         <input
                             type="checkbox"
