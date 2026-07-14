@@ -120,7 +120,7 @@ export default function GerenciarUsuarios() {
                         <Dropdown
                             className="w-36"
                             value={statusFilter}
-                            onChange={setStatusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
                             options={["Todos", "Ativos", "Inativos"]}
                         />
                     </div>

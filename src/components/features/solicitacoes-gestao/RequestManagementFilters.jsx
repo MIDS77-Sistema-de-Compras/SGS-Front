@@ -1,7 +1,7 @@
 'use client';
 
 import { Input } from '@/components/ui/input/Input';
-import { Select } from '@/components/ui/select/Select';
+import Dropdown from '@/components/ui/select/Dropdown';
 import { STATUS_OPTIONS } from './requestStatusOptions';
 
 export default function RequestManagementFilters({
@@ -26,8 +26,8 @@ export default function RequestManagementFilters({
 
             <div className="flex flex-row items-center gap-3 flex-wrap">
                 <div className="w-[190px]">
-                    <Select
-                        variant="form"
+                    <Dropdown
+                        name="status"
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
                         placeholder="Status"
@@ -36,8 +36,8 @@ export default function RequestManagementFilters({
                 </div>
 
                 <div className="w-[190px]">
-                    <Select
-                        variant="form"
+                    <Dropdown
+                        name="cr"
                         value={cr}
                         onChange={(e) => setCr(e.target.value)}
                         placeholder="CR"
@@ -52,8 +52,8 @@ export default function RequestManagementFilters({
                 </div>
 
                 <div className="w-[190px]">
-                    <Select
-                        variant="form"
+                    <Dropdown
+                        name="supervisor"
                         value={supervisor}
                         onChange={(e) => setSupervisor(e.target.value)}
                         placeholder="Supervisor"

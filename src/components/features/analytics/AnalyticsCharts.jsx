@@ -1,5 +1,7 @@
 'use client';
 
+import { DonutChartSkeleton, LineChartSkeleton } from './AnalyticsSkeletons';
+
 export default function AnalyticsCharts({
   loading,
   filteredRequestsCount,
@@ -19,7 +21,7 @@ export default function AnalyticsCharts({
         </div>
 
         {loading ? (
-          <div className="flex-grow flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Carregando...</div>
+          <DonutChartSkeleton legends={4} />
         ) : requestsStatusChart.length === 0 ? (
           <div className="flex-grow flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Nenhum dado.</div>
         ) : (
@@ -67,7 +69,7 @@ export default function AnalyticsCharts({
         </div>
 
         {loading ? (
-          <div className="flex-grow flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Carregando...</div>
+          <DonutChartSkeleton legends={4} />
         ) : itemsStatusChart.length === 0 ? (
           <div className="flex-grow flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Nenhum dado.</div>
         ) : (
@@ -117,7 +119,7 @@ export default function AnalyticsCharts({
         </div>
 
         {loading ? (
-          <div className="flex-grow flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Carregando...</div>
+          <LineChartSkeleton />
         ) : !historyChartData || !historyChartData.points || historyChartData.points.length === 0 ? (
           <div className="flex-grow flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] text-sm">Nenhum dado.</div>
         ) : (
