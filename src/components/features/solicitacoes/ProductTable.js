@@ -4,9 +4,7 @@ import ProductTableRow from "./ProductTableRow";
 
 export default function ProductTable({
     localProducts,
-    isProfessor,
     openModal,
-    openEditModal,
     isServiceRequest = false,
     showItemDecisions = false,
     itemDecisions = {},

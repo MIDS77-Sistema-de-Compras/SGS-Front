@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { getRequestById } from "@/service/requests";
 
@@ -7,12 +7,26 @@ export function useRequestDetails(id) {
     const [loading, setLoading] = useState(Boolean(id));
     const [error, setError] = useState("");
 
-    useEffect(() => {
+    const loadRequest = useCallback(async () => {
         if (!id) return;
 
+        try {
+            setLoading(true);
+            setError("");
+            const data = await getRequestById(id);
+            setRequest(data);
+        } catch (err) {
+            setError(err.message || "Erro ao carregar solicitação.");
+        } finally {
+            setLoading(false);
+        }
+    }, [id]);
+
+    useEffect(() => {
         let cancelled = false;
 
-        async function loadRequest() {
+        async function run() {
+            if (!id) return;
             try {
                 setLoading(true);
                 setError("");
@@ -25,12 +39,12 @@ export function useRequestDetails(id) {
             }
         }
 
-        loadRequest();
+        run();
 
         return () => {
             cancelled = true;
         };
     }, [id]);
 
-    return { request, loading, error };
+    return { request, loading, error, refetch: loadRequest };
 }

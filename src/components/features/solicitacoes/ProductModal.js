@@ -1,6 +1,21 @@
 "use client";
 
-export default function ProductModal({ isModalOpen, editing, selectedProduct, editedProduct, setEditedProduct, closeModal, handleSave }) {
+import SearchableSelect from "@/components/ui/select/SearchableSelect";
+
+export default function ProductModal({
+    isModalOpen,
+    editing,
+    selectedProduct,
+    editedProduct,
+    setEditedProduct,
+    closeModal,
+    handleSave,
+    crBranchOptions,
+    crBranchOptionsLoading,
+    selectedCrBranchId,
+    setSelectedCrBranchId,
+    crBranchLabel,
+}) {
     if (!selectedProduct) return null;
 
     return (
@@ -57,6 +72,22 @@ export default function ProductModal({ isModalOpen, editing, selectedProduct, ed
                             </select>
                         ) : (
                             <span className="text-sm text-gray-700 dark:text-[#E2E2EA]">{selectedProduct.unit}</span>
+                        )}
+                    </div>
+
+                    <div>
+                        <label className="text-xs font-bold text-gray-400 dark:text-[#C3C6D3] uppercase tracking-wider block mb-1">CR e Filial</label>
+                        {editing ? (
+                            <SearchableSelect
+                                name="crBranch"
+                                placeholder={crBranchOptionsLoading ? "Carregando..." : "Selecione o CR e Projeto..."}
+                                options={crBranchOptions}
+                                value={selectedCrBranchId}
+                                onChange={(e) => setSelectedCrBranchId(e.target.value)}
+                                isRequired
+                            />
+                        ) : (
+                            <span className="text-sm text-gray-700 dark:text-[#E2E2EA]">{crBranchLabel}</span>
                         )}
                     </div>
 
