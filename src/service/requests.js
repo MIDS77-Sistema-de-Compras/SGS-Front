@@ -18,7 +18,7 @@ function normalizeProduct(item) {
         id: item.itemRequestProduct,
         code: item.itemRequestProduct ? `PROD-${item.itemRequestProduct}` : "PROD",
         nome: item.productName,
-        variation: item.measurementUnit,
+        variation: item.variation,
         status: item.statusName,
         quantity: item.quantity,
         unit: item.measurementUnit,

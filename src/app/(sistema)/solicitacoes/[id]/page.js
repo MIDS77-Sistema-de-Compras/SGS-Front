@@ -97,6 +97,7 @@ export default function MyRequests() {
             await updateItemRequestProduct(editedProduct.id, {
                 requestId: Number(id),
                 productName: editedProduct.nome,
+                variation: editedProduct.variation,
                 measurementUnit: editedProduct.unit,
                 quantity: Number(editedProduct.quantity),
                 statusName: editedProduct.status,

@@ -27,6 +27,7 @@ export default function RequestForm() {
         phone, setPhone,
         crBranchId,
         productName, setProductName,
+        variation, setVariation,
         quantity, setQuantity,
         unit, setUnit,
         additionalInfo, setAdditionalInfo,
@@ -141,6 +142,18 @@ export default function RequestForm() {
                                             setProductName(product.name);
                                         }}
                                         placeholder="Digite o nome do produto..."
+                                    />
+                                </FormField>
+
+                                <FormField
+                                    label="Variação"
+                                    className="flex-1"
+                                >
+                                    <Input
+                                        variant="form"
+                                        placeholder="Ex: Tamanho G, Azul..."
+                                        value={variation || ""}
+                                        onChange={(event) => setVariation(event.target.value)}
                                     />
                                 </FormField>
 
