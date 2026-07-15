@@ -110,6 +110,10 @@ async function getRequestsFromEndpoint(endpoint) {
     });
 }
 
+export function updateItemRequestProduct(itemId, payload) {
+    return api.put(`/item-request-products/${itemId}`, payload);
+}
+
 export async function getRequestById(id) {
     const request = await api.get(`/requests/${id}`);
 

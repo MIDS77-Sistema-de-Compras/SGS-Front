@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/button/Button';
 import StatusBadge from '@/components/features/solicitacoes/statusBadge';
 import { calcularTempoDecorrido } from '@/lib/utils/calculateTime';
@@ -5,6 +6,7 @@ import { getStatusColor, getStatusLabel } from '@/lib/utils/requestStatus';
 import Link from 'next/link';
 
 export default function RequestManagementCard({ item, onApprove, onReject, isDeciding = false }) {
+    const router = useRouter();
     const quantidadeProdutos = item.produtos?.length || 0;
     const titulo = `${item.codigo}${quantidadeProdutos > 0
         ? `: Lista de ${quantidadeProdutos} ${quantidadeProdutos === 1 ? 'produto' : 'produtos'}`
