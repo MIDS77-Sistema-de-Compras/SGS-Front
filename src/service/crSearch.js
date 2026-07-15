@@ -13,6 +13,7 @@ export async function getAllCRBranches() {
     return getPageContent(crBranches).map((crb) => ({
         ...crb,
         sector: sectorMap[crb.crCode] ?? '',
+        responsibleUserName: (crb.responsibleUsersName ?? []).join(', '),
     }));
 }
 
