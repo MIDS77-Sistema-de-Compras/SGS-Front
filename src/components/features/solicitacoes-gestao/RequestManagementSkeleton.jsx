@@ -6,7 +6,7 @@ export default function RequestManagementSkeleton({ rows = 5 }) {
             {Array.from({ length: rows }).map((_, index) => (
                 <div
                     key={index}
-                    className="flex items-center justify-between gap-6 py-4 border-b border-gray-100 last:border-b-0"
+                    className="flex items-center justify-between gap-6 py-4 border-b border-gray-100 dark:border-white/10 last:border-b-0"
                 >
                     <div className="flex items-center gap-4 min-w-0">
                         <SkeletonCircle className="w-7 h-7 shrink-0" />

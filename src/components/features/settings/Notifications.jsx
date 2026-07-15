@@ -5,8 +5,8 @@ import SettingsCard from "@/components/ui/layout/SettingsCard";
 
 const BellIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
     </svg>
 );
 
@@ -32,7 +32,13 @@ export default function Notifications() {
                         onClick={() => setActive(!active)}
                         className={`w-11 h-6 rounded-full relative cursor-pointer flex items-center transition-colors duration-300 ${active ? "bg-[#103D85] dark:bg-[#1A4A9E]" : "bg-gray-300 dark:bg-[#E2E2EA]/25"}`}
                     >
-                        <div className={`bg-white w-5 h-5 rounded-full shadow-sm absolute transition-transform duration-300 ease-in-out ${active ? "translate-x-5.5" : "translate-x-0.5"}`} />
+                        <div
+                            className="bg-white w-5 h-5 rounded-full shadow-sm absolute"
+                            style={{
+                                transform: active ? "translateX(22px)" : "translateX(2px)",
+                                transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+                            }}
+                        />
                     </div>
                 </div>
             }

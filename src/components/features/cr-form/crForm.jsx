@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Select from "@/components/ui/select/Select";
+import Dropdown from "@/components/ui/select/Dropdown";
 import send from "../../../../public/images/icons/send.svg";
 import FormField from "@/components/ui/form/FormField";
 import { Input } from "@/components/ui/input/Input";
@@ -16,20 +16,31 @@ export default function RequestFormCR() {
         isLoading,
         sectors,
         sectorsLoading,
+        branches,
+        branchesLoading,
+        supervisors,
+        supervisorsLoading,
         handleChange,
         handleSubmit,
     } = useCreateCr();
 
-    return (
-         <div className="border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col overflow-hidden">
+    const supervisorOptions = (excludeId) =>
+        supervisors
+            .filter((supervisor) => String(supervisor.id) !== String(excludeId))
+            .map((supervisor) => ({ value: String(supervisor.id), label: supervisor.name }));
 
-            <div className="px-5 py-3 border border-transparent border-b-[#AAAAAA] dark:border-b-white/10">
-                <h1 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">Cadastrar CR</h1>
+    return (
+         <div className="shadow-sm border border-gray-100 dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col overflow-hidden">
+
+            <div className="px-5 py-3 border border-transparent border-b-gray-100 dark:border-b-white/10">
+                <h1 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
+                    Cadastrar CR
+                </h1>
             </div>
 
             <form
                 onSubmit={handleSubmit}
-                className="flex-1 overflow-y-auto p-5"
+                className="flex-1 p-5"
             >
                 <SectionHeader label="IDENTIFICAÇÃO DE CR" />
 
@@ -46,12 +57,25 @@ export default function RequestFormCR() {
                     )}
                 </FormField>
 
+                <FormField label="Descrição" className="col-span-2">
+                    <Input
+                        variant="form"
+                        placeholder="Descrição do CR (opcional)"
+                        value={formData.descricao}
+                        onChange={(e) => handleChange('descricao', e.target.value)}
+                        error={errors.descricao}
+                    />
+                    {errors.descricao && (
+                        <span className="text-[11px] text-[#BA1A1A] mt-1 block">{errors.descricao}</span>
+                    )}
+                </FormField>
+
                 <div className="grid grid-cols-2 items-center gap-x-5">
 
                     <FormField label="Código" required className="col-span-1">
                         <Input
                             variant="form"
-                            placeholder="3333-7777"
+                            placeholder="1234"
                             value={formData.codigo}
                             onChange={(e) => handleChange('codigo', e.target.value)}
                             error={errors.codigo}
@@ -71,9 +95,11 @@ export default function RequestFormCR() {
                                 }`}
                             >
                                 <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                        formData.master ? 'translate-x-5' : 'translate-x-0'
-                                    }`}
+                                    className="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0"
+                                    style={{
+                                        transform: formData.master ? 'translateX(20px)' : 'translateX(0)',
+                                        transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    }}
                                 />
                             </button>
                             <div className="flex flex-col text-left min-w-[100px]">
@@ -88,7 +114,7 @@ export default function RequestFormCR() {
                     </FormField>
 
                     <FormField label="Bloco responsável" required>
-                        <Select
+                        <Dropdown
                             name="sector"
                             placeholder={sectorsLoading ? "Carregando blocos..." : "Associar a um bloco responsável"}
                             value={formData.sectorName}
@@ -103,6 +129,44 @@ export default function RequestFormCR() {
                         )}
                     </FormField>
 
+                    <FormField label="Filial" required className="col-span-2">
+                        <Dropdown
+                            name="branch"
+                            placeholder={branchesLoading ? "Carregando filiais..." : "Selecione a filial vinculada"}
+                            value={formData.branchId}
+                            onChange={(e) => handleChange('branchId', e.target.value)}
+                            options={branches.map((branch) => ({ value: String(branch.id), label: branch.name }))}
+                            error={errors.branchId}
+                            disabled={branchesLoading}
+                            isRequired
+                        />
+                        {errors.branchId && (
+                            <span className="text-[11px] text-[#BA1A1A] mt-1 block">{errors.branchId}</span>
+                        )}
+                    </FormField>
+
+                    <FormField label="Supervisor responsável 1">
+                        <Dropdown
+                            name="responsibleUserId1"
+                            placeholder={supervisorsLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
+                            value={formData.responsibleUserId1}
+                            onChange={(e) => handleChange('responsibleUserId1', e.target.value)}
+                            options={supervisorOptions(formData.responsibleUserId2)}
+                            disabled={supervisorsLoading}
+                        />
+                    </FormField>
+
+                    <FormField label="Supervisor responsável 2">
+                        <Dropdown
+                            name="responsibleUserId2"
+                            placeholder={supervisorsLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
+                            value={formData.responsibleUserId2}
+                            onChange={(e) => handleChange('responsibleUserId2', e.target.value)}
+                            options={supervisorOptions(formData.responsibleUserId1)}
+                            disabled={supervisorsLoading}
+                        />
+                    </FormField>
+
                 </div>
 
                 <div className="flex flex-col items-end mt-5">
@@ -112,7 +176,7 @@ export default function RequestFormCR() {
                         className="py-3 px-7 text-[14px] font-semibold"
                         isLoading={isLoading}
                     >
-                        <span className="flex gap-5">CADASTRAR CR
+                        <span className="flex gap-5">Cadastrar CR
                             <Image
                                 src={send}
                                 alt="Paper Plane Send Icon"

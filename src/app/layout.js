@@ -2,6 +2,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import Script from 'next/script';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -11,7 +12,7 @@ const montserrat = Montserrat({
 
 export const metadata = {
   title: {
-    default: "SGS | Home",
+    default: "SGS",
     template: "SGS | %s",
   },
   description: "Projeto Final - Sistema de Compras - FrontEnd",
@@ -35,7 +36,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className={montserrat.variable} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
         <ThemeProvider>

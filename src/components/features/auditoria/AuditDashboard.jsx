@@ -127,7 +127,7 @@ export default function AuditDashboard() {
                         <Dropdown
                             className="w-full sm:w-44"
                             value={actionType}
-                            onChange={setActionType}
+                            onChange={(e) => setActionType(e.target.value)}
                             placeholder="Tipo de ação"
                             options={[{ value: "", label: "Tipo de ação" }, ...actionOptions]}
                         />

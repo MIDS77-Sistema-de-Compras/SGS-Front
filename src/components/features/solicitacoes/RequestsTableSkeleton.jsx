@@ -1,13 +1,12 @@
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 
-
 export default function RequestsTableSkeleton({ rows = 6 }) {
     return (
         <div className="flex flex-col">
             {Array.from({ length: rows }).map((_, index) => (
                 <div
                     key={index}
-                    className="flex items-center justify-between py-5 border-b border-gray-200"
+                    className="flex items-center justify-between py-5 border-b border-gray-200 dark:border-white/10"
                 >
                     <div className="flex items-center gap-20 px-6">
                         <Skeleton className="h-5 w-64" />
