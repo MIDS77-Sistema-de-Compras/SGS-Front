@@ -130,7 +130,7 @@ export default function RequestFormCR() {
                     </FormField>
 
                     <FormField label="Filial" required className="col-span-2">
-                        <Select
+                        <Dropdown
                             name="branch"
                             placeholder={branchesLoading ? "Carregando filiais..." : "Selecione a filial vinculada"}
                             value={formData.branchId}
@@ -146,7 +146,7 @@ export default function RequestFormCR() {
                     </FormField>
 
                     <FormField label="Supervisor responsável 1">
-                        <Select
+                        <Dropdown
                             name="responsibleUserId1"
                             placeholder={supervisorsLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
                             value={formData.responsibleUserId1}
@@ -157,7 +157,7 @@ export default function RequestFormCR() {
                     </FormField>
 
                     <FormField label="Supervisor responsável 2">
-                        <Select
+                        <Dropdown
                             name="responsibleUserId2"
                             placeholder={supervisorsLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
                             value={formData.responsibleUserId2}
