@@ -101,12 +101,12 @@ export default function GerenciarUsuarios() {
 
             <div className="flex flex-1 flex-col min-h-0 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 mb-4 overflow-hidden bg-white dark:bg-[#1A2233]">
 
-                <div className="p-4 border-b border-gray-100 dark:border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="p-3 sm:p-4 border-b border-gray-100 dark:border-white/10 flex flex-col lg:flex-row justify-between items-center gap-3">
 
-                    <div className="flex w-full sm:w-auto items-center gap-4">
-                        <div className="relative w-full sm:w-80">
+                    <div className="flex w-full lg:w-auto items-center gap-2">
+                        <div className="relative w-full lg:w-56">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Search size={18} className="text-gray-400" />
+                                <Search size={16} className="text-gray-400" />
                             </div>
                             <input
                                 type="text"
@@ -118,24 +118,26 @@ export default function GerenciarUsuarios() {
                         </div>
 
                         <Dropdown
-                            className="w-36"
+                            className="w-28 text-xs h-9"
                             value={statusFilter}
                             onChange={setStatusFilter}
                             options={["Todos", "Ativos", "Inativos"]}
                         />
                     </div>
 
-                    <div className="flex w-full sm:w-auto items-center gap-3">
+                    <div className="flex w-full lg:w-auto items-center justify-between lg:justify-end gap-4">
                         <Button
                             variant="outline"
-                            className="bg-[#E6F0FF] dark:bg-[#303746] text-[#103D85] dark:text-[#E2E2EA] border-transparent hover:bg-[#D4E5FF] dark:hover:bg-white/5"
+                            className="flex-1 lg:flex-initial h-9 px-3 text-xs bg-[#E6F0FF] dark:bg-[#303746] text-[#103D85] dark:text-[#E2E2EA] border-transparent hover:bg-[#D4E5FF] dark:hover:bg-white/5"
                         >
                             Exportar
                         </Button>
-                        <Link href="/usuarios/criar">
+                        <Link href="/usuarios/criar" className="flex-1 lg:flex-initial">
                             <Button
                                 variant="primary"
-                                leftIcon={<Plus size={18} />}
+                                leftIcon={<Plus size={16} />}
+                                className="h-9 px-3 text-xs"
+                                fullWidth
                             >
                                 Cadastrar Usuário
                             </Button>

@@ -20,7 +20,7 @@ const formatRole = (role) =>
     role ? role.charAt(0) + role.slice(1).toLowerCase() : "";
 
 export default function UserProfile() {
-    const { showNotification } = useNotification(); 
+    const { showNotification } = useNotification();
     const { user, loading } = useLoggedUser();
 
     const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ export default function UserProfile() {
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPwd, setConfirmPwd] = useState("");
-    
+
     const [modalError, setModalError] = useState("");
 
     useEffect(() => {
@@ -50,7 +50,7 @@ export default function UserProfile() {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
-        
+
         if (modalError) return;
 
         try {
@@ -63,7 +63,7 @@ export default function UserProfile() {
             }
 
             showNotification("Senha atualizada com sucesso!", "success");
-            
+
             openModal(false);
             setOldPassword("");
             setNewPassword("");
@@ -79,18 +79,18 @@ export default function UserProfile() {
         <section className="bg-white dark:bg-[#303746] rounded-xl border border-gray-100 dark:border-white/10 shadow-sm overflow-hidden transition-all">
             <div
                 onClick={() => setOpen(!open)}
-                className="p-8 flex items-center justify-between cursor-pointer transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-white/5 active:bg-gray-100/50 dark:active:bg-white/10"
+                className="p-5 sm:p-8 flex items-center justify-between cursor-pointer transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-white/5 active:bg-gray-100/50 dark:active:bg-white/10"
             >
-                <div className="flex items-center gap-5">
-                    <div className="w-12 h-12 bg-gray-50 dark:bg-white/5 rounded-full flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] border border-gray-100 dark:border-white/10">
+                <div className="flex items-center gap-4 sm:gap-5">
+                    <div className="w-12 h-12 bg-gray-50 dark:bg-white/5 rounded-full flex items-center justify-center text-gray-400 dark:text-[#C3C6D3] border border-gray-100 dark:border-white/10 shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                             <circle cx="12" cy="7" r="4" />
                         </svg>
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold text-gray-800 dark:text-[#E2E2EA]">Perfil do usuário</h3>
-                        <p className="text-gray-400 dark:text-[#C3C6D3] text-sm">Gerencie suas informações pessoais e de contato</p>
+                        <h3 className="text-base sm:text-lg font-bold text-gray-800 dark:text-[#E2E2EA]">Perfil do usuário</h3>
+                        <p className="text-gray-400 dark:text-[#C3C6D3] text-xs sm:text-sm">Gerencie suas informações pessoais e de contato</p>
                     </div>
                 </div>
                 <svg
@@ -113,8 +113,8 @@ export default function UserProfile() {
                 }}
             >
                 <div className="overflow-hidden">
-                    <div className="p-10 border-t border-gray-100 dark:border-white/10 bg-gray-50/20 dark:bg-white/[0.02]">
-                        <div className="grid grid-cols-2 gap-6 mb-6">
+                    <div className="p-5 sm:p-10 border-t border-gray-100 dark:border-white/10 bg-gray-50/20 dark:bg-white/[0.02]">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div className="flex flex-col gap-2">
                                 <label className="text-xs font-semibold text-gray-500 dark:text-[#C3C6D3]">Nome completo</label>
                                 <Input
@@ -138,14 +138,14 @@ export default function UserProfile() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             <div className="flex flex-col gap-2">
                                 <label className="text-xs font-semibold text-gray-500 dark:text-[#C3C6D3]">Senha</label>
                                 <form onSubmit={handleSubmit}>
                                     <Button onClick={handleSubmit} fullWidth>
                                         Alterar minha senha
                                     </Button>
-
+                                    <p className="text-sm text-red-500 dark:text-[#F87171]">{error}</p>
                                     <Modal isOpen={modal} onClose={() => openModal(false)} title={"Confirmação"} height="h-auto" maxWidth="max-w-[460px]">
                                         <div className="flex flex-col gap-4">
                                             <div className="flex flex-col gap-1.5">

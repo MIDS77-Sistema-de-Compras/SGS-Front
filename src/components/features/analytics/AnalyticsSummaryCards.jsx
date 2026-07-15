@@ -24,7 +24,7 @@ export default function AnalyticsSummaryCards({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <div className="bg-white dark:bg-[#303746] p-4 border border-gray-100 dark:border-white/10 rounded-xl shadow-sm hover:shadow transition relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-16 h-16 bg-blue-50/50 dark:bg-blue-500/10 rounded-full translate-x-4 -translate-y-4"></div>
           <div className="flex items-center gap-2 text-gray-400 dark:text-[#C3C6D3]">
@@ -65,7 +65,7 @@ export default function AnalyticsSummaryCards({
           <p className="text-[10px] text-red-500 dark:text-[#F08B92] mt-1 font-semibold">{advancedMetrics.taxaRejeicao}% taxa de recusa</p>
         </div>
 
-        <div className="bg-white dark:bg-[#303746] p-4 border border-[#E2E8F0] dark:border-white/10 rounded-xl shadow-sm hover:shadow transition relative overflow-hidden group col-span-2 md:col-span-1">
+        <div className="bg-white dark:bg-[#303746] p-4 border border-[#E2E8F0] dark:border-white/10 rounded-xl shadow-sm hover:shadow transition relative overflow-hidden group sm:col-span-2 lg:col-span-1">
           <div className="absolute top-0 right-0 w-16 h-16 bg-pink-50/50 dark:bg-pink-500/10 rounded-full translate-x-4 -translate-y-4"></div>
           <div className="flex items-center gap-2 text-gray-400 dark:text-[#C3C6D3]">
             <Paperclip className="w-4 h-4 text-pink-500 dark:text-pink-300" />
@@ -76,7 +76,7 @@ export default function AnalyticsSummaryCards({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <div className="bg-white dark:bg-[#303746] p-4 border-l-4 border-l-amber-500 border border-[#E2E8F0] dark:border-white/10 rounded-xl shadow-sm hover:shadow transition">
           <div className="flex items-center gap-1.5 text-gray-400 dark:text-[#C3C6D3]">
             <Clock className="w-4 h-4 text-amber-500 dark:text-amber-300" />
@@ -121,7 +121,7 @@ export default function AnalyticsSummaryCards({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#303746] p-4 border-l-4 border-l-red-500 border border-[#E2E8F0] dark:border-white/10 rounded-xl shadow-sm hover:shadow transition col-span-2 md:col-span-1">
+        <div className="bg-white dark:bg-[#303746] p-4 border-l-4 border-l-red-500 border border-[#E2E8F0] dark:border-white/10 rounded-xl shadow-sm hover:shadow transition sm:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-1.5 text-gray-400 dark:text-[#C3C6D3]">
             <AlertCircle className="w-4 h-4 text-red-500 dark:text-red-300" />
             <span className="text-[9px] font-bold uppercase tracking-wider">Recusadas/Cancel.</span>

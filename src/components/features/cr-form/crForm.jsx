@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Dropdown from "@/components/ui/select/Dropdown";
+import SearchableSelect from "@/components/ui/select/SearchableSelect";
 import send from "../../../../public/images/icons/send.svg";
 import FormField from "@/components/ui/form/FormField";
 import { Input } from "@/components/ui/input/Input";
@@ -30,7 +31,7 @@ export default function RequestFormCR() {
             .map((supervisor) => ({ value: String(supervisor.id), label: supervisor.name }));
 
     return (
-         <div className="shadow-sm border border-gray-100 dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col overflow-hidden">
+        <div className="shadow-sm border border-gray-100 dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col overflow-hidden">
 
             <div className="px-5 py-3 border border-transparent border-b-gray-100 dark:border-b-white/10">
                 <h1 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
@@ -90,9 +91,8 @@ export default function RequestFormCR() {
                             <button
                                 type="button"
                                 onClick={() => handleChange('master', !formData.master)}
-                                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    formData.master ? 'bg-[#103D85] dark:bg-[#1A4A9E]' : 'bg-gray-200 dark:bg-white/20'
-                                }`}
+                                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.master ? 'bg-[#103D85] dark:bg-[#1A4A9E]' : 'bg-gray-200 dark:bg-white/20'
+                                    }`}
                             >
                                 <span
                                     className="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0"

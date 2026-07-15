@@ -223,7 +223,7 @@ export default function AnalyticsRankings({
             <p className="text-[11px] text-gray-400 dark:text-[#C3C6D3]">Informações de auditoria e tempos operacionais agregados.</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
             <div className="p-3 bg-blue-50/30 dark:bg-[#1A4A9E]/15 border border-blue-50/60 dark:border-[#1A4A9E]/30 rounded-xl">
               <span className="text-[10px] text-gray-400 dark:text-[#C3C6D3] font-bold uppercase tracking-wider block">Taxa de SLA Cumprido</span>
               <span className="text-lg font-black text-blue-800 dark:text-[#7FA9F5] mt-1 block">
