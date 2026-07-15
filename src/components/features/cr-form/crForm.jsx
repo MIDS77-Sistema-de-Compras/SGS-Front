@@ -21,7 +21,7 @@ export default function RequestFormCR() {
     } = useCreateCr();
 
     return (
-         <div className="shadow-sm border border-gray-100 dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col overflow-hidden">
+         <div className="shadow-sm border border-gray-100 dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col">
 
             <div className="px-5 py-3 border border-transparent border-b-gray-100 dark:border-b-white/10">
                 <h1 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
@@ -31,7 +31,7 @@ export default function RequestFormCR() {
 
             <form
                 onSubmit={handleSubmit}
-                className="flex-1 p-5"
+                className="flex-1 p-4 sm:p-5"
             >
                 <SectionHeader label="IDENTIFICAÇÃO DE CR" />
 
@@ -48,9 +48,9 @@ export default function RequestFormCR() {
                     )}
                 </FormField>
 
-                <div className="grid grid-cols-2 items-center gap-x-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 items-start sm:items-center gap-x-5 gap-y-2">
 
-                    <FormField label="Código" required className="col-span-1">
+                    <FormField label="Código" required className="sm:col-span-1">
                         <Input
                             variant="form"
                             placeholder="1234"
@@ -109,14 +109,14 @@ export default function RequestFormCR() {
 
                 </div>
 
-                <div className="flex flex-col items-end mt-5">
+                <div className="flex flex-col items-stretch sm:items-end mt-5">
                     <Button
                         type="submit"
                         variant="primary"
-                        className="py-3 px-7 text-[14px] font-semibold"
+                        className="w-full sm:w-auto py-3 px-7 text-[14px] font-semibold"
                         isLoading={isLoading}
                     >
-                        <span className="flex gap-5">Cadastrar CR
+                        <span className="flex items-center justify-center gap-5">Cadastrar CR
                             <Image
                                 src={send}
                                 alt="Paper Plane Send Icon"
