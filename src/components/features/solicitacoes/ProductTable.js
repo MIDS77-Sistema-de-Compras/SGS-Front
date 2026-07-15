@@ -1,6 +1,7 @@
 "use client";
 
 import ProductTableRow from "./ProductTableRow";
+import { getStatusLabel } from "@/lib/utils/requestStatus";
 
 export default function ProductTable({
     localProducts,
