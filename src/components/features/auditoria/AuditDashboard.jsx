@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { 
-    ClipboardList, 
-    Calendar, 
-    LogIn, 
+import {
+    ClipboardList,
+    Calendar,
+    LogIn,
     ShieldAlert,
     Search
 } from "lucide-react";
@@ -74,7 +74,7 @@ export default function AuditDashboard() {
                     Monitore e acompanhe as ações realizadas no sistema
                 </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <StatCard
                     title="Total de Registros"
@@ -105,11 +105,11 @@ export default function AuditDashboard() {
                     iconColor="text-purple-600 dark:text-[#B48CF7]"
                 />
             </div>
-            
+
             <div className="flex flex-1 flex-col min-h-0 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 mb-4 overflow-hidden bg-white dark:bg-[#1A2233]">
-                
+
                 <div className="p-4 border-b border-gray-100 dark:border-white/10 flex flex-col lg:flex-row justify-between items-center gap-4">
-                    
+
                     <div className="flex flex-wrap w-full lg:w-auto items-center gap-4">
                         <div className="relative w-full sm:w-72">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -118,7 +118,7 @@ export default function AuditDashboard() {
                             <input
                                 type="text"
                                 placeholder="Buscar por usuário, ação, nível..."
-                                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
+                                className="w-full pl-10 pr-4 py-2.5 border border-gray-100 shadow-sm dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -135,7 +135,7 @@ export default function AuditDashboard() {
                         <div className="relative w-full sm:w-40">
                             <input
                                 type="date"
-                                className="w-full pl-4 pr-3 py-2 border border-gray-200 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E] dark:[color-scheme:dark]"
+                                className="w-full pl-4 pr-3 shadow-sm py-2.5 border border-gray-100 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E] dark:[color-scheme:dark]"
                                 value={period}
                                 onChange={(e) => setPeriod(e.target.value)}
                             />
@@ -152,7 +152,7 @@ export default function AuditDashboard() {
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-auto">
+                <div className="flex-1 min-h-0 flex flex-col">
                     {loading ? (
                         <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
                             Carregando registros...
@@ -169,7 +169,7 @@ export default function AuditDashboard() {
                     )}
                 </div>
             </div>
-            
+
             <AuditDetailsModal
                 open={!!selectedLog}
                 data={selectedLog}

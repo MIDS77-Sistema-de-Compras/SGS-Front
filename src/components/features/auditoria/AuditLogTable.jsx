@@ -14,6 +14,24 @@ const columns = [
     { label: "Timestamp", field: "timestamp", type: "date", width: "w-[13%]", sortable: true },
 ];
 
+const CRITICAL_ACTION_REGEX = /DESATI|EXCLU|REMOV|ATUALI/;
+
+function isCriticalAction(log) {
+    return CRITICAL_ACTION_REGEX.test((log.actionId || "").toUpperCase());
+}
+
+function parseBrDate(value) {
+    if (!value) return null;
+
+    const [datePart, timePart = "00:00"] = String(value).split(" ");
+    const [day, month, year] = datePart.split("/").map(Number);
+    const [hours, minutes] = timePart.split(":").map(Number);
+
+    if (!day || !month || !year) return null;
+
+    return new Date(year, month - 1, day, hours || 0, minutes || 0);
+}
+
 function compareValues(a, b, type) {
     if (a == null && b == null) return 0;
     if (a == null) return 1;
@@ -24,10 +42,10 @@ function compareValues(a, b, type) {
     }
 
     if (type === "date") {
-        const dateA = new Date(a).getTime();
-        const dateB = new Date(b).getTime();
-        if (!Number.isNaN(dateA) && !Number.isNaN(dateB)) {
-            return dateA - dateB;
+        const dateA = parseBrDate(a);
+        const dateB = parseBrDate(b);
+        if (dateA && dateB) {
+            return dateA.getTime() - dateB.getTime();
         }
     }
 
@@ -35,8 +53,8 @@ function compareValues(a, b, type) {
 }
 
 export default function AuditLogTable({ logs, onSelectLog }) {
-    const [sortField, setSortField] = useState("id");
-    const [sortDirection, setSortDirection] = useState("asc");
+    const [sortField, setSortField] = useState("timestamp");
+    const [sortDirection, setSortDirection] = useState("desc");
 
     function handleSort(column) {
         if (!column.sortable) return;
@@ -71,12 +89,11 @@ export default function AuditLogTable({ logs, onSelectLog }) {
     }
 
     return (
-        <div className="flex-1 flex flex-col min-h-0 w-full bg-white dark:bg-[#1A2233]">
-
-            <div className="w-full bg-[#F8FAFC] dark:bg-[#303746] shadow-[0_1px_0_0_rgba(243,244,246,1)] dark:shadow-[0_1px_0_0_#303746] z-10 pr-6 overflow-x-auto">
+        <div className="flex-1 flex flex-col min-h-0 w-full bg-white dark:bg-[#1A2233] overflow-hidden">
+            <div className="flex-1 min-h-0 w-full overflow-auto pr-2 pb-2">
                 <table className="w-full text-left border-collapse table-fixed min-w-[860px]">
-                    <thead>
-                        <tr className="text-sm font-semibold text-gray-700 dark:text-[#E2E2EA]">
+                    <thead className="sticky top-0 z-10">
+                        <tr className="text-sm font-semibold text-gray-700 dark:text-[#E2E2EA] bg-[#F8FAFC] dark:bg-[#303746] shadow-[0_1px_0_0_rgba(243,244,246,1)] dark:shadow-[0_1px_0_0_#303746]">
                             {columns.map((col) => (
                                 <th key={col.label} className={`py-3 px-4 font-medium ${col.width}`}>
                                     {col.sortable ? (
@@ -93,14 +110,12 @@ export default function AuditLogTable({ logs, onSelectLog }) {
                             ))}
                         </tr>
                     </thead>
-                </table>
-            </div>
 
-            <div className="flex-1 flex flex-col min-h-0 w-full pr-2 pb-2 overflow-x-auto">
-                <div className="flex-1 overflow-y-auto min-h-0 w-full">
-                    <table className="w-full text-left border-collapse table-fixed min-w-[860px]">
-                        <tbody className="text-sm bg-white dark:bg-[#1A2233]">
-                            {sortedLogs.map((log) => (
+                    <tbody className="text-sm bg-white dark:bg-[#1A2233]">
+                        {sortedLogs.map((log) => {
+                            const critical = isCriticalAction(log);
+
+                            return (
                                 <tr
                                     key={log.id}
                                     onClick={() => onSelectLog(log)}
@@ -118,8 +133,16 @@ export default function AuditLogTable({ logs, onSelectLog }) {
                                         <LevelBadge level={log.level} />
                                     </td>
 
-                                    <td className="py-2.5 px-4 w-[15%] text-gray-600 dark:text-[#C3C6D3] truncate">
-                                        {(log.action)}
+                                    <td className="py-2.5 px-4 w-[15%] truncate">
+                                        {critical ? (
+                                            <span className="inline-flex rounded-full px-3 py-1 text-xs font-semibold bg-purple-100 text-purple-600 dark:bg-[#7C3AED]/20 dark:text-[#B48CF7]">
+                                                {log.action}
+                                            </span>
+                                        ) : (
+                                            <span className="text-gray-600 dark:text-[#C3C6D3]">
+                                                {log.action}
+                                            </span>
+                                        )}
                                     </td>
 
                                     <td className="py-2.5 px-4 w-[18%] text-gray-500 dark:text-[#C3C6D3] truncate">
@@ -134,16 +157,16 @@ export default function AuditLogTable({ logs, onSelectLog }) {
                                         {log.timestamp}
                                     </td>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            );
+                        })}
+                    </tbody>
+                </table>
 
-                    {logs.length === 0 && (
-                        <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
-                            Nenhum registro encontrado.
-                        </p>
-                    )}
-                </div>
+                {logs.length === 0 && (
+                    <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
+                        Nenhum registro encontrado.
+                    </p>
+                )}
             </div>
         </div>
     );
