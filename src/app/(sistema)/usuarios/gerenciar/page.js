@@ -12,14 +12,48 @@ import {
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import Button from "@/components/ui/button/Button";
+import Modal from "@/components/ui/overlay/Modal";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import UserTable from "@/components/features/gerenciar-users/UserTable";
 import { getAllUsers } from "@/service/users/usersSearch";
+import { impersonateUser } from "@/service/auth/auth-impersonate";
+import { useLoggedUser } from "@/hooks/useLoggedUser";
 
 export default function GerenciarUsuarios() {
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("Todos");
+    const [userToImpersonate, setUserToImpersonate] = useState(null);
+    const [isImpersonating, setIsImpersonating] = useState(false);
+    const [impersonateError, setImpersonateError] = useState("");
+    const { user: loggedUser } = useLoggedUser();
+
+    const isAdmin = loggedUser?.roleName === "ADMIN";
+
+    function handleImpersonate(user) {
+        setImpersonateError("");
+        setUserToImpersonate(user);
+    }
+
+    function closeImpersonateModal() {
+        if (isImpersonating) return;
+        setUserToImpersonate(null);
+        setImpersonateError("");
+    }
+
+    async function confirmImpersonate() {
+        setIsImpersonating(true);
+        setImpersonateError("");
+
+        try {
+            await impersonateUser(userToImpersonate.id);
+            window.location.assign("/");
+        } catch (error) {
+            console.error("Erro ao entrar como usuário:", error);
+            setImpersonateError(error.message || "Não foi possível entrar como este usuário.");
+            setIsImpersonating(false);
+        }
+    }
 
     useEffect(() => {
         loadUsers();
@@ -150,8 +184,51 @@ export default function GerenciarUsuarios() {
                     </div>
                 </div>
 
-                <UserTable users={filteredUsers} />
+                <UserTable
+                    users={filteredUsers}
+                    onImpersonate={isAdmin ? handleImpersonate : null}
+                />
             </div>
+
+            <Modal
+                isOpen={Boolean(userToImpersonate)}
+                onClose={closeImpersonateModal}
+                title="Entrar como usuário"
+                maxWidth="max-w-[420px]"
+                height="h-auto"
+                contentClassName="text-left"
+            >
+                <p>
+                    Entrar como{" "}
+                    <strong className="text-gray-800 dark:text-[#E2E2EA]">
+                        {userToImpersonate?.name}
+                    </strong>
+                    ? Você passará a usar o sistema com as permissões deste usuário
+                    e as ações serão registradas na auditoria em nome dele, com a
+                    identificação do administrador.
+                </p>
+
+                {impersonateError && (
+                    <p className="text-[13px] text-[#BA1A1A]">{impersonateError}</p>
+                )}
+
+                <div className="flex justify-end gap-3 pt-2">
+                    <Button
+                        variant="outline"
+                        onClick={closeImpersonateModal}
+                        disabled={isImpersonating}
+                    >
+                        Cancelar
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={confirmImpersonate}
+                        disabled={isImpersonating}
+                    >
+                        {isImpersonating ? "Entrando..." : "Entrar"}
+                    </Button>
+                </div>
+            </Modal>
         </div>
     );
 }

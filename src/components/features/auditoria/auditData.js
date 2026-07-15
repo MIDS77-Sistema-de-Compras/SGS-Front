@@ -25,5 +25,8 @@ export const levelStyles = {
     Docente: { color: "#3B6FCC", background: "#EBF0F9" },
     Coordenador: { color: "#D97706", background: "#FEF3C7" },
     Supervisor: { color: "#16A34A", background: "#DCFCE7" },
+    Comprador: { color: "#7C3AED", background: "#EDE9FE" },
     ADM: { color: "#DC2626", background: "#FEE2E2" },
 };
+
+export const defaultLevelStyle = { color: "#3B6FCC", background: "#EBF0F9" };
