@@ -5,5 +5,5 @@ export const metadata = {
 };
 
 export default function AuditoriaPage() {
-    return <AuditDashboard />;
+  return <AuditDashboard />;
 }

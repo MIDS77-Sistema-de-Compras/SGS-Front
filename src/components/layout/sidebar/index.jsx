@@ -1,6 +1,6 @@
 import { Profile } from "./Profile";
 import { Navigation } from "./Navigation";
-import { Footer } from "./Footer";
+import { Footer } from "./Footer"; 
 import { SidebarShell } from "./SidebarShell";
 import { cookies } from "next/headers";
 

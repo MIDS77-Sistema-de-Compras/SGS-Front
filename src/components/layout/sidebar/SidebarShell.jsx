@@ -66,7 +66,7 @@ export function SidebarShell({ children }) {
                     fixed inset-y-0 left-0 w-[280px] max-w-[85vw] overflow-y-auto
                     transition-transform duration-300 ease-in-out
                     ${isOpen ? "translate-x-0" : "-translate-x-full"}
-                    lg:static lg:translate-x-0 lg:h-screen lg:w-72 lg:shrink-0 lg:shadow-xl
+                    lg:static lg:translate-x-0 lg:h-screen lg:w-64 min-[1350px]:w-72 lg:shrink-0 lg:shadow-xl
                 `}
             >
                 <button
