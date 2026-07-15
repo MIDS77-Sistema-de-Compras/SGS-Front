@@ -19,6 +19,7 @@ export function useRequestForm() {
     const [phone, setPhone] = useState("");
     const [crBranchId, setCrBranchId] = useState("");
     const [productName, setProductName] = useState("");
+    const [variation, setVariation] = useState("");
     const [quantity, setQuantity] = useState("");
     const [unit, setUnit] = useState("");
     const [additionalInfo, setAdditionalInfo] = useState("");
@@ -150,12 +151,14 @@ export function useRequestForm() {
             {
                 id: crypto.randomUUID(),
                 name: productName.trim(),
+                variation: variation.trim(),
                 quantity: Number(quantity),
                 measurementUnit: unit,
                 additionalInformations: additionalInfo.trim(),
             },
         ]);
         setProductName("");
+        setVariation("");
         setQuantity("");
         setUnit("");
         setAdditionalInfo("");
@@ -247,7 +250,7 @@ export function useRequestForm() {
         }
 
         if (abaAtiva === "produto") {
-            if (productName.trim() || quantity || unit) {
+            if (productName.trim() || variation.trim() || quantity || unit) {
                 setFormError("Você preencheu os campos, mas esqueceu de clicar no botão '+' para adicionar o produto.");
                 showNotification("Adicione o produto pendente à lista antes de finalizar.", "warning");
                 return;
@@ -336,6 +339,8 @@ export function useRequestForm() {
         crBranchId,
         productName,
         setProductName,
+        variation,
+        setVariation,
         quantity,
         setQuantity,
         unit,

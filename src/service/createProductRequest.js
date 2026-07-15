@@ -10,6 +10,7 @@ export async function createFullRequest({ crBranchId, products, attachments = []
         userIds: [],
         products: products.map((product) => ({
             productName: product.name,
+            variation: product.variation || "",
             measurementUnit: product.measurementUnit,
             quantity: Number(product.quantity),
             additionalInformations: product.additionalInformations || "",
