@@ -1,11 +1,15 @@
 "use client";
 
 import ProductTableRow from "./ProductTableRow";
+import { getStatusLabel } from "@/lib/utils/requestStatus";
 
 export default function ProductTable({
     localProducts,
     openModal,
     isServiceRequest = false,
+    canDecideItems = false,
+    onApproveItem,
+    onRejectItem,
 }) {
     return (
         <div className="w-full flex-1 overflow-y-auto px-5">
@@ -42,6 +46,9 @@ export default function ProductTable({
                                 item={item}
                                 openModal={openModal}
                                 isServiceRequest={isServiceRequest}
+                                canDecideItem={canDecideItems && getStatusLabel(item.status) === "Aguardando aprovação"}
+                                onApproveItem={onApproveItem}
+                                onRejectItem={onRejectItem}
                             />
                         ))
                     ) : (

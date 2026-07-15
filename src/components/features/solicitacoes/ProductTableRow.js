@@ -2,7 +2,7 @@
 
 import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
 
-export default function ProductTableRow({ item, openModal }) {
+export default function ProductTableRow({ item, openModal, canDecideItem = false, onApproveItem, onRejectItem }) {
     return (
         <tr className="hover:bg-gray-50/40 dark:hover:bg-white/5 transition-colors">
             <td 
@@ -32,6 +32,22 @@ export default function ProductTableRow({ item, openModal }) {
                 <span className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide ${getStatusColor(item.status)}`}>
                     {getStatusLabel(item.status)}
                 </span>
+                {canDecideItem && (
+                    <div className="flex justify-center gap-2 mt-2">
+                        <button
+                            onClick={() => onApproveItem(item)}
+                            className="rounded-full bg-green-600 text-white text-xs font-bold px-4 py-1 hover:opacity-90 transition-opacity"
+                        >
+                            Aprovar
+                        </button>
+                        <button
+                            onClick={() => onRejectItem(item)}
+                            className="rounded-full bg-red-600 text-white text-xs font-bold px-4 py-1 hover:opacity-90 transition-opacity"
+                        >
+                            Recusar
+                        </button>
+                    </div>
+                )}
             </td>
         </tr>
     );

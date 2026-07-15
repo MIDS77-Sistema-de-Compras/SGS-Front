@@ -16,6 +16,7 @@ import { api, getPageContent } from "@/service/api";
 import { updateItemRequestProduct, updateRequestCrBranch } from "@/service/requests";
 
 const CARGOS_QUE_PODEM_EDITAR = ["DOCENTE", "SUPERVISOR", "COORDENADOR", "COMPRADOR", "ADMIN"];
+const CARGOS_QUE_DECIDEM_ITEM = ["SUPERVISOR", "COORDENADOR"];
 
 function formatDisplayDate(date) {
     if (!date) return "-";
@@ -32,6 +33,7 @@ export default function MyRequests() {
     const { id } = useParams();
     const { request: solicitacao, loading, error, refetch } = useRequestDetails(id);
     const isProfessor = CARGOS_QUE_PODEM_EDITAR.includes(getUserRole());
+    const canDecideItems = CARGOS_QUE_DECIDEM_ITEM.includes(getUserRole());
 
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -126,6 +128,30 @@ export default function MyRequests() {
         }
     };
 
+    const handleDecideItem = async (item, novoStatus) => {
+        try {
+            await updateItemRequestProduct(item.id, {
+                requestId: Number(id),
+                productName: item.nome,
+                variation: item.variation,
+                measurementUnit: item.unit,
+                quantity: Number(item.quantity),
+                statusName: novoStatus,
+                additionalInformations: item.additionalInfo,
+            });
+
+            await refetch();
+            setNotification({
+                type: "success",
+                message: novoStatus === "Aprovado" ? "Item aprovado com sucesso!" : "Item recusado.",
+            });
+            setTimeout(() => setNotification(null), 3000);
+        } catch (err) {
+            setNotification({ type: "error", message: err.message || "Erro ao decidir sobre o item." });
+            setTimeout(() => setNotification(null), 3000);
+        }
+    };
+
     if (loading) {
         return <RequestDetailsSkeleton />;
     }
@@ -162,7 +188,9 @@ export default function MyRequests() {
                                 <path d="m15 18-6-6 6-6" />
                             </svg>
                         </Link>
-                        <h3 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">Minhas solicitações</h3>
+                        <h3 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
+                            {canDecideItems ? "Monitoramento" : "Minhas solicitações"}
+                        </h3>
                     </div>
 
                     <hr className="border-gray-100 dark:border-white/10 mb-6" />
@@ -196,6 +224,9 @@ export default function MyRequests() {
                         localProducts={isServiceRequest ? localServices : localProducts}
                         openModal={openModal}
                         isServiceRequest={isServiceRequest}
+                        canDecideItems={canDecideItems && !isServiceRequest}
+                        onApproveItem={(item) => handleDecideItem(item, "Aprovado")}
+                        onRejectItem={(item) => handleDecideItem(item, "Recusado")}
                     />
                 </div>
 
