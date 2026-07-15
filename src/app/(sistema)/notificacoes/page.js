@@ -41,7 +41,7 @@ export default function Notificacoes() {
                 }
             } catch {
                 if (isMounted) {
-                    setError("Nao foi possivel carregar as notificacoes.");
+                    setError("Não foi possivel carregar as notificações.");
                 }
             } finally {
                 if (isMounted) {
@@ -70,7 +70,7 @@ export default function Notificacoes() {
                 ))
             ));
         } catch {
-            setError("Nao foi possivel atualizar a notificacao.");
+            setError("Não foi possivel atualizar a notificação.");
         } finally {
             setUpdatingId(null);
         }

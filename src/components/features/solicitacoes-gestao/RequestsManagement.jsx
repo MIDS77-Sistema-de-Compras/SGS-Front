@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import SolicitacoesTabs from '@/lib/utils/requestTabs';
 import { useRequestsList } from '@/hooks/useRequestsList';
 import { useCRSearch } from '@/hooks/useCRSearch';
@@ -34,9 +35,21 @@ const MENSAGENS_VAZIO = {
     concluidas: 'Nenhuma solicitação concluída encontrada.',
 };
 
+function getAbaByStatusLabel(statusLabel) {
+    return (
+        Object.keys(STATUS_POR_ABA).find((aba) => STATUS_POR_ABA[aba].includes(statusLabel)) ||
+        null
+    );
+}
+
 export default function RequestsManagement() {
     const { requests, loading, error } = useRequestsList();
     const { filteredCRs: crs } = useCRSearch();
+
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const highlightRequestId = searchParams.get('requestId');
 
     const [abaAtiva, setAbaAtiva] = useState('pendentes');
     const [status, setStatus] = useState('');
@@ -52,6 +65,10 @@ export default function RequestsManagement() {
     const [justificativa, setJustificativa] = useState('');
     const [justificativaErro, setJustificativaErro] = useState('');
 
+    const [highlightHandled, setHighlightHandled] = useState(false);
+    const [highlightedId, setHighlightedId] = useState(null);
+    const cardRefs = useRef(new Map());
+
     const supervisores = useMemo(() => {
         const nomes = crs.flatMap((crBranch) => crBranch.responsibleUsersName || []);
         return [...new Set(nomes)];
@@ -66,7 +83,7 @@ export default function RequestsManagement() {
     const itensFiltrados = useMemo(() => {
         const statusPermitidos = STATUS_POR_ABA[abaAtiva] || [];
 
-        return itensComOverrides.filter((item) => {
+        const filtrados = itensComOverrides.filter((item) => {
             const statusLabel = getStatusLabel(item.status);
 
             if (!statusPermitidos.includes(statusLabel)) return false;
@@ -86,13 +103,49 @@ export default function RequestsManagement() {
             return true;
         });
 
-        return filtrados.sort((a, b) => {
+        return [...filtrados].sort((a, b) => {
             const dataA = new Date(a.data || 0).getTime();
             const dataB = new Date(b.data || 0).getTime();
-            
-            return dataB - dataA; 
+
+            return dataB - dataA;
         });
     }, [itensComOverrides, abaAtiva, status, cr, supervisor, busca]);
+
+   
+    useEffect(() => {
+        if (!highlightRequestId || highlightHandled || loading) return;
+        if (requests.length === 0) return;
+
+        const alvo = requests.find((item) => String(item.id) === String(highlightRequestId));
+
+        if (alvo) {
+            const statusLabel = getStatusLabel(alvo.status);
+            const aba = getAbaByStatusLabel(statusLabel);
+            if (aba) setAbaAtiva(aba);
+        }
+
+        setHighlightHandled(true);
+    }, [highlightRequestId, highlightHandled, loading, requests]);
+
+    
+    useEffect(() => {
+        if (!highlightRequestId || !highlightHandled) return;
+
+        const node = cardRefs.current.get(String(highlightRequestId));
+        if (!node) return;
+
+        node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setHighlightedId(highlightRequestId);
+
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete('requestId');
+        const novaQuery = params.toString();
+        router.replace(novaQuery ? `${pathname}?${novaQuery}` : pathname, { scroll: false });
+
+        const timeout = setTimeout(() => setHighlightedId(null), 3000);
+        return () => clearTimeout(timeout);
+        
+    }, [highlightRequestId, highlightHandled, itensFiltrados]);
 
     function openRejectModal(item) {
         setRejectTarget(item);
@@ -192,13 +245,28 @@ export default function RequestsManagement() {
                     {!loading && !error && itensFiltrados.length > 0 && (
                         <div className="flex flex-col">
                             {itensFiltrados.map((item) => (
-                                <RequestManagementCard
+                                <div
                                     key={item.id}
-                                    item={item}
-                                    onApprove={(request) => handleDecisao(request, 'Aprovado')}
-                                    onReject={(request) => openRejectModal(request)}
-                                    isDeciding={decidingId === item.id}
-                                />
+                                    ref={(node) => {
+                                        if (node) {
+                                            cardRefs.current.set(String(item.id), node);
+                                        } else {
+                                            cardRefs.current.delete(String(item.id));
+                                        }
+                                    }}
+                                    className={`rounded-xl transition-shadow duration-500 ${
+                                        String(item.id) === String(highlightedId)
+                                            ? 'ring-2 ring-[#103D85] ring-offset-2 dark:ring-[#5D8EF7] dark:ring-offset-[#1A2233]'
+                                            : ''
+                                    }`}
+                                >
+                                    <RequestManagementCard
+                                        item={item}
+                                        onApprove={(request) => handleDecisao(request, 'Aprovado')}
+                                        onReject={(request) => openRejectModal(request)}
+                                        isDeciding={decidingId === item.id}
+                                    />
+                                </div>
                             ))}
                         </div>
                     )}
