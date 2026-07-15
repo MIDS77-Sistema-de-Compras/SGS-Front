@@ -51,7 +51,7 @@ export function csvParse(csvFile){
 
 /**
  * Converts the csv (already parsed to rows) into a JSON object (or key: value, if you prefer) specifically for Products
- * @param {*} rows The parsed rows from the csv file
+ * @param {*} rows The parsed rows from the csv contents
  * @returns The JSON/key: value object, with data that might not be necessary, but here just for the sake of organization
  */
 export function csvConvertForProducts(rows){
@@ -59,12 +59,27 @@ export function csvConvertForProducts(rows){
         productName: row['PRODUTO'] || '',
         measurementUnit: row['VARIAÇÃO'] || '',
         userName: row['SOLICITANTE E/OU DESTINATÁRIO (COM RAMAL)'] || '',
-        requester: row['REQUISITANTE'],
-        status: row['STATUS'],
+        requester: row['REQUISITANTE'] || '',
+        status: row['STATUS'] || '',
         quantity: parseFloat(row['QUANTIDADE']) || 0,
         additionalInformations: row['INFORMAÇÕES ADICIONAIS'] || '',
         crBranchId: String(row['CR E PROJETO'] || ''),
         branchId: String(row['FILIAL PAGADORA'] || '')
     }));
+}
+
+/**
+ * Converts the csv (already parsed to rows) into a JSON object (or key: value, if you prefer) specifically for Provisions (or services)
+ * @param {*} rows The parsed rows from the csv contents
+ * @returns The JSON/key: value object, with data that might not be necessary, but here just for the sake of organization
+ */
+export function csvConvertForProvisions(rows){
+    return rows.map(row => ({
+        provision: row['DESCRIÇÃO DO SERVIÇO'] || '',
+        userName: row['SOLICITANTE E/OU DESTINATÁRIO (COM RAMAL)'] || '',
+        requester: row['REQUISITANTE'] || '',
+        status: row['STATUS'] || '',
+        crBranchId: row['CR E PROJETO'] || '',
+    }))
 }
 // me tired ;/
