@@ -66,7 +66,7 @@ export default function RequestsManagement() {
     const itensFiltrados = useMemo(() => {
         const statusPermitidos = STATUS_POR_ABA[abaAtiva] || [];
 
-        return itensComOverrides.filter((item) => {
+        const filtrados = itensComOverrides.filter((item) => {
             const statusLabel = getStatusLabel(item.status);
 
             if (!statusPermitidos.includes(statusLabel)) return false;
@@ -87,8 +87,8 @@ export default function RequestsManagement() {
         });
 
         return filtrados.sort((a, b) => {
-            const dataA = new Date(a.data || 0).getTime();
-            const dataB = new Date(b.data || 0).getTime();
+            const dataA = new Date(a.data).getTime(); 
+            const dataB = new Date(b.data).getTime();
             
             return dataB - dataA; 
         });
@@ -190,7 +190,7 @@ export default function RequestsManagement() {
                     )}
 
                     {!loading && !error && itensFiltrados.length > 0 && (
-                        <div className="flex flex-col">
+                        <div className="flex flex-col mt-2">
                             {itensFiltrados.map((item) => (
                                 <RequestManagementCard
                                     key={item.id}
