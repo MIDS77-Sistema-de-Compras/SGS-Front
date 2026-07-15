@@ -50,11 +50,11 @@ export function csvParse(csvFile){
 }
 
 /**
- * Converts the csv (already parsed to rows) into a JSON object (or key: value, if you prefer.)
+ * Converts the csv (already parsed to rows) into a JSON object (or key: value, if you prefer) specifically for Products
  * @param {*} rows The parsed rows from the csv file
  * @returns The JSON/key: value object, with data that might not be necessary, but here just for the sake of organization
  */
-export function csvConvert(rows){
+export function csvConvertForProducts(rows){
     return rows.map(row => ({
         productName: row['PRODUTO'] || '',
         measurementUnit: row['VARIAÇÃO'] || '',

@@ -18,6 +18,7 @@ import { useRequestForm } from "@/hooks/useRequestForm";
 import ServiceAutocomplete from "./ServiceAutoComplete";
 import ProductAutocomplete from './ProductAutocomplete';
 
+// this needs componentization
 export default function RequestForm() {
     const {
         abaAtiva, setAbaAtiva,
@@ -364,6 +365,30 @@ export default function RequestForm() {
 
                     {attachments.length > 0 && csvData.length === 0 && !isProcessing && (
                         <div className="mb-6">
+                            <ul className="mt-3 flex flex-col gap-2 mb-4">
+                                {attachments.map((f, index) => (
+                                    <li
+                                        key={index}
+                                        className="flex items-center justify-between rounded-lg border border-[#AAAAAA] px-4 py-2 text-sm"
+                                    >
+                                        <div className="flex items-center gap-3 min-w-0">
+                                            <span className="truncate font-medium text-[#103D85]">
+                                                {f.name}
+                                            </span>
+                                            <span className="shrink-0 text-[#747782]">
+                                                {formatFileSize(f.size)}
+                                            </span>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveAttachment(index)}
+                                            className="ml-3 shrink-0 font-bold text-[#BA1A1A] hover:opacity-70"
+                                        >
+                                            ×
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
                             <Button
                                 variant="primary"
                                 onClick={handleImportSubmit}
@@ -411,7 +436,7 @@ export default function RequestForm() {
                                 <Button
                                     variant="outline"
                                     onClick={() => {
-                                        setCsvData(null);
+                                        setCsvData([]);
                                         setCsvError("");
                                     }}
                                     className="mr-3"
