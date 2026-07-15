@@ -55,16 +55,17 @@ export function SidebarShell({ children }) {
             <div
                 onClick={() => setIsOpen(false)}
                 aria-hidden="true"
-                className={`lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px] transition-opacity duration-300
-                    ${isOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                style={{ transition: "opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1)" }}
+                className={`lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px]
+                ${isOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
             />
 
             <aside
+                style={{ transition: "translate 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)" }}
                 className={`
                     z-50 bg-[#103D85] dark:bg-[#0D121F] text-white shadow-2xl select-none
                     flex flex-col justify-between gap-8 py-8 px-4
                     fixed inset-y-0 left-0 w-[280px] max-w-[85vw] overflow-y-auto
-                    transition-transform duration-300 ease-in-out
                     ${isOpen ? "translate-x-0" : "-translate-x-full"}
                     lg:static lg:translate-x-0 lg:h-screen lg:w-72 lg:shrink-0 lg:shadow-xl
                 `}
