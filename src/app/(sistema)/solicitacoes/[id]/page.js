@@ -3,7 +3,7 @@
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
@@ -31,6 +31,7 @@ export default function MyRequests() {
     useDocumentTitle("Detalhe da Solicitação");
 
     const { id } = useParams();
+    const router = useRouter();
     const { request: solicitacao, loading, error, refetch } = useRequestDetails(id);
     const isProfessor = CARGOS_QUE_PODEM_EDITAR.includes(getUserRole());
     const canDecideItems = CARGOS_QUE_DECIDEM_ITEM.includes(getUserRole());
@@ -183,11 +184,15 @@ export default function MyRequests() {
             <div className="w-full">
                 <div className="border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
                     <div className="flex items-center gap-3 px-5 py-3">
-                        <Link href="/solicitacoes" className="text-[#103D85] dark:text-[#5D8EF7] hover:opacity-80 transition-opacity">
+                        <button
+                            type="button"
+                            onClick={() => router.back()}
+                            className="text-[#103D85] dark:text-[#5D8EF7] hover:opacity-80 transition-opacity"
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="m15 18-6-6 6-6" />
                             </svg>
-                        </Link>
+                        </button>
                         <h3 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
                             {canDecideItems ? "Monitoramento" : "Minhas solicitações"}
                         </h3>
@@ -231,12 +236,13 @@ export default function MyRequests() {
                 </div>
 
                 <div className="flex justify-end pt-5">
-                    <Link
-                        href="/solicitacoes"
+                    <button
+                        type="button"
+                        onClick={() => router.back()}
                         className="bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
                     >
                         Fechar solicitação
-                    </Link>
+                    </button>
                 </div>
             </div>
 
