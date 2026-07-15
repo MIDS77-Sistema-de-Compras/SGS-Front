@@ -91,7 +91,7 @@ export default function Notificacoes() {
                 </div>
 
                 <div className="border-t border-gray-100 dark:border-white/10 mt-2 mb-3 -mx-5 shrink-0" />
-                <div className="min-h-0 flex-1 overflow-y-auto py-2 pr-1">
+                <div className="min-h-0 flex-1 overflow-y-auto py-2 pr-4">
                     {isLoading && <NotificationsListSkeleton />}
 
                     {!isLoading && error && (

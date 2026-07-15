@@ -11,7 +11,7 @@ export function Search({
     const { filteredCRs, search, setSearch, loading, error } = useCRSearch();
 
     return (
-        <div className="w-[380px] flex flex-col border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl min-h-0">
+        <div className="w-full xl:w-[380px] xl:shrink-0 flex flex-col border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl min-h-0">
 
             <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 dark:border-white/10">
                 <h1 className="font-bold text-[#103D85] dark:text-[#E2E2EA] text-[22px]">

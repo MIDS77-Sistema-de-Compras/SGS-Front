@@ -83,11 +83,11 @@ export default function RequestForm() {
                     <div className="mt-10">
                         <SectionHeader label="IDENTIFICAÇÃO E CENTRO DE CUSTO" />
 
-                        <div className="grid grid-cols-3 items-center gap-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-5">
                             <FormField
                                 label="Solicitante/Destinatário"
                                 required
-                                className="col-span-2"
+                                className="sm:col-span-2"
                             >
                                 <Input
                                     variant="form"
@@ -128,7 +128,7 @@ export default function RequestForm() {
                             <SectionHeader label="PRODUTOS" />
 
 
-                            <div className="flex w-full gap-5">
+                            <div className="flex flex-col md:flex-row w-full gap-5">
                                 <FormField
                                     label="Produto"
                                     required
@@ -206,8 +206,8 @@ export default function RequestForm() {
                         <div className="mt-10">
                             <SectionHeader label="SERVIÇOS" />
 
-                            <div className="flex w-full gap-5">
-                                <FormField label="Título do Serviço" required className="flex-2">
+                             <div className="flex flex-col md:flex-row w-full gap-5">
+                                 <FormField label="Título do Serviço" required className="flex-2">
                                     <ServiceAutocomplete
                                         placeholder="Digite para buscar um serviço..."
                                         value={serviceName}

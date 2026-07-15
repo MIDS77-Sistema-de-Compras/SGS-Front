@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Dropdown from "@/components/ui/select/Dropdown";
+import SearchableSelect from "@/components/ui/select/SearchableSelect";
 import send from "../../../../public/images/icons/send.svg";
 import FormField from "@/components/ui/form/FormField";
 import { Input } from "@/components/ui/input/Input";
@@ -130,7 +131,7 @@ export default function RequestFormCR() {
                     </FormField>
 
                     <FormField label="Filial" required className="col-span-2">
-                        <Select
+                        <SearchableSelect
                             name="branch"
                             placeholder={branchesLoading ? "Carregando filiais..." : "Selecione a filial vinculada"}
                             value={formData.branchId}
@@ -146,7 +147,7 @@ export default function RequestFormCR() {
                     </FormField>
 
                     <FormField label="Supervisor responsável 1">
-                        <Select
+                        <SearchableSelect
                             name="responsibleUserId1"
                             placeholder={supervisorsLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
                             value={formData.responsibleUserId1}
@@ -157,7 +158,7 @@ export default function RequestFormCR() {
                     </FormField>
 
                     <FormField label="Supervisor responsável 2">
-                        <Select
+                        <SearchableSelect
                             name="responsibleUserId2"
                             placeholder={supervisorsLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
                             value={formData.responsibleUserId2}
