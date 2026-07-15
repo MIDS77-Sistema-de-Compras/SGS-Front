@@ -9,15 +9,15 @@ export default function AuditDetailsModal({ open, onClose, data }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 p-4"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-4xl rounded-2xl bg-white dark:bg-[#1A2233] shadow-xl border border-gray-100 dark:border-white/10"
+        className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-[#1A2233] shadow-xl border border-gray-100 dark:border-white/10"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-gray-100 dark:border-white/10 px-8 py-4">
-          <h2 className="text-xl font-bold text-[#0B2C66] dark:text-[#E2E2EA]">
+        <div className="flex items-center justify-between border-b border-gray-100 dark:border-white/10 px-5 sm:px-8 py-4">
+          <h2 className="text-lg sm:text-xl font-bold text-[#0B2C66] dark:text-[#E2E2EA]">
             Informações do Registro
           </h2>
 
@@ -29,7 +29,7 @@ export default function AuditDetailsModal({ open, onClose, data }) {
           </button>
         </div>
 
-        <div className="space-y-6 p-8">
+        <div className="space-y-6 p-5 sm:p-8">
           <div>
             <p className="mb-2 text-xs font-semibold text-gray-400 dark:text-[#C3C6D3]">RESUMO</p>
 
@@ -41,7 +41,7 @@ export default function AuditDetailsModal({ open, onClose, data }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-x-12 gap-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 lg:gap-x-12 gap-y-5 sm:gap-y-6">
             <div>
                 <p className="text-xs font-semibold text-gray-400 dark:text-[#C3C6D3] uppercase">
                     ID DO REGISTRO
@@ -104,7 +104,7 @@ export default function AuditDetailsModal({ open, onClose, data }) {
           </div>
         </div>
 
-        <div className="flex justify-end border-t border-gray-100 dark:border-white/10 px-8 py-5">
+        <div className="flex justify-end border-t border-gray-100 dark:border-white/10 px-5 sm:px-8 py-4 sm:py-5">
           <button
             onClick={onClose}
             className="rounded-lg bg-gray-200 dark:bg-[#303746] px-6 py-2 font-medium text-gray-700 dark:text-[#E2E2EA] transition-colors hover:bg-gray-300 dark:hover:bg-white/5"
