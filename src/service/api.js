@@ -1,4 +1,4 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://sgs-back.onrender.com';
 
 export function getPageContent(response) {
     return Array.isArray(response) ? response : (response?.content ?? []);
