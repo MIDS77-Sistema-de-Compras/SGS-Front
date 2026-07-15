@@ -2,7 +2,6 @@
 
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input/Input";
 import Button from "@/components/ui/button/Button";
 import FormCard from "@/components/features/auth/FormCard";
@@ -19,8 +18,6 @@ export default function RecuperarSenhaPage() {
 
     const [disableBtn, setDisabled] = useState(false);
     const [load, setLoad] = useState(false);
-
-    const router = useRouter();
 
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
     const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
