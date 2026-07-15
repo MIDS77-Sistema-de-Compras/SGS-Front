@@ -4,9 +4,7 @@ import ProductTableRow from "./ProductTableRow";
 
 export default function ProductTable({
     localProducts,
-    isProfessor,
     openModal,
-    openEditModal,
     isServiceRequest = false,
 }) {
     return (
@@ -42,9 +40,7 @@ export default function ProductTable({
                             <ProductTableRow
                                 key={item.id || item.code}
                                 item={item}
-                                isProfessor={isProfessor}
                                 openModal={openModal}
-                                openEditModal={openEditModal}
                                 isServiceRequest={isServiceRequest}
                             />
                         ))

@@ -2,7 +2,7 @@
 
 import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
 
-export default function ProductTableRow({ item, isProfessor, openModal, openEditModal }) {
+export default function ProductTableRow({ item, openModal }) {
     return (
         <tr className="hover:bg-gray-50/40 dark:hover:bg-white/5 transition-colors">
             <td 
@@ -32,18 +32,6 @@ export default function ProductTableRow({ item, isProfessor, openModal, openEdit
                 <span className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide ${getStatusColor(item.status)}`}>
                     {getStatusLabel(item.status)}
                 </span>
-                {isProfessor && getStatusLabel(item.status) === "Aguardando aprovação" && (
-                    <button
-                        onClick={() => openEditModal(item)}
-                        title="Editar solicitação"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-yellow-500 hover:text-yellow-600 transition-colors"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
-                            <path d="m15 5 4 4"/>
-                        </svg>
-                    </button>
-                )}
             </td>
         </tr>
     );

@@ -12,7 +12,8 @@ import { useRequestDetails } from "@/hooks/useRequestDetails";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
 import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
 import { getUserRole } from "@/lib/utils/getUserRole";
-import { updateItemRequestProduct } from "@/service/requests";
+import { api, getPageContent } from "@/service/api";
+import { updateItemRequestProduct, updateRequestCrBranch } from "@/service/requests";
 
 const CARGOS_QUE_PODEM_EDITAR = ["DOCENTE", "SUPERVISOR", "COORDENADOR", "COMPRADOR", "ADMIN"];
 
@@ -29,7 +30,7 @@ export default function MyRequests() {
     useDocumentTitle("Detalhe da Solicitação");
 
     const { id } = useParams();
-    const { request: solicitacao, loading, error } = useRequestDetails(id);
+    const { request: solicitacao, loading, error, refetch } = useRequestDetails(id);
     const isProfessor = CARGOS_QUE_PODEM_EDITAR.includes(getUserRole());
 
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -45,18 +46,45 @@ export default function MyRequests() {
     const statusGeral = getStatusLabel(solicitacao?.status || calcularStatusSolicitacao(localProducts));
     const corGeral = getStatusColor(statusGeral);
 
-    const openModal = (item) => {
-        setSelectedProduct(item);
-        setEditedProduct({ ...item });
-        setEditing(false);
-        setTimeout(() => setIsModalOpen(true), 10);
-    };
+    const [crBranchOptions, setCrBranchOptions] = useState([]);
+    const [crBranchOptionsLoading, setCrBranchOptionsLoading] = useState(false);
+    const [selectedCrBranchId, setSelectedCrBranchId] = useState("");
 
-    const openEditModal = (item) => {
+    const crBranchLabel = solicitacao?.crBranch
+        ? `${solicitacao.crBranch.crCode} - ${solicitacao.crBranch.crName} (${solicitacao.crBranch.branchName ?? "sem filial"})`
+        : "Não vinculado";
+
+    async function loadCrBranchOptions() {
+        if (crBranchOptions.length > 0) return;
+
+        try {
+            setCrBranchOptionsLoading(true);
+            const crs = await api.get("/cr-branches?size=1000");
+            setCrBranchOptions(
+                getPageContent(crs).map((cr) => ({
+                    value: String(cr.id),
+                    label: `${cr.crCode} - ${cr.crName} (${cr.branchName ?? "sem filial"})`,
+                }))
+            );
+        } catch {
+            setNotification({ type: "error", message: "Não foi possível carregar as opções de CR/Filial." });
+            setTimeout(() => setNotification(null), 3000);
+        } finally {
+            setCrBranchOptionsLoading(false);
+        }
+    }
+
+    const openModal = (item) => {
+        const canEdit = isProfessor && getStatusLabel(item.status) === "Aguardando aprovação";
         setSelectedProduct(item);
         setEditedProduct({ ...item });
-        setEditing(true);
+        setEditing(canEdit);
+        setSelectedCrBranchId(solicitacao?.crBranch?.id ? String(solicitacao.crBranch.id) : "");
         setTimeout(() => setIsModalOpen(true), 10);
+
+        if (canEdit) {
+            loadCrBranchOptions();
+        }
     };
 
     const closeModal = () => {
@@ -75,11 +103,20 @@ export default function MyRequests() {
                 additionalInformations: editedProduct.additionalInfo,
             });
 
+            const currentCrBranchId = solicitacao?.crBranch?.id ? String(solicitacao.crBranch.id) : "";
+            if (selectedCrBranchId && selectedCrBranchId !== currentCrBranchId) {
+                await updateRequestCrBranch(id, {
+                    crBranchId: Number(selectedCrBranchId),
+                    statusName: solicitacao.status,
+                });
+            }
+
             setEditedProductsByRequestId(prev => ({
                 ...prev,
                 [id]: localProducts.map(item => item.id === editedProduct.id ? editedProduct : item),
             }));
             closeModal();
+            await refetch();
             setNotification({ type: "success", message: "Solicitação atualizada com sucesso!" });
             setTimeout(() => setNotification(null), 3000);
         } catch (err) {
@@ -147,11 +184,16 @@ export default function MyRequests() {
                         </span>
                     </div>
 
-                    <ProductTable 
+                    <div className="px-6 mb-6">
+                        <span className="text-sm text-gray-600 dark:text-[#C3C6D3]">
+                            <span className="font-bold text-gray-400 dark:text-[#8A8FA3] uppercase text-[10px] tracking-wider mr-2">Filial</span>
+                            {solicitacao.crBranch?.branchName ?? "Não vinculado"}
+                        </span>
+                    </div>
+
+                    <ProductTable
                         localProducts={isServiceRequest ? localServices : localProducts}
-                        isProfessor={isProfessor}
                         openModal={openModal}
-                        openEditModal={openEditModal}
                         isServiceRequest={isServiceRequest}
                     />
                 </div>
@@ -166,7 +208,7 @@ export default function MyRequests() {
                 </div>
             </div>
 
-            <ProductModal 
+            <ProductModal
                 isModalOpen={isModalOpen}
                 editing={editing}
                 selectedProduct={selectedProduct}
@@ -174,6 +216,11 @@ export default function MyRequests() {
                 setEditedProduct={setEditedProduct}
                 closeModal={closeModal}
                 handleSave={handleSave}
+                crBranchOptions={crBranchOptions}
+                crBranchOptionsLoading={crBranchOptionsLoading}
+                selectedCrBranchId={selectedCrBranchId}
+                setSelectedCrBranchId={setSelectedCrBranchId}
+                crBranchLabel={crBranchLabel}
             />
         </div>
     );
