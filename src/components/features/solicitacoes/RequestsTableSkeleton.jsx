@@ -6,15 +6,15 @@ export default function RequestsTableSkeleton({ rows = 6 }) {
             {Array.from({ length: rows }).map((_, index) => (
                 <div
                     key={index}
-                    className="flex items-center justify-between py-5 border-b border-gray-200 dark:border-white/10"
+                    className="border-b border-gray-100 dark:border-white/10"
                 >
-                    <div className="flex items-center gap-20 px-6">
-                        <Skeleton className="h-5 w-64" />
-                        <Skeleton className="h-5 w-24" />
-                    </div>
+                    <div className="flex flex-col gap-3 px-4 py-4 sm:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_120px_170px] lg:items-center lg:gap-6 lg:py-5">
+                        <Skeleton className="h-5 w-48 sm:w-64" />
 
-                    <div className="px-6">
-                        <Skeleton className="h-8 w-[150px] rounded-full" />
+                        <div className="flex items-center justify-between gap-4 lg:contents">
+                            <Skeleton className="h-5 w-20 lg:ml-auto" />
+                            <Skeleton className="h-8 w-[130px] rounded-full lg:w-full" />
+                        </div>
                     </div>
                 </div>
             ))}
