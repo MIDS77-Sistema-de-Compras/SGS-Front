@@ -15,13 +15,13 @@ export default function SolicitacoesFilter({
     statusDisponiveis,
 }) {
     return (
-        <div className="bg-white dark:bg-[#1A2233] rounded-xl border border-gray-100 shadow-sm dark:border-white/10 flex flex-row items-center justify-between p-2 gap-3">
-            <span className="pl-3 text-[18px] text-[#133D87] dark:text-[#E2E2EA]">
+        <div className="bg-white dark:bg-[#1A2233] rounded-xl border border-gray-100 shadow-sm dark:border-white/10 flex flex-col md:flex-row md:items-center md:justify-between p-4 gap-4 md:gap-3">
+            <span className="text-[16px] md:text-[18px] text-[#133D87] dark:text-[#E2E2EA]">
                 Filtrar
             </span>
 
-            <div className="flex flex-row items-center gap-3">
-                <div className="w-[140px]">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <div className="w-full sm:w-[140px]">
                     <Dropdown
                         name="status"
                         value={status}
@@ -38,7 +38,7 @@ export default function SolicitacoesFilter({
                     />
                 </div>
 
-                <div className="w-[140px]">
+                <div className="w-full sm:w-[150px]">
                     <Input
                         type="date"
                         value={data}
@@ -47,13 +47,13 @@ export default function SolicitacoesFilter({
                     />
                 </div>
 
-                <div className="flex flex-row items-center w-[260px] px-3 border border-gray-100 shadow-sm dark:border-white/15 rounded-xl text-sm focus-within:ring-1 focus-within:ring-[#103D85] dark:focus-within:ring-[#1A4A9E] dark:bg-[#303746]">
+                <div className="flex flex-row items-center w-full sm:w-[240px] min-[1350px]:w-[260px] px-3 border border-gray-100 shadow-sm dark:border-white/15 rounded-xl text-sm focus-within:ring-1 focus-within:ring-[#103D85] dark:focus-within:ring-[#1A4A9E] dark:bg-[#303746]">
                     <Image
                         src="/images/icons/lupa.png"
                         alt="Ícone de lupa"
                         width={21}
                         height={21}
-                        className="w-5 h-5 dark:invert dark:brightness-90"
+                        className="w-5 h-5 shrink-0 dark:invert dark:brightness-90"
                     />
 
                     <input

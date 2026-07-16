@@ -58,12 +58,12 @@ const STATUS_CATALOG = [
         aliases: ["entregue"],
     },
     {
-        key: "parcial_aprovado",
-        label: "Parcial Aprovado",
-        color: "bg-[#0084FF]",
-        category: null,
-        selectable: false,
-        aliases: ["parcial aprovado"],
+        key: "parcialmente_aprovada",
+        label: "Parcialmente aprovada",
+        color: "bg-[#8B5CF6]",
+        category: "pendente",
+        selectable: true,
+        aliases: ["parcialmente aprovada", "parcial aprovado", "parcialmente aprovado"],
     },
     {
         key: "sem_produtos",

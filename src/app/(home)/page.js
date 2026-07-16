@@ -18,18 +18,19 @@ export default function Home(){
     useEffect(() => {
         const userRole = getUserRole();
         setRole(userRole);
-        
+
         setMounted(true);
     }, []);
 
     return(
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col gap-8 lg:gap-0">
             <Header />
-            <section className="flex gap-10 my-auto">
+
+            <section className="flex flex-col-reverse lg:flex-row gap-6 min-[1350px]:gap-10 lg:my-auto">
                 <RecentActivity />
                 <SummaryCard />
             </section>
-            
+
             {mounted ? (
                 role === "COMPRADOR" ? <CompradorFooter /> : <HomeFooter />
             ) : (

@@ -1,4 +1,5 @@
 import { api, getPageContent } from "@/service/api";
+import { getUserRole } from "@/lib/utils/getUserRole";
 
 function formatRequestCode(crBranch) {
     if (!crBranch?.crCode) return "SolicitaÃ§Ã£o";
@@ -17,7 +18,7 @@ function normalizeProduct(item) {
         id: item.itemRequestProduct,
         code: item.itemRequestProduct ? `PROD-${item.itemRequestProduct}` : "PROD",
         nome: item.productName,
-        variation: item.measurementUnit,
+        variation: item.variation,
         status: item.statusName,
         quantity: item.quantity,
         unit: item.measurementUnit,
@@ -110,8 +111,17 @@ async function getRequestsFromEndpoint(endpoint) {
     });
 }
 
+export function updateItemRequestProduct(itemId, payload) {
+    return api.put(`/item-request-products/${itemId}`, payload);
+}
+
+export function updateRequestCrBranch(id, payload) {
+    return api.put(`/requests/${id}`, payload);
+}
+
 export async function getRequestById(id) {
-    const request = await api.get(`/requests/${id}`);
+    const endpoint = getUserRole() === "DOCENTE" ? `/requests/me/${id}` : `/requests/${id}`;
+    const request = await api.get(endpoint);
 
     const [products, crBranch] = await Promise.all([
         api.get("/item-request-products?size=1000"),

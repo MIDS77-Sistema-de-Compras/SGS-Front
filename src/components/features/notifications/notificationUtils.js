@@ -68,19 +68,19 @@ export function formatRelativeTime(value) {
     const minutes = Math.floor(diffInSeconds / 60);
 
     if (minutes < 60) {
-        return `Ha ${minutes} min`;
+        return `Há ${minutes} min`;
     }
 
     const hours = Math.floor(minutes / 60);
 
     if (hours < 24) {
-        return `Ha ${hours} h`;
+        return `Há ${hours} h`;
     }
 
     const days = Math.floor(hours / 24);
 
     if (days < 7) {
-        return `Ha ${days} d`;
+        return `Há ${days} d`;
     }
 
     return formatDateTime(value);

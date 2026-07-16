@@ -31,6 +31,7 @@ export default function RequestForm() {
         phone, setPhone,
         crBranchId, setCrBranchId,
         productName, setProductName,
+        variation, setVariation,
         quantity, setQuantity,
         unit, setUnit,
         additionalInfo, setAdditionalInfo,
@@ -95,19 +96,19 @@ export default function RequestForm() {
                         <div className="mt-10">
                             <SectionHeader label="IDENTIFICAÇÃO E CENTRO DE CUSTO" />
 
-                            <div className="grid grid-cols-3 items-center gap-5">
-                                <FormField
-                                    label="Solicitante/Destinatário"
-                                    required
-                                    className="col-span-2"
-                                >
-                                    <Input
-                                        variant="form"
-                                        placeholder="Nome completo do docente..."
-                                        value={requester || ""}
-                                        onChange={(event) => setRequester(event.target.value)}
-                                    />
-                                </FormField>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-5">
+                            <FormField
+                                label="Solicitante/Destinatário"
+                                required
+                                className="sm:col-span-2"
+                            >
+                                <Input
+                                    variant="form"
+                                    placeholder="Nome completo do docente..."
+                                    value={requester || ""}
+                                    onChange={(event) => setRequester(event.target.value)}
+                                />
+                            </FormField>
 
                                 <FormField label="Ramal" required>
                                     <PhoneInput
@@ -135,25 +136,38 @@ export default function RequestForm() {
                             </FormField>
                         </div>
 
-                        {abaAtiva === "produto" ? (
-                            <div className="mt-10">
-                                <SectionHeader label="PRODUTOS" />
+                    {abaAtiva === "produto" ? (
+                        <div className="mt-10">
+                            <SectionHeader label="PRODUTOS" />
 
-                                <div className="flex w-full gap-5">
-                                    <FormField
-                                        label="Produto"
-                                        required
-                                        className="flex-2"
-                                    >
-                                        <ProductAutocomplete
-                                            value={productName}
-                                            onChange={setProductName}
-                                            onSelectProduct={(product) => {
-                                                setProductName(product.name);
-                                            }}
-                                            placeholder="Digite o nome do produto..."
-                                        />
-                                    </FormField>
+
+                            <div className="flex flex-col md:flex-row w-full gap-5">
+                                <FormField
+                                    label="Produto"
+                                    required
+                                    className="flex-2"
+                                >
+                                    <ProductAutocomplete
+                                        value={productName}
+                                        onChange={setProductName}
+                                        onSelectProduct={(product) => {
+                                            setProductName(product.name);
+                                        }}
+                                        placeholder="Digite o nome do produto..."
+                                    />
+                                </FormField>
+
+                                <FormField
+                                    label="Variação"
+                                    className="flex-1"
+                                >
+                                    <Input
+                                        variant="form"
+                                        placeholder="Ex: Tamanho G, Azul..."
+                                        value={variation || ""}
+                                        onChange={(event) => setVariation(event.target.value)}
+                                    />
+                                </FormField>
 
                                     <FormField
                                         label="Quantidade"
@@ -216,18 +230,18 @@ export default function RequestForm() {
                             <div className="mt-10">
                                 <SectionHeader label="SERVIÇOS" />
 
-                                <div className="flex w-full gap-5">
-                                    <FormField label="Título do Serviço" required className="flex-2">
-                                        <ServiceAutocomplete
-                                            placeholder="Digite para buscar um serviço..."
-                                            value={serviceName}
-                                            onChange={setServiceName}
-                                            onSelectProvision={(provision) => {
-                                                setServiceValue(String(provision.totalValue ?? ""));
-                                                setServiceAdditionalInfo(provision.description ?? "");
-                                            }}
-                                        />
-                                    </FormField>
+                             <div className="flex flex-col md:flex-row w-full gap-5">
+                                 <FormField label="Título do Serviço" required className="flex-2">
+                                    <ServiceAutocomplete
+                                        placeholder="Digite para buscar um serviço..."
+                                        value={serviceName}
+                                        onChange={setServiceName}
+                                        onSelectProvision={(provision) => {
+                                            setServiceValue(String(provision.totalValue ?? ""));
+                                            setServiceAdditionalInfo(provision.description ?? "");
+                                        }}
+                                    />
+                                </FormField>
 
                                     <FormField label="Valor" required className="flex-1">
                                         <Input
