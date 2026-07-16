@@ -16,6 +16,7 @@ import Modal from "@/components/ui/overlay/Modal";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import UserTable from "@/components/features/gerenciar-users/UserTable";
 import { getAllUsers } from "@/service/users/usersSearch";
+import { exportToCsv } from "@/lib/utils/exportCsv";
 import { impersonateUser } from "@/service/auth/auth-impersonate";
 import { useLoggedUser } from "@/hooks/useLoggedUser";
 
@@ -84,6 +85,18 @@ export default function GerenciarUsuarios() {
             return matchesSearch && matchesStatus;
         });
     }, [users, searchTerm, statusFilter]);
+
+    function handleExport() {
+        const headers = ["Nome", "E-mail", "Perfil", "Status", "Última atualização"];
+        const rows = filteredUsers.map((user) => [
+            user.name,
+            user.email,
+            user.roleName || "",
+            user.active ? "Ativo" : "Inativo",
+            user.updatedAt ? new Date(user.updatedAt).toLocaleDateString("pt-BR") : "",
+        ]);
+        exportToCsv(`usuarios_${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
+    }
 
     const totalUsers = users.length;
     const activeUsers = users.filter((u) => u.active).length;
@@ -169,6 +182,7 @@ export default function GerenciarUsuarios() {
                     <div className="flex w-full sm:w-auto items-center gap-3">
                         <Button
                             variant="outline"
+                            onClick={handleExport}
                             className="bg-[#E6F0FF] dark:bg-[#303746] text-[#103D85] dark:text-[#E2E2EA] border-transparent hover:bg-[#D4E5FF] dark:hover:bg-white/5"
                         >
                             Exportar

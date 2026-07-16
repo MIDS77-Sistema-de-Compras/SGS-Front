@@ -7,6 +7,7 @@ import AuditLogTable from "./AuditLogTable";
 import AuditPagination from "./AuditPagination";
 import AuditSummaryCards from "./AuditSummaryCards";
 import { getAuditLogs } from "@/service/auditLogs";
+import { exportToCsv } from "@/lib/utils/exportCsv";
 
 const LOGS_PER_PAGE = 6;
 
@@ -108,6 +109,21 @@ export default function AuditDashboard() {
     const page = Math.min(currentPage, totalPages);
     const paginatedLogs = filteredLogs.slice((page - 1) * LOGS_PER_PAGE, page * LOGS_PER_PAGE);
 
+    function handleExport() {
+        const headers = ["ID", "Usuário", "Nível", "Ação", "Descrição", "Usuário afetado", "Requisição", "Data/Hora"];
+        const rows = filteredLogs.map((log) => [
+            log.id,
+            log.user,
+            log.level,
+            log.action,
+            log.description,
+            log.affectedUser,
+            log.request,
+            log.timestamp.replace("\n", " "),
+        ]);
+        exportToCsv(`auditoria_${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
+    }
+
     function updateFilter(setter) {
         return (value) => {
             setter(value);
@@ -120,7 +136,7 @@ export default function AuditDashboard() {
             <AuditHeader />
             <AuditSummaryCards stats={stats} />
             <section className="flex-1 bg-white border border-gray-300 rounded-[14px] shadow-sm overflow-hidden flex flex-col">
-                <AuditFilters searchTerm={searchTerm} actionType={actionType} period={period} actionOptions={actionOptions} onSearchChange={updateFilter(setSearchTerm)} onActionChange={updateFilter(setActionType)} onPeriodChange={updateFilter(setPeriod)} />
+                <AuditFilters searchTerm={searchTerm} actionType={actionType} period={period} actionOptions={actionOptions} onSearchChange={updateFilter(setSearchTerm)} onActionChange={updateFilter(setActionType)} onPeriodChange={updateFilter(setPeriod)} onExport={handleExport} />
                 <div className="flex-1 overflow-x-auto overflow-y-auto">
                     {loading
                         ? <p className="px-6 py-8 text-center text-sm text-gray-500">Carregando registros...</p>

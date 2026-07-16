@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function AuditFilters({ searchTerm, actionType, period, actionOptions, onSearchChange, onActionChange, onPeriodChange }) {
+export default function AuditFilters({ searchTerm, actionType, period, actionOptions, onSearchChange, onActionChange, onPeriodChange, onExport }) {
     return (
         <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-200">
             <label className="relative flex-1 max-w-[280px]">
@@ -22,7 +22,7 @@ export default function AuditFilters({ searchTerm, actionType, period, actionOpt
             </label>
 
             <div className="flex-1" />
-            <button type="button" className="flex items-center gap-2 border border-gray-300 rounded-lg px-5 py-2 text-[13px] font-semibold text-gray-700 bg-white hover:bg-gray-50 transition-colors active:scale-[0.98]">Exportar</button>
+            <button type="button" onClick={onExport} className="flex items-center gap-2 border border-gray-300 rounded-lg px-5 py-2 text-[13px] font-semibold text-gray-700 bg-white hover:bg-gray-50 transition-colors active:scale-[0.98]">Exportar</button>
         </div>
     );
 }
