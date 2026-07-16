@@ -56,7 +56,7 @@ export default function AnalyticsDashboard() {
   } = useAnalytics();
 
   return (
-    <div className="flex flex-col gap-6 w-full max-h-[85vh] overflow-y-auto pr-2 pb-6">
+    <div className="flex flex-col gap-6 w-full lg:max-h-[85vh] lg:overflow-y-auto pr-0 lg:pr-2 pb-6">
       <AnalyticsHeader
         filteredRequestsCount={filteredRequests.length}
         currentTime={currentTime}

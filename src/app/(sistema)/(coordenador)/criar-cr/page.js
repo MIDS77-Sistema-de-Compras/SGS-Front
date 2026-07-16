@@ -13,7 +13,7 @@ export default function CadastrarCR() {
                 <RequestFormCR />
             </div>
 
-            <div className="flex flex-col shrink-0 xl:min-h-0">
+            <div className="w-full xl:w-auto flex flex-col shrink-0 xl:min-h-0">
                 <Search />
             </div>
         </div>

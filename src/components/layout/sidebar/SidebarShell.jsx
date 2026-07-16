@@ -65,9 +65,9 @@ export function SidebarShell({ children }) {
                 className={`
                     z-50 bg-[#103D85] dark:bg-[#0D121F] text-white shadow-2xl select-none
                     flex flex-col justify-between gap-8 py-8 px-4
-                    fixed inset-y-0 left-0 w-[280px] max-w-[85vw] overflow-y-auto
+                    fixed inset-y-0 left-0 w-[300px] max-w-[85vw] overflow-y-auto
                     ${isOpen ? "translate-x-0" : "-translate-x-full"}
-                    lg:static lg:translate-x-0 lg:h-screen lg:w-72 lg:shrink-0 lg:shadow-xl
+                    lg:static lg:translate-x-0 lg:h-screen lg:w-72 min-[1350px]:w-80 lg:shrink-0 lg:shadow-xl
                 `}
             >
                 <button
