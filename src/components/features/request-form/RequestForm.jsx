@@ -404,6 +404,7 @@ export default function RequestForm() {
 
                     {csvData && csvData.length > 0 && !isProcessing && (
                         <>
+                            {/* NOTA: O algoritmo de conversão está em BETA e pode apresentar comportamento instável */}
                             {csvType === "product" && ( <><ProductRequestTable csvData={csvData} /></> )}
                             {csvType === "provision" && ( <><ProvisionRequestTable csvData={csvData} /></> )}
 

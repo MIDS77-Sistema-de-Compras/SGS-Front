@@ -77,9 +77,9 @@ export function handleProvisionRequest(validProvisionRequests, dataLines, valida
         }else{
             validProvisionRequests.push({
                 name: provision.name.trim(),
-                totalValue: null,
+                totalValue: 1,
                 description: provision.name.trim(),
-                additionalInformations: null,
+                additionalInformations: provision.additionalInformations + " (Adicionado através da conversão da planilha).",
                 attachments: provision.attachments,
                 crBranchId: provision.crBranchId
             });
@@ -123,7 +123,7 @@ export function checkAndPushElements(csvData, type){
                 name: element.name,
                 totalValue: element.totalValue,
                 description: element.description,
-                additionalInformations: element.additionalInformations,
+                additionalInformation: element.additionalInformations,
                 attachments: element.attachments
             })
         }
