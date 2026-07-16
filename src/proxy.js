@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getSafeRedirect } from "@/lib/utils/safeRedirect";
 
 const publicPaths = [
     "/login",
@@ -34,10 +35,17 @@ function getUsuarioPayload(token) {
 
 export function proxy(request) {
     const token = request.cookies.get("jwt")?.value;
-    const { pathname } = request.nextUrl;
+    const { pathname, search } = request.nextUrl;
 
     if (publicPaths.includes(pathname)) {
         if (token) {
+            const requestedDestination = request.nextUrl.searchParams.get("returnTo");
+            const safeDestination = getSafeRedirect(requestedDestination);
+
+            if (pathname === "/login" && requestedDestination && safeDestination !== "/") {
+                return NextResponse.redirect(new URL(safeDestination, request.url));
+            }
+
             const usuario = getUsuarioPayload(token);
             const role = usuario?.role?.toLowerCase(); 
             
@@ -50,7 +58,10 @@ export function proxy(request) {
     }
 
     if (!token) {
-        return NextResponse.redirect(new URL("/login", request.url));
+        const loginUrl = new URL("/login", request.url);
+        loginUrl.searchParams.set("returnTo", `${pathname}${search}`);
+
+        return NextResponse.redirect(loginUrl);
     }
 
     const usuario = getUsuarioPayload(token);
