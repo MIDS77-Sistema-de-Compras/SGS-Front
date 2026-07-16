@@ -26,9 +26,9 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
                 />
             </div>
 
-            {/* Main content wrapper */}
+          
             <div className="flex-1 min-w-0 flex flex-row items-start justify-between gap-4">
-                {/* Left column: Title and Message */}
+                
                 <div className="flex-1 min-w-0 flex flex-col">
                     <p className="text-[14px] sm:text-[15px] font-bold leading-tight text-black dark:text-[#E2E2EA]">
                         {notification.title || `Solicitação #${notification.requestId || ""}`}
@@ -39,7 +39,6 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
                     />
                 </div>
 
-                {/* Right column: Time only */}
                 <span className="shrink-0 whitespace-nowrap text-right text-[10px] sm:text-[12px] leading-tight text-black/50 dark:text-[#C3C6D3]/70 pt-0.5">
                     {isUpdating ? "Atualizando..." : formatRelativeTime(notification.createdAt)}
                 </span>
