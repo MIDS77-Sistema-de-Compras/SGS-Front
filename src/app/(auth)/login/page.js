@@ -10,6 +10,7 @@ import Button from "@/components/ui/button/Button";
 import FormCard from "@/components/features/auth/FormCard";
 import { ModalTermos } from "@/components/features/auth/ModalTermos";
 import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
+import { getSafeRedirect } from "@/lib/utils/safeRedirect";
 import { loginUser } from "@/service/auth/auth-login";
 
 export default function LoginPage() {
@@ -81,8 +82,10 @@ export default function LoginPage() {
                 console.warn("Nao foi possivel decodificar a role do token", decodeError);
             }
 
-            router.push("/");
-            router.refresh();
+            const returnTo = new URLSearchParams(window.location.search).get("returnTo");
+            const destination = getSafeRedirect(returnTo);
+
+            window.location.replace(destination);
         } catch (loginError) {
             setError(loginError.message || "Nao foi possivel entrar. Verifique suas credenciais e se a API esta online.");
         } finally {
