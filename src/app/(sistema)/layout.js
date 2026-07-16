@@ -1,13 +1,20 @@
 import "../globals.css";
 import Sidebar from "@/components/layout/sidebar/index";
+import ImpersonationBanner from "@/components/layout/ImpersonationBanner";
 
 export default function SistemaLayout({ children }) {
     return (
-        <div className="min-h-screen lg:h-screen flex lg:overflow-hidden bg-white dark:bg-[#1A2233]">
-            <Sidebar />
-            <main className="flex-1 flex flex-col min-w-0 px-4 sm:px-8 lg:px-10 xl:px-20 pt-20 lg:pt-14 min-[1350px]:pt-20 pb-8 lg:pb-16 min-[1350px]:pb-29 lg:overflow-y-auto">
-                {children}
-            </main>
+        <div className="h-screen flex flex-col overflow-hidden bg-white dark:bg-[#1A2233]">
+            <ImpersonationBanner />
+            <div className="flex-1 flex overflow-hidden">
+                <Sidebar />
+                <div className="flex-1 flex flex-col min-w-0 mx-20 mb-20">
+                    <Topbar />
+                    <main className="flex-1 flex flex-col mt-7 min-h-0 overflow-hidden">
+                        {children}
+                    </main>
+                </div>
+            </div>
         </div>
     )
 }

@@ -1,7 +1,10 @@
-import { ChevronsUpDown, Pencil } from "lucide-react";
+import { ChevronsUpDown, Pencil, LogIn } from "lucide-react";
 import Link from "next/link";
 
-export default function UserTable({ users }) {
+export default function UserTable({ users, onImpersonate }) {
+    const canImpersonate = (user) =>
+        Boolean(onImpersonate) && user.active && user.roleName !== "ADMIN";
+
     const formatProfile = (profile) => {
         if (!profile) return "-";
 
@@ -118,12 +121,25 @@ export default function UserTable({ users }) {
                                 </td>
 
                                 <td className="py-2.5 px-4">
-                                    <div className="flex justify-center">
+                                    <div className="flex justify-center items-center gap-1.5">
                                         <Link href={`/usuarios/editar/${user.id}`}>
-                                            <button className="text-[#103D85] dark:text-[#5D8EF7] hover:text-blue-800 dark:hover:text-[#7BA5F9] p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-white/5 transition-colors">
+                                            <button
+                                                title="Editar usuário"
+                                                className="text-[#103D85] dark:text-[#5D8EF7] hover:text-blue-800 dark:hover:text-[#7BA5F9] p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-white/5 transition-colors"
+                                            >
                                                 <Pencil size={18} />
                                             </button>
                                         </Link>
+
+                                        {canImpersonate(user) && (
+                                            <button
+                                                title="Entrar como este usuário"
+                                                onClick={() => onImpersonate(user)}
+                                                className="text-[#103D85] dark:text-[#5D8EF7] hover:text-blue-800 dark:hover:text-[#7BA5F9] p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-white/5 transition-colors"
+                                            >
+                                                <LogIn size={18} />
+                                            </button>
+                                        )}
                                     </div>
                                 </td>
                             </tr>

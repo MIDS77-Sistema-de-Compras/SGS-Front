@@ -10,10 +10,13 @@ import {
 } from "lucide-react";
 import AuditLogTable from "./AuditLogTable";
 import AuditDetailsModal from "./AuditDetailsModal";
+import AuditPagination from "./AuditPagination";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import Button from "@/components/ui/button/Button";
 import Dropdown from "@/components/ui/select/Dropdown";
 import { useAuditLogs } from "@/hooks/useAuditLogs";
+
+const LOGS_PER_PAGE = 10;
 
 function formatActionType(action) {
     if (!action || action.length <= 20) return action;
@@ -21,13 +24,50 @@ function formatActionType(action) {
     return action.trim().replace(/\s+\S*$/, "");
 }
 
+function formatActionLabel(typeAction) {
+    if (!typeAction) return "—";
+
+    return typeAction
+        .toLowerCase()
+        .split("_")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+}
+
+function formatTimestamp(timestamp) {
+    if (!timestamp) return { display: "—", date: "" };
+
+    const parsed = new Date(timestamp);
+    const date = parsed.toLocaleDateString("pt-BR");
+    const time = parsed.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
+    return { display: `${date}\n${time}`, date };
+}
+
+function mapLog(log) {
+    const { display, date } = formatTimestamp(log.timestamp);
+
+    return {
+        id: log.id,
+        user: log.userAgentName || "—",
+        level: log.userAgentRole || "—",
+        action: formatActionLabel(log.typeAction),
+        actionId: log.typeAction,
+        description: log.description || "—",
+        affectedUser: log.userTargetName || "—",
+        request: log.request ? `#${log.request}` : "—",
+        timestamp: display,
+        date,
+    };
+}
+
 export default function AuditDashboard() {
-    const { logs, loading, error } = useAuditLogs();
+    const { logs = [], loading, error } = useAuditLogs();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [actionType, setActionType] = useState("");
     const [period, setPeriod] = useState("");
-
+    const [currentPage, setCurrentPage] = useState(1);
     const [selectedLog, setSelectedLog] = useState(null);
 
     const actionOptions = useMemo(() => {
@@ -41,28 +81,56 @@ export default function AuditDashboard() {
     }, [logs]);
 
     const stats = useMemo(() => {
-        const today = new Date();
-        const todayISO = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+        const today = new Date().toLocaleDateString("pt-BR");
+        const todayCount = logs.filter((log) => log.date === today).length;
+        const loginCount = logs.filter((log) => log.actionId?.toUpperCase().includes("LOGAR")).length;
+        const impersonationCount = logs.filter((log) => log.actionId === "LOGAR_COMO_USUARIO").length;
 
         return {
             total: logs.length,
-            today: logs.filter((log) => log.date === todayISO).length,
-            logins: logs.filter((log) => log.actionId.toUpperCase().includes("LOGAR")).length,
-            critical: logs.filter((log) => /DESATI|EXCLU|REMOV|ATUALI/.test(log.actionId.toUpperCase())).length,
+            today: todayCount,
+            logins: loginCount,
+            impersonation: impersonationCount,
         };
     }, [logs]);
 
     const filteredLogs = useMemo(() => {
+        let formattedPeriod = "";
+        if (period) {
+            const [year, month, day] = period.split("-");
+            formattedPeriod = `${day}/${month}/${year}`;
+        }
+
         return logs.filter((log) => {
             const searchableContent = `${log.id} ${log.user} ${log.level} ${log.action} ${log.affectedUser} ${log.request} ${log.timestamp}`.toLowerCase();
 
             const matchesSearch = !searchTerm || searchableContent.includes(searchTerm.toLowerCase());
             const matchesAction = !actionType || log.actionId === actionType;
-            const matchesPeriod = !period || log.date === period;
+            const matchesPeriod = !period || log.date === formattedPeriod;
 
             return matchesSearch && matchesAction && matchesPeriod;
         });
     }, [logs, actionType, period, searchTerm]);
+
+    const totalPages = Math.max(1, Math.ceil(filteredLogs.length / LOGS_PER_PAGE));
+    const page = Math.min(currentPage, totalPages);
+    const paginatedLogs = filteredLogs.slice((page - 1) * LOGS_PER_PAGE, page * LOGS_PER_PAGE);
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const handleActionChange = (valueOrEvent) => {
+        const val = valueOrEvent?.target ? valueOrEvent.target.value : valueOrEvent;
+        setActionType(val);
+        setCurrentPage(1);
+    };
+
+    const handlePeriodChange = (e) => {
+        setPeriod(e.target.value);
+        setCurrentPage(1);
+    };
 
     return (
         <div className="flex flex-1 flex-col w-full h-full pb-4">
@@ -98,11 +166,11 @@ export default function AuditDashboard() {
                     iconColor="text-orange-500 dark:text-[#F0B95B]"
                 />
                 <StatCard
-                    title="Alertas Críticos"
-                    value={stats.critical}
+                    title="Ações como Usuário"
+                    value={stats.impersonation}
                     icon={ShieldAlert}
-                    iconBg="bg-purple-100 dark:bg-[#7C3AED]/20"
-                    iconColor="text-purple-600 dark:text-[#B48CF7]"
+                    iconBg="bg-red-100 dark:bg-[#DC2626]/20"
+                    iconColor="text-red-600 dark:text-[#F08B92]"
                 />
             </div>
 
@@ -120,14 +188,14 @@ export default function AuditDashboard() {
                                 placeholder="Buscar por usuário, ação, nível..."
                                 className="w-full pl-10 pr-4 py-2.5 border border-gray-100 shadow-sm dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onChange={handleSearchChange}
                             />
                         </div>
 
                         <Dropdown
                             className="w-full sm:w-44"
                             value={actionType}
-                            onChange={(e) => setActionType(e.target.value)}
+                            onChange={handleActionChange}
                             placeholder="Tipo de ação"
                             options={[{ value: "", label: "Tipo de ação" }, ...actionOptions]}
                         />
@@ -137,7 +205,7 @@ export default function AuditDashboard() {
                                 type="date"
                                 className="w-full pl-4 pr-3 shadow-sm py-2.5 border border-gray-100 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E] dark:[color-scheme:dark]"
                                 value={period}
-                                onChange={(e) => setPeriod(e.target.value)}
+                                onChange={handlePeriodChange}
                             />
                         </div>
                     </div>
@@ -152,20 +220,34 @@ export default function AuditDashboard() {
                     </div>
                 </div>
 
-                <div className="flex-1 min-h-0 flex flex-col">
-                    {loading ? (
-                        <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
-                            Carregando registros...
-                        </p>
-                    ) : error ? (
-                        <p className="px-6 py-8 text-center text-sm text-red-500 dark:text-[#F08B92]">
-                            {error}
-                        </p>
-                    ) : (
-                        <AuditLogTable
-                            logs={filteredLogs}
-                            onSelectLog={setSelectedLog}
-                        />
+                <div className="flex-1 min-h-0 flex flex-col justify-between">
+                    <div className="flex-1 overflow-y-auto">
+                        {loading ? (
+                            <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
+                                Carregando registros...
+                            </p>
+                        ) : error ? (
+                            <p className="px-6 py-8 text-center text-sm text-red-500 dark:text-[#F08B92]">
+                                {error}
+                            </p>
+                        ) : (
+                            <AuditLogTable
+                                logs={paginatedLogs}
+                                onSelectLog={setSelectedLog}
+                            />
+                        )}
+                    </div>
+
+                    {!loading && !error && filteredLogs.length > 0 && (
+                        <div className="border-t border-gray-100 dark:border-white/10 p-4">
+                            <AuditPagination
+                                currentPage={page}
+                                totalPages={totalPages}
+                                totalRecords={filteredLogs.length}
+                                pageSize={LOGS_PER_PAGE}
+                                onPageChange={setCurrentPage}
+                            />
+                        </div>
                     )}
                 </div>
             </div>
