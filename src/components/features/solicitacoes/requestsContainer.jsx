@@ -32,7 +32,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
     });
 
     return (
-        <>
+        <div className="flex flex-1 min-h-0 flex-col gap-4 sm:gap-6">
             <SolicitacoesFilter
                 status={status}
                 setStatus={setStatus}
@@ -43,7 +43,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
                 statusDisponiveis={statusDisponiveis}
             />
 
-            <div className="flex flex-1 flex-col bg-white dark:bg-[#1A2233] border border-gray-100 shadow-sm dark:border-white/10 rounded-xl overflow-hidden">
+            <div className="flex flex-1 min-h-0 flex-col bg-white dark:bg-[#1A2233] border border-gray-100 shadow-sm dark:border-white/10 rounded-xl overflow-hidden">
                 <SolicitacoesTabs
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
@@ -51,7 +51,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
                     abas={abas}
                 />
 
-                <div className="overflow-y-auto mr-2 pr-2 bg-white dark:bg-[#1A2233]">
+                <div className="flex-1 overflow-y-auto bg-white dark:bg-[#1A2233]">
                     {loading && <RequestsTableSkeleton />}
 
                     {!loading && error && (
@@ -68,6 +68,6 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
                     )}
                 </div>
             </div>
-        </>
+        </div>
     );
 }

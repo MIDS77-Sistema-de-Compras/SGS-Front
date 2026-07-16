@@ -86,9 +86,9 @@ const recordItems = [
 
 export default function AdminDashboard() {
     return (
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col gap-8 lg:gap-0">
             <Header />
-            <section className="flex gap-10 my-auto">
+            <section className="flex flex-col lg:flex-row gap-6 min-[1350px]:gap-10 lg:my-auto">
                 <AdminSummaryCard
                     title="Resumo registros"
                     items={recordItems}
