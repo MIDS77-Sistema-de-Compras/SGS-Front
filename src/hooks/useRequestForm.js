@@ -5,6 +5,7 @@ import { createFullRequest, getAllMeasurementUnits } from "@/service/createProdu
 import { createFullServiceRequest } from "@/service/createServiceRequest";
 import { useNotification } from "@/contexts/NotificationContext";
 import { csvConvertForProducts, csvParse } from "@/lib/utils/csvToJson";
+import { checkAndPushElements, checkAndPushProducts, checkAndSubmitElements, handleProductRequest, handleProvisionRequest } from "@/lib/utils/csvHandlers";
 
 const REQUEST_TABS = [
     { valor: "produto", label: "PRODUTO" },
@@ -32,9 +33,9 @@ export function useRequestForm() {
     const [crOptions, setCrOptions] = useState([]);
     const [branchOptions, setBranchOptions] = useState([]);
     const [unitOptions, setUnitOptions] = useState([]);
-    // CSV import state
     const [csvData, setCsvData] = useState([]);
     const [csvError, setCsvError] = useState("");
+    const [csvType, setCsvType] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState("");
@@ -236,7 +237,7 @@ export function useRequestForm() {
         setAttachments((prev) => prev.filter((_, i) => i !== index));
     }
 
-    // CSV import handlers
+    // this currently only supports products or provisions, if it's a coffee request, for example, it will throw an error.
     async function handleImportSubmit() {
         setCsvError("");
         setCsvData([]);
@@ -250,7 +251,6 @@ export function useRequestForm() {
                 throw new Error('Por favor, selecione um arquivo .csv');
             }
 
-            // Read file content as text
             const csvContent = await new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = (e) => resolve(e.target.result);
@@ -259,55 +259,29 @@ export function useRequestForm() {
             });
 
             const dataLines = csvParse(csvContent);
-
+            
             if (dataLines.length === 0) {
                 throw new Error('Nenhum dado encontrado no arquivo .csv');
             }
 
-            const productRequests = csvConvertForProducts(dataLines);
-
             const validationErrors = [];
-            const validProductRequests = [];
+            const validRequests = [];
 
-            productRequests.forEach((product, index) => {
-                const rowErrors = [];
-
-                if (!product.productName || product.productName.trim() === '') {
-                    rowErrors.push(`Produto na linha ${index + 2} é obrigatório`);
-                }
-
-                if (!product.measurementUnit || product.measurementUnit.trim() === '') {
-                    rowErrors.push(`Unidade de medida na linha ${index + 2} é obrigatória`);
-                }
-
-                const quantity = parseFloat(product.quantity);
-                if (isNaN(quantity) || quantity <= 0) {
-                    rowErrors.push(`Quantidade na linha ${index + 2} deve ser maior que zero`);
-                }
-
-                if (product.additionalInformations && product.additionalInformations.length > 255) {
-                    rowErrors.push(`Informações adicionais na linha ${index + 2} excedem o limite de 255 caracteres`);
-                }
-
-                if (rowErrors.length > 0) {
-                    validationErrors.push(...rowErrors);
-                } else {
-                    validProductRequests.push({
-                        productName: product.productName.trim(),
-                        measurementUnit: product.measurementUnit.trim(),
-                        quantity: quantity,
-                        additionalInformations: product.additionalInformations.trim(),
-                        crBranchId: product.crBranchId,
-                        branchId: product.branchId
-                    });
-                }
-            });
+            // verifies if it's a product request or provision request
+            // TOFIX: poor verification, I'm too tired to enhance this myself
+            if(dataLines[0].PRODUTO){
+                setCsvType("product");
+                handleProductRequest(validRequests, dataLines, validationErrors);
+            }else{
+                setCsvType("provision");
+                handleProvisionRequest(validRequests, dataLines, validationErrors);
+            }
 
             if (validationErrors.length > 0) {
                 throw new Error(validationErrors.join('\n'));
             }
 
-            setCsvData(validProductRequests);
+            setCsvData(validRequests);
         } catch (error) {
             setCsvError(error.message || "Erro ao processar o CSV.");
         } finally {
@@ -325,61 +299,27 @@ export function useRequestForm() {
         setCsvError("");
 
         try {
-            const productsByCrProject = {};
-            csvData.forEach(product => {
-                const crProjectId = product.crBranchId;
-                if (!crProjectId) {
-                    return;
-                }
+            const elementsByCrProject = checkAndPushElements(csvData, csvType);
 
-                if (!productsByCrProject[crProjectId]) {
-                    productsByCrProject[crProjectId] = [];
-                }
+            console.log("[DEBUG] handleConfirmImport -> ", elementsByCrProject);
 
-                productsByCrProject[crProjectId].push({
-                    name: product.productName,
-                    measurementUnit: product.measurementUnit,
-                    quantity: product.quantity,
-                    additionalInformations: product.additionalInformations
-                });
-            });
-
-            console.log(productsByCrProject);
-
-            const validCrProjectIds = Object.keys(productsByCrProject).filter(id => id && id.trim() !== '');
+            const validCrProjectIds = Object.keys(elementsByCrProject).filter(id => id && id.trim() !== '');
             if (validCrProjectIds.length === 0) {
-                throw new Error('Nenhum CR/Project válido encontrado no CSV');
+                throw new Error('Nenhum CR/Project válido encontrado no CSV.');
             }
 
             const submissionResults = [];
-            for (const [crBranchId, products] of Object.entries(productsByCrProject)) {
-                console.log("Cr Branch Id: ", crBranchId, " | Products: ", products);
-                try {
-                    await createFullRequest({
-                        crBranchId: Number(crBranchId),
-                        products: products,
-                        attachments: attachments
-                    });
-                    submissionResults.push({ crBranchId, success: true });
-                } catch (error) {
-                    submissionResults.push({
-                        crBranchId,
-                        success: false,
-                        error: error.message
-                    });
-                    console.error(`Failed to submit request for CR/Project ID: ${crBranchId}`, error);
-                }
-            }
+            await checkAndSubmitElements(submissionResults, elementsByCrProject, csvType, attachments);
 
             const successfulSubmissions = submissionResults.filter(r => r.success).length;
             const failedSubmissions = submissionResults.filter(r => !r.success).length;
 
             if (failedSubmissions === 0) {
-                showNotification(`Successfully submitted ${successfulSubmissions} request(s)!`, "success");
+                showNotification(`Sucesso na submissão de ${successfulSubmissions} solicitação(es)!`, "success");
             } else if (successfulSubmissions === 0) {
-                showNotification(`Failed to submit all requests. Please check the console for details.`, "error");
+                showNotification(`Falha na submissão de suas solicitações.`, "error");
             } else {
-                showNotification(`Submitted ${successfulSubmissions} successfully, ${failedSubmissions} failed.`, "warning");
+                showNotification(`Sucesso na submissão de ${successfulSubmissions} solicitação(es), ${failedSubmissions} submissão(es) falharam.`, "warning");
             }
 
             setAttachments([]);
@@ -486,8 +426,6 @@ export function useRequestForm() {
                 setSubmitting(false);
             }
         }
-
-        // If abaAtiva === "importing", no form to submit
     }
 
     return {
@@ -540,11 +478,11 @@ export function useRequestForm() {
         handleSubmit,
         attachments,
         setAttachments,
-        // CSV import
         csvData,
         setCsvData,
         csvError,
         setCsvError,
+        csvType,
         isProcessing,
         setIsProcessing,
         handleImportSubmit,
