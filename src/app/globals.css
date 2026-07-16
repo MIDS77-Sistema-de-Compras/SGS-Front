@@ -33,7 +33,9 @@
 *,
 *::before,
 *::after {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition-property: background-color, color, border-color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }
 
 * {
@@ -128,5 +130,32 @@ body {
 }
 
 .dark ::-webkit-scrollbar-button {
+    display: none;
+}
+
+.dark .force-light,
+.dark .force-light * {
+    scrollbar-color: var(--color-primary) #fff;
+}
+
+.dark .force-light::-webkit-scrollbar-track,
+.dark .force-light *::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+.dark .force-light::-webkit-scrollbar-thumb,
+.dark .force-light *::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 9999px;
+    border: 2px solid #ffffff;
+}
+
+.dark .force-light::-webkit-scrollbar-thumb:hover,
+.dark .force-light *::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-hover);
+}
+
+.dark .force-light::-webkit-scrollbar-button,
+.dark .force-light *::-webkit-scrollbar-button {
     display: none;
 }

@@ -1,28 +1,26 @@
 "use client";
 
-import {
-    Users,
-    UserCheck,
-    UserMinus,
-    Shield,
-    Search,
-    ChevronDown,
-    Plus,
-} from "lucide-react";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { Users, UserCheck, UserMinus, Shield, Search, Plus } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import Modal from "@/components/ui/overlay/Modal";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import UserTable from "@/components/features/gerenciar-users/UserTable";
+import Dropdown from "@/components/ui/select/Dropdown";
+import UserTableSkeleton from "@/components/features/gerenciar-users/UserTableSkeleton";
 import { getAllUsers } from "@/service/users/usersSearch";
 import { impersonateUser } from "@/service/auth/auth-impersonate";
 import { useLoggedUser } from "@/hooks/useLoggedUser";
 
 export default function GerenciarUsuarios() {
+    useDocumentTitle("Gerenciar Usuários");
+
     const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState("Todos");
+    const [statusFilter, setStatusFilter] = useState("Todos"); // Ajuste para "Ativos" se preferir o padrão da develop
     const [userToImpersonate, setUserToImpersonate] = useState(null);
     const [isImpersonating, setIsImpersonating] = useState(false);
     const [impersonateError, setImpersonateError] = useState("");
@@ -61,10 +59,13 @@ export default function GerenciarUsuarios() {
 
     async function loadUsers() {
         try {
+            setLoading(true);
             const response = await getAllUsers();
-            setUsers(response.content);
+            setUsers(response.content ?? []);
         } catch (error) {
             console.error("Erro ao buscar usuários:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -78,8 +79,8 @@ export default function GerenciarUsuarios() {
                 statusFilter === "Todos"
                     ? true
                     : statusFilter === "Ativos"
-                    ? user.active
-                    : !user.active;
+                        ? user.active
+                        : !user.active;
 
             return matchesSearch && matchesStatus;
         });
@@ -133,13 +134,13 @@ export default function GerenciarUsuarios() {
             </div>
 
             <div className="flex flex-1 flex-col min-h-0 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 mb-4 overflow-hidden bg-white dark:bg-[#1A2233]">
-                
-                <div className="p-4 border-b border-gray-100 dark:border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    
-                    <div className="flex w-full sm:w-auto items-center gap-4">
-                        <div className="relative w-full sm:w-80">
+
+                <div className="p-3 sm:p-4 border-b border-gray-100 dark:border-white/10 flex flex-col lg:flex-row justify-between items-center gap-3">
+
+                    <div className="flex w-full lg:w-auto items-center gap-2">
+                        <div className="relative w-full lg:w-56">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Search size={18} className="text-gray-400" />
+                                <Search size={16} className="text-gray-400" />
                             </div>
                             <input
                                 type="text"
@@ -150,33 +151,27 @@ export default function GerenciarUsuarios() {
                             />
                         </div>
 
-                        <div className="relative">
-                            <select
-                                className="appearance-none border border-gray-200 dark:border-white/15 dark:bg-[#303746] text-gray-700 dark:text-[#E2E2EA] py-2 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
-                                value={statusFilter}
-                                onChange={(e) => setStatusFilter(e.target.value)}
-                            >
-                                <option>Todos</option>
-                                <option>Ativos</option>
-                                <option>Inativos</option>
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-[#C3C6D3]">
-                                <ChevronDown size={16} />
-                            </div>
-                        </div>
+                        <Dropdown
+                            className="w-28 text-xs h-9"
+                            value={statusFilter}
+                            onChange={setStatusFilter}
+                            options={["Todos", "Ativos", "Inativos"]}
+                        />
                     </div>
 
-                    <div className="flex w-full sm:w-auto items-center gap-3">
+                    <div className="flex w-full lg:w-auto items-center justify-between lg:justify-end gap-4">
                         <Button
                             variant="outline"
-                            className="bg-[#E6F0FF] dark:bg-[#303746] text-[#103D85] dark:text-[#E2E2EA] border-transparent hover:bg-[#D4E5FF] dark:hover:bg-white/5"
+                            className="flex-1 lg:flex-initial h-9 px-3 text-xs bg-[#E6F0FF] dark:bg-[#303746] text-[#103D85] dark:text-[#E2E2EA] border-transparent hover:bg-[#D4E5FF] dark:hover:bg-white/5"
                         >
                             Exportar
                         </Button>
-                        <Link href="/usuarios/criar">
+                        <Link href="/usuarios/criar" className="flex-1 lg:flex-initial">
                             <Button
                                 variant="primary"
-                                leftIcon={<Plus size={18} />}
+                                leftIcon={<Plus size={16} />}
+                                className="h-9 px-3 text-xs"
+                                fullWidth
                             >
                                 Cadastrar Usuário
                             </Button>
@@ -184,10 +179,14 @@ export default function GerenciarUsuarios() {
                     </div>
                 </div>
 
-                <UserTable
-                    users={filteredUsers}
-                    onImpersonate={isAdmin ? handleImpersonate : null}
-                />
+                {loading ? (
+                    <UserTableSkeleton />
+                ) : (
+                    <UserTable
+                        users={filteredUsers}
+                        onImpersonate={isAdmin ? handleImpersonate : null}
+                    />
+                )}
             </div>
 
             <Modal

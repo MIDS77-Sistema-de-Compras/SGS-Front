@@ -1,6 +1,7 @@
 'use client';
 
 import Input from '@/components/ui/input/Input';
+import Dropdown from '@/components/ui/select/Dropdown';
 import Image from 'next/image';
 
 
@@ -14,25 +15,27 @@ export default function SolicitacoesFilter({
     statusDisponiveis,
 }) {
     return (
-        <div className="bg-white dark:bg-[#1A2233] rounded-xl border border-[#AAAAAA] dark:border-white/10 flex flex-row items-center justify-between p-2 gap-3">
+        <div className="bg-white dark:bg-[#1A2233] rounded-xl border border-gray-100 shadow-sm dark:border-white/10 flex flex-row items-center justify-between p-2 gap-3">
             <span className="pl-3 text-[18px] text-[#133D87] dark:text-[#E2E2EA]">
                 Filtrar
             </span>
 
             <div className="flex flex-row items-center gap-3">
-                <div className="relative w-[140px]">
-                    <select
+                <div className="w-[140px]">
+                    <Dropdown
+                        name="status"
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
-                        className="appearance-none pl-3 w-full py-2 border border-[#AAAAAA] dark:border-white/15 rounded-xl text-sm text-[#374151] dark:text-[#E2E2EA] bg-white dark:bg-[#303746] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#103D85] dark:focus:ring-[#1A4A9E]"
-                    >
-                        <option value="">Status</option>
-                        {statusDisponiveis.map((item) => (
-                            <option key={item.id} value={item.nome}>
-                                {item.nome}
-                            </option>
-                        ))}
-                    </select>
+                        placeholder="Status"
+                        options={[
+                            { value: '', label: 'Status' },
+                            ...statusDisponiveis.map((item) => ({
+                                value: item.nome,
+                                label: item.nome,
+                            })),
+                        ]}
+                        buttonClassName="py-2 border-gray-100"
+                    />
                 </div>
 
                 <div className="w-[140px]">
@@ -40,11 +43,11 @@ export default function SolicitacoesFilter({
                         type="date"
                         value={data}
                         onChange={(e) => setData(e.target.value)}
-                        className="!h-auto py-2 text-sm !border-[#AAAAAA] dark:!border-white/15 dark:!bg-[#303746] dark:text-[#E2E2EA] dark:[color-scheme:dark]"
+                        className="!h-auto py-2 text-sm border-gray-100 shadow-sm dark:!border-white/15 dark:!bg-[#303746] dark:text-[#E2E2EA] dark:[color-scheme:dark]"
                     />
                 </div>
 
-                <div className="flex flex-row items-center w-[260px] px-3 border border-[#AAAAAA] dark:border-white/15 rounded-xl text-sm focus-within:ring-1 focus-within:ring-[#103D85] dark:focus-within:ring-[#1A4A9E] dark:bg-[#303746]">
+                <div className="flex flex-row items-center w-[260px] px-3 border border-gray-100 shadow-sm dark:border-white/15 rounded-xl text-sm focus-within:ring-1 focus-within:ring-[#103D85] dark:focus-within:ring-[#1A4A9E] dark:bg-[#303746]">
                     <Image
                         src="/images/icons/lupa.png"
                         alt="Ícone de lupa"

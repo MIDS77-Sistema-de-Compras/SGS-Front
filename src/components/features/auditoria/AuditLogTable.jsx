@@ -1,48 +1,172 @@
-import { levelStyles, defaultLevelStyle } from "./auditData";
+"use client";
 
-const columns = ["ID", "Usuário", "Nível", "Tipo", "Descrição", "Usuário Afetado", "Solicitação", "Timestamp"];
+import { useMemo, useState } from "react";
+import { ChevronsUpDown, ChevronUp, ChevronDown } from "lucide-react";
+import LevelBadge from "./LevelBadge";
 
-const GRID_TEMPLATE = "grid-cols-[60px_1fr_110px_120px_1.4fr_1fr_100px_110px]";
+const columns = [
+    { label: "ID", field: "id", type: "number", width: "w-[8%]", sortable: true },
+    { label: "Usuário", field: "user", type: "text", width: "w-[22%]", sortable: true },
+    { label: "Nível", field: "level", type: "text", width: "w-[12%]", sortable: true },
+    { label: "Tipo", field: "action", type: "text", width: "w-[15%]", sortable: true },
+    { label: "Usuário Afetado", field: "affectedUser", width: "w-[18%]", sortable: false },
+    { label: "Solicitação", field: "request", width: "w-[12%]", sortable: false },
+    { label: "Timestamp", field: "timestamp", type: "date", width: "w-[13%]", sortable: true },
+];
 
-function SortIcon() {
-    return <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="inline ml-1 opacity-40" aria-hidden="true"><path d="M5 1L8 4H2L5 1Z" fill="currentColor" /><path d="M5 9L2 6H8L5 9Z" fill="currentColor" /></svg>;
+const CRITICAL_ACTION_REGEX = /DESATI|EXCLU|REMOV|ATUALI/;
+
+function isCriticalAction(log) {
+    return CRITICAL_ACTION_REGEX.test((log.actionId || "").toUpperCase());
 }
 
-function formatLevelLabel(level) {
-    if (!level) return "—";
-    if (level.toUpperCase() === "ADMIN") return "ADM";
+function parseBrDate(value) {
+    if (!value) return null;
 
-    return level
-        .toLowerCase()
-        .split("_")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
+    const [datePart, timePart = "00:00"] = String(value).split(" ");
+    const [day, month, year] = datePart.split("/").map(Number);
+    const [hours, minutes] = timePart.split(":").map(Number);
+
+    if (!day || !month || !year) return null;
+
+    return new Date(year, month - 1, day, hours || 0, minutes || 0);
 }
 
-function LevelBadge({ level }) {
-    const label = formatLevelLabel(level);
-    const style = levelStyles[label] || defaultLevelStyle;
-    return <span className="inline-block px-3 py-1 rounded-full text-[12px] font-bold whitespace-nowrap" style={{ color: style.color, backgroundColor: style.background }}>{label}</span>;
+function compareValues(a, b, type) {
+    if (a == null && b == null) return 0;
+    if (a == null) return 1;
+    if (b == null) return -1;
+
+    if (type === "number") {
+        return Number(a) - Number(b);
+    }
+
+    if (type === "date") {
+        const dateA = parseBrDate(a);
+        const dateB = parseBrDate(b);
+        if (dateA && dateB) {
+            return dateA.getTime() - dateB.getTime();
+        }
+    }
+
+    return String(a).localeCompare(String(b), "pt", { numeric: true, sensitivity: "base" });
 }
 
-export default function AuditLogTable({ logs }) {
+export default function AuditLogTable({ logs, onSelectLog }) {
+    const [sortField, setSortField] = useState("timestamp");
+    const [sortDirection, setSortDirection] = useState("desc");
+
+    function handleSort(column) {
+        if (!column.sortable) return;
+
+        if (sortField === column.field) {
+            setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+        } else {
+            setSortField(column.field);
+            setSortDirection("asc");
+        }
+    }
+
+    const sortedLogs = useMemo(() => {
+        if (!sortField) return logs;
+
+        const column = columns.find((col) => col.field === sortField);
+        const type = column?.type ?? "text";
+
+        return [...logs].sort((a, b) => {
+            const result = compareValues(a[sortField], b[sortField], type);
+            return sortDirection === "asc" ? result : -result;
+        });
+    }, [logs, sortField, sortDirection]);
+
+    function renderSortIcon(column) {
+        if (sortField !== column.field) {
+            return <ChevronsUpDown size={14} className="text-gray-400" />;
+        }
+        return sortDirection === "asc"
+            ? <ChevronUp size={14} className="text-[#103D85] dark:text-[#5D8EF7]" />
+            : <ChevronDown size={14} className="text-[#103D85] dark:text-[#5D8EF7]" />;
+    }
+
     return (
-        <div className="min-w-[1020px]">
-            <div className={`grid ${GRID_TEMPLATE} gap-2 px-6 py-3 border-b border-gray-200 bg-gray-50/50 text-[13px] font-semibold text-gray-500`}>
-                {columns.map((column, index) => <span key={column}>{column}{[0, 1, 2, 3, 7].includes(index) && <SortIcon />}</span>)}
-            </div>
-            <div className="flex flex-col flex-1">
-                {logs.map((log, index) => <div key={log.id} className={`grid ${GRID_TEMPLATE} gap-2 px-6 py-3 items-center text-[13px] border-b border-gray-100 ${index % 2 === 0 ? "bg-white" : "bg-gray-50/30"}`}>
-                    <span className="text-gray-700 font-medium">{log.id}</span>
-                    <span className="text-gray-600 whitespace-pre-line leading-tight">{log.user}</span>
-                    <span><LevelBadge level={log.level} /></span>
-                    <span className="text-gray-600 whitespace-pre-line leading-tight">{log.action}</span>
-                    <span className="text-gray-500 leading-tight">{log.description}</span>
-                    <span className="text-gray-500 whitespace-pre-line leading-tight">{log.affectedUser}</span>
-                    <span className="text-gray-500">{log.request}</span>
-                    <span className="text-gray-400 whitespace-pre-line leading-tight">{log.timestamp}</span>
-                </div>)}
-                {logs.length === 0 && <p className="px-6 py-8 text-center text-sm text-gray-500">Nenhum registro encontrado.</p>}
+        <div className="flex-1 flex flex-col min-h-0 w-full bg-white dark:bg-[#1A2233] overflow-hidden">
+            <div className="flex-1 min-h-0 w-full overflow-auto pr-2 pb-2">
+                <table className="w-full text-left border-collapse table-fixed min-w-[860px]">
+                    <thead className="sticky top-0 z-10">
+                        <tr className="text-sm font-semibold text-gray-700 dark:text-[#E2E2EA] bg-[#F8FAFC] dark:bg-[#303746] shadow-[0_1px_0_0_rgba(243,244,246,1)] dark:shadow-[0_1px_0_0_#303746]">
+                            {columns.map((col) => (
+                                <th key={col.label} className={`py-3 px-4 font-medium ${col.width}`}>
+                                    {col.sortable ? (
+                                        <div
+                                            onClick={() => handleSort(col)}
+                                            className="flex items-center gap-1 cursor-pointer hover:text-[#103D85] dark:hover:text-[#5D8EF7]"
+                                        >
+                                            {col.label} {renderSortIcon(col)}
+                                        </div>
+                                    ) : (
+                                        col.label
+                                    )}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+
+                    <tbody className="text-sm bg-white dark:bg-[#1A2233]">
+                        {sortedLogs.map((log) => {
+                            const critical = isCriticalAction(log);
+
+                            return (
+                                <tr
+                                    key={log.id}
+                                    onClick={() => onSelectLog(log)}
+                                    className="border-b border-gray-50 dark:border-white/5 hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                                >
+                                    <td className="py-2.5 px-4 w-[8%] text-gray-700 dark:text-[#E2E2EA] font-medium">
+                                        {log.id}
+                                    </td>
+
+                                    <td className="py-2.5 px-4 w-[22%] font-medium text-gray-800 dark:text-[#E2E2EA] truncate">
+                                        {log.user}
+                                    </td>
+
+                                    <td className="py-2.5 px-4 w-[12%]">
+                                        <LevelBadge level={log.level} />
+                                    </td>
+
+                                    <td className="py-2.5 px-4 w-[15%] truncate">
+                                        {critical ? (
+                                            <span className="inline-flex rounded-full px-3 py-1 text-xs font-semibold bg-purple-100 text-purple-600 dark:bg-[#7C3AED]/20 dark:text-[#B48CF7]">
+                                                {log.action}
+                                            </span>
+                                        ) : (
+                                            <span className="text-gray-600 dark:text-[#C3C6D3]">
+                                                {log.action}
+                                            </span>
+                                        )}
+                                    </td>
+
+                                    <td className="py-2.5 px-4 w-[18%] text-gray-500 dark:text-[#C3C6D3] truncate">
+                                        {log.affectedUser || "-"}
+                                    </td>
+
+                                    <td className="py-2.5 px-4 w-[12%] text-gray-500 dark:text-[#C3C6D3] truncate">
+                                        {log.request}
+                                    </td>
+
+                                    <td className="py-2.5 px-4 w-[13%] text-gray-400 dark:text-[#A0A5B5] whitespace-nowrap">
+                                        {log.timestamp}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+
+                {logs.length === 0 && (
+                    <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
+                        Nenhum registro encontrado.
+                    </p>
+                )}
             </div>
         </div>
     );

@@ -11,7 +11,7 @@ export default function FormCard({
     return (
         <form
             onSubmit={onSubmit}
-            className="w-[580px] h-[580px] bg-[#0A2E6B] rounded-[24px] px-10 pt-12 pb-8 flex flex-col shadow-2xl border border-white/5"
+            className="w-full max-w-[440px] sm:max-w-[480px] lg:max-w-[540px] min-[1350px]:max-w-[580px] h-auto lg:min-h-[520px] min-[1350px]:min-h-[580px] shrink-0 bg-[#0A2E6B] rounded-2xl sm:rounded-[24px] px-5 py-7 sm:px-8 sm:pt-10 sm:pb-8 min-[1350px]:px-10 min-[1350px]:pt-12 min-[1350px]:pb-8 flex flex-col shadow-2xl border border-white/5"
         >
             {showBackLink && (
                 <Link
@@ -23,19 +23,19 @@ export default function FormCard({
                 </Link>
             )}
 
-            <div className="mb-10">
+            <div className="mb-6 sm:mb-8 min-[1350px]:mb-10 flex justify-center sm:justify-start">
                 <Image
                     src="/images/logos/sgc.png"
                     alt="SGS"
                     width={110}
                     height={110}
-                    className="w-auto h-auto opacity-90 hover:opacity-100 cursor-pointer"
+                    className="w-auto h-auto max-sm:h-8 max-sm:w-auto opacity-90 hover:opacity-100 cursor-pointer"
                 />
             </div>
 
             {children}
 
-            <div className="flex justify-between text-[11px] text-white/60 underline mt-auto">
+            <div className="flex justify-between gap-4 text-[11px] text-white/60 underline mt-10 lg:mt-auto">
                 <button
                     type="button"
                     onClick={onTermosClick}

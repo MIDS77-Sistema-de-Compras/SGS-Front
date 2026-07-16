@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export default function ActivityItem({ iconSrc, iconAlt, title, subtitle, time }) {
     return (
-        <li className="-mx-5 flex items-center justify-between  px-4 py-3 transition-all hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg p-2 transition-all active:scale-[0.98]">
+        <li className=" flex items-center justify-between py-3 transition-all hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg px-1 transition-all active:scale-[0.98]">
             <div className="flex gap-5 items-center">
                 <Image
                     src={iconSrc}

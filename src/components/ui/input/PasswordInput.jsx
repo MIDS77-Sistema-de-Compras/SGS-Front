@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { forwardRef, useState } from 'react';
-import { cn } from '@/lib/cn';
 import { getInputClassName } from './inputVariants';
 
 const PasswordInput = forwardRef(function PasswordInput(

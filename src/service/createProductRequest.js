@@ -1,34 +1,21 @@
 import { api, getPageContent } from "@/service/api";
 
-const INITIAL_STATUS = "EM_ANDAMENTO";
-
 export async function getAllMeasurementUnits() {
     return api.get("/measurement-unit?size=1000").then(getPageContent);
-}
-
-export function getInitialStatusName() {
-    return INITIAL_STATUS;
 }
 
 export async function createFullRequest({ crBranchId, products, attachments = [] }) {
     const request = await api.post("/requests", {
         crBranchId: Number(crBranchId),
-        statusName: INITIAL_STATUS,
         userIds: [],
+        products: products.map((product) => ({
+            productName: product.name,
+            variation: product.variation || "",
+            measurementUnit: product.measurementUnit,
+            quantity: Number(product.quantity),
+            additionalInformations: product.additionalInformations || "",
+        })),
     });
-
-    const createdProducts = await Promise.all(
-        products.map((product) =>
-            api.post("/item-request-products", {
-                requestId: request.id,
-                productName: product.name,
-                measurementUnit: product.measurementUnit,
-                quantity: Number(product.quantity),
-                statusName: INITIAL_STATUS,
-                additionalInformations: product.additionalInformations || "",
-            })
-        )
-    );
 
     if (attachments.length > 0) {
         const MIME_BY_EXT = {
@@ -52,8 +39,5 @@ export async function createFullRequest({ crBranchId, products, attachments = []
         await api.postFormData(`/requests/${request.id}/attachments`, formData);
     }
 
-    return {
-        request,
-        products: createdProducts,
-    };
+    return { request };
 }

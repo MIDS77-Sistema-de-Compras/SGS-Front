@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/ui/input/Input";
 import { SearchCard } from "./SearchCard";
+import SearchCardSkeleton from "./SearchCardSkeleton";
 import { useCRSearch } from "@/hooks/useCRSearch";
 
 export function Search({
@@ -10,9 +11,9 @@ export function Search({
     const { filteredCRs, search, setSearch, loading, error } = useCRSearch();
 
     return (
-        <div className="w-[380px] flex flex-col border border-[#AAAAAA] dark:border-white/10 dark:bg-[#1A2233] rounded-xl min-h-0">
+        <div className="w-full xl:w-[380px] xl:shrink-0 flex flex-col border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl min-h-0">
 
-            <div className="flex items-center justify-between px-5 py-3 border-b border-[#AAAAAA] dark:border-white/10">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 dark:border-white/10">
                 <h1 className="font-bold text-[#103D85] dark:text-[#E2E2EA] text-[22px]">
                     Busca de CR
                 </h1>
@@ -29,11 +30,7 @@ export function Search({
                 />
 
                 <div className="flex flex-col gap-5 flex-1 overflow-y-auto pr-2">
-                    {loading && (
-                        <div className="text-center text-gray-400 dark:text-[#C3C6D3] py-6">
-                            Carregando CRs...
-                        </div>
-                    )}
+                    {loading && <SearchCardSkeleton />}
 
                     {error && !loading && (
                         <div className="text-center text-red-400 py-6">

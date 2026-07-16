@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { api, getPageContent } from "@/service/api";
 import { createFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
+import { createFullServiceRequest } from "@/service/createServiceRequest";
 import { useNotification } from "@/contexts/NotificationContext";
 
 const REQUEST_TABS = [
@@ -13,18 +14,22 @@ export function useRequestForm() {
     const { showNotification } = useNotification();
     const [abaAtiva, setAbaAtiva] = useState("produto");
     const [attachments, setAttachments] = useState([]);
-    const [branch, setBranch] = useState("");
+    const [branchId, setBranchId] = useState("");
     const [requester, setRequester] = useState("");
     const [phone, setPhone] = useState("");
     const [crBranchId, setCrBranchId] = useState("");
     const [productName, setProductName] = useState("");
+    const [variation, setVariation] = useState("");
     const [quantity, setQuantity] = useState("");
     const [unit, setUnit] = useState("");
     const [additionalInfo, setAdditionalInfo] = useState("");
     const [serviceName, setServiceName] = useState("");
+    const [serviceValue, setServiceValue] = useState("");
     const [serviceAdditionalInfo, setServiceAdditionalInfo] = useState("");
     const [products, setProducts] = useState([]);
+    const [services, setServices] = useState([]);
     const [crOptions, setCrOptions] = useState([]);
+    const [branchOptions, setBranchOptions] = useState([]);
     const [unitOptions, setUnitOptions] = useState([]);
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState("");
@@ -35,8 +40,9 @@ export function useRequestForm() {
 
         async function loadData() {
             try {
-                const [crs, units] = await Promise.all([
+                const [crs, branches, units] = await Promise.all([
                     api.get("/cr-branches?size=1000"),
+                    api.get("/branches"),
                     getAllMeasurementUnits(),
                 ]);
 
@@ -47,6 +53,13 @@ export function useRequestForm() {
                         value: String(cr.id),
                         label: `${cr.crCode} - ${cr.crName}`,
                         branchName: cr.branchName ?? "",
+                    }))
+                );
+
+                setBranchOptions(
+                    getPageContent(branches).map((branch) => ({
+                        value: String(branch.id),
+                        label: branch.name,
                     }))
                 );
 
@@ -98,12 +111,30 @@ export function useRequestForm() {
         };
     }, []);
 
-    function handleCrBranchChange(event) {
-        const selectedCrBranchId = event.target.value;
-        const selectedCr = crOptions.find((cr) => cr.value === selectedCrBranchId);
+    const selectedBranchName = branchOptions.find(
+        (branchOption) => branchOption.value === branchId
+    )?.label ?? "";
 
-        setCrBranchId(selectedCrBranchId);
-        setBranch(selectedCr?.branchName ?? "");
+    const filteredCrOptions = branchId
+        ? crOptions.filter((cr) => cr.branchName === selectedBranchName)
+        : crOptions;
+
+    function handleBranchChange(event) {
+        const selectedBranchId = event.target.value;
+        setBranchId(selectedBranchId);
+
+        const newBranchName = branchOptions.find(
+            (branchOption) => branchOption.value === selectedBranchId
+        )?.label ?? "";
+
+        const currentCr = crOptions.find((cr) => cr.value === crBranchId);
+        if (currentCr && selectedBranchId && currentCr.branchName !== newBranchName) {
+            setCrBranchId("");
+        }
+    }
+
+    function handleCrBranchChange(event) {
+        setCrBranchId(event.target.value);
     }
 
     function handleAddProduct() {
@@ -120,12 +151,14 @@ export function useRequestForm() {
             {
                 id: crypto.randomUUID(),
                 name: productName.trim(),
+                variation: variation.trim(),
                 quantity: Number(quantity),
                 measurementUnit: unit,
                 additionalInformations: additionalInfo.trim(),
             },
         ]);
         setProductName("");
+        setVariation("");
         setQuantity("");
         setUnit("");
         setAdditionalInfo("");
@@ -133,6 +166,33 @@ export function useRequestForm() {
 
     function handleRemoveProduct(productId) {
         setProducts((currentProducts) => currentProducts.filter((product) => product.id !== productId));
+    }
+
+    function handleAddService() {
+        setFormError("");
+        setSuccess(false);
+
+        if (!serviceName.trim() || !serviceValue || !serviceAdditionalInfo.trim()) {
+            setFormError("Preencha título, valor e informações adicionais do serviço antes de adicionar.");
+            return;
+        }
+
+        setServices((currentServices) => [
+            ...currentServices,
+            {
+                id: crypto.randomUUID(),
+                name: serviceName.trim(),
+                totalValue: Number(serviceValue),
+                additionalInformation: serviceAdditionalInfo.trim(),
+            },
+        ]);
+        setServiceName("");
+        setServiceValue("");
+        setServiceAdditionalInfo("");
+    }
+
+    function handleRemoveService(serviceId) {
+        setServices((currentServices) => currentServices.filter((service) => service.id !== serviceId));
     }
 
     const ALLOWED_TYPES = [
@@ -177,9 +237,9 @@ export function useRequestForm() {
         setFormError("");
         setSuccess(false);
 
-        if (abaAtiva !== "produto") {
-            setFormError("A criação de serviços ainda não está conectada à API.");
-            showNotification("A criação de serviços ainda não está conectada à API.", "error");
+        if (!branchId) {
+            setFormError("Selecione a Filial Pagadora.");
+            showNotification("Selecione a Filial Pagadora antes de finalizar.", "error");
             return;
         }
 
@@ -189,31 +249,80 @@ export function useRequestForm() {
             return;
         }
 
-        if (products.length === 0) {
-            setFormError("Adicione pelo menos um produto antes de finalizar.");
-            showNotification("Adicione pelo menos um produto antes de finalizar.", "error");
+        if (abaAtiva === "produto") {
+            if (productName.trim() || variation.trim() || quantity || unit) {
+                setFormError("Você preencheu os campos, mas esqueceu de clicar no botão '+' para adicionar o produto.");
+                showNotification("Adicione o produto pendente à lista antes de finalizar.", "warning");
+                return;
+            }
+
+            if (products.length === 0) {
+                setFormError("Adicione pelo menos um produto antes de finalizar.");
+                showNotification("Adicione pelo menos um produto antes de finalizar.", "error");
+                return;
+            }
+
+            const payloadProducts = products.map(({ id, ...rest }) => rest);
+
+            try {
+                setSubmitting(true);
+                await createFullRequest({
+                    crBranchId,
+                    products: payloadProducts, 
+                    attachments,
+                });
+
+                setSuccess(true);
+                showNotification("Solicitação criada com sucesso!", "success");
+                setBranchId("");
+                setCrBranchId("");
+                setProducts([]);
+                setAttachments([]);
+            } catch (error) {
+                setFormError(error.message || "Erro ao criar a solicitação.");
+                showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
+            } finally {
+                setSubmitting(false);
+            }
             return;
         }
 
-        try {
-            setSubmitting(true);
-            await createFullRequest({
-                crBranchId,
-                products,
-                attachments,
-            });
+        if (abaAtiva === "servico") { 
 
-            setSuccess(true);
-            showNotification("Solicitação criada com sucesso!", "success");
-            setBranch("");
-            setCrBranchId("");
-            setProducts([]);
-            setAttachments([]);
-        } catch (error) {
-            setFormError(error.message || "Erro ao criar a solicitação.");
-            showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
-        } finally {
-            setSubmitting(false);
+            if (serviceName.trim() || serviceValue || serviceAdditionalInfo.trim()) {
+                setFormError("Você preencheu os campos, mas esqueceu de clicar no botão '+' para adicionar o serviço.");
+                showNotification("Adicione o serviço pendente à lista antes de finalizar.", "warning");
+                return;
+            }
+
+            if (services.length === 0) {
+                setFormError("Adicione pelo menos um serviço antes de finalizar.");
+                showNotification("Adicione pelo menos um serviço antes de finalizar.", "error");
+                return;
+            }
+
+            const payloadServices = services.map(({ id, ...rest }) => rest);
+
+            try {
+                setSubmitting(true);
+                await createFullServiceRequest({
+                    crBranchId,
+                    services: payloadServices, 
+                    attachments,
+                });
+
+                setSuccess(true);
+                showNotification("Solicitação criada com sucesso!", "success");
+                setBranchId("");
+                setCrBranchId("");
+                setServices([]);
+                setAttachments([]);
+            } catch (error) {
+                setFormError(error.message || "Erro ao criar a solicitação.");
+                showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
+            } finally {
+                setSubmitting(false);
+            }
         }
     }
 
@@ -221,7 +330,8 @@ export function useRequestForm() {
         abaAtiva,
         setAbaAtiva,
         abas: REQUEST_TABS,
-        branch,
+        branchId,
+        branchOptions,
         requester,
         setRequester,
         phone,
@@ -229,6 +339,8 @@ export function useRequestForm() {
         crBranchId,
         productName,
         setProductName,
+        variation,
+        setVariation,
         quantity,
         setQuantity,
         unit,
@@ -237,17 +349,23 @@ export function useRequestForm() {
         setAdditionalInfo,
         serviceName,
         setServiceName,
+        serviceValue,
+        setServiceValue,
         serviceAdditionalInfo,
         setServiceAdditionalInfo,
         products,
-        crOptions,
+        crOptions: filteredCrOptions,
+        services,
         unitOptions,
         submitting,
         formError,
         success,
+        handleBranchChange,
         handleCrBranchChange,
         handleAddProduct,
         handleRemoveProduct,
+        handleAddService,
+        handleRemoveService,
         handleFilesSelected,
         handleRemoveAttachment,
         handleSubmit,

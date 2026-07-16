@@ -8,18 +8,18 @@ import FormCard from "@/components/features/auth/FormCard";
 import { ModalTermos } from "@/components/features/auth/ModalTermos";
 import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 
-export default function ErrorPage({error}){
+export default function ErrorPage({ error }) {
     const [index, setIndex] = useState(0);
 
     const [modalTermosOpen, setModalTermosOpen] = useState(false);
     const [modalPoliticasOpen, setModalPoliticasOpen] = useState(false);
 
     useEffect(() => {
-        setIndex(Math.floor(Math.random()*errorPossiblePhrases.length));
+        setIndex(Math.floor(Math.random() * errorPossiblePhrases.length));
     }, [])
 
     return (
-        <div className="text-white">
+        <div className="text-white w-full max-w-[440px] sm:max-w-[480px] lg:max-w-[540px] min-[1350px]:max-w-[580px] flex justify-center">
             <FormCard onTermosClick={() => setModalTermosOpen(true)} onPoliticasClick={() => setModalTermosOpen(true)}>
                 <p className="mt-5 font-semibold">{errorPossiblePhrases[index]}</p>
                 <p className="text-xs mt-4">Motivo do erro:</p>
@@ -33,6 +33,6 @@ export default function ErrorPage({error}){
                 isOpen={modalPoliticasOpen}
                 onClose={() => setModalPoliticasOpen(false)}
             />
-        </div>
+        </div >
     );
 }

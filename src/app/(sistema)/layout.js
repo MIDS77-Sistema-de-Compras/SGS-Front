@@ -1,4 +1,4 @@
-import Topbar from "@/components/layout/topbar/Topbar";
+import "../globals.css";
 import Sidebar from "@/components/layout/sidebar/index";
 import ImpersonationBanner from "@/components/layout/ImpersonationBanner";
 
