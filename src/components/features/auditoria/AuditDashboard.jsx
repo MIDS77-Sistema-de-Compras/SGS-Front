@@ -12,7 +12,6 @@ import {
 
 import AuditLogTable from "./AuditLogTable";
 import AuditDetailsModal from "./AuditDetailsModal";
-import AuditPagination from "./AuditPagination";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import Button from "@/components/ui/button/Button";
 import Dropdown from "@/components/ui/select/Dropdown";
@@ -246,18 +245,6 @@ export default function AuditDashboard() {
                             />
                         )}
                     </div>
-
-                    {!loading && !error && filteredLogs.length > 0 && (
-                        <div className="border-t border-gray-100 dark:border-white/10 p-4">
-                            <AuditPagination
-                                currentPage={page}
-                                totalPages={totalPages}
-                                totalRecords={filteredLogs.length}
-                                pageSize={LOGS_PER_PAGE}
-                                onPageChange={setCurrentPage}
-                            />
-                        </div>
-                    )}
                 </div>
             </div>
 

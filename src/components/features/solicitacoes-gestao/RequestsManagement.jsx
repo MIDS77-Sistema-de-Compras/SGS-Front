@@ -16,21 +16,18 @@ import RequestManagementSkeleton from './RequestManagementSkeleton';
 const ABAS = [
     { valor: 'pendentes', label: 'Pendentes' },
     { valor: 'andamento', label: 'Em Andamento' },
-    { valor: 'aprovadas', label: 'Aprovadas' },
     { valor: 'concluidas', label: 'Concluídas' },
 ];
 
 const STATUS_POR_ABA = {
     pendentes: ['Aguardando aprovação'],
-    andamento: ['Em atendimento'],
-    aprovadas: ['Aprovado', 'Parcialmente aprovada'],
+    andamento: ['Em atendimento', 'Aprovado', 'Parcialmente aprovada'],
     concluidas: ['Entregue', 'Cancelado', 'Recusado'],
 };
 
 const MENSAGENS_VAZIO = {
     pendentes: 'Nenhuma solicitação pendente encontrada.',
     andamento: 'Nenhuma solicitação em andamento encontrada.',
-    aprovadas: 'Nenhuma solicitação aprovada encontrada.',
     concluidas: 'Nenhuma solicitação concluída encontrada.',
 };
 
@@ -174,7 +171,7 @@ export default function RequestsManagement() {
                     abas={ABAS}
                 />
 
-                <div className="flex-1 mr-2 overflow-y-auto px-5 bg-white dark:bg-[#1A2233]">
+                <div className="flex-1 overflow-y-auto px-3 sm:px-5 bg-white dark:bg-[#1A2233]">
                     {loading && <RequestManagementSkeleton />}
 
                     {!loading && error && (
