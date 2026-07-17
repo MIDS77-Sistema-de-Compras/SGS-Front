@@ -14,15 +14,14 @@ import { getStatusLabel } from '@/lib/utils/requestStatus';
 import RequestManagementSkeleton from './RequestManagementSkeleton';
 
 const ABAS = [
-    { valor: 'pendentes', label: 'Pendentes' },
-    { valor: 'andamento', label: 'Em Andamento' },
-    { valor: 'concluidas', label: 'Concluídas' },
+    { valor: 'pendentes', label: 'PENDENTES' },
+    { valor: 'andamento', label: 'EM ANDAMENTO' },
+    { valor: 'concluidas', label: 'CONCLUÍDAS' },
 ];
 
 const STATUS_POR_ABA = {
     pendentes: ['Aguardando aprovação'],
-    andamento: ['Em atendimento'],
-    aprovadas: ['Aprovado', 'Auto-aprovado', 'Parcialmente aprovada'],
+    andamento: ['Em atendimento', 'Aprovado', 'Auto-aprovado', 'Parcialmente aprovada'],
     concluidas: ['Entregue', 'Cancelado', 'Recusado'],
 };
 
