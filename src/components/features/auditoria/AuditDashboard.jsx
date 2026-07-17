@@ -16,6 +16,7 @@ import StatCard from "@/components/features/gerenciar-users/StatCard";
 import Button from "@/components/ui/button/Button";
 import Dropdown from "@/components/ui/select/Dropdown";
 import { useAuditLogs } from "@/hooks/useAuditLogs";
+import AuditTableSkeleton from "./AuditTableSkeleton";
 
 function formatActionType(action) {
     if (!action || action.length <= 20) return action;
@@ -195,20 +196,18 @@ export default function AuditDashboard() {
                 </div>
 
                 <div className="flex-1 min-h-0 flex flex-col justify-between">
-                    {loading ? (
-                        <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
-                            Carregando registros...
-                        </p>
-                    ) : error ? (
-                        <p className="px-6 py-8 text-center text-sm text-red-500 dark:text-[#F08B92]">
-                            {error}
-                        </p>
-                    ) : (
-                        <AuditLogTable
-                            logs={filteredLogs}
-                            onSelectLog={setSelectedLog}
-                        />
-                    )}
+                        {loading ? (
+                            <AuditTableSkeleton />
+                        ) : error ? (
+                            <p className="px-6 py-8 text-center text-sm text-red-500 dark:text-[#F08B92]">
+                                {error}
+                            </p>
+                        ) : (
+                            <AuditLogTable
+                                logs={paginatedLogs}
+                                onSelectLog={setSelectedLog}
+                            />
+                        )}
                 </div>
             </div>
 

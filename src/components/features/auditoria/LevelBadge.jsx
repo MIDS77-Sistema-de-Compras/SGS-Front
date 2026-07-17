@@ -6,16 +6,21 @@ const LEVEL_COLORS = {
     COMPRADOR: "bg-[#022E7C1A] text-[#0040B0] dark:bg-[#1A4A9E]/25 dark:text-[#7FA9F5]",
 };
 
-export default function LevelBadge({ level }) {
+function formatLevel(level) {
+    if (!level) return level;
+    return level.charAt(0).toUpperCase() + level.slice(1).toLowerCase();
+}
+
+export default function LevelBadge({ level, className = "px-3 py-1 text-xs min-w-[110px]" }) {
     const key = level?.toUpperCase();
 
     return (
         <span
-            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold align-middle ${
+            className={`inline-flex items-center justify-center text-center whitespace-nowrap rounded-full font-semibold align-middle ${className} ${
                 LEVEL_COLORS[key] || "bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-[#C3C6D3]"
             }`}
         >
-            {level}
+            {formatLevel(level)}
         </span>
     );
 }

@@ -5,13 +5,13 @@ import { ChevronsUpDown, ChevronUp, ChevronDown, ChevronRight, Clock, User } fro
 import LevelBadge from "./LevelBadge";
 
 const columns = [
-    { label: "ID", field: "id", type: "number", width: "w-[8%]", sortable: true },
-    { label: "Usuário", field: "user", type: "text", width: "w-[22%]", sortable: true },
-    { label: "Nível", field: "level", type: "text", width: "w-[12%]", sortable: true },
-    { label: "Tipo", field: "action", type: "text", width: "w-[15%]", sortable: true },
+    { label: "ID", field: "id", type: "number", width: "w-[6%]", sortable: true },
+    { label: "Usuário", field: "user", type: "text", width: "w-[20%]", sortable: true },
+    { label: "Nível", field: "level", type: "text", width: "w-[128px] min-[1350px]:w-[150px]", sortable: true },
+    { label: "Tipo", field: "action", type: "text", width: "w-[17%]", sortable: true },
     { label: "Usuário Afetado", field: "affectedUser", width: "w-[18%]", sortable: false },
-    { label: "Solicitação", field: "request", width: "w-[12%]", sortable: false },
-    { label: "Timestamp", field: "timestamp", type: "date", width: "w-[13%]", sortable: true },
+    { label: "Solicitação", field: "request", width: "w-[11%]", sortable: false },
+    { label: "Timestamp", field: "timestamp", type: "date", width: "w-[16%]", sortable: true },
 ];
 
 const CRITICAL_ACTION_REGEX = /DESATI|EXCLU|REMOV|ATUALI/;
@@ -154,7 +154,6 @@ export default function AuditLogTable({ logs, onSelectLog }) {
 
     return (
         <div className="flex-1 flex flex-col min-h-0 w-full bg-white dark:bg-[#1A2233] overflow-hidden">
-            {/* ===== Mobile/tablet: cards ===== */}
             <div className="lg:hidden p-3 space-y-3 max-h-[560px] overflow-y-auto">
                 {sortedLogs.length > 0 ? (
                     sortedLogs.map((log) => (
@@ -170,13 +169,13 @@ export default function AuditLogTable({ logs, onSelectLog }) {
             </div>
 
             <div className="hidden lg:block flex-1 min-h-0 w-full overflow-auto pr-2 pb-2">
-                <table className="w-full text-left border-separate border-spacing-0 table-fixed min-w-[860px]">
+                <table className="w-full text-left border-separate border-spacing-0 table-fixed min-w-[900px]">
                     <thead>
-                        <tr className="text-sm font-semibold text-gray-700 dark:text-[#E2E2EA]">
+                        <tr className="text-[12px] min-[1350px]:text-sm font-semibold text-gray-700 dark:text-[#E2E2EA]">
                             {columns.map((col) => (
                                 <th
                                     key={col.label}
-                                    className={`sticky top-0 z-10 py-3 px-4 font-medium bg-[#F8FAFC] dark:bg-[#303746] shadow-[0_1px_0_0_rgba(243,244,246,1)] dark:shadow-[0_1px_0_0_#303746] ${col.width}`}
+                                    className={`sticky top-0 z-10 py-3 px-2 min-[1350px]:px-4 font-medium whitespace-nowrap bg-[#F8FAFC] dark:bg-[#303746] shadow-[0_1px_0_0_rgba(243,244,246,1)] dark:shadow-[0_1px_0_0_#303746] ${col.width}`}
                                 >
                                     {col.sortable ? (
                                         <div
@@ -193,7 +192,7 @@ export default function AuditLogTable({ logs, onSelectLog }) {
                         </tr>
                     </thead>
 
-                    <tbody className="text-sm bg-white dark:bg-[#1A2233]">
+                    <tbody className="text-[12px] min-[1350px]:text-sm bg-white dark:bg-[#1A2233]">
                         {sortedLogs.map((log) => {
                             const critical = isCriticalAction(log);
 
@@ -203,21 +202,24 @@ export default function AuditLogTable({ logs, onSelectLog }) {
                                     onClick={() => onSelectLog(log)}
                                     className="border-b border-gray-50 dark:border-white/5 hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors cursor-pointer"
                                 >
-                                    <td className="py-2.5 px-4 w-[8%] text-gray-700 dark:text-[#E2E2EA] font-medium">
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[6%] text-gray-700 dark:text-[#E2E2EA] font-medium">
                                         {log.id}
                                     </td>
 
-                                    <td className="py-2.5 px-4 w-[22%] font-medium text-gray-800 dark:text-[#E2E2EA] truncate">
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[20%] font-medium text-gray-800 dark:text-[#E2E2EA] truncate">
                                         {log.user}
                                     </td>
 
-                                    <td className="py-2.5 px-4 w-[12%]">
-                                        <LevelBadge level={log.level} />
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[128px] min-[1350px]:w-[150px]">
+                                        <LevelBadge
+                                            level={log.level}
+                                            className="px-2 py-0.5 text-[10px] min-w-[96px] min-[1350px]:px-3 min-[1350px]:py-1 min-[1350px]:text-xs min-[1350px]:min-w-[110px]"
+                                        />
                                     </td>
 
-                                    <td className="py-2.5 px-4 w-[15%] truncate">
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[17%] truncate">
                                         {critical ? (
-                                            <span className="inline-flex rounded-full px-3 py-1 text-xs font-semibold bg-purple-100 text-purple-600 dark:bg-[#7C3AED]/20 dark:text-[#B48CF7]">
+                                            <span className="block max-w-full w-[140px] min-[1350px]:w-[170px] truncate text-center rounded-full px-2 py-0.5 text-[10px] min-[1350px]:px-3 min-[1350px]:py-1 min-[1350px]:text-xs font-semibold bg-purple-100 text-purple-600 dark:bg-[#7C3AED]/20 dark:text-[#B48CF7]">
                                                 {log.action}
                                             </span>
                                         ) : (
@@ -227,15 +229,15 @@ export default function AuditLogTable({ logs, onSelectLog }) {
                                         )}
                                     </td>
 
-                                    <td className="py-2.5 px-4 w-[18%] text-gray-500 dark:text-[#C3C6D3] truncate">
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[18%] text-gray-500 dark:text-[#C3C6D3] truncate">
                                         {log.affectedUser || "-"}
                                     </td>
 
-                                    <td className="py-2.5 px-4 w-[12%] text-gray-500 dark:text-[#C3C6D3] truncate">
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[11%] text-gray-500 dark:text-[#C3C6D3] truncate">
                                         {log.request}
                                     </td>
 
-                                    <td className="py-2.5 px-4 w-[13%] text-gray-400 dark:text-[#A0A5B5] whitespace-nowrap">
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[16%] text-gray-400 dark:text-[#A0A5B5] whitespace-pre-line leading-tight">
                                         {log.timestamp}
                                     </td>
                                 </tr>
