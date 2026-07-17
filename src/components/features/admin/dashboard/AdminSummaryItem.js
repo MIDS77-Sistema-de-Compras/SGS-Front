@@ -1,9 +1,17 @@
-export default function AdminSummaryItem({ icon, label, count, barColor = "#103D85", isLarge = false, className = "" }) {
+export default function AdminSummaryItem({ icon, label, count, className = "" }) {
     return (
-        <article className={`relative flex items-center gap-2 overflow-hidden rounded-lg border border-gray-200 bg-white px-2.5 py-2 shadow-md ${isLarge ? "row-span-2" : ""} ${className}`}>
-            <div className="absolute left-2 top-0 h-[3px] rounded-b-full" style={{ right: "0.5rem", backgroundColor: barColor }} />
-            <div className="flex shrink-0 items-center justify-center">{icon}</div>
-            <div className="min-w-0"><p className="text-[10px] leading-tight text-gray-500">{label}</p><p className={`${isLarge ? "text-[34px]" : "text-[27px]"} font-bold leading-tight text-black`}>{count}</p></div>
-        </article>
+        <li
+            className={`flex w-full items-center justify-between rounded-xl p-3 sm:p-4 shadow-sm transition-all hover:scale-[1.01] dark:bg-[#303746] dark:border dark:border-white/10 ${className}`}
+        >
+            <div className="flex min-w-0 items-center gap-3">
+                {icon}
+                <p className="truncate text-gray-800 dark:text-[#E2E2EA]">
+                    {label}
+                </p>
+            </div>
+            <p className="shrink-0 font-semibold text-[18px] sm:text-[20px] text-gray-800 dark:text-[#E2E2EA]">
+                {count}
+            </p>
+        </li>
     );
 }

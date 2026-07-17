@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import SummaryItem from "./SummaryItem";
+import SummaryCardSkeleton from "./SummaryCardSkeleton";
 import { requestsService } from "@/service/requests";
-import { normalizeText } from "@/components/features/notifications/notificationUtils";
+import { resolveRequestStatus } from "@/lib/utils/requestStatus";
 
 const summaryConfig = [
     {
@@ -31,17 +32,17 @@ const summaryConfig = [
 
 function getSummaryCounts(requests) {
     return requests.reduce((counts, request) => {
-        const status = normalizeText(request.statusName || "").replace(/_/g, " ");
+        const { key } = resolveRequestStatus(request.statusName);
 
-        if (status.includes("aprov")) {
+        if (key === "aprovado") {
             return { ...counts, approved: counts.approved + 1 };
         }
 
-        if (status.includes("recus")) {
+        if (key === "recusado") {
             return { ...counts, refused: counts.refused + 1 };
         }
 
-        if (status.includes("pend") || status.includes("aguard") || status.includes("andamento") || status.includes("atendimento")) {
+        if (key === "aguardando_aprovacao" || key === "em_atendimento") {
             return { ...counts, pending: counts.pending + 1 };
         }
 
@@ -94,26 +95,24 @@ export default function SummaryCard() {
     const counts = useMemo(() => getSummaryCounts(requests), [requests]);
 
     return (
-        <div className="w-[430px] shrink-0 border border-[#AAAAAA] dark:border-white/10 rounded-xl px-5 py-3 shadow-lg dark:bg-[#1A2233]">
-            <div className="flex justify-between mb-7">
-                <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
+        <div className="w-full lg:w-[360px] min-[1350px]:w-[430px] lg:shrink-0 border border-gray-100 dark:border-white/10 rounded-xl px-4 sm:px-5 py-4 sm:py-3 shadow-sm dark:bg-[#1A2233]">
+            <div className="flex items-start justify-between gap-3 mb-5 sm:mb-7">
+                <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[18px] sm:text-[22px]">
                     Resumo
                 </h2>
-                <p className="text-[#103D85] dark:text-[#C3C6D3] text-[12px]">
+                <p className="shrink-0 text-right text-[#103D85] dark:text-[#C3C6D3] text-[11px] sm:text-[12px] leading-tight">
                     Minhas <br /> solicitações
                 </p>
             </div>
 
-            {isLoading && (
-                <p className="text-sm text-[#666666]">Carregando resumo...</p>
-            )}
+            {isLoading && <SummaryCardSkeleton />}
 
             {!isLoading && error && (
                 <p className="text-sm text-red-600">{error}</p>
             )}
 
             {!isLoading && !error && (
-                <ul className="flex flex-col gap-4">
+                <ul className="grid grid-cols-3 gap-3 sm:grid-cols-1 sm:gap-4">
                     {summaryConfig.map((item) => (
                         <SummaryItem
                             key={item.id}

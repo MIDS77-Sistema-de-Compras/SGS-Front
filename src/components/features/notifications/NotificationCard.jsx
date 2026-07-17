@@ -14,10 +14,10 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
     return (
         <li
             onClick={handleClick}
-            className={`grid min-h-16 grid-cols-[46px_1fr_116px] items-center gap-3 border-b border-[#AAAAAA]/35 dark:border-white/10 px-7 py-4 transition-colors last:border-b-0 ${canMarkAsViewed ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5" : ""}`}
+            className={`flex items-start gap-3 sm:gap-4 border-b border-gray-100 dark:border-white/10 mb-2 py-4 transition-colors last:border-b-0 ${canMarkAsViewed ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5" : ""}`}
             title={canMarkAsViewed ? "Marcar como visualizada" : undefined}
         >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-[#303746]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-[#303746] shrink-0 mt-0.5">
                 <Image
                     src={icon.src}
                     alt={icon.alt}
@@ -26,18 +26,23 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
                 />
             </div>
 
-            <div className="min-w-0">
-                <p className="truncate text-[15px] font-bold leading-tight text-black dark:text-[#E2E2EA]">
-                    {notification.title || `Solicitacao #${notification.requestId || ""}`}
-                </p>
-                <p className="mt-0.5 truncate text-[12px] leading-tight text-black/70 dark:text-[#C3C6D3]">
-                    {notification.message || "Atualizacao de solicitacao"}
-                </p>
-            </div>
+          
+            <div className="flex-1 min-w-0 flex flex-row items-start justify-between gap-4">
+                
+                <div className="flex-1 min-w-0 flex flex-col">
+                    <p className="text-[14px] sm:text-[15px] font-bold leading-tight text-black dark:text-[#E2E2EA]">
+                        {notification.title || `Solicitação #${notification.requestId || ""}`}
+                    </p>
+                    <p 
+                        className="mt-1 text-[11px] sm:text-[12px] leading-relaxed text-black/70 dark:text-[#C3C6D3] break-words"
+                        dangerouslySetInnerHTML={{ __html: notification.message || "Atualização de solicitação" }}
+                    />
+                </div>
 
-            <p className="text-right text-[12px] leading-tight text-black/70 dark:text-[#C3C6D3]">
-                {isUpdating ? "Atualizando..." : formatRelativeTime(notification.createdAt)}
-            </p>
+                <span className="shrink-0 whitespace-nowrap text-right text-[10px] sm:text-[12px] leading-tight text-black/50 dark:text-[#C3C6D3]/70 pt-0.5">
+                    {isUpdating ? "Atualizando..." : formatRelativeTime(notification.createdAt)}
+                </span>
+            </div>
         </li>
     );
 }

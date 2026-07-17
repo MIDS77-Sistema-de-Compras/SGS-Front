@@ -1,10 +1,25 @@
 import { NextResponse } from "next/server";
+import { getSafeRedirect } from "@/lib/utils/safeRedirect";
 
 const publicPaths = [
     "/login",
     "/recuperar-senha",
     "/autenticacao",
     "/nova-senha",
+];
+
+const routePermissions = [
+    { path: "/admin", roles: ["admin"] },
+    { path: "/auditoria", roles: ["admin"] },
+    { path: "/usuarios", roles: ["admin", "supervisor", "coordenador"] },
+    { path: "/solicitacoes-compra", roles: ["comprador"] },
+    { path: "/criar-cr", roles: ["coordenador"] },
+    { path: "/solicitacoes/gestao", roles: ["supervisor", "coordenador"] },
+    { path: "/solicitacoes/criar", roles: ["docente", "supervisor", "coordenador"] },
+    { path: "/solicitacoes", roles: ["docente", "supervisor", "coordenador"] },
+    { path: "/analitico", roles: ["supervisor", "coordenador"] },
+    { path: "/notificacoes", roles: ["docente", "admin", "comprador", "supervisor", "coordenador"] },
+    { path: "/configuracoes", roles: ["docente", "admin", "comprador", "supervisor", "coordenador"] },
 ];
 
 function getUsuarioPayload(token) {
@@ -20,10 +35,17 @@ function getUsuarioPayload(token) {
 
 export function proxy(request) {
     const token = request.cookies.get("jwt")?.value;
-    const { pathname } = request.nextUrl;
+    const { pathname, search } = request.nextUrl;
 
     if (publicPaths.includes(pathname)) {
         if (token) {
+            const requestedDestination = request.nextUrl.searchParams.get("returnTo");
+            const safeDestination = getSafeRedirect(requestedDestination);
+
+            if (pathname === "/login" && requestedDestination && safeDestination !== "/") {
+                return NextResponse.redirect(new URL(safeDestination, request.url));
+            }
+
             const usuario = getUsuarioPayload(token);
             const role = usuario?.role?.toLowerCase(); 
             
@@ -36,7 +58,10 @@ export function proxy(request) {
     }
 
     if (!token) {
-        return NextResponse.redirect(new URL("/login", request.url));
+        const loginUrl = new URL("/login", request.url);
+        loginUrl.searchParams.set("returnTo", `${pathname}${search}`);
+
+        return NextResponse.redirect(loginUrl);
     }
 
     const usuario = getUsuarioPayload(token);
@@ -46,18 +71,16 @@ export function proxy(request) {
         if (role === "admin") {
             return NextResponse.redirect(new URL("/admin", request.url));
         }
+        return NextResponse.next();
     }
 
-    if ((pathname.startsWith("/admin") || pathname.startsWith("/auditoria")) && role !== "admin") {
-        return NextResponse.redirect(new URL("/", request.url));
-    }
+    const matchedRoute = routePermissions.find(r => pathname.startsWith(r.path));
 
-    if (pathname.startsWith("/solicitacoes-compra") && role !== "comprador") {
-        return NextResponse.redirect(new URL("/", request.url));
-    }
-
-    if ((pathname.startsWith("/criar-cr") || pathname.startsWith("/coordenador")) && role !== "coordenador") {
-        return NextResponse.redirect(new URL("/", request.url));
+    if (matchedRoute) {
+        if (!matchedRoute.roles.includes(role)) {
+            const fallbackUrl = role === "admin" ? "/admin" : "/";
+            return NextResponse.redirect(new URL(fallbackUrl, request.url));
+        }
     }
 
     return NextResponse.next();

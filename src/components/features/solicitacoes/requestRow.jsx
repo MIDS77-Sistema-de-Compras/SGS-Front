@@ -12,21 +12,23 @@ export default function SolicitacaoRow({ item, onClick }) {
     return (
         <div
             onClick={onClick}
-            className="flex text-lg items-center justify-between py-5 border-b border-gray-200 dark:border-white/10 cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition"
+            className="py-4 xl:py-5 border-b border-gray-100 dark:border-white/10 cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition"
         >
-            <div className="flex items-center gap-20 px-6">
-                <span className="font-bold text-[#333333] dark:text-[#E2E2EA] text-[16px]">
+            <div className="flex flex-col gap-3 px-4 sm:px-6 xl:grid xl:grid-cols-3 xl:flex-1 xl:items-center xl:gap-12 2xl:gap-20">
+                <span className="font-bold text-[#333333] dark:text-[#E2E2EA] break-words xl:whitespace-nowrap">
                     {item.codigo}
                     {quantidadeProdutos > 0 && `: Lista de ${quantidadeProdutos} ${quantidadeProdutos === 1 ? "produto" : "produtos"}`}
                 </span>
 
-                <span className="text-lg text-[#555555] dark:text-[#C3C6D3] px-6 text-[16px]">
-                    {dataFormatada}
-                </span>
-            </div>
+                <div className="flex items-center justify-between gap-4 xl:contents">
+                    <span className="text-[#555555] dark:text-[#C3C6D3] whitespace-nowrap">
+                        {dataFormatada}
+                    </span>
 
-            <div className="px-6">
-                <StatusBadge status={statusSolicitacao} className="px-4 min-w-[150px]" />
+                    <div className="flex justify-end shrink-0">
+                        <StatusBadge status={statusSolicitacao} className="px-4 text-[15px] min-w-[150px]" />
+                    </div>
+                </div>
             </div>
         </div>
     );

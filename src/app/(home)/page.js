@@ -1,30 +1,41 @@
 "use client"
 
-import Cookies from "js-cookie"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import Header from "@/components/features/home/HomeHeader"
 import SummaryCard from "@/components/features/home/SummaryCard"
 import HomeFooter from "@/components/features/home/HomeFooter"
 import RecentActivity from "@/components/features/home/RecentActivity"
-import { useEffect } from "react"
+import { getUserRole } from "@/lib/utils/getUserRole";
+import CompradorFooter from "@/components/features/home/CompradorFooter";
 
 export default function Home(){
-    const router = useRouter()
+    useDocumentTitle("Home");
 
-    function handleLogout(){
-        Cookies.remove("token")
-        Cookies.remove("jwt")
-        router.push("/login")
-    }
+    const [role, setRole] = useState(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        const userRole = getUserRole();
+        setRole(userRole);
+
+        setMounted(true);
+    }, []);
 
     return(
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col gap-8 lg:gap-0">
             <Header />
-            <section className="flex gap-10 mt-15">
+
+            <section className="flex flex-col-reverse lg:flex-row gap-6 min-[1350px]:gap-10 lg:my-auto">
                 <RecentActivity />
                 <SummaryCard />
             </section>
-            <HomeFooter />
+
+            {mounted ? (
+                role === "COMPRADOR" ? <CompradorFooter /> : <HomeFooter />
+            ) : (
+                <div className="min-h-[72px]" />
+            )}
         </div>
     )
 }
