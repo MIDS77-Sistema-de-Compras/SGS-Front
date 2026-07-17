@@ -44,7 +44,7 @@ export function Modal({
     >
       <div
         className={cn(
-          'bg-white dark:bg-[#1A2233] text-gray-800 dark:text-[#E2E2EA] w-full rounded-xl shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ease-out',
+          'bg-white dark:bg-[#1A2233] text-gray-800 dark:text-[#E2E2EA] w-full max-h-[85dvh] rounded-xl shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ease-out',
           maxWidth,
           height,
           isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'

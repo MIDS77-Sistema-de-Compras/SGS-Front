@@ -98,7 +98,7 @@ export default function MyRequests() {
     return (
         <div className="flex-1 p-0">
             {notification && (
-                <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl text-white shadow-sm ${notification.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
+                <div className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] px-5 py-3 rounded-xl text-white shadow-sm ${notification.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
                     <div className="flex items-center gap-3">
                         <span>{notification.message}</span>
                         <button onClick={() => setNotification(null)} className="hover:opacity-80">×</button>
@@ -114,14 +114,15 @@ export default function MyRequests() {
                                 <path d="m15 18-6-6 6-6" />
                             </svg>
                         </Link>
-                        <h3 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">Detalhes Solicitação</h3>
+                        <h3 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[18px] sm:text-[22px]">Detalhes Solicitação</h3>
                     </div>
 
                     <hr className="border-gray-100 dark:border-white/10 mb-6" />
 
-                    <div className="flex items-center justify-between mb-6 px-6">
-                        <div className="flex items-baseline gap-4">
-                            <h4 className="text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
+                    <div className="mb-6 px-4 sm:px-6">
+                        <div className="flex flex-col gap-3 min-[1350px]:flex-row min-[1350px]:items-center min-[1350px]:justify-between">
+                            <div className="flex flex-col gap-1 min-w-0 min-[1350px]:flex-row min-[1350px]:items-baseline min-[1350px]:gap-4">
+                                <h4 className="text-[16px] sm:text-[18px] min-[1350px]:text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
                                 {solicitacao.codigo} : Lista de{" "}
                                 {isServiceRequest ? localServices.length : localProducts.length}{" "}
                                 {isServiceRequest
@@ -131,14 +132,15 @@ export default function MyRequests() {
                                     : localProducts.length === 1
                                         ? "produto"
                                         : "produtos"}
-                            </h4>
-                            <span className="text-gray-600 dark:text-[#C3C6D3] text-base font-medium px-7 text-[16px]">
-                                Realizada em: {formatDisplayDate(solicitacao.data)}
+                                </h4>
+                                <span className="text-gray-600 dark:text-[#C3C6D3] text-[13px] sm:text-sm min-[1350px]:text-[16px] font-medium whitespace-nowrap min-[1350px]:px-7">
+                                    Realizada em: {formatDisplayDate(solicitacao.data)}
+                                </span>
+                            </div>
+                            <span className={`inline-block w-fit shrink-0 whitespace-nowrap text-center text-[12px] sm:text-[13px] font-semibold text-white py-1 px-3 rounded-full min-w-[140px] min-[1350px]:min-w-[150px] shadow-sm tracking-wide min-[1350px]:mr-8 ${corGeral}`}>
+                                {statusGeral}
                             </span>
                         </div>
-                        <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide mr-8 ${corGeral}`}>
-                            {statusGeral}
-                        </span>
                     </div>
 
                     <ProductTable 
@@ -150,10 +152,10 @@ export default function MyRequests() {
                     />
                 </div>
 
-                <div className="flex justify-end pt-5">
+                <div className="flex justify-stretch sm:justify-end pt-5">
                     <Link
                         href="/solicitacoes-compra"
-                        className="bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
+                        className="w-full sm:w-auto text-center bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
                     >
                         Fechar produtos
                     </Link>
