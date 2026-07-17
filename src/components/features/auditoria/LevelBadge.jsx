@@ -2,7 +2,7 @@ const LEVEL_COLORS = {
     DOCENTE: "bg-[#4CAF501A] text-[#007805] dark:bg-[#16A34A]/20 dark:text-[#5FD68A]",
     COORDENADOR: "bg-[#022E7C1A] text-[#0040B0] dark:bg-[#1A4A9E]/25 dark:text-[#7FA9F5]",
     SUPERVISOR: "bg-[#FFC1071A] text-[#FFC107] dark:bg-[#D97706]/20 dark:text-[#F0B95B]",
-    ADMIN: "bg-[#FDE7E81A] text-[#E30613] dark:bg-[#C62834]/25 dark:text-[#F08B92]",
+    ADMIN: "bg-[#ffedee] text-[#E30613] dark:bg-[#C62834]/25 dark:text-[#F08B92]",
     COMPRADOR: "bg-[#022E7C1A] text-[#0040B0] dark:bg-[#1A4A9E]/25 dark:text-[#7FA9F5]",
 };
 

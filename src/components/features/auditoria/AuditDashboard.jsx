@@ -196,18 +196,18 @@ export default function AuditDashboard() {
                 </div>
 
                 <div className="flex-1 min-h-0 flex flex-col justify-between">
-                        {loading ? (
-                            <AuditTableSkeleton />
-                        ) : error ? (
-                            <p className="px-6 py-8 text-center text-sm text-red-500 dark:text-[#F08B92]">
-                                {error}
-                            </p>
-                        ) : (
-                            <AuditLogTable
-                                logs={paginatedLogs}
-                                onSelectLog={setSelectedLog}
-                            />
-                        )}
+                    {loading ? (
+                        <AuditTableSkeleton />
+                    ) : error ? (
+                        <p className="px-6 py-8 text-center text-sm text-red-500 dark:text-[#F08B92]">
+                            {error}
+                        </p>
+                    ) : (
+                        <AuditLogTable
+                            logs={filteredLogs}
+                            onSelectLog={setSelectedLog}
+                        />
+                    )}
                 </div>
             </div>
 
