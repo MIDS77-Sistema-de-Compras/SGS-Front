@@ -145,7 +145,6 @@ export default function UserProfile() {
                                     <Button onClick={handleSubmit} fullWidth>
                                         Alterar minha senha
                                     </Button>
-                                    <p className="text-sm text-red-500 dark:text-[#F87171]">{error}</p>
                                     <Modal isOpen={modal} onClose={() => openModal(false)} title={"Confirmação"} height="h-auto" maxWidth="max-w-[460px]">
                                         <div className="flex flex-col gap-4">
                                             <div className="flex flex-col gap-1.5">

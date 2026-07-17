@@ -12,13 +12,10 @@ import {
 
 import AuditLogTable from "./AuditLogTable";
 import AuditDetailsModal from "./AuditDetailsModal";
-import AuditPagination from "./AuditPagination";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import Button from "@/components/ui/button/Button";
 import Dropdown from "@/components/ui/select/Dropdown";
 import { useAuditLogs } from "@/hooks/useAuditLogs";
-
-const LOGS_PER_PAGE = 10;
 
 function formatActionType(action) {
     if (!action || action.length <= 20) return action;
@@ -26,41 +23,13 @@ function formatActionType(action) {
     return action.trim().replace(/\s+\S*$/, "");
 }
 
-function formatActionLabel(typeAction) {
-    if (!typeAction) return "—";
+function getSortableDate(log) {
+    if (!log.date) return new Date(0);
 
-    return typeAction
-        .toLowerCase()
-        .split("_")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
-}
+    const timeMatch = log.timestamp?.match(/(\d{2}):(\d{2})/);
+    const time = timeMatch ? `${timeMatch[1]}:${timeMatch[2]}` : "00:00";
 
-function formatTimestamp(timestamp) {
-    if (!timestamp) return { display: "—", date: "" };
-
-    const parsed = new Date(timestamp);
-    const date = parsed.toLocaleDateString("pt-BR");
-    const time = parsed.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-
-    return { display: `${date}\n${time}`, date };
-}
-
-function mapLog(log) {
-    const { display, date } = formatTimestamp(log.timestamp);
-
-    return {
-        id: log.id,
-        user: log.userAgentName || "—",
-        level: log.userAgentRole || "—",
-        action: formatActionLabel(log.typeAction),
-        actionId: log.typeAction,
-        description: log.description || "—",
-        affectedUser: log.userTargetName || "—",
-        request: log.request ? `#${log.request}` : "—",
-        timestamp: display,
-        date,
-    };
+    return new Date(`${log.date}T${time}`);
 }
 
 export default function AuditDashboard() {
@@ -69,32 +38,35 @@ export default function AuditDashboard() {
     const [searchTerm, setSearchTerm] = useState("");
     const [actionType, setActionType] = useState("");
     const [period, setPeriod] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
     const [selectedLog, setSelectedLog] = useState(null);
+
+    const sortedLogs = useMemo(() => {
+        return [...logs].sort((a, b) => getSortableDate(b) - getSortableDate(a));
+    }, [logs]);
 
     const actionOptions = useMemo(() => {
         const seen = new Map();
-        logs.forEach((log) => {
+        sortedLogs.forEach((log) => {
             if (log.actionId && !seen.has(log.actionId)) {
                 seen.set(log.actionId, formatActionType(log.action));
             }
         });
         return Array.from(seen, ([value, label]) => ({ value, label }));
-    }, [logs]);
+    }, [sortedLogs]);
 
     const stats = useMemo(() => {
         const today = new Date().toLocaleDateString("pt-BR");
-        const todayCount = logs.filter((log) => log.date === today).length;
-        const loginCount = logs.filter((log) => log.actionId?.toUpperCase().includes("LOGAR")).length;
-        const impersonationCount = logs.filter((log) => log.actionId === "LOGAR_COMO_USUARIO").length;
+        const todayCount = sortedLogs.filter((log) => log.date === today || log.timestamp?.startsWith(today)).length;
+        const loginCount = sortedLogs.filter((log) => log.actionId?.toUpperCase().includes("LOGAR")).length;
+        const impersonationCount = sortedLogs.filter((log) => log.actionId === "LOGAR_COMO_USUARIO").length;
 
         return {
-            total: logs.length,
+            total: sortedLogs.length,
             today: todayCount,
             logins: loginCount,
             impersonation: impersonationCount,
         };
-    }, [logs]);
+    }, [sortedLogs]);
 
     const filteredLogs = useMemo(() => {
         let formattedPeriod = "";
@@ -103,35 +75,28 @@ export default function AuditDashboard() {
             formattedPeriod = `${day}/${month}/${year}`;
         }
 
-        return logs.filter((log) => {
+        return sortedLogs.filter((log) => {
             const searchableContent = `${log.id} ${log.user} ${log.level} ${log.action} ${log.affectedUser} ${log.request} ${log.timestamp}`.toLowerCase();
 
             const matchesSearch = !searchTerm || searchableContent.includes(searchTerm.toLowerCase());
             const matchesAction = !actionType || log.actionId === actionType;
-            const matchesPeriod = !period || log.date === formattedPeriod;
+            const matchesPeriod = !period || log.date === period;
 
             return matchesSearch && matchesAction && matchesPeriod;
         });
-    }, [logs, actionType, period, searchTerm]);
-
-    const totalPages = Math.max(1, Math.ceil(filteredLogs.length / LOGS_PER_PAGE));
-    const page = Math.min(currentPage, totalPages);
-    const paginatedLogs = filteredLogs.slice((page - 1) * LOGS_PER_PAGE, page * LOGS_PER_PAGE);
+    }, [sortedLogs, actionType, period, searchTerm]);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
-        setCurrentPage(1);
     };
 
     const handleActionChange = (valueOrEvent) => {
         const val = valueOrEvent?.target ? valueOrEvent.target.value : valueOrEvent;
         setActionType(val);
-        setCurrentPage(1);
     };
 
     const handlePeriodChange = (e) => {
         setPeriod(e.target.value);
-        setCurrentPage(1);
     };
 
     return (
@@ -230,33 +195,19 @@ export default function AuditDashboard() {
                 </div>
 
                 <div className="flex-1 min-h-0 flex flex-col justify-between">
-                    <div className="flex-1 overflow-y-auto">
-                        {loading ? (
-                            <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
-                                Carregando registros...
-                            </p>
-                        ) : error ? (
-                            <p className="px-6 py-8 text-center text-sm text-red-500 dark:text-[#F08B92]">
-                                {error}
-                            </p>
-                        ) : (
-                            <AuditLogTable
-                                logs={paginatedLogs}
-                                onSelectLog={setSelectedLog}
-                            />
-                        )}
-                    </div>
-
-                    {!loading && !error && filteredLogs.length > 0 && (
-                        <div className="border-t border-gray-100 dark:border-white/10 p-4">
-                            <AuditPagination
-                                currentPage={page}
-                                totalPages={totalPages}
-                                totalRecords={filteredLogs.length}
-                                pageSize={LOGS_PER_PAGE}
-                                onPageChange={setCurrentPage}
-                            />
-                        </div>
+                    {loading ? (
+                        <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
+                            Carregando registros...
+                        </p>
+                    ) : error ? (
+                        <p className="px-6 py-8 text-center text-sm text-red-500 dark:text-[#F08B92]">
+                            {error}
+                        </p>
+                    ) : (
+                        <AuditLogTable
+                            logs={filteredLogs}
+                            onSelectLog={setSelectedLog}
+                        />
                     )}
                 </div>
             </div>

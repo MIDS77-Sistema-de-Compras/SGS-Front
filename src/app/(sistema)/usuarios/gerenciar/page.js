@@ -20,7 +20,7 @@ export default function GerenciarUsuarios() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState("Todos"); // Ajuste para "Ativos" se preferir o padrão da develop
+    const [statusFilter, setStatusFilter] = useState("Todos");
     const [userToImpersonate, setUserToImpersonate] = useState(null);
     const [isImpersonating, setIsImpersonating] = useState(false);
     const [impersonateError, setImpersonateError] = useState("");
@@ -148,9 +148,9 @@ export default function GerenciarUsuarios() {
 
             <div className="flex flex-1 flex-col min-h-0 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 mb-4 overflow-hidden bg-white dark:bg-[#1A2233]">
 
-                <div className="p-3 sm:p-4 border-b border-gray-100 dark:border-white/10 flex flex-col lg:flex-row justify-between items-center gap-3">
+                <div className="flex p-3 sm:p-4 border-b border-gray-100 dark:border-white/10 flex flex-col lg:flex-row justify-between items-center gap-3">
 
-                    <div className="flex w-full lg:w-auto items-center gap-2">
+                    <div className="flex !items-center w-full lg:w-auto  gap-2">
                         <div className="relative w-full lg:w-56">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Search size={16} className="text-gray-400" />
@@ -158,14 +158,14 @@ export default function GerenciarUsuarios() {
                             <input
                                 type="text"
                                 placeholder="Buscar pelo Nome, E-mail..."
-                                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
+                                className="w-full pl-10 pr-4 py-2.5 border border-gray-100 shadow-sm dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E]"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
 
                         <Dropdown
-                            className="w-28 text-xs h-9"
+                            className="w-28 text-xs"
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
                             options={["Todos", "Ativos", "Inativos"]}

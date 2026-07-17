@@ -81,11 +81,10 @@ function MobileCard({ log, onSelect }) {
 
             <div className="mt-2.5 sm:mt-3 flex items-center gap-2 flex-wrap">
                 <LevelBadge level={log.level} />
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    critical
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${critical
                         ? "bg-purple-100 text-purple-600 dark:bg-[#7C3AED]/20 dark:text-[#B48CF7] font-semibold"
                         : "bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-[#C3C6D3]"
-                }`}>
+                    }`}>
                     {log.action}
                 </span>
             </div>
@@ -171,11 +170,14 @@ export default function AuditLogTable({ logs, onSelectLog }) {
             </div>
 
             <div className="hidden lg:block flex-1 min-h-0 w-full overflow-auto pr-2 pb-2">
-                <table className="w-full text-left border-collapse table-fixed min-w-[860px]">
-                    <thead className="sticky top-0 z-10">
-                        <tr className="text-sm font-semibold text-gray-700 dark:text-[#E2E2EA] bg-[#F8FAFC] dark:bg-[#303746] shadow-[0_1px_0_0_rgba(243,244,246,1)] dark:shadow-[0_1px_0_0_#303746]">
+                <table className="w-full text-left border-separate border-spacing-0 table-fixed min-w-[860px]">
+                    <thead>
+                        <tr className="text-sm font-semibold text-gray-700 dark:text-[#E2E2EA]">
                             {columns.map((col) => (
-                                <th key={col.label} className={`py-3 px-4 font-medium ${col.width}`}>
+                                <th
+                                    key={col.label}
+                                    className={`sticky top-0 z-10 py-3 px-4 font-medium bg-[#F8FAFC] dark:bg-[#303746] shadow-[0_1px_0_0_rgba(243,244,246,1)] dark:shadow-[0_1px_0_0_#303746] ${col.width}`}
+                                >
                                     {col.sortable ? (
                                         <div
                                             onClick={() => handleSort(col)}
