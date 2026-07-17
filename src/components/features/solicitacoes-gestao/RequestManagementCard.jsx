@@ -54,7 +54,11 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
                                 variant="success"
                                 className="rounded-full px-6 max-h-[30px]"
                                 isLoading={isDeciding}
-                                onClick={() => onApprove(item)}
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    onApprove(item);
+                                }}
                             >
                                 Aprovar
                             </Button>
@@ -62,7 +66,11 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
                                 variant="danger"
                                 className="rounded-full px-6 max-h-[30px]"
                                 isLoading={isDeciding}
-                                onClick={() => onReject(item)}
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    onReject(item);
+                                }}
                             >
                                 Recusar
                             </Button>
