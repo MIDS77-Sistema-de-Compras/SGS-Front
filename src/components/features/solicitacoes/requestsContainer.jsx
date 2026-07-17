@@ -23,7 +23,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
 
     const abas = [
         { valor: 'todas', label: 'TODAS' },
-        { valor: 'pendentes', label: 'PENDENTES' },
+        { valor: 'em_andamento', label: 'EM ANDAMENTO' },
         { valor: 'concluidas', label: 'CONCLUÍDAS' },
     ];
 
