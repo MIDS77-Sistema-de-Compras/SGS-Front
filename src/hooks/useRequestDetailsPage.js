@@ -6,7 +6,7 @@ import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
 
 export function useRequestDetailsPage() {
   const { id } = useParams();
-  const { request: solicitacao, loading, error } = useRequestDetails(id);
+  const { request: solicitacao, loading, error, refetch } = useRequestDetails(id);
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,7 +57,7 @@ export function useRequestDetailsPage() {
   };
 
   return {
-    id, solicitacao, loading, error,
+    id, solicitacao, loading, error, refetch,
     localProducts, localServices, isServiceRequest,
     statusGeral, corGeral,
     selectedProduct, isModalOpen, editing, editedProduct, setEditedProduct,

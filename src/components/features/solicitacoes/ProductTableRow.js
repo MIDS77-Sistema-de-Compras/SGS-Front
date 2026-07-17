@@ -7,7 +7,6 @@ export default function ProductTableRow({
     openModal,
     showItemDecisions = false,
     decision = null,
-    isDeciding = false,
     onAcceptItem,
     onRejectItem,
 }) {
@@ -52,34 +51,30 @@ export default function ProductTableRow({
 
             {showItemDecisions && (
                 <td className={`py-3 text-center ${tdHoverAndRoundedClass}`}>
-                    {decision ? (
-                        <span
-                            className={`inline-block text-center text-[14px] font-semibold py-1 px-3 rounded-full tracking-wide border ${
-                                decision === "Aceito"
-                                    ? "text-green-600 border-green-600 dark:text-green-400 dark:border-green-400"
-                                    : "text-[#BA1A1A] border-[#BA1A1A] dark:text-[#F87171] dark:border-[#F87171]"
+                    <div className="flex items-center justify-center gap-2">
+                        <button
+                            onClick={() => onAcceptItem?.(item)}
+                            title={decision === "Aprovado" ? "Clique para desfazer" : "Aprovar item"}
+                            className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${
+                                decision === "Aprovado"
+                                    ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
+                                    : "text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-500/10"
                             }`}
                         >
-                            {decision}
-                        </span>
-                    ) : (
-                        <div className="flex items-center justify-center gap-2">
-                            <button
-                                onClick={() => onAcceptItem?.(item)}
-                                disabled={isDeciding}
-                                className="text-[13px] font-semibold text-green-600 border border-green-600 rounded-full px-3 py-1 hover:bg-green-50 dark:hover:bg-green-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            >
-                                Aprovar
-                            </button>
-                            <button
-                                onClick={() => onRejectItem?.(item)}
-                                disabled={isDeciding}
-                                className="text-[13px] font-semibold text-[#BA1A1A] border border-[#BA1A1A] rounded-full px-3 py-1 hover:bg-red-50 dark:hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            >
-                                Recusar
-                            </button>
-                        </div>
-                    )}
+                            Aprovar
+                        </button>
+                        <button
+                            onClick={() => onRejectItem?.(item)}
+                            title={decision === "Recusado" ? "Clique para desfazer" : "Recusar item"}
+                            className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${
+                                decision === "Recusado"
+                                    ? "bg-[#BA1A1A] border-[#BA1A1A] text-white hover:bg-[#a01717]"
+                                    : "text-[#BA1A1A] border-[#BA1A1A] hover:bg-red-50 dark:hover:bg-red-500/10"
+                            }`}
+                        >
+                            Recusar
+                        </button>
+                    </div>
                 </td>
             )}
         </tr>

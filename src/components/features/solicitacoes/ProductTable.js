@@ -9,7 +9,6 @@ export default function ProductTable({
     isServiceRequest = false,
     showItemDecisions = false,
     itemDecisions = {},
-    decidingItemId = null,
     onAcceptItem,
     onRejectItem,
 }) {
@@ -58,7 +57,6 @@ export default function ProductTable({
                                 isServiceRequest={isServiceRequest}
                                 showItemDecisions={showItemDecisions}
                                 decision={itemDecisions[item.id]}
-                                isDeciding={decidingItemId === item.id}
                                 onAcceptItem={onAcceptItem}
                                 onRejectItem={onRejectItem}
                             />

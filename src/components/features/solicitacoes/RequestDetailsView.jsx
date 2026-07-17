@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
 import RequestDetailsSkeleton from "@/components/features/solicitacoes/RequestDetailsSkeleton";
 import RejectionModal from "@/components/ui/overlay/RejectionModal";
+import Button from "@/components/ui/button/Button";
 import { useRequestDetailsPage } from "@/hooks/useRequestDetailsPage";
+import { useItemApprovalFlow } from "@/hooks/useItemApprovalFlow";
 
 function formatDisplayDate(date) {
   if (!date) return "-";
@@ -22,7 +23,7 @@ export default function RequestDetailsView({ title, backHref, mode }) {
   const isProfessor = true;
 
   const {
-    solicitacao, loading, error,
+    id, solicitacao, loading, error, refetch,
     localProducts, localServices, isServiceRequest,
     statusGeral, corGeral,
     selectedProduct, isModalOpen, editing, editedProduct, setEditedProduct,
@@ -30,29 +31,25 @@ export default function RequestDetailsView({ title, backHref, mode }) {
     openModal, openEditModal, closeModal, handleSave,
   } = useRequestDetailsPage();
 
-  const [itemDecisions, setItemDecisions] = useState({});
-  const [decidingItemId, setDecidingItemId] = useState(null);
-  const [rejectItemTarget, setRejectItemTarget] = useState(null);
+  const itemsEmAnalise = isServiceRequest ? localServices : localProducts;
 
-  const handleAcceptItem = async (item) => {
-    setDecidingItemId(item.id);
-    try {
-      setItemDecisions((prev) => ({ ...prev, [item.id]: "Aceito" }));
-    } finally {
-      setDecidingItemId(null);
-    }
-  };
-
-  const handleRejectItem = async (justificativa) => {
-    const item = rejectItemTarget;
-    setDecidingItemId(item.id);
-    try {
-      setItemDecisions((prev) => ({ ...prev, [item.id]: "Recusado" }));
-      setRejectItemTarget(null);
-    } finally {
-      setDecidingItemId(null);
-    }
-  };
+  const {
+    itemDecisions,
+    rejectItemTarget,
+    setRejectItemTarget,
+    saving,
+    hasPendingChanges,
+    handleAcceptItem,
+    openRejectModal,
+    handleRejectItem,
+    handleSaveChanges,
+  } = useItemApprovalFlow({
+    requestId: id,
+    items: itemsEmAnalise,
+    isServiceRequest,
+    refetch,
+    setNotification,
+  });
 
   if (loading) return <RequestDetailsSkeleton />;
 
@@ -114,26 +111,36 @@ export default function RequestDetailsView({ title, backHref, mode }) {
           </div>
 
           <ProductTable
-            localProducts={isServiceRequest ? localServices : localProducts}
+            localProducts={itemsEmAnalise}
             isProfessor={isProfessor}
             openModal={openModal}
             openEditModal={openEditModal}
             isServiceRequest={isServiceRequest}
             showItemDecisions={isAnalysis}
             itemDecisions={itemDecisions}
-            decidingItemId={decidingItemId}
             onAcceptItem={handleAcceptItem}
-            onRejectItem={(item) => setRejectItemTarget(item)}
+            onRejectItem={openRejectModal}
           />
         </div>
 
         <div className="flex justify-end pt-5">
-          <Link
-            href={backHref}
-            className="bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
-          >
-            Fechar solicitação
-          </Link>
+          {hasPendingChanges ? (
+            <Button
+              variant="primary"
+              className="px-11 py-3 rounded-xl"
+              isLoading={saving}
+              onClick={handleSaveChanges}
+            >
+              Salvar alterações
+            </Button>
+          ) : (
+            <Link
+              href={backHref}
+              className="bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
+            >
+              Fechar solicitação
+            </Link>
+          )}
         </div>
       </div>
 
@@ -152,7 +159,6 @@ export default function RequestDetailsView({ title, backHref, mode }) {
           isOpen={!!rejectItemTarget}
           onClose={() => setRejectItemTarget(null)}
           onConfirm={handleRejectItem}
-          isLoading={decidingItemId === rejectItemTarget?.id}
           title="Recusar item"
           description={`Informe o motivo da recusa do item "${rejectItemTarget?.nome || rejectItemTarget?.descricao || ""}".`}
         />
