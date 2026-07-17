@@ -1,19 +1,10 @@
 import { ChevronsUpDown, Pencil, LogIn } from "lucide-react";
 import Link from "next/link";
+import LevelBadge from "@/components/features/auditoria/LevelBadge";
 
 export default function UserTable({ users, onImpersonate }) {
     const canImpersonate = (user) =>
         Boolean(onImpersonate) && user.active && user.roleName !== "ADMIN";
-
-    const formatProfile = (profile) => {
-        if (!profile) return "-";
-
-        return profile
-            .toLowerCase()
-            .split("_")
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-    };
 
     const getInitials = (name) => {
         if (!name) return "";
@@ -86,20 +77,12 @@ export default function UserTable({ users, onImpersonate }) {
                                 <td className="py-2.5 px-4 text-gray-500 dark:text-[#C3C6D3] truncate max-w-[180px]">{user.email}</td>
                                 
                                 <td className="py-2.5 px-4">
-                                    <span 
-                                        className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap 
-                                            ${user.level === "DOCENTE" 
-                                                ? "bg-green-50 dark:bg-green-500/15 text-green-700 dark:text-green-300" 
-                                                : "bg-orange-50 dark:bg-orange-500/15 text-orange-600 dark:text-orange-300"
-                                            }`}
-                                    >
-                                        {formatProfile(user.roleName)}
-                                    </span>
+                                    <LevelBadge level={user.roleName} />
                                 </td>
 
                                 <td className="py-2.5 px-4">
                                     <span
-                                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap
+                                        className={`inline-flex items-center justify-center gap-1.5 min-w-[92px] px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap
                                             ${user.active
                                                 ? "bg-green-50 dark:bg-green-500/15 text-green-700 dark:text-green-300"
                                                 : "bg-red-50 dark:bg-red-500/15 text-red-700 dark:text-red-300"

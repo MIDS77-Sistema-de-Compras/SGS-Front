@@ -92,22 +92,24 @@ export default function RequestDetailsView({ title, backHref, mode }) {
 
           <hr className="border-gray-100 dark:border-white/10 mb-6" />
 
-          <div className="flex items-center justify-between mb-6 px-6">
-            <div className="flex items-baseline gap-4">
-              <h4 className="text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
-                {solicitacao.codigo} : Lista de{" "}
-                {isServiceRequest ? localServices.length : localProducts.length}{" "}
-                {isServiceRequest
-                  ? localServices.length === 1 ? "serviço" : "serviços"
-                  : localProducts.length === 1 ? "produto" : "produtos"}
-              </h4>
-              <span className="text-gray-600 dark:text-[#C3C6D3] text-base font-medium px-7 text-[16px]">
-                Realizada em: {formatDisplayDate(solicitacao.data)}
+          <div className="mb-6 px-4 sm:px-6">
+            <div className="flex items-start justify-between gap-3 min-[1350px]:items-center">
+              <div className="flex flex-col gap-1 min-w-0 min-[1350px]:flex-row min-[1350px]:items-baseline min-[1350px]:gap-4">
+                <h4 className="text-[16px] sm:text-[18px] min-[1350px]:text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
+                  {solicitacao.codigo} : Lista de{" "}
+                  {isServiceRequest ? localServices.length : localProducts.length}{" "}
+                  {isServiceRequest
+                    ? localServices.length === 1 ? "serviço" : "serviços"
+                    : localProducts.length === 1 ? "produto" : "produtos"}
+                </h4>
+                <span className="text-gray-600 dark:text-[#C3C6D3] text-[13px] sm:text-sm min-[1350px]:text-[16px] font-medium whitespace-nowrap min-[1350px]:px-7">
+                  Realizada em: {formatDisplayDate(solicitacao.data)}
+                </span>
+              </div>
+              <span className={`inline-block shrink-0 whitespace-nowrap text-center text-[12px] sm:text-[13px] min-[1350px]:text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[140px] min-[1350px]:min-w-[150px] shadow-sm tracking-wide ${corGeral}`}>
+                {statusGeral}
               </span>
             </div>
-            <span className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide ${corGeral}`}>
-              {statusGeral}
-            </span>
           </div>
 
           <ProductTable
@@ -123,11 +125,11 @@ export default function RequestDetailsView({ title, backHref, mode }) {
           />
         </div>
 
-        <div className="flex justify-end pt-5">
+     <div className="flex justify-stretch sm:justify-end pt-5">
           {hasPendingChanges ? (
             <Button
               variant="primary"
-              className="px-11 py-3 rounded-xl"
+              className="w-full sm:w-auto px-11 py-3 rounded-xl"
               isLoading={saving}
               onClick={handleSaveChanges}
             >
@@ -136,7 +138,7 @@ export default function RequestDetailsView({ title, backHref, mode }) {
           ) : (
             <Link
               href={backHref}
-              className="bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
+              className="w-full sm:w-auto text-center bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
             >
               Fechar solicitação
             </Link>

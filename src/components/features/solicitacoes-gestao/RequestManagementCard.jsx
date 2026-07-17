@@ -1,4 +1,3 @@
-import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/button/Button';
 import StatusBadge from '@/components/features/solicitacoes/statusBadge';
 import { calcularTempoDecorrido } from '@/lib/utils/calculateTime';
@@ -6,7 +5,6 @@ import { getStatusColor, getStatusLabel } from '@/lib/utils/requestStatus';
 import Link from 'next/link';
 
 export default function RequestManagementCard({ item, onApprove, onReject, isDeciding = false }) {
-    const router = useRouter();
     const quantidadeProdutos = item.produtos?.length || 0;
     const titulo = `${item.codigo}${quantidadeProdutos > 0
         ? `: Lista de ${quantidadeProdutos} ${quantidadeProdutos === 1 ? 'produto' : 'produtos'}`
@@ -23,36 +21,42 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
     return (
         <Link
             href={`/solicitacoes/gestao/${item.id}`}
+            className="group block"
         >
-            <div className="hover:bg-gray-100 px-2 rounded-xl flex items-center justify-between gap-6 py-4 border-b border-gray-100 dark:border-white/10 last:border-b-0">
-                <div className="flex items-center gap-4 min-w-0">
-                    <div className={`w-7 h-7 rounded-full shrink-0 ${getStatusColor(item.status)}`} />
+            <div className="hover:bg-gray-100 dark:hover:bg-white/5 px-2 rounded-xl flex flex-col gap-3 py-4 xl:flex-row xl:items-center xl:justify-between xl:gap-6 transition-colors">
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                    <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full shrink-0 ${getStatusColor(item.status)}`} />
 
                     <div className="flex flex-col min-w-0">
-                        <span className="font-bold text-[#333333] dark:text-[#E2E2EA] truncate">
+                        <span className="font-bold text-[15px] sm:text-base text-[#333333] dark:text-[#E2E2EA] break-words xl:truncate">
                             {titulo}
                         </span>
 
                         {subtitulo && (
-                            <span className="text-sm text-gray-400 dark:text-[#C3C6D3] truncate">
+                            <span className="text-xs sm:text-sm text-gray-400 dark:text-[#C3C6D3] break-words xl:truncate">
                                 {subtitulo}
                             </span>
                         )}
                     </div>
                 </div>
 
-                <div className="flex items-center gap-6 shrink-0">
-                    <span className="text-xs text-gray-400 dark:text-[#C3C6D3] min-w-[70px] text-right whitespace-nowrap">
+                <div
+                    className="grid grid-cols-[70px_1fr] items-center gap-x-3 gap-y-2 pl-9 sm:flex sm:items-center sm:gap-4 sm:pl-11 xl:gap-6 xl:pl-0 xl:shrink-0"
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                >
+                    <span className="text-xs text-gray-400 dark:text-[#C3C6D3] whitespace-nowrap sm:min-w-[70px] xl:text-right">
                         {calcularTempoDecorrido(item.data)}
                     </span>
 
-                    <StatusBadge status={item.status} className="px-4 min-w-[170px]" />
+                    <div className="justify-self-end sm:ml-auto xl:ml-0">
+                        <StatusBadge status={item.status} className="px-3 min-w-[150px] xl:px-4 xl:min-w-[170px]" />
+                    </div>
 
                     {podeDecidir && (
-                        <div className="flex gap-3">
+                        <div className="col-start-2 justify-self-end flex gap-2 sm:col-auto xl:gap-3">
                             <Button
                                 variant="success"
-                                className="rounded-full px-6 max-h-[30px]"
+                                className="rounded-full px-4 xl:px-6 max-h-[28px] xl:max-h-[30px]"
                                 isLoading={isDeciding}
                                 onClick={(event) => {
                                     event.preventDefault();
@@ -64,7 +68,7 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
                             </Button>
                             <Button
                                 variant="danger"
-                                className="rounded-full px-6 max-h-[30px]"
+                                className="rounded-full px-4 xl:px-6 max-h-[28px] xl:max-h-[30px]"
                                 isLoading={isDeciding}
                                 onClick={(event) => {
                                     event.preventDefault();
@@ -78,6 +82,8 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
                     )}
                 </div>
             </div>
+
+            <div className="mx-auto h-px w-[92%] bg-gray-100/80 dark:bg-white/5 group-last:hidden" />
         </Link>
     );
 }

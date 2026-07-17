@@ -14,22 +14,22 @@ export default function ProductTableRow({
 
     return (
         <tr className="group">
-            <td 
-                className={`py-3 pl-6 text-left text-base text-gray-700 dark:text-[#E2E2EA] font-medium truncate w-[100px] cursor-pointer ${tdHoverAndRoundedClass}`} 
+            <td
+                className={`py-3 pl-4 min-[1350px]:pl-6 pr-3 text-left text-[13px] min-[1350px]:text-base text-gray-700 dark:text-[#E2E2EA] font-medium truncate cursor-pointer ${tdHoverAndRoundedClass}`}
                 onClick={() => openModal(item)}
             >
                 {item.code} {item.nome}
             </td>
-            <td 
-                className={`py-3 pl-10 text-left text-base text-gray-500 dark:text-[#C3C6D3] truncate w-[20px] cursor-pointer ${tdHoverAndRoundedClass}`} 
+            <td
+                className={`py-3 pr-3 text-left text-[13px] min-[1350px]:text-base text-gray-500 dark:text-[#C3C6D3] truncate cursor-pointer ${tdHoverAndRoundedClass}`}
                 onClick={() => openModal(item)}
             >
                 {item.variation}
             </td>
-            <td className={`py-3 text-center text-base text-gray-600 dark:text-[#C3C6D3] font-medium ${tdHoverAndRoundedClass}`}>
+            <td className={`py-3 px-3 text-center text-[13px] min-[1350px]:text-base text-gray-600 dark:text-[#C3C6D3] font-medium truncate ${tdHoverAndRoundedClass}`}>
                 {item.quantity} {item.unit?.toLowerCase()}
             </td>
-            <td className={`py-3 pl-5 text-center text-base ${tdHoverAndRoundedClass}`}>
+            <td className={`py-3 px-3 text-center ${tdHoverAndRoundedClass}`}>
                 <button
                     onClick={() => openModal(item)}
                     className="text-gray-400 dark:text-[#5D8EF7] underline underline-offset-2 hover:text-gray-600 dark:hover:text-[#7BA5F9] text-sm transition-colors"
@@ -37,20 +37,20 @@ export default function ProductTableRow({
                     Ver mais
                 </button>
             </td>
-            <td className={`py-3 text-center relative ${tdHoverAndRoundedClass}`}>
+            <td className={`py-3 px-3 text-center relative ${tdHoverAndRoundedClass}`}>
                 {showItemDecisions ? (
                     <div className="flex items-center justify-center" title={getStatusLabel(item.status)}>
                         <span className={`inline-block w-6 h-6 rounded-full shadow-sm ${getStatusColor(item.status)}`} />
                     </div>
                 ) : (
-                    <span className={`inline-block text-center text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[150px] shadow-sm tracking-wide ${getStatusColor(item.status)}`}>
+                    <span className={`inline-block max-w-full truncate whitespace-nowrap text-center text-[12px] min-[1350px]:text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[140px] min-[1350px]:min-w-[150px] shadow-sm tracking-wide ${getStatusColor(item.status)}`}>
                         {getStatusLabel(item.status)}
                     </span>
                 )}
             </td>
 
             {showItemDecisions && (
-                <td className={`py-3 text-center ${tdHoverAndRoundedClass}`}>
+                <td className={`py-3 px-3 text-center ${tdHoverAndRoundedClass}`}>
                     <div className="flex items-center justify-center gap-2">
                         <button
                             onClick={() => onAcceptItem?.(item)}
