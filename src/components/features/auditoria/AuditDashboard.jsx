@@ -12,11 +12,11 @@ import {
 
 import AuditLogTable from "./AuditLogTable";
 import AuditDetailsModal from "./AuditDetailsModal";
-import AuditPagination from "./AuditPagination";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import Button from "@/components/ui/button/Button";
 import Dropdown from "@/components/ui/select/Dropdown";
 import { useAuditLogs } from "@/hooks/useAuditLogs";
+import AuditTableSkeleton from "./AuditTableSkeleton";
 
 const LOGS_PER_PAGE = 10;
 
@@ -232,9 +232,7 @@ export default function AuditDashboard() {
                 <div className="flex-1 min-h-0 flex flex-col justify-between">
                     <div className="flex-1 overflow-y-auto">
                         {loading ? (
-                            <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
-                                Carregando registros...
-                            </p>
+                            <AuditTableSkeleton />
                         ) : error ? (
                             <p className="px-6 py-8 text-center text-sm text-red-500 dark:text-[#F08B92]">
                                 {error}
@@ -246,18 +244,6 @@ export default function AuditDashboard() {
                             />
                         )}
                     </div>
-
-                    {!loading && !error && filteredLogs.length > 0 && (
-                        <div className="border-t border-gray-100 dark:border-white/10 p-4">
-                            <AuditPagination
-                                currentPage={page}
-                                totalPages={totalPages}
-                                totalRecords={filteredLogs.length}
-                                pageSize={LOGS_PER_PAGE}
-                                onPageChange={setCurrentPage}
-                            />
-                        </div>
-                    )}
                 </div>
             </div>
 

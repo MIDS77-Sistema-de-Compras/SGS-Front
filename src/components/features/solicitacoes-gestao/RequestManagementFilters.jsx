@@ -17,15 +17,15 @@ export default function RequestManagementFilters({
     supervisores,
 }) {
     return (
-        <div className="bg-white dark:bg-[#1A2233] rounded-xl border border-gray-100 shadow-sm dark:border-white/10 flex flex-row items-center justify-between p-2 gap-3 flex-wrap">
-            <div className="flex flex-row items-center px-4 gap-2">
-                <span className="text-xl text-[#133D87] dark:text-[#E2E2EA]">
+        <div className="bg-white dark:bg-[#1A2233] rounded-xl border border-gray-100 shadow-sm dark:border-white/10 flex flex-col xl:flex-row xl:items-center xl:justify-between p-3 xl:p-2 gap-3">
+            <div className="flex flex-row items-center px-1 xl:px-4">
+                <span className="text-lg xl:text-xl text-[#133D87] dark:text-[#E2E2EA]">
                     Filtrar
                 </span>
             </div>
 
-            <div className="flex flex-row items-center gap-3 flex-wrap">
-                <div className="w-[190px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:flex xl:flex-row xl:items-center gap-3">
+                <div className="w-full xl:w-[190px]">
                     <Dropdown
                         name="status"
                         value={status}
@@ -35,7 +35,7 @@ export default function RequestManagementFilters({
                     />
                 </div>
 
-                <div className="w-[190px]">
+                <div className="w-full xl:w-[190px]">
                     <Dropdown
                         name="cr"
                         value={cr}
@@ -51,7 +51,7 @@ export default function RequestManagementFilters({
                     />
                 </div>
 
-                <div className="w-[190px]">
+                <div className="w-full xl:w-[190px]">
                     <Dropdown
                         name="supervisor"
                         value={supervisor}
@@ -67,7 +67,7 @@ export default function RequestManagementFilters({
                     />
                 </div>
 
-                <div className="w-[260px]">
+                <div className="w-full xl:w-[260px]">
                     <Input
                         variant="form"
                         value={busca}

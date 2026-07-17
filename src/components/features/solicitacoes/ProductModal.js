@@ -19,8 +19,8 @@ export default function ProductModal({
     if (!selectedProduct) return null;
 
     return (
-        <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300 ${isModalOpen ? "opacity-100" : "opacity-0"}`}>
-            <div className={`bg-white dark:bg-[#303746] p-8 rounded-2xl max-w-md w-full shadow-xl border border-gray-100 dark:border-white/10 relative transition-all duration-300 transform ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
+        <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300 ${isModalOpen ? "opacity-100" : "opacity-0"}`}>
+            <div className={`bg-white dark:bg-[#303746] p-6 sm:p-8 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl border border-gray-100 dark:border-white/10 relative transition-all duration-300 transform ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
                 <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 dark:text-[#C3C6D3] hover:text-gray-600 dark:hover:text-[#E2E2EA] transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
