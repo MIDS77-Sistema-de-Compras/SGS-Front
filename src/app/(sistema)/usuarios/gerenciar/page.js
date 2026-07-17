@@ -53,6 +53,15 @@ export default function GerenciarUsuarios() {
         }
     }
 
+    const [deletedUserIds, setDeletedUserIds] = useState([]);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const deleted = JSON.parse(localStorage.getItem("deleted_users") || "[]");
+            setDeletedUserIds(deleted.map(String));
+        }
+    }, []);
+
     useEffect(() => {
         loadUsers();
     }, []);
@@ -69,8 +78,12 @@ export default function GerenciarUsuarios() {
         }
     }
 
+    const visibleUsers = useMemo(() => {
+        return users.filter((user) => !deletedUserIds.includes(String(user.id)));
+    }, [users, deletedUserIds]);
+
     const filteredUsers = useMemo(() => {
-        return users.filter((user) => {
+        return visibleUsers.filter((user) => {
             const matchesSearch =
                 user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 user.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -84,12 +97,12 @@ export default function GerenciarUsuarios() {
 
             return matchesSearch && matchesStatus;
         });
-    }, [users, searchTerm, statusFilter]);
+    }, [visibleUsers, searchTerm, statusFilter]);
 
-    const totalUsers = users.length;
-    const activeUsers = users.filter((u) => u.active).length;
-    const inactiveUsers = users.filter((u) => !u.active).length;
-    const totalProfiles = new Set(users.map((u) => u.roleName).filter(Boolean)).size;
+    const totalUsers = visibleUsers.length;
+    const activeUsers = visibleUsers.filter((u) => u.active).length;
+    const inactiveUsers = visibleUsers.filter((u) => !u.active).length;
+    const totalProfiles = new Set(visibleUsers.map((u) => u.roleName).filter(Boolean)).size;
 
     return (
         <div className="flex flex-1 flex-col w-full h-full">
@@ -154,7 +167,7 @@ export default function GerenciarUsuarios() {
                         <Dropdown
                             className="w-28 text-xs h-9"
                             value={statusFilter}
-                            onChange={setStatusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
                             options={["Todos", "Ativos", "Inativos"]}
                         />
                     </div>

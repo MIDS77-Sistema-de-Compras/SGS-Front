@@ -159,3 +159,22 @@ body {
 .dark .force-light *::-webkit-scrollbar-button {
     display: none;
 }
+
+/* Evita o cursor de seleção de texto e ponteiros incorretos em botões e elementos interativos */
+button,
+a,
+[role="button"],
+select,
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+button *,
+a * {
+  pointer-events: none;
+}
