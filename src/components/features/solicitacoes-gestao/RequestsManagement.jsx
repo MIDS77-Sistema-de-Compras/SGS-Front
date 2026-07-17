@@ -225,13 +225,14 @@ export default function RequestsManagement() {
                     <p className="text-xs font-medium text-[#BA1A1A] dark:text-[#F87171]">{justificativaErro}</p>
                 )}
 
-                <div className="flex justify-end gap-3">
-                    <Button variant="outline" onClick={closeRejectModal}>
+                <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+                    <Button variant="outline" fullWidth className="sm:w-auto" onClick={closeRejectModal}>
                         Cancelar
                     </Button>
                     <Button
                         variant="danger"
-                        className="rounded-full"
+                        fullWidth
+                        className="sm:w-auto rounded-full"
                         isLoading={decidingId === rejectTarget?.id}
                         onClick={confirmReject}
                     >

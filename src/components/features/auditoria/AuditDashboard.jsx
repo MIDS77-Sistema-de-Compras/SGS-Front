@@ -100,6 +100,36 @@ export default function AuditDashboard() {
         setPeriod(e.target.value);
     };
 
+    function handleExport() {
+        const clean = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
+        const headers = ["ID", "Usuário", "Nível", "Ação", "Usuário Afetado", "Solicitação", "Data/Hora"];
+        const rows = filteredLogs.map((log) => [
+            log.id,
+            clean(log.user),
+            clean(log.level),
+            clean(log.action),
+            clean(log.affectedUser),
+            clean(log.request),
+            clean(log.timestamp),
+        ]);
+
+        const csvContent =
+            "﻿" +
+            [headers, ...rows]
+                .map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(";"))
+                .join("\r\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `auditoria_${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
     return (
         <div className="flex flex-col w-full h-full gap-4 lg:gap-5">
             <div className="space-y-1">
@@ -179,6 +209,7 @@ export default function AuditDashboard() {
 
                             <Button
                                 variant="outline"
+                                onClick={handleExport}
                                 className="w-full xl:w-auto bg-[#E6F0FF] dark:bg-[#303746] text-[#103D85] dark:text-[#E2E2EA] border-transparent hover:bg-[#D4E5FF] dark:hover:bg-white/5 rounded-xl px-4 py-2.5"
                             >
                                 <span className="inline-flex items-center justify-center gap-2">
