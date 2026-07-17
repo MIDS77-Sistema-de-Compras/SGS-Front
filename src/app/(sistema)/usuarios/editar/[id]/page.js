@@ -272,11 +272,11 @@ export default function EditarUsuarios() {
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center w-full">
-                    <div className="flex gap-4">
+                <div className="flex flex-col gap-3 w-full min-[1350px]:flex-row min-[1350px]:justify-between min-[1350px]:items-center">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                         <Button
                             onClick={() => abrirModal('excluir')}
-                            className="w-[295px] bg-[#E30613] hover:bg-[#B8010C] text-white border-[#E30613] dark:bg-[#C62834] dark:hover:bg-[#A01F29] dark:border-[#C62834]"
+                            className="w-full sm:flex-1 min-[1350px]:w-[295px] bg-[#E30613] hover:bg-[#B8010C] text-white border-[#E30613] dark:bg-[#C62834] dark:hover:bg-[#A01F29] dark:border-[#C62834]"
                             rightIcon={<Image src="/images/icons/lixeira.png" alt="" width={16} height={16} />}
                         >
                             Excluir usuário
@@ -286,8 +286,8 @@ export default function EditarUsuarios() {
                             onClick={() => abrirModal(formData.ativo ? 'desativar' : 'ativar')}
                             className={
                                 formData.ativo
-                                    ? "w-[295px] bg-[#7D7D7D] hover:bg-[#555555] text-white border-[#7D7D7D] dark:bg-[#303746] dark:hover:bg-[#3d4456] dark:border-white/15"
-                                    : "w-[295px] bg-[#4CAF50] hover:bg-[#37823A] text-white border-[#10B981] dark:bg-[#37823A] dark:hover:bg-[#2b652e] dark:border-[#10B981]"
+                                    ? "w-full sm:flex-1 min-[1350px]:w-[295px] bg-[#7D7D7D] hover:bg-[#555555] text-white border-[#7D7D7D] dark:bg-[#303746] dark:hover:bg-[#3d4456] dark:border-white/15"
+                                    : "w-full sm:flex-1 min-[1350px]:w-[295px] bg-[#4CAF50] hover:bg-[#37823A] text-white border-[#10B981] dark:bg-[#37823A] dark:hover:bg-[#2b652e] dark:border-[#10B981]"
                             }
                             rightIcon={
                                 formData.ativo ? <Lock size={16} /> : <Unlock size={16} />
@@ -299,7 +299,7 @@ export default function EditarUsuarios() {
 
                     <Button
                         onClick={handleSave}
-                        className="w-[295px]"
+                        className="w-full min-[1350px]:w-[295px]"
                         rightIcon={<Image src="/images/icons/lapisEdicao.png" alt="" width={16} height={16} />}
                     >
                         SALVAR MUDANÇAS
