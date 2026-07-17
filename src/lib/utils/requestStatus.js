@@ -26,6 +26,14 @@ const STATUS_CATALOG = [
         aliases: ["aprovado"],
     },
     {
+        key: "auto_aprovado",
+        label: "Auto-aprovado",
+        color: "bg-[#0EA5E9]",
+        category: "pendente",
+        selectable: true,
+        aliases: ["auto aprovado", "auto-aprovado"],
+    },
+    {
         key: "em_atendimento",
         label: "Em atendimento",
         color: "bg-[#13BAD6]",
