@@ -104,6 +104,33 @@ export default function GerenciarUsuarios() {
     const inactiveUsers = visibleUsers.filter((u) => !u.active).length;
     const totalProfiles = new Set(visibleUsers.map((u) => u.roleName).filter(Boolean)).size;
 
+    function handleExport() {
+        const headers = ["Nome", "E-mail", "Nível", "Status", "Último Acesso"];
+        const rows = filteredUsers.map((user) => [
+            user.name ?? "",
+            user.email ?? "",
+            user.roleName ?? "",
+            user.active ? "Ativo" : "Inativo",
+            user.updatedAt ? new Date(user.updatedAt).toLocaleString("pt-BR") : "",
+        ]);
+
+        const csvContent =
+            "﻿" +
+            [headers, ...rows]
+                .map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(";"))
+                .join("\r\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `usuarios_${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
     return (
         <div className="flex flex-1 flex-col w-full h-full">
             <div className="mb-4">
@@ -175,6 +202,7 @@ export default function GerenciarUsuarios() {
                     <div className="flex w-full lg:w-auto items-center justify-between lg:justify-end gap-4">
                         <Button
                             variant="outline"
+                            onClick={handleExport}
                             className="flex-1 lg:flex-initial h-9 px-3 text-xs bg-[#E6F0FF] dark:bg-[#303746] text-[#103D85] dark:text-[#E2E2EA] border-transparent hover:bg-[#D4E5FF] dark:hover:bg-white/5"
                         >
                             Exportar
