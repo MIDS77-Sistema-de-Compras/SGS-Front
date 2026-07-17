@@ -36,9 +36,17 @@ export default function RejectionModal({ isOpen, onClose, onConfirm, isLoading, 
 
       {erro && <p className="text-xs font-medium text-[#BA1A1A] dark:text-[#F87171]">{erro}</p>}
 
-      <div className="flex justify-end gap-3">
-        <Button variant="outline" onClick={handleClose}>Cancelar</Button>
-        <Button variant="danger" className="rounded-full" isLoading={isLoading} onClick={handleConfirm}>
+      <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+        <Button variant="outline" fullWidth className="sm:w-auto" onClick={handleClose}>
+          Cancelar
+        </Button>
+        <Button
+          variant="danger"
+          fullWidth
+          className="sm:w-auto rounded-full"
+          isLoading={isLoading}
+          onClick={handleConfirm}
+        >
           Confirmar recusa
         </Button>
       </div>

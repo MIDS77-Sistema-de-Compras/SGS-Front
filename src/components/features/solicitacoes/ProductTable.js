@@ -9,6 +9,7 @@ export default function ProductTable({
     isServiceRequest = false,
     showItemDecisions = false,
     itemDecisions = {},
+    decidingItemId = null,
     onAcceptItem,
     onRejectItem,
 }) {
