@@ -108,7 +108,7 @@ export default function ProductModal({
                                     ? "A solicitação cumpre com os requisitos técnicos da unidade e o orçamento está dentro do limite estipulado para o trimestre corrente."
                                     : selectedProduct.status === "Reprovado"
                                     ? "A compra foi recusada temporariamente pois identificamos itens similares disponíveis no estoque central da instituição para remanejamento."
-                                    : selectedProduct.status === "Auto-Aprovado"
+                                    : selectedProduct.status === "Auto-aprovado"
                                     ? "Solicitação originada por Supervisor. Processo elegível para fluxo de aprovação direta."
                                     : "Aguardando análise do supervisor responsável."}
                             </p>

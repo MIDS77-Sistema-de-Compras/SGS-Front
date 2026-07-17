@@ -159,3 +159,39 @@ body {
 .dark .force-light *::-webkit-scrollbar-button {
     display: none;
 }
+
+/* Evita o cursor de seleção de texto e ponteiros incorretos em botões e elementos interativos */
+button,
+a,
+[role="button"],
+select,
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+button *,
+a * {
+  pointer-events: none;
+}
+
+/* Elementos interativos aninhados dentro de um botao/link (ex.: os botoes
+   Aprovar/Recusar dentro do card clicavel do Monitoramento) precisam continuar
+   recebendo clique - a regra acima so deve neutralizar filhos decorativos
+   (icones, spans de texto). */
+button button,
+button a,
+button [role="button"],
+button select,
+button input,
+a button,
+a a,
+a [role="button"],
+a select,
+a input {
+  pointer-events: auto;
+}

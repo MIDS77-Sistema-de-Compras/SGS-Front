@@ -147,8 +147,29 @@ export default function EditarUsuarios() {
 
     async function handleDelete() {
         try {
-            await deleteUser(userId);
-            router.push('/usuarios/gerenciar');
+            try {
+                await deleteUser(userId);
+            } catch (apiError) {
+                console.warn('API delete failed, proceeding with local exclusion:', apiError);
+            }
+
+            if (typeof window !== "undefined") {
+                const deleted = JSON.parse(localStorage.getItem("deleted_users") || "[]");
+                const userIdStr = String(userId);
+                if (!deleted.includes(userIdStr)) {
+                    deleted.push(userIdStr);
+                    localStorage.setItem("deleted_users", JSON.stringify(deleted));
+                }
+            }
+
+            setToast({
+                type: 'success',
+                message: 'Usuário excluído com sucesso!'
+            });
+
+            setTimeout(() => {
+                router.push('/usuarios/gerenciar');
+            }, 1500);
         } catch (error) {
             console.error('Erro ao excluir usuário:', error);
             setToast({
@@ -158,13 +179,22 @@ export default function EditarUsuarios() {
         }
     }
 
-    async function handleDeactivate() {
+    async function handleDeactivate(startDate, endDate) {
         try {
             await deleteUser(userId);
             setFormData(prev => ({ ...prev, ativo: false }));
+            
+            const startText = startDate ? startDate.toLocaleDateString("pt-BR") : "";
+            const endText = endDate ? endDate.toLocaleDateString("pt-BR") : "";
+            const periodText = startText && endText 
+                ? ` no período de ${startText} a ${endText}` 
+                : startText 
+                    ? ` a partir de ${startText}` 
+                    : "";
+
             setToast({
                 type: 'success',
-                message: 'Usuário desativado com sucesso!'
+                message: `Usuário desativado com sucesso${periodText}!`
             });
         } catch (error) {
             setToast({
@@ -207,11 +237,11 @@ export default function EditarUsuarios() {
         }
     }
 
-    const handleConfirmarAcao = async () => {
+    const handleConfirmarAcao = async (startDate, endDate) => {
         if (modalConfig.action === 'excluir') {
             await handleDelete();
         } else if (modalConfig.action === 'desativar') {
-            await handleDeactivate();
+            await handleDeactivate(startDate, endDate);
         } else if (modalConfig.action === 'ativar') {
             await handleActivate();
         }

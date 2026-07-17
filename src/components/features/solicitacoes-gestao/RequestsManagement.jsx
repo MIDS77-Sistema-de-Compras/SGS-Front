@@ -21,7 +21,8 @@ const ABAS = [
 
 const STATUS_POR_ABA = {
     pendentes: ['Aguardando aprovação'],
-    andamento: ['Em atendimento', 'Aprovado', 'Parcialmente aprovada'],
+    andamento: ['Em atendimento'],
+    aprovadas: ['Aprovado', 'Auto-aprovado', 'Parcialmente aprovada'],
     concluidas: ['Entregue', 'Cancelado', 'Recusado'],
 };
 

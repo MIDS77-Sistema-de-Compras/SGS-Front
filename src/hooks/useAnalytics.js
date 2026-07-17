@@ -103,10 +103,10 @@ export function useAnalytics() {
       
       if (selectedStatus) {
         if (selectedStatus === 'PENDENTE' && r.status !== 'Aguardando aprovação') return false;
-        if (selectedStatus === 'APROVADO' && r.status !== 'Aprovado') return false;
+        if (selectedStatus === 'APROVADO' && !['Aprovado', 'Auto-aprovado'].includes(r.status)) return false;
         if (selectedStatus === 'ENTREGUE' && r.status !== 'Entregue') return false;
         if (selectedStatus === 'RECUSADO' && !['Cancelado', 'Recusado', 'Pedido Cancelado'].includes(r.status)) return false;
-        if (selectedStatus === 'ANDAMENTO' && ['Aguardando aprovação', 'Aprovado', 'Entregue', 'Cancelado', 'Recusado', 'Pedido Cancelado'].includes(r.status)) return false;
+        if (selectedStatus === 'ANDAMENTO' && ['Aguardando aprovação', 'Aprovado', 'Auto-aprovado', 'Entregue', 'Cancelado', 'Recusado', 'Pedido Cancelado'].includes(r.status)) return false;
       }
 
       if (selectedFilial && r.crBranch?.branchName !== selectedFilial) return false;
@@ -213,7 +213,7 @@ export function useAnalytics() {
 
       const s = r.status;
       if (s === 'Aguardando aprovação') pendentes++;
-      else if (s === 'Aprovado') aprovadas++;
+      else if (s === 'Aprovado' || s === 'Auto-aprovado') aprovadas++;
       else if (s === 'Entregue') entregues++;
       else if (s === 'Atrasada') {
         atrasadas++;
@@ -308,6 +308,7 @@ export function useAnalytics() {
       'EM_ANDAMENTO': '#3B82F6',
       'Aguardando aprovação': '#F59E0B',
       'Aprovado': '#8B5CF6',
+      'Auto-aprovado': '#0EA5E9',
       'Entregue': '#10B981',
       'Recusado': '#EF4444',
       'Cancelado': '#EF4444',
