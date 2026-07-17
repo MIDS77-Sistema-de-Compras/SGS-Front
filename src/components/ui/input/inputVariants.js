@@ -2,7 +2,7 @@ import { cn } from '@/lib/cn';
 
 export const inputVariantStyles = {
   auth: 'h-14 text-lg bg-white border border-transparent focus:border-[#5D8EF7] text-gray-800 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3]',
-  form: 'h-auto py-2.5 text-sm bg-white border border-gray-100 shadow-sm focus:border-[#103D85] focus:ring-0.5 focus:ring-[#103D85] text-gray-800 placeholder:text-[#6B7280] dark:bg-[#303746] dark:border-white/15 dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] dark:focus:border-[#1A4A9E] dark:focus:ring-[#1A4A9E] dark:[color-scheme:dark]',
+  form: 'h-auto py-2.5 text-base sm:text-sm bg-white border border-gray-100 shadow-sm focus:border-[#103D85] focus:ring-0.5 focus:ring-[#103D85] text-gray-800 placeholder:text-[#6B7280] dark:bg-[#303746] dark:border-white/15 dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] dark:focus:border-[#1A4A9E] dark:focus:ring-[#1A4A9E] dark:[color-scheme:dark]',
 };
 
 export function getInputClassName({ variant = 'auth', iconSrc, error, hasRightSlot, className }) {
