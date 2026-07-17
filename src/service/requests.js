@@ -115,6 +115,14 @@ export function updateItemRequestProduct(itemId, payload) {
     return api.put(`/item-request-products/${itemId}`, payload);
 }
 
+export function updateItemRequestProvision(itemId, payload) {
+    return api.put(`/item-provision-requests/request/${itemId}`, payload);
+}
+
+export function getStatusByName(statusName) {
+    return api.get(`/status/statusName/${encodeURIComponent(statusName)}`);
+}
+
 export function updateRequestCrBranch(id, payload) {
     return api.put(`/requests/${id}`, payload);
 }
