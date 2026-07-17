@@ -29,7 +29,6 @@ export default function NewPasswordForm(){
         // TODO: degeneralize the error "Dados Inválidos".
         try{
             const res = await newPassword(senha, token);
-            console.log(res);
 
             if(res){
                 router.push("/login");

@@ -48,7 +48,6 @@ export function csvParse(csvFile){
             return rowObj;
         });
 
-    console.log("[DEGUG] csvToJson.js -> ", actualData);
     return actualData;
 }
 

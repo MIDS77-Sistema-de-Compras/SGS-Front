@@ -304,8 +304,6 @@ export function useRequestForm() {
         try {
             const elementsByCrProject = checkAndPushElements(csvData, csvType);
 
-            console.log("[DEBUG] handleConfirmImport -> ", elementsByCrProject);
-
             const validCrProjectIds = Object.keys(elementsByCrProject).filter(id => id && id.trim() !== '');
             if (validCrProjectIds.length === 0) {
                 throw new Error('Nenhum CR/Project válido encontrado no CSV.');

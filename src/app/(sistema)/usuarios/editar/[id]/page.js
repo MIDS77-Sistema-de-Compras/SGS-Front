@@ -62,9 +62,7 @@ export default function EditarUsuarios() {
 
     async function loadUser() {
         try {
-            console.log("ID da rota:", userId);
             const response = await getUserById(userId);
-            console.log("Usuario encontrado:", response);
 
             setFormData({
                 nome: response.name ?? '',
