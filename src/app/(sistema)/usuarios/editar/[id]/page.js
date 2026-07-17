@@ -9,7 +9,7 @@ import SectionHeader from '@/components/ui/layout/SectionHeader';
 import Button from '@/components/ui/button/Button';
 import UserIdentificationSection from '@/components/features/admin/UserIdentification';
 import AccessLevelSelector from '@/components/features/admin/AccessLevelSelector';
-import { getUserById, updateUser, deleteUser, getLoggedUser } from '@/service/users/usersSearch';
+import { getUserById, deleteUser, getLoggedUser, changeUserActivationStatus } from '@/service/users/usersSearch';
 import Toast from '@/components/ui/notifications/Toast';
 import { ModalUser } from '@/components/coord/ModalUser';
 import { Lock, Unlock } from 'lucide-react';
@@ -181,15 +181,15 @@ export default function EditarUsuarios() {
 
     async function handleDeactivate(startDate, endDate) {
         try {
-            await deleteUser(userId);
+            await changeUserActivationStatus(userId, false);
             setFormData(prev => ({ ...prev, ativo: false }));
-            
+
             const startText = startDate ? startDate.toLocaleDateString("pt-BR") : "";
             const endText = endDate ? endDate.toLocaleDateString("pt-BR") : "";
-            const periodText = startText && endText 
-                ? ` no período de ${startText} a ${endText}` 
-                : startText 
-                    ? ` a partir de ${startText}` 
+            const periodText = startText && endText
+                ? ` no período de ${startText} a ${endText}`
+                : startText
+                    ? ` a partir de ${startText}`
                     : "";
 
             setToast({
@@ -205,25 +205,8 @@ export default function EditarUsuarios() {
     }
 
     async function handleActivate() {
-        if (!PASSWORD_REGEX.test(formData.senha || '')) {
-            setFormData(prev => ({ ...prev, ativo: true }));
-            setToast({
-                type: 'error',
-                message: 'Para reativar é preciso informar uma senha nova válida (o backend exige isso). Digite a senha abaixo e clique em "Ativar usuário" de novo, ou em SALVAR MUDANÇAS.'
-            });
-            return;
-        }
-
         try {
-            const payload = {
-                name: formData.nome,
-                email: formData.email,
-                password: formData.senha,
-                extensionNumber: formData.ramal,
-                active: true,
-                nameRole: formData.nivelAcesso
-            };
-            await updateUser(userId, payload);
+            await changeUserActivationStatus(userId, true);
             setFormData(prev => ({ ...prev, ativo: true }));
             setToast({
                 type: 'success',
