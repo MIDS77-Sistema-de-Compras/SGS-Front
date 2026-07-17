@@ -23,6 +23,8 @@ export function Navigation({ userRole }) {
             <ul className="flex flex-col gap-2">
                 {routes.map((route) => {
                     const isActive = pathname === route.href
+                    
+                    const IconComponent = route.icon
 
                     return (
                         <li key={route.href}>
@@ -39,13 +41,22 @@ export function Navigation({ userRole }) {
                             >
                                 <div className={`transition-transform duration-200 group-hover:scale-105 
                                     ${isActive ? "opacity-100" : "opacity-80"}`}>
-                                    <Image
-                                        src={route.icon}
-                                        alt={`Ícone ${route.label}`}
-                                        width={22}
-                                        height={22}
-                                        priority
-                                    />
+                               
+                                    {typeof route.icon === "string" ? (
+                                        <Image
+                                            src={route.icon}
+                                            alt={`Ícone ${route.label}`}
+                                            width={22}
+                                            height={22}
+                                            priority
+                                        />
+                                    ) : (
+                                        <IconComponent 
+                                            size={22} 
+                                            strokeWidth={2.2} 
+                                            className="shrink-0 text-white" 
+                                        />
+                                    )}
                                 </div>
                                 <p>{route.label}</p>
                             </Link>

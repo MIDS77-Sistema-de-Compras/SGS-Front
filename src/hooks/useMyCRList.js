@@ -1,5 +1,10 @@
 import { useState, useMemo } from "react";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
+import {
+    getStatusCategory,
+    getStatusLabel,
+    REQUEST_STATUS_FILTER_OPTIONS,
+} from "@/lib/utils/requestStatus";
 
 export function useRequestsFilter(solicitacoes = []) {
     const [status, setStatus] = useState("");
@@ -8,34 +13,27 @@ export function useRequestsFilter(solicitacoes = []) {
     const [abaAtiva, setAbaAtiva] = useState('todas');
 
     const statusDisponiveis = useMemo(() => {
-        const baseStatuses = ["Em análise", "Reprovado", "Parcial Aprovado", "Aprovado"];
-        const apiStatuses = solicitacoes
-            .map((item) => item.status || calcularStatusSolicitacao(item.produtos || []))
-            .filter(Boolean);
-
-        return [...new Set([...baseStatuses, ...apiStatuses])].map((nome, index) => ({
-            id: index + 1,
-            nome,
-        }));
-    }, [solicitacoes]);
+        return REQUEST_STATUS_FILTER_OPTIONS
+            .filter((option) => option.value)
+            .map((option, index) => ({ id: index + 1, nome: option.label }));
+    }, []);
 
     const solicitacoesFiltradas = useMemo(() => {
         return solicitacoes.filter((item) => {
             const produtos = item.produtos || [];
             const statusSolicitacao = item.status || calcularStatusSolicitacao(produtos);
+            const categoria = getStatusCategory(statusSolicitacao, item.statusCategory);
+            const statusLabel = getStatusLabel(statusSolicitacao);
 
-            if (abaAtiva === "pendentes" && statusSolicitacao !== "Em análise") {
+            if (abaAtiva === "pendentes" && categoria !== "pendente") {
                 return false;
             }
 
-            if (
-                abaAtiva === "concluidas" &&
-                (statusSolicitacao === "Em análise" || statusSolicitacao === "Reprovado")
-            ) {
+            if (abaAtiva === "concluidas" && categoria !== "concluida") {
                 return false;
             }
 
-            if (status && statusSolicitacao !== status) {
+            if (status && statusLabel !== status) {
                 return false;
             }
 
@@ -47,7 +45,7 @@ export function useRequestsFilter(solicitacoes = []) {
                 const textoBusca = busca.toLowerCase();
                 const textoPesquisavel = `
                     ${item.codigo || ""}
-                    ${statusSolicitacao || ""}
+                    ${statusLabel || ""}
                     Lista de ${produtos.length} ${produtos.length === 1 ? "produto" : "produtos"}
                     ${produtos.map((p) => p.nome).join(" ")}
                     ${item.data || ""}

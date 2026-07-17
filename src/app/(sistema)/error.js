@@ -15,10 +15,10 @@ export default function ErrorPage({error}){
     return (
         <div className="h-screen flex flex-col justify-center mx-20">
             <div className="max-h-1/2 ">
-                <Image src={errorRobot} alt="Ícone de um robô quebrado" width={100} loading="eager" className="-mx-2" />
-                <h3 className="text-xl font-semibold mt-3">{errorPossiblePhrases[index]}</h3>
-                <p className="text-xs mt-4">Motivo do erro:</p>
-                <p className="text-black font-semibold">- {error.message}</p>
+                <Image src={errorRobot} alt="Ícone de um robô quebrado" width={100} loading="eager" className="-mx-2 dark:invert dark:brightness-90" />
+                <h3 className="text-xl font-semibold mt-3 text-gray-900 dark:text-[#E2E2EA]">{errorPossiblePhrases[index]}</h3>
+                <p className="text-xs mt-4 text-gray-600 dark:text-[#C3C6D3]">Motivo do erro:</p>
+                <p className="text-black dark:text-[#E2E2EA] font-semibold">- {error.message}</p>
             </div>
         </div>
     )

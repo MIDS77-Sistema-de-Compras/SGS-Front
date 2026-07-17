@@ -1,11 +1,26 @@
 "use client";
 
-export default function ProductModal({ isModalOpen, editing, selectedProduct, editedProduct, setEditedProduct, closeModal, handleSave }) {
+import SearchableSelect from "@/components/ui/select/SearchableSelect";
+
+export default function ProductModal({
+    isModalOpen,
+    editing,
+    selectedProduct,
+    editedProduct,
+    setEditedProduct,
+    closeModal,
+    handleSave,
+    crBranchOptions,
+    crBranchOptionsLoading,
+    selectedCrBranchId,
+    setSelectedCrBranchId,
+    crBranchLabel,
+}) {
     if (!selectedProduct) return null;
 
     return (
-        <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300 ${isModalOpen ? "opacity-100" : "opacity-0"}`}>
-            <div className={`bg-white dark:bg-[#303746] p-8 rounded-2xl max-w-md w-full shadow-xl border border-gray-100 dark:border-white/10 relative transition-all duration-300 transform ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
+        <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300 ${isModalOpen ? "opacity-100" : "opacity-0"}`}>
+            <div className={`bg-white dark:bg-[#303746] p-6 sm:p-8 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl border border-gray-100 dark:border-white/10 relative transition-all duration-300 transform ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
                 <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 dark:text-[#C3C6D3] hover:text-gray-600 dark:hover:text-[#E2E2EA] transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
@@ -61,6 +76,22 @@ export default function ProductModal({ isModalOpen, editing, selectedProduct, ed
                     </div>
 
                     <div>
+                        <label className="text-xs font-bold text-gray-400 dark:text-[#C3C6D3] uppercase tracking-wider block mb-1">CR e Filial</label>
+                        {editing ? (
+                            <SearchableSelect
+                                name="crBranch"
+                                placeholder={crBranchOptionsLoading ? "Carregando..." : "Selecione o CR e Projeto..."}
+                                options={crBranchOptions}
+                                value={selectedCrBranchId}
+                                onChange={(e) => setSelectedCrBranchId(e.target.value)}
+                                isRequired
+                            />
+                        ) : (
+                            <span className="text-sm text-gray-700 dark:text-[#E2E2EA]">{crBranchLabel}</span>
+                        )}
+                    </div>
+
+                    <div>
                         <label className="text-xs font-bold text-gray-400 dark:text-[#C3C6D3] uppercase tracking-wider block mb-1">Informações Adicionais</label>
                         {editing ? (
                             <textarea value={editedProduct.additionalInfo} onChange={(e) => setEditedProduct({ ...editedProduct, additionalInfo: e.target.value })} className="border dark:border-white/15 dark:bg-[#1A2233] dark:text-[#E2E2EA] rounded-lg px-3 py-2 w-full text-sm" rows={3} />
@@ -77,7 +108,7 @@ export default function ProductModal({ isModalOpen, editing, selectedProduct, ed
                                     ? "A solicitação cumpre com os requisitos técnicos da unidade e o orçamento está dentro do limite estipulado para o trimestre corrente."
                                     : selectedProduct.status === "Reprovado"
                                     ? "A compra foi recusada temporariamente pois identificamos itens similares disponíveis no estoque central da instituição para remanejamento."
-                                    : selectedProduct.status === "Auto-Aprovado"
+                                    : selectedProduct.status === "Auto-aprovado"
                                     ? "Solicitação originada por Supervisor. Processo elegível para fluxo de aprovação direta."
                                     : "Aguardando análise do supervisor responsável."}
                             </p>

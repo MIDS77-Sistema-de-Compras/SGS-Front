@@ -28,7 +28,7 @@ export default function ListProducts({ products = [], onRemove, tipo = "produto"
                     key={product.id}
                     className="flex items-center justify-between bg-white dark:bg-[#303746] rounded-lg px-4 py-3"
                 >
-                    <div className="flex flex-col min-w-0 flex-1 mr-16">
+                    <div className="flex flex-col min-w-0 flex-1 mr-4 sm:mr-16">
                         <p className="font-bold text-[14px] text-gray-800 dark:text-[#E2E2EA] break-words">
                             {product.name}
                         </p>

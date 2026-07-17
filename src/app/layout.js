@@ -2,6 +2,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import Script from 'next/script';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -10,10 +11,13 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: "SGS-Front",
+  title: {
+    default: "SGS",
+    template: "SGS | %s",
+  },
   description: "Projeto Final - Sistema de Compras - FrontEnd",
   icons: {
-    icon: "/images/logos/sgc.png"
+    icon: "/images/logos/favicon-sgs.png"
   }
 };
 
@@ -32,7 +36,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className={montserrat.variable} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
         <ThemeProvider>

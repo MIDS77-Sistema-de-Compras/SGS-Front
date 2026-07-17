@@ -4,13 +4,13 @@ export default function NotificationsList({ notifications, onMarkAsViewed, updat
     if (!notifications.length) {
         return (
             <div className="flex flex-1 items-center justify-center px-7 py-10 text-center text-base text-[#666666] dark:text-[#C3C6D3]">
-                Nenhuma notificacao encontrada.
+                Nenhuma notificação encontrada.
             </div>
         );
     }
 
     return (
-        <ul className="flex flex-col py-3">
+        <ul className="flex flex-col">
             {notifications.map((notification) => (
                 <NotificationCard
                     key={notification.id}
