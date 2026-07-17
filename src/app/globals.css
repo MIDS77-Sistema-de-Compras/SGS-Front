@@ -178,3 +178,20 @@ button *,
 a * {
   pointer-events: none;
 }
+
+/* Elementos interativos aninhados dentro de um botao/link (ex.: os botoes
+   Aprovar/Recusar dentro do card clicavel do Monitoramento) precisam continuar
+   recebendo clique - a regra acima so deve neutralizar filhos decorativos
+   (icones, spans de texto). */
+button button,
+button a,
+button [role="button"],
+button select,
+button input,
+a button,
+a a,
+a [role="button"],
+a select,
+a input {
+  pointer-events: auto;
+}
