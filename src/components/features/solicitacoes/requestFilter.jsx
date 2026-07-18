@@ -1,7 +1,7 @@
 'use client';
 
-import Input from '@/components/ui/input/Input';
 import Dropdown from '@/components/ui/select/Dropdown';
+import DatePicker from '@/components/ui/select/DatePicker';
 import Image from 'next/image';
 
 
@@ -39,11 +39,10 @@ export default function SolicitacoesFilter({
                 </div>
 
                 <div className="w-full sm:w-[150px]">
-                    <Input
-                        type="date"
+                    <DatePicker
                         value={data}
                         onChange={(e) => setData(e.target.value)}
-                        className="!h-auto py-2 text-sm border-gray-100 shadow-sm dark:!border-white/15 dark:!bg-[#303746] dark:text-[#E2E2EA] dark:[color-scheme:dark]"
+                        buttonClassName="py-2 border-gray-100"
                     />
                 </div>
 

@@ -49,6 +49,7 @@ export function useRequestsFilter(solicitacoes = []) {
                     Lista de ${produtos.length} ${produtos.length === 1 ? "produto" : "produtos"}
                     ${produtos.map((p) => p.nome).join(" ")}
                     ${item.data || ""}
+                    ${item.data ? new Date(`${item.data}T00:00:00`).toLocaleDateString("pt-BR") : ""}
                 `.toLowerCase();
 
                 if (!textoPesquisavel.includes(textoBusca)) {
