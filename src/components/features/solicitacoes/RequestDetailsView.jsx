@@ -29,7 +29,7 @@ export default function RequestDetailsView({ title, backHref, mode }) {
     selectedProduct, isModalOpen, editing, editedProduct, setEditedProduct,
     notification, setNotification,
     openModal, openEditModal, closeModal, handleSave,
-  } = useRequestDetailsPage();
+  } = useRequestDetailsPage({ ownRequest: mode === "minhas" });
 
   const itemsEmAnalise = isServiceRequest ? localServices : localProducts;
 

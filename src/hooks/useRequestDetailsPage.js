@@ -4,9 +4,9 @@ import { useRequestDetails } from "@/hooks/useRequestDetails";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
 import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
 
-export function useRequestDetailsPage() {
+export function useRequestDetailsPage({ ownRequest = false } = {}) {
   const { id } = useParams();
-  const { request: solicitacao, loading, error, refetch } = useRequestDetails(id);
+  const { request: solicitacao, loading, error, refetch } = useRequestDetails(id, { ownRequest });
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
