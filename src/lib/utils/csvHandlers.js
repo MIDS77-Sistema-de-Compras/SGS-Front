@@ -11,8 +11,6 @@ import { createFullRequest } from "@/service/createProductRequest";
 export function handleProductRequest(validProductRequests, dataLines, validationErrors){
     const productRequests = csvConvertForProducts(dataLines);
 
-    console.log("[DEBUG] ", productRequests);
-
     productRequests.forEach((product, index) => {
         const rowErrors = [];
 
@@ -62,8 +60,6 @@ export function handleProductRequest(validProductRequests, dataLines, validation
  */
 export function handleProvisionRequest(validProvisionRequests, dataLines, validationErrors){
     const provisionRequests = csvConvertForProvisions(dataLines);
-
-    console.log("[DEBUG] ", provisionRequests);
 
     provisionRequests.forEach((provision, index) => {
         const rowErrors = [];
@@ -150,7 +146,6 @@ export function checkAndPushElements(csvData, type){
  * @param {*} attachments Anexos. Se aplica apenas ao tipo provision, já que o csv contém links de anexos.
  */
 export async function checkAndSubmitElements(results, elements, type, attachments){
-    console.log("checkAndSubmitElements.js -> ", Object.entries(elements), "\n\n\n");
     for (const [crBranchId, element] of Object.entries(elements)) {
         try {
             if(type === "product"){

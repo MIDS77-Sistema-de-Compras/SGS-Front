@@ -33,6 +33,13 @@ const themeScript = `
 `;
 
 export default function RootLayout({ children }) {
+  console.group();
+  console.log("%cBem-Vindo ao %cSGS!\n%cNão cole comandos que você desconhece aqui, pois eles podem ser %cmaliciosos!", 
+      "font-size: 25px; font-weight: semibold;", 
+      "font-size: 25px; font-weight: bold; color: #2577fa", 
+      "font-size-12px", "color: red");
+  console.groupEnd();
+
   return (
     <html lang="pt-BR" className={montserrat.variable} suppressHydrationWarning>
       <head>
