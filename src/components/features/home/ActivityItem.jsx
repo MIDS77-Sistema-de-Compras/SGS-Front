@@ -1,8 +1,11 @@
-import Image from "next/image"
+import Image from "next/image";
 
-export default function ActivityItem({ iconSrc, iconAlt, title, subtitle, time }) {
+export default function ActivityItem({ iconSrc, iconAlt, title, subtitle, time, onClick }) {
     return (
-        <li className="flex items-center justify-between gap-3 rounded-lg px-1 py-3 transition-all hover:bg-gray-100 active:scale-[0.98] dark:hover:bg-white/5">
+        <li
+            onClick={onClick}
+            className={`flex items-center justify-between gap-3 rounded-lg px-1 py-3 transition-all hover:bg-gray-100 active:scale-[0.98] dark:hover:bg-white/5 ${onClick ? "cursor-pointer" : ""}`}
+        >
             <div className="flex min-w-0 items-center gap-3 sm:gap-5">
                 <Image
                     src={iconSrc}
@@ -24,5 +27,5 @@ export default function ActivityItem({ iconSrc, iconAlt, title, subtitle, time }
                 {time}
             </p>
         </li>
-    )
+    );
 }

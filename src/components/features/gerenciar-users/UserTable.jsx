@@ -26,7 +26,7 @@ export default function UserTable({ users, onImpersonate }) {
 
     return (
         <div className="flex-1 flex flex-col min-h-0 w-full bg-white dark:bg-[#1A2233]">
-            <div className="w-full overflow-auto flex-1 min-h-0 pr-2 pb-2">
+            <div className="w-full overflow-x-auto overflow-y-auto flex-1 min-h-0 pr-2 pb-2 max-h-[580px]">
                 <table className="w-full text-left border-collapse min-w-[800px]">
                     <thead className="sticky top-0 z-10 bg-[#F8FAFC] dark:bg-[#303746]">
                         <tr className="text-sm font-semibold text-gray-700 dark:text-[#E2E2EA] border-b border-gray-100 dark:border-white/10">

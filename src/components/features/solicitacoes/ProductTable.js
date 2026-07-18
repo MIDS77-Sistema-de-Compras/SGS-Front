@@ -18,7 +18,7 @@ export default function ProductTable({
     const emptyLabel = `Nenhum ${isServiceRequest ? "serviço" : "produto"} encontrado.`;
 
     return (
-        <div className="w-full flex-1 overflow-y-auto px-4 sm:px-5">
+        <div className="w-full flex-1 overflow-auto px-4 sm:px-5">
             <div className="flex flex-col gap-3 pb-4 lg:hidden">
                 {localProducts.length > 0 ? (
                     localProducts.map((item) => (
@@ -42,7 +42,7 @@ export default function ProductTable({
                 )}
             </div>
 
-            <table className="hidden lg:table w-full border-separate border-spacing-y-3 table-fixed">
+            <table className="hidden lg:table w-full min-w-[720px] border-separate border-spacing-y-3 table-fixed">
                 <thead className="sticky top-0 z-10">
                     <tr className="bg-[#EEF2F6] dark:bg-[#303746] text-[13px] min-[1350px]:text-base">
                         <th className="py-3 pl-4 min-[1350px]:pl-6 pr-3 text-left font-bold text-[#103D85] dark:text-[#E2E2EA] rounded-l-xl w-[28%] whitespace-nowrap">
@@ -58,10 +58,18 @@ export default function ProductTable({
                         </th>
 
                         <th className="py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[110px] min-[1350px]:w-32">
-                            <span className="block leading-tight">Informações<br />adicionais</span>
+                            <span className="block leading-tight">
+                                Informações
+                                <br />
+                                adicionais
+                            </span>
                         </th>
 
-                        <th className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[170px] min-[1350px]:w-[190px] ${showItemDecisions ? "" : "rounded-r-xl"}`}>
+                        <th
+                            className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[170px] min-[1350px]:w-[190px] ${
+                                showItemDecisions ? "" : "rounded-r-xl"
+                            }`}
+                        >
                             Status
                         </th>
 

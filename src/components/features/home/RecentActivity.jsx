@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import ActivityItem from "./ActivityItem";
 import RecentActivitySkeleton from "./RecentActivitySkeleton";
 import { notificationsService } from "@/service/notifications";
 import { formatRelativeTime, getNotificationIcon, sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
 
 export default function RecentActivity() {
+    const router = useRouter();
     const [notifications, setNotifications] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
@@ -78,6 +80,7 @@ export default function RecentActivity() {
                                 title={notification.title || `Solicitacao #${notification.requestId}`}
                                 subtitle={notification.message || "Atualizacao de solicitacao"}
                                 time={formatRelativeTime(notification.createdAt)}
+                                onClick={notification.requestId ? () => router.push(`/solicitacoes/${notification.requestId}`) : undefined}
                             />
                         );
                     })}

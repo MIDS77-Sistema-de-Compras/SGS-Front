@@ -11,7 +11,7 @@ export function Search({
     const { filteredCRs, search, setSearch, loading, error } = useCRSearch();
 
     return (
-        <div className="w-full xl:w-[380px] xl:shrink-0 flex flex-col border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl min-h-0 max-h-[500px] xl:max-h-none xl:h-full">
+        <div className="w-full min-[1450px]:w-[380px] min-[1450px]:shrink-0 flex flex-col border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl min-h-0 max-h-[70vh] min-[1450px]:max-h-none min-[1450px]:h-full">
             <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 dark:border-white/10">
                 <h1 className="font-bold text-[#103D85] dark:text-[#E2E2EA] text-[20px] sm:text-[22px]">
                     Busca de CR

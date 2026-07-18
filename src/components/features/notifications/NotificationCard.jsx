@@ -1,7 +1,11 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { formatRelativeTime, getNotificationIcon } from "./notificationUtils";
 
 export default function NotificationCard({ notification, onMarkAsViewed, isUpdating = false }) {
+    const router = useRouter();
     const icon = getNotificationIcon(notification);
     const canMarkAsViewed = !notification.viewed && !isUpdating;
 
@@ -9,13 +13,17 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
         if (canMarkAsViewed) {
             onMarkAsViewed(notification.id);
         }
+
+        if (notification.requestId) {
+            router.push(`/solicitacoes/${notification.requestId}`);
+        }
     }
 
     return (
         <li
             onClick={handleClick}
-            className={`flex items-start gap-3 sm:gap-4 border-b border-gray-100 dark:border-white/10 mb-2 py-4 transition-colors last:border-b-0 ${canMarkAsViewed ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5" : ""}`}
-            title={canMarkAsViewed ? "Marcar como visualizada" : undefined}
+            className={`flex items-start gap-3 sm:gap-4 border-b border-gray-100 dark:border-white/10 mb-2 py-4 transition-colors last:border-b-0 ${notification.requestId ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5" : ""}`}
+            title={notification.requestId ? "Ver solicitação" : undefined}
         >
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-[#303746] shrink-0 mt-0.5">
                 <Image

@@ -128,6 +128,7 @@ export default function RequestDetailsView({ title, backHref, mode }) {
             isServiceRequest={isServiceRequest}
             showItemDecisions={isAnalysis && !isFinalizada}
             itemDecisions={itemDecisions}
+            saving={saving}
             onAcceptItem={handleAcceptItem}
             onRejectItem={openRejectModal}
           />
