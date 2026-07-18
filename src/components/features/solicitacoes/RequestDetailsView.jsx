@@ -9,6 +9,7 @@ import RejectionModal from "@/components/ui/overlay/RejectionModal";
 import Button from "@/components/ui/button/Button";
 import { useRequestDetailsPage } from "@/hooks/useRequestDetailsPage";
 import { useItemApprovalFlow } from "@/hooks/useItemApprovalFlow";
+import { isFinalizedForSupervisor } from "@/lib/utils/requestStatus";
 
 function formatDisplayDate(date) {
   if (!date) return "-";
@@ -32,6 +33,7 @@ export default function RequestDetailsView({ title, backHref, mode }) {
   } = useRequestDetailsPage({ ownRequest: mode === "minhas" });
 
   const itemsEmAnalise = isServiceRequest ? localServices : localProducts;
+  const isFinalizada = isAnalysis && isFinalizedForSupervisor(solicitacao?.status);
 
   const {
     itemDecisions,
@@ -112,13 +114,19 @@ export default function RequestDetailsView({ title, backHref, mode }) {
             </div>
           </div>
 
+          {isFinalizada && (
+            <div className="mx-4 sm:mx-6 mb-6 rounded-xl border border-[#103D85]/20 bg-[#103D85]/5 dark:border-[#5D8EF7]/20 dark:bg-[#5D8EF7]/5 px-4 py-3 text-sm text-[#103D85] dark:text-[#5D8EF7]">
+              Esta solicitação já foi finalizada e seguiu para o fluxo do comprador — não pode mais ser editada aqui.
+            </div>
+          )}
+
           <ProductTable
             localProducts={itemsEmAnalise}
             isProfessor={isProfessor}
             openModal={openModal}
             openEditModal={openEditModal}
             isServiceRequest={isServiceRequest}
-            showItemDecisions={isAnalysis}
+            showItemDecisions={isAnalysis && !isFinalizada}
             itemDecisions={itemDecisions}
             onAcceptItem={handleAcceptItem}
             onRejectItem={openRejectModal}
