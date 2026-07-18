@@ -15,6 +15,7 @@ import AuditDetailsModal from "./AuditDetailsModal";
 import StatCard from "@/components/features/gerenciar-users/StatCard";
 import Button from "@/components/ui/button/Button";
 import Dropdown from "@/components/ui/select/Dropdown";
+import DatePicker from "@/components/ui/select/DatePicker";
 import { useAuditLogs } from "@/hooks/useAuditLogs";
 import AuditTableSkeleton from "./AuditTableSkeleton";
 
@@ -81,7 +82,7 @@ export default function AuditDashboard() {
 
             const matchesSearch = !searchTerm || searchableContent.includes(searchTerm.toLowerCase());
             const matchesAction = !actionType || log.actionId === actionType;
-            const matchesPeriod = !period || log.date === period;
+            const matchesPeriod = !period || log.date === period || log.date === formattedPeriod;
 
             return matchesSearch && matchesAction && matchesPeriod;
         });
@@ -200,11 +201,11 @@ export default function AuditDashboard() {
                                 options={[{ value: "", label: "Tipo de ação" }, ...actionOptions]}
                             />
 
-                            <input
-                                type="date"
-                                className="w-full pl-4 pr-3 shadow-sm py-2.5 border border-gray-100 dark:border-white/15 dark:bg-[#303746] dark:text-[#E2E2EA] dark:placeholder:text-[#C3C6D3] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#103D85]/20 focus:border-[#103D85] dark:focus:border-[#1A4A9E] dark:[color-scheme:dark]"
+                            <DatePicker
+                                className="w-full"
                                 value={period}
                                 onChange={handlePeriodChange}
+                                placeholder="Período"
                             />
 
                             <Button

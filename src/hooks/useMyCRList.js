@@ -6,6 +6,25 @@ import {
     REQUEST_STATUS_FILTER_OPTIONS,
 } from "@/lib/utils/requestStatus";
 
+
+function toIsoDateString(value) {
+    if (!value) return "";
+    const str = String(value).trim();
+
+    if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
+
+    const brMatch = str.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+    if (brMatch) return `${brMatch[3]}-${brMatch[2]}-${brMatch[1]}`;
+
+    return "";
+}
+
+function formatBrDateString(isoDate) {
+    if (!isoDate) return "";
+    const [year, month, day] = isoDate.split("-");
+    return `${day}/${month}/${year}`;
+}
+
 export function useRequestsFilter(solicitacoes = []) {
     const [status, setStatus] = useState("");
     const [data, setData] = useState("");
@@ -37,7 +56,9 @@ export function useRequestsFilter(solicitacoes = []) {
                 return false;
             }
 
-            if (data && item.data !== data) {
+            const itemIsoDate = toIsoDateString(item.data || item.requestDate);
+
+            if (data && itemIsoDate !== data) {
                 return false;
             }
 
@@ -48,7 +69,8 @@ export function useRequestsFilter(solicitacoes = []) {
                     ${statusLabel || ""}
                     Lista de ${produtos.length} ${produtos.length === 1 ? "produto" : "produtos"}
                     ${produtos.map((p) => p.nome).join(" ")}
-                    ${item.data || ""}
+                    ${itemIsoDate}
+                    ${formatBrDateString(itemIsoDate)}
                 `.toLowerCase();
 
                 if (!textoPesquisavel.includes(textoBusca)) {
