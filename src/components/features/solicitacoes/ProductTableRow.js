@@ -1,6 +1,7 @@
 "use client";
 
 import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
+import Dropdown from "@/components/ui/select/Dropdown";
 
 export default function ProductTableRow({
     item,
@@ -9,6 +10,8 @@ export default function ProductTableRow({
     decision = null,
     onAcceptItem,
     onRejectItem,
+    itemStatusOptions = null,
+    onItemStatusChange,
 }) {
     const tdHoverAndRoundedClass = "transition-colors mt-2 group-hover:bg-gray-50 dark:group-hover:bg-white/10 first:rounded-l-xl last:rounded-r-xl";
 
@@ -51,30 +54,43 @@ export default function ProductTableRow({
 
             {showItemDecisions && (
                 <td className={`py-3 px-3 text-center ${tdHoverAndRoundedClass}`}>
-                    <div className="flex items-center justify-center gap-2">
-                        <button
-                            onClick={() => onAcceptItem?.(item)}
-                            title={decision === "Aprovado" ? "Clique para desfazer" : "Aprovar item"}
-                            className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${
-                                decision === "Aprovado"
-                                    ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
-                                    : "text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-500/10"
-                            }`}
-                        >
-                            Aprovar
-                        </button>
-                        <button
-                            onClick={() => onRejectItem?.(item)}
-                            title={decision === "Recusado" ? "Clique para desfazer" : "Recusar item"}
-                            className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${
-                                decision === "Recusado"
-                                    ? "bg-[#BA1A1A] border-[#BA1A1A] text-white hover:bg-[#a01717]"
-                                    : "text-[#BA1A1A] border-[#BA1A1A] hover:bg-red-50 dark:hover:bg-red-500/10"
-                            }`}
-                        >
-                            Recusar
-                        </button>
-                    </div>
+                    {itemStatusOptions ? (
+                        <div className="min-w-[170px] mx-auto">
+                            <Dropdown
+                                name={`item-status-${item.id}`}
+                                value={decision || ""}
+                                onChange={(e) => onItemStatusChange?.(item, e.target.value)}
+                                placeholder={getStatusLabel(item.status)}
+                                options={itemStatusOptions}
+                                buttonClassName="py-1.5 text-[13px]"
+                            />
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center gap-2">
+                            <button
+                                onClick={() => onAcceptItem?.(item)}
+                                title={decision === "Aprovado" ? "Clique para desfazer" : "Aprovar item"}
+                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${
+                                    decision === "Aprovado"
+                                        ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
+                                        : "text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-500/10"
+                                }`}
+                            >
+                                Aprovar
+                            </button>
+                            <button
+                                onClick={() => onRejectItem?.(item)}
+                                title={decision === "Recusado" ? "Clique para desfazer" : "Recusar item"}
+                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${
+                                    decision === "Recusado"
+                                        ? "bg-[#BA1A1A] border-[#BA1A1A] text-white hover:bg-[#a01717]"
+                                        : "text-[#BA1A1A] border-[#BA1A1A] hover:bg-red-50 dark:hover:bg-red-500/10"
+                                }`}
+                            >
+                                Recusar
+                            </button>
+                        </div>
+                    )}
                 </td>
             )}
         </tr>

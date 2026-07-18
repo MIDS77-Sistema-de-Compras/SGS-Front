@@ -11,6 +11,8 @@ export default function ProductTable({
     itemDecisions = {},
     onAcceptItem,
     onRejectItem,
+    itemStatusOptions = null,
+    onItemStatusChange,
 }) {
     const colSpan = showItemDecisions ? 6 : 5;
     const emptyLabel = `Nenhum ${isServiceRequest ? "serviço" : "produto"} encontrado.`;
@@ -27,9 +29,10 @@ export default function ProductTable({
                             isServiceRequest={isServiceRequest}
                             showItemDecisions={showItemDecisions}
                             decision={itemDecisions[item.id]}
-                            isDeciding={decidingItemId === item.id}
                             onAcceptItem={onAcceptItem}
                             onRejectItem={onRejectItem}
+                            itemStatusOptions={itemStatusOptions}
+                            onItemStatusChange={onItemStatusChange}
                         />
                     ))
                 ) : (
@@ -82,6 +85,8 @@ export default function ProductTable({
                                 decision={itemDecisions[item.id]}
                                 onAcceptItem={onAcceptItem}
                                 onRejectItem={onRejectItem}
+                                itemStatusOptions={itemStatusOptions}
+                                onItemStatusChange={onItemStatusChange}
                             />
                         ))
                     ) : (
