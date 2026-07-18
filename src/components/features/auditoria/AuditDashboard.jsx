@@ -82,7 +82,7 @@ export default function AuditDashboard() {
 
             const matchesSearch = !searchTerm || searchableContent.includes(searchTerm.toLowerCase());
             const matchesAction = !actionType || log.actionId === actionType;
-            const matchesPeriod = !period || log.date === formattedPeriod;
+            const matchesPeriod = !period || log.date === period || log.date === formattedPeriod;
 
             return matchesSearch && matchesAction && matchesPeriod;
         });
