@@ -15,6 +15,7 @@ function buildProductPayload(item, requestId, decision) {
     return {
         requestId: Number(requestId),
         productName: item.nome,
+        variation: item.variation || "",
         measurementUnit: item.unit,
         quantity: item.quantity,
         statusName: decision,
