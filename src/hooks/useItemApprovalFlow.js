@@ -3,7 +3,7 @@ import { getStatusLabel } from "@/lib/utils/requestStatus";
 import {
     updateItemRequestProduct,
     updateItemRequestProvision,
-    getStatusByName,
+    resolveStatusIdsByName,
 } from "@/service/requests";
 import { api } from "@/service/api";
 
@@ -22,13 +22,11 @@ function buildProductPayload(item, requestId, decision) {
     };
 }
 
-async function buildProvisionPayload(item, requestId, decision) {
-    const status = await getStatusByName(decision);
-
+function buildProvisionPayload(item, requestId, decision, statusIdsByName) {
     return {
         requestId: Number(requestId),
         provisionId: item.provisionId,
-        statusId: status.id,
+        statusId: statusIdsByName.get(decision),
         additionalInformation: item.additionalInfo,
     };
 }
@@ -90,14 +88,22 @@ export function useItemApprovalFlow({ requestId, items, isServiceRequest, refetc
     const handleSaveChanges = async () => {
         setSaving(true);
         try {
+            const decisions = Object.entries(itemDecisions);
+
+            const statusIdsByName = isServiceRequest
+                ? await resolveStatusIdsByName(decisions.map(([, decision]) => decision))
+                : null;
+
             await Promise.all(
-                Object.entries(itemDecisions).map(async ([itemId, decision]) => {
+                decisions.map(([itemId, decision]) => {
                     const item = items.find((candidate) => String(candidate.id) === itemId);
                     if (!item) return;
 
                     if (isServiceRequest) {
-                        const payload = await buildProvisionPayload(item, requestId, decision);
-                        return updateItemRequestProvision(item.id, payload);
+                        return updateItemRequestProvision(
+                            item.id,
+                            buildProvisionPayload(item, requestId, decision, statusIdsByName)
+                        );
                     }
 
                     return updateItemRequestProduct(

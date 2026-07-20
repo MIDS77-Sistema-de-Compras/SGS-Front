@@ -122,6 +122,18 @@ export function getStatusByName(statusName) {
     return api.get(`/status/statusName/${encodeURIComponent(statusName)}`);
 }
 
+/**
+ * Resolve os ids dos status a partir dos nomes, buscando cada nome distinto
+ * uma única vez. Uma lista de N itens costuma repetir poucos status
+ * (ex.: "Aprovado"/"Recusado"), então a busca é feita por nome, não por item.
+ */
+export async function resolveStatusIdsByName(statusNames) {
+    const uniqueNames = [...new Set(statusNames)];
+    const statuses = await Promise.all(uniqueNames.map(getStatusByName));
+
+    return new Map(uniqueNames.map((name, index) => [name, statuses[index].id]));
+}
+
 export function updateRequestCrBranch(id, payload) {
     return api.put(`/requests/${id}`, payload);
 }
@@ -130,11 +142,12 @@ export async function getRequestById(id, { ownRequest = false } = {}) {
     const endpoint = ownRequest ? `/requests/me/${id}` : `/requests/${id}`;
     const request = await api.get(endpoint);
 
-    const [products, crBranch] = await Promise.all([
+    const [products, crBranch, provisions] = await Promise.all([
         api.get("/item-request-products?size=1000"),
         request.crBranchId
             ? api.get(`/cr-branches/${request.crBranchId}`).catch(() => null)
             : null,
+        api.get("/provisions"),
     ]);
 
     const requestId = Number(id);
@@ -143,27 +156,11 @@ export async function getRequestById(id, { ownRequest = false } = {}) {
         .filter((item) => Number(item.requestId) === requestId)
         .map(normalizeProduct);
 
-    const provisions = await Promise.all(
-        (request.provisions || []).map(async (item) => {
-            const provision = await api.get(`/provisions/${item.provisionId}`);
-
-            return {
-                ...item,
-                provisionName: provision.name,
-                provisionDescription: provision.description,
-                totalValue: provision.totalValue,
-            };
-        })
+    const provisionsById = new Map(
+        getPageContent(provisions).map((provision) => [provision.id, provision])
     );
 
-    return normalizeRequest(
-        {
-            ...request,
-            provisions,
-        },
-        requestProducts,
-        crBranch
-    );
+    return normalizeRequest(request, requestProducts, crBranch, provisionsById);
 }
 
 export const requestsService = {
