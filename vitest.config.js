@@ -19,8 +19,21 @@ export default defineConfig({
     port: 3001,
     https: true,
   },
+  resolve: {
+    alias: {
+      '@': path.join(dirname, 'src'),
+    },
+  },
   test: {
     projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          environment: 'node',
+          include: ['src/**/*.test.js'],
+        },
+      },
       {
         extends: true,
         plugins: [

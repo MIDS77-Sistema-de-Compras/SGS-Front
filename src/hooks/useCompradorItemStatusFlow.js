@@ -2,13 +2,14 @@ import { useState } from "react";
 import {
     updateItemRequestProduct,
     updateItemRequestProvision,
-    getStatusByName,
+    resolveStatusIdsByName,
 } from "@/service/requests";
 
 function buildProductPayload(item, requestId, statusName) {
     return {
         requestId: Number(requestId),
         productName: item.nome,
+        variation: item.variation || "",
         measurementUnit: item.unit,
         quantity: item.quantity,
         statusName,
@@ -16,13 +17,11 @@ function buildProductPayload(item, requestId, statusName) {
     };
 }
 
-async function buildProvisionPayload(item, requestId, statusName) {
-    const status = await getStatusByName(statusName);
-
+function buildProvisionPayload(item, requestId, statusName, statusIdsByName) {
     return {
         requestId: Number(requestId),
         provisionId: item.provisionId,
-        statusId: status.id,
+        statusId: statusIdsByName.get(statusName),
         additionalInformation: item.additionalInfo,
     };
 }
@@ -50,14 +49,22 @@ export function useCompradorItemStatusFlow({ requestId, items, isServiceRequest,
     const handleSaveChanges = async () => {
         setSaving(true);
         try {
+            const decisions = Object.entries(itemDecisions);
+
+            const statusIdsByName = isServiceRequest
+                ? await resolveStatusIdsByName(decisions.map(([, statusValue]) => statusValue))
+                : null;
+
             await Promise.all(
-                Object.entries(itemDecisions).map(async ([itemId, statusValue]) => {
+                decisions.map(([itemId, statusValue]) => {
                     const item = items.find((candidate) => String(candidate.id) === itemId);
                     if (!item) return;
 
                     if (isServiceRequest) {
-                        const payload = await buildProvisionPayload(item, requestId, statusValue);
-                        return updateItemRequestProvision(item.id, payload);
+                        return updateItemRequestProvision(
+                            item.id,
+                            buildProvisionPayload(item, requestId, statusValue, statusIdsByName)
+                        );
                     }
 
                     return updateItemRequestProduct(item.id, buildProductPayload(item, requestId, statusValue));

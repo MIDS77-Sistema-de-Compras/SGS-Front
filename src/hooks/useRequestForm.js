@@ -1,31 +1,51 @@
 import { useEffect, useState } from "react";
 
 import { api, getPageContent } from "@/service/api";
-import { createFullRequest, editFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
+import { getAllCRBranches } from "@/service/crSearch";
+import {
+    createFullRequest,
+    editFullRequest,
+    getAllMeasurementUnits,
+} from "@/service/createProductRequest";
 import { createFullServiceRequest } from "@/service/createServiceRequest";
 import { useNotification } from "@/contexts/NotificationContext";
 import { csvConvertForProducts, csvParse } from "@/lib/utils/csvToJson";
-import { checkAndPushElements, checkAndPushProducts, checkAndSubmitElements, handleProductRequest, handleProvisionRequest } from "@/lib/utils/csvHandlers";
+import {
+    checkAndPushElements,
+    checkAndPushProducts,
+    checkAndSubmitElements,
+    handleProductRequest,
+    handleProvisionRequest,
+} from "@/lib/utils/csvHandlers";
 
 const REQUEST_TABS = [
     { valor: "produto", label: "PRODUTO" },
     { valor: "servico", label: "SERVIÇO" },
-    { valor: "importing", label: "IMPORTAR" }
+    { valor: "importing", label: "IMPORTAR" },
 ];
 
 export function useRequestForm({ initialRequest = null, onSaved } = {}) {
     const { showNotification } = useNotification();
-    const initialIsService = (initialRequest?.servicos || []).length > 0
-        && (initialRequest?.produtos || []).length === 0;
-    const [abaAtiva, setAbaAtiva] = useState(initialIsService ? "servico" : "produto");
+
+    const initialIsService =
+        (initialRequest?.servicos || []).length > 0 &&
+        (initialRequest?.produtos || []).length === 0;
+
+    const [abaAtiva, setAbaAtiva] = useState(
+        initialIsService ? "servico" : "produto"
+    );
     const [attachments, setAttachments] = useState([]);
-    const [existingAttachments, setExistingAttachments] = useState(initialRequest?.attachments || []);
+    const [existingAttachments, setExistingAttachments] = useState(
+        initialRequest?.attachments || []
+    );
     const [editingProductId, setEditingProductId] = useState(null);
     const [editingServiceId, setEditingServiceId] = useState(null);
     const [branchId, setBranchId] = useState("");
     const [requester, setRequester] = useState("");
     const [phone, setPhone] = useState("");
-    const [crBranchId, setCrBranchId] = useState(String(initialRequest?.crBranchId || initialRequest?.crBranch?.id || ""));
+    const [crBranchId, setCrBranchId] = useState(
+        String(initialRequest?.crBranchId || initialRequest?.crBranch?.id || "")
+    );
     const [productName, setProductName] = useState("");
     const [variation, setVariation] = useState("");
     const [quantity, setQuantity] = useState("");
@@ -34,22 +54,30 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
     const [serviceName, setServiceName] = useState("");
     const [serviceValue, setServiceValue] = useState("");
     const [serviceAdditionalInfo, setServiceAdditionalInfo] = useState("");
-    const [products, setProducts] = useState(() => (initialRequest?.produtos || []).map((product) => ({
-        id: product.id,
-        name: product.nome,
-        variation: product.variation || "",
-        quantity: Number(product.quantity),
-        measurementUnit: product.unit,
-        additionalInformations: product.additionalInformations || "",
-    })));
-    const [services, setServices] = useState(() => (initialRequest?.servicos || []).map((service) => ({
-        id: service.id,
-        provisionId: service.provisionId,
-        name: service.nome,
-        totalValue: Number(service.totalValue),
-        description: service.description || service.additionalInformation || "",
-        additionalInformation: service.additionalInformation || "",
-    })));
+
+    const [products, setProducts] = useState(() =>
+        (initialRequest?.produtos || []).map((product) => ({
+            id: product.id,
+            name: product.nome,
+            variation: product.variation || "",
+            quantity: Number(product.quantity),
+            measurementUnit: product.unit,
+            additionalInformations: product.additionalInformations || "",
+        }))
+    );
+
+    const [services, setServices] = useState(() =>
+        (initialRequest?.servicos || []).map((service) => ({
+            id: service.id,
+            provisionId: service.provisionId,
+            name: service.nome,
+            totalValue: Number(service.totalValue),
+            description:
+                service.description || service.additionalInformation || "",
+            additionalInformation: service.additionalInformation || "",
+        }))
+    );
+
     const [crOptions, setCrOptions] = useState([]);
     const [branchOptions, setBranchOptions] = useState([]);
     const [unitOptions, setUnitOptions] = useState([]);
@@ -60,6 +88,7 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState("");
     const [success, setSuccess] = useState(false);
+
     const isEditMode = Boolean(initialRequest?.id);
 
     useEffect(() => {
@@ -68,7 +97,7 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         async function loadData() {
             try {
                 const [crs, branches, units] = await Promise.all([
-                    api.get("/cr-branches?size=1000"),
+                    getAllCRBranches(),
                     api.get("/branches"),
                     getAllMeasurementUnits(),
                 ]);
@@ -76,22 +105,31 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                 if (cancelled) return;
 
                 const nextCrOptions = getPageContent(crs).map((cr) => ({
-                        value: String(cr.id),
-                        label: `${cr.crCode} - ${cr.crName}`,
-                        branchName: cr.branchName ?? "",
-                    }));
+                    value: String(cr.id),
+                    label: `${cr.crCode} - ${cr.crName}`,
+                    branchName: cr.branchName ?? "",
+                    master: cr.master === true,
+                }));
 
-                const nextBranchOptions = getPageContent(branches).map((branch) => ({
+                const nextBranchOptions = getPageContent(branches).map(
+                    (branch) => ({
                         value: String(branch.id),
                         label: branch.name,
-                    }));
+                    })
+                );
 
                 setCrOptions(nextCrOptions);
                 setBranchOptions(nextBranchOptions);
 
                 if (initialRequest) {
-                    const branchName = initialRequest.crBranch?.branchName || "";
-                    setBranchId(nextBranchOptions.find((option) => option.label === branchName)?.value || "");
+                    const branchName =
+                        initialRequest.crBranch?.branchName || "";
+
+                    setBranchId(
+                        nextBranchOptions.find(
+                            (option) => option.label === branchName
+                        )?.value || ""
+                    );
                 }
 
                 setUnitOptions(
@@ -104,7 +142,10 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                 );
             } catch (error) {
                 if (!cancelled) {
-                    setFormError(error.message || "Erro ao carregar dados do formulário.");
+                    setFormError(
+                        error.message ||
+                            "Erro ao carregar dados do formulário."
+                    );
                 }
             }
         }
@@ -142,9 +183,10 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         };
     }, []);
 
-    const selectedBranchName = branchOptions.find(
-        (branchOption) => branchOption.value === branchId
-    )?.label ?? "";
+    const selectedBranchName =
+        branchOptions.find(
+            (branchOption) => branchOption.value === branchId
+        )?.label ?? "";
 
     const filteredCrOptions = branchId
         ? crOptions.filter((cr) => cr.branchName === selectedBranchName)
@@ -154,12 +196,20 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         const selectedBranchId = event.target.value;
         setBranchId(selectedBranchId);
 
-        const newBranchName = branchOptions.find(
-            (branchOption) => branchOption.value === selectedBranchId
-        )?.label ?? "";
+        const newBranchName =
+            branchOptions.find(
+                (branchOption) => branchOption.value === selectedBranchId
+            )?.label ?? "";
 
-        const currentCr = crOptions.find((cr) => cr.value === crBranchId);
-        if (currentCr && selectedBranchId && currentCr.branchName !== newBranchName) {
+        const currentCr = crOptions.find(
+            (cr) => cr.value === crBranchId
+        );
+
+        if (
+            currentCr &&
+            selectedBranchId &&
+            currentCr.branchName !== newBranchName
+        ) {
             setCrBranchId("");
         }
     }
@@ -173,7 +223,9 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         setSuccess(false);
 
         if (!productName.trim() || !quantity || !unit) {
-            setFormError("Preencha produto, quantidade e unidade de medida antes de adicionar.");
+            setFormError(
+                "Preencha produto, quantidade e unidade de medida antes de adicionar."
+            );
             return;
         }
 
@@ -186,10 +238,16 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                 measurementUnit: unit,
                 additionalInformations: additionalInfo.trim(),
             };
+
             return editingProductId
-                ? currentProducts.map((product) => product.id === editingProductId ? nextProduct : product)
+                ? currentProducts.map((product) =>
+                      product.id === editingProductId
+                          ? nextProduct
+                          : product
+                  )
                 : [...currentProducts, nextProduct];
         });
+
         setEditingProductId(null);
         setProductName("");
         setVariation("");
@@ -199,7 +257,9 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
     }
 
     function handleRemoveProduct(productId) {
-        setProducts((currentProducts) => currentProducts.filter((product) => product.id !== productId));
+        setProducts((currentProducts) =>
+            currentProducts.filter((product) => product.id !== productId)
+        );
     }
 
     function handleEditProduct(product) {
@@ -215,25 +275,42 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         setFormError("");
         setSuccess(false);
 
-        if (!serviceName.trim() || !serviceValue || !serviceAdditionalInfo.trim()) {
-            setFormError("Preencha título, valor e informações adicionais do serviço antes de adicionar.");
+        if (
+            !serviceName.trim() ||
+            !serviceValue ||
+            !serviceAdditionalInfo.trim()
+        ) {
+            setFormError(
+                "Preencha título, valor e informações adicionais do serviço antes de adicionar."
+            );
             return;
         }
 
         setServices((currentServices) => {
-            const currentService = currentServices.find((service) => service.id === editingServiceId);
+            const currentService = currentServices.find(
+                (service) => service.id === editingServiceId
+            );
+
             const nextService = {
                 id: editingServiceId || crypto.randomUUID(),
                 provisionId: currentService?.provisionId,
                 name: serviceName.trim(),
                 totalValue: Number(serviceValue),
-                description: currentService?.description || serviceAdditionalInfo.trim(),
+                description:
+                    currentService?.description ||
+                    serviceAdditionalInfo.trim(),
                 additionalInformation: serviceAdditionalInfo.trim(),
             };
+
             return editingServiceId
-                ? currentServices.map((service) => service.id === editingServiceId ? nextService : service)
+                ? currentServices.map((service) =>
+                      service.id === editingServiceId
+                          ? nextService
+                          : service
+                  )
                 : [...currentServices, nextService];
         });
+
         setEditingServiceId(null);
         setServiceName("");
         setServiceValue("");
@@ -241,105 +318,179 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
     }
 
     function handleRemoveService(serviceId) {
-        setServices((currentServices) => currentServices.filter((service) => service.id !== serviceId));
+        setServices((currentServices) =>
+            currentServices.filter((service) => service.id !== serviceId)
+        );
     }
 
     function handleEditService(service) {
         setEditingServiceId(service.id);
         setServiceName(service.name || "");
         setServiceValue(String(service.totalValue ?? ""));
-        setServiceAdditionalInfo(service.additionalInformation || service.description || "");
+        setServiceAdditionalInfo(
+            service.additionalInformation || service.description || ""
+        );
     }
 
     const ALLOWED_TYPES = [
-        'image/png',
-        'image/jpeg',
-        'application/pdf',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'text/csv',
+        "image/png",
+        "image/jpeg",
+        "application/pdf",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "text/csv",
     ];
-    const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'pdf', 'docx', 'csv'];
+
+    const ALLOWED_EXTENSIONS = [
+        "png",
+        "jpg",
+        "jpeg",
+        "pdf",
+        "docx",
+        "csv",
+    ];
+
     const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     function isFileAllowed(file) {
         if (ALLOWED_TYPES.includes(file.type)) return true;
-        const ext = file.name.split('.').pop().toLowerCase();
-        return ALLOWED_EXTENSIONS.includes(ext);
+
+        const extension = file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+        return ALLOWED_EXTENSIONS.includes(extension);
     }
 
     function handleFilesSelected(files) {
         const fileArray = Array.from(files ?? []);
 
-        const wrongType = fileArray.filter((f) => !isFileAllowed(f));
-        const tooBig = fileArray.filter((f) => isFileAllowed(f) && f.size > MAX_FILE_SIZE);
-        const valid = fileArray.filter((f) => isFileAllowed(f) && f.size <= MAX_FILE_SIZE);
+        const wrongType = fileArray.filter(
+            (file) => !isFileAllowed(file)
+        );
+
+        const tooBig = fileArray.filter(
+            (file) =>
+                isFileAllowed(file) &&
+                file.size > MAX_FILE_SIZE
+        );
+
+        const valid = fileArray.filter(
+            (file) =>
+                isFileAllowed(file) &&
+                file.size <= MAX_FILE_SIZE
+        );
 
         if (wrongType.length > 0) {
-            setFormError(`Formato não permitido: ${wrongType.map((f) => f.name).join(', ')}. Use PNG, JPEG, PDF, DOCX ou CSV.`);
+            setFormError(
+                `Formato não permitido: ${wrongType
+                    .map((file) => file.name)
+                    .join(
+                        ", "
+                    )}. Use PNG, JPEG, PDF, DOCX ou CSV.`
+            );
         } else if (tooBig.length > 0) {
-            setFormError(`Arquivo muito grande: ${tooBig.map((f) => f.name).join(', ')}. Máximo 10MB por arquivo. 50MB se CSV.`);
+            setFormError(
+                `Arquivo muito grande: ${tooBig
+                    .map((file) => file.name)
+                    .join(
+                        ", "
+                    )}. Máximo 10MB por arquivo. 50MB se CSV.`
+            );
         }
 
         if (valid.length > 0) {
-            setAttachments((prev) => [...prev, ...valid]);
+            setAttachments((current) => [
+                ...current,
+                ...valid,
+            ]);
         }
     }
 
     function handleRemoveAttachment(index) {
-        setAttachments((prev) => prev.filter((_, i) => i !== index));
+        setAttachments((current) =>
+            current.filter((_, currentIndex) => currentIndex !== index)
+        );
     }
 
     function handleRemoveExistingAttachment(attachmentId) {
-        setExistingAttachments((current) => current.filter((attachment) => attachment.id !== attachmentId));
+        setExistingAttachments((current) =>
+            current.filter(
+                (attachment) => attachment.id !== attachmentId
+            )
+        );
     }
 
-    // this currently only supports products or provisions, if it's a coffee request, for example, it will throw an error.
     async function handleImportSubmit() {
         setCsvError("");
         setCsvData([]);
 
         try {
-            const csvFile = attachments.find(file =>
-                file.name.toLowerCase().endsWith('.csv')
+            const csvFile = attachments.find((file) =>
+                file.name.toLowerCase().endsWith(".csv")
             );
 
             if (!csvFile) {
-                throw new Error('Por favor, selecione um arquivo .csv');
+                throw new Error(
+                    "Por favor, selecione um arquivo .csv"
+                );
             }
 
-            const csvContent = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.onerror = (e) => reject(e);
-                reader.readAsText(csvFile);
-            });
+            const csvContent = await new Promise(
+                (resolve, reject) => {
+                    const reader = new FileReader();
+
+                    reader.onload = (event) =>
+                        resolve(event.target.result);
+
+                    reader.onerror = (event) =>
+                        reject(event);
+
+                    reader.readAsText(csvFile);
+                }
+            );
 
             const dataLines = csvParse(csvContent);
-            
+
             if (dataLines.length === 0) {
-                throw new Error('Nenhum dado encontrado no arquivo .csv');
+                throw new Error(
+                    "Nenhum dado encontrado no arquivo .csv"
+                );
             }
 
             const validationErrors = [];
             const validRequests = [];
 
-            // verifies if it's a product request or provision request
-            // TOFIX: poor verification, I'm too tired to enhance this myself
-            if(dataLines[0].PRODUTO){
+            if (dataLines[0].PRODUTO) {
                 setCsvType("product");
-                handleProductRequest(validRequests, dataLines, validationErrors);
-            }else{
+
+                handleProductRequest(
+                    validRequests,
+                    dataLines,
+                    validationErrors
+                );
+            } else {
                 setCsvType("provision");
-                handleProvisionRequest(validRequests, dataLines, validationErrors);
+
+                handleProvisionRequest(
+                    validRequests,
+                    dataLines,
+                    validationErrors
+                );
             }
 
             if (validationErrors.length > 0) {
-                throw new Error(validationErrors.join('\n'));
+                throw new Error(
+                    validationErrors.join("\n")
+                );
             }
 
             setCsvData(validRequests);
         } catch (error) {
-            setCsvError(error.message || "Erro ao processar o CSV.");
+            setCsvError(
+                error.message ||
+                    "Erro ao processar o CSV."
+            );
         } finally {
             setSubmitting(false);
         }
@@ -347,7 +498,9 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
 
     async function handleConfirmImport() {
         if (csvData.length === 0) {
-            setCsvError("Nenhum dado válido para importar.");
+            setCsvError(
+                "Nenhum dado válido para importar."
+            );
             return;
         }
 
@@ -355,56 +508,108 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         setCsvError("");
 
         try {
-            const elementsByCrProject = checkAndPushElements(csvData, csvType);
+            const elementsByCrProject =
+                checkAndPushElements(csvData, csvType);
 
-            const validCrProjectIds = Object.keys(elementsByCrProject).filter(id => id && id.trim() !== '');
+            const validCrProjectIds = Object.keys(
+                elementsByCrProject
+            ).filter(
+                (id) => id && id.trim() !== ""
+            );
+
             if (validCrProjectIds.length === 0) {
-                throw new Error('Nenhum CR/Project válido encontrado no CSV.');
+                throw new Error(
+                    "Nenhum CR/Project válido encontrado no CSV."
+                );
             }
 
             const submissionResults = [];
-            await checkAndSubmitElements(submissionResults, elementsByCrProject, csvType, attachments);
 
-            const successfulSubmissions = submissionResults.filter(r => r.success).length;
-            const failedSubmissions = submissionResults.filter(r => !r.success).length;
+            await checkAndSubmitElements(
+                submissionResults,
+                elementsByCrProject,
+                csvType,
+                attachments
+            );
+
+            const successfulSubmissions =
+                submissionResults.filter(
+                    (result) => result.success
+                ).length;
+
+            const failedSubmissions =
+                submissionResults.filter(
+                    (result) => !result.success
+                ).length;
 
             if (failedSubmissions === 0) {
-                showNotification(`Sucesso na submissão de ${successfulSubmissions} solicitação(es)!`, "success");
+                showNotification(
+                    `Sucesso na submissão de ${successfulSubmissions} solicitação(es)!`,
+                    "success"
+                );
             } else if (successfulSubmissions === 0) {
-                showNotification(`Falha na submissão de suas solicitações.`, "error");
+                showNotification(
+                    "Falha na submissão de suas solicitações.",
+                    "error"
+                );
             } else {
-                showNotification(`Sucesso na submissão de ${successfulSubmissions} solicitação(es), ${failedSubmissions} submissão(es) falharam.`, "warning");
+                showNotification(
+                    `Sucesso na submissão de ${successfulSubmissions} solicitação(es), ${failedSubmissions} submissão(es) falharam.`,
+                    "warning"
+                );
             }
 
             setAttachments([]);
             setCsvData([]);
             setCsvError("");
         } catch (error) {
-            setCsvError(error.message || "Erro ao processar o CSV.");
-            showNotification(error.message || "Erro ao processar o CSV.", "error");
+            setCsvError(
+                error.message ||
+                    "Erro ao processar o CSV."
+            );
+
+            showNotification(
+                error.message ||
+                    "Erro ao processar o CSV.",
+                "error"
+            );
         } finally {
             setIsProcessing(false);
         }
     }
 
-
     async function saveProducts(payloadProducts) {
         if (!isEditMode) {
-            return createFullRequest({ crBranchId, products: payloadProducts, attachments });
+            return createFullRequest({
+                crBranchId,
+                products: payloadProducts,
+                attachments,
+            });
         }
 
         return editFullRequest({
             id: initialRequest.id,
             payload: {
                 crBranchId: Number(crBranchId),
-                products: payloadProducts.map((product) => ({
-                    productName: product.name,
-                    variation: product.variation || "",
-                    measurementUnit: product.measurementUnit,
-                    quantity: Number(product.quantity),
-                    additionalInformations: product.additionalInformations || "",
-                })),
-                retainedAttachmentIds: existingAttachments.map((attachment) => attachment.id),
+                products: payloadProducts.map(
+                    (product) => ({
+                        productName: product.name,
+                        variation:
+                            product.variation || "",
+                        measurementUnit:
+                            product.measurementUnit,
+                        quantity: Number(
+                            product.quantity
+                        ),
+                        additionalInformations:
+                            product.additionalInformations ||
+                            "",
+                    })
+                ),
+                retainedAttachmentIds:
+                    existingAttachments.map(
+                        (attachment) => attachment.id
+                    ),
             },
             attachments,
         });
@@ -412,21 +617,37 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
 
     async function saveServices(payloadServices) {
         if (!isEditMode) {
-            return createFullServiceRequest({ crBranchId, services: payloadServices, attachments });
+            return createFullServiceRequest({
+                crBranchId,
+                services: payloadServices,
+                attachments,
+            });
         }
 
         return editFullRequest({
             id: initialRequest.id,
             payload: {
                 crBranchId: Number(crBranchId),
-                provisions: payloadServices.map((service) => ({
-                    provisionId: service.provisionId || null,
-                    name: service.name,
-                    totalValue: Number(service.totalValue),
-                    description: service.description || service.additionalInformation,
-                    additionalInformation: service.additionalInformation || "",
-                })),
-                retainedAttachmentIds: existingAttachments.map((attachment) => attachment.id),
+                provisions: payloadServices.map(
+                    (service) => ({
+                        provisionId:
+                            service.provisionId || null,
+                        name: service.name,
+                        totalValue: Number(
+                            service.totalValue
+                        ),
+                        description:
+                            service.description ||
+                            service.additionalInformation,
+                        additionalInformation:
+                            service.additionalInformation ||
+                            "",
+                    })
+                ),
+                retainedAttachmentIds:
+                    existingAttachments.map(
+                        (attachment) => attachment.id
+                    ),
             },
             attachments,
         });
@@ -437,39 +658,86 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         setFormError("");
         setSuccess(false);
 
-        if (!branchId && abaAtiva !== "importing") {
-            setFormError("Selecione a Filial Pagadora.");
-            showNotification("Selecione a Filial Pagadora antes de finalizar.", "error");
+        if (
+            !branchId &&
+            abaAtiva !== "importing"
+        ) {
+            setFormError(
+                "Selecione a Filial Pagadora."
+            );
+
+            showNotification(
+                "Selecione a Filial Pagadora antes de finalizar.",
+                "error"
+            );
             return;
         }
 
-        if (!crBranchId && abaAtiva !== "importing") {
-            setFormError("Selecione o CR e Projeto.");
-            showNotification("Selecione o CR e Projeto antes de finalizar.", "error");
+        if (
+            !crBranchId &&
+            abaAtiva !== "importing"
+        ) {
+            setFormError(
+                "Selecione o CR e Projeto."
+            );
+
+            showNotification(
+                "Selecione o CR e Projeto antes de finalizar.",
+                "error"
+            );
             return;
         }
 
         if (abaAtiva === "produto") {
-            if (productName.trim() || variation.trim() || quantity || unit) {
-                setFormError("Você preencheu os campos, mas esqueceu de clicar no botão '+' para adicionar o produto.");
-                showNotification("Adicione o produto pendente à lista antes de finalizar.", "warning");
+            if (
+                productName.trim() ||
+                variation.trim() ||
+                quantity ||
+                unit
+            ) {
+                setFormError(
+                    "Você preencheu os campos, mas esqueceu de clicar no botão '+' para adicionar o produto."
+                );
+
+                showNotification(
+                    "Adicione o produto pendente à lista antes de finalizar.",
+                    "warning"
+                );
                 return;
             }
 
             if (products.length === 0) {
-                setFormError("Adicione pelo menos um produto antes de finalizar.");
-                showNotification("Adicione pelo menos um produto antes de finalizar.", "error");
+                setFormError(
+                    "Adicione pelo menos um produto antes de finalizar."
+                );
+
+                showNotification(
+                    "Adicione pelo menos um produto antes de finalizar.",
+                    "error"
+                );
                 return;
             }
 
-            const payloadProducts = products.map(({ id, ...rest }) => rest);
+            const payloadProducts = products.map(
+                ({ id, ...rest }) => rest
+            );
 
             try {
                 setSubmitting(true);
-                const saved = await saveProducts(payloadProducts);
+
+                const saved = await saveProducts(
+                    payloadProducts
+                );
 
                 setSuccess(true);
-                showNotification(isEditMode ? "Solicitação atualizada com sucesso!" : "Solicitação criada com sucesso!", "success");
+
+                showNotification(
+                    isEditMode
+                        ? "Solicitação atualizada com sucesso!"
+                        : "Solicitação criada com sucesso!",
+                    "success"
+                );
+
                 if (isEditMode) {
                     onSaved?.(saved);
                 } else {
@@ -479,37 +747,74 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                     setAttachments([]);
                 }
             } catch (error) {
-                const fallback = isEditMode ? "Erro ao atualizar a solicitação." : "Erro ao criar a solicitação.";
-                setFormError(error.message || fallback);
-                showNotification(error.message || fallback, "error");
+                const fallback = isEditMode
+                    ? "Erro ao atualizar a solicitação."
+                    : "Erro ao criar a solicitação.";
+
+                setFormError(
+                    error.message || fallback
+                );
+
+                showNotification(
+                    error.message || fallback,
+                    "error"
+                );
             } finally {
                 setSubmitting(false);
             }
+
             return;
         }
 
         if (abaAtiva === "servico") {
+            if (
+                serviceName.trim() ||
+                serviceValue ||
+                serviceAdditionalInfo.trim()
+            ) {
+                setFormError(
+                    "Você preencheu os campos, mas esqueceu de clicar no botão '+' para adicionar o serviço."
+                );
 
-            if (serviceName.trim() || serviceValue || serviceAdditionalInfo.trim()) {
-                setFormError("Você preencheu os campos, mas esqueceu de clicar no botão '+' para adicionar o serviço.");
-                showNotification("Adicione o serviço pendente à lista antes de finalizar.", "warning");
+                showNotification(
+                    "Adicione o serviço pendente à lista antes de finalizar.",
+                    "warning"
+                );
                 return;
             }
 
             if (services.length === 0) {
-                setFormError("Adicione pelo menos um serviço antes de finalizar.");
-                showNotification("Adicione pelo menos um serviço antes de finalizar.", "error");
+                setFormError(
+                    "Adicione pelo menos um serviço antes de finalizar."
+                );
+
+                showNotification(
+                    "Adicione pelo menos um serviço antes de finalizar.",
+                    "error"
+                );
                 return;
             }
 
-            const payloadServices = services.map(({ id, ...rest }) => rest);
+            const payloadServices = services.map(
+                ({ id, ...rest }) => rest
+            );
 
             try {
                 setSubmitting(true);
-                const saved = await saveServices(payloadServices);
+
+                const saved = await saveServices(
+                    payloadServices
+                );
 
                 setSuccess(true);
-                showNotification(isEditMode ? "Solicitação atualizada com sucesso!" : "Solicitação criada com sucesso!", "success");
+
+                showNotification(
+                    isEditMode
+                        ? "Solicitação atualizada com sucesso!"
+                        : "Solicitação criada com sucesso!",
+                    "success"
+                );
+
                 if (isEditMode) {
                     onSaved?.(saved);
                 } else {
@@ -519,9 +824,18 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                     setAttachments([]);
                 }
             } catch (error) {
-                const fallback = isEditMode ? "Erro ao atualizar a solicitação." : "Erro ao criar a solicitação.";
-                setFormError(error.message || fallback);
-                showNotification(error.message || fallback, "error");
+                const fallback = isEditMode
+                    ? "Erro ao atualizar a solicitação."
+                    : "Erro ao criar a solicitação.";
+
+                setFormError(
+                    error.message || fallback
+                );
+
+                showNotification(
+                    error.message || fallback,
+                    "error"
+                );
             } finally {
                 setSubmitting(false);
             }
@@ -531,7 +845,11 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
     return {
         abaAtiva,
         setAbaAtiva,
-        abas: isEditMode ? REQUEST_TABS.filter((tab) => tab.valor !== "importing") : REQUEST_TABS,
+        abas: isEditMode
+            ? REQUEST_TABS.filter(
+                  (tab) => tab.valor !== "importing"
+              )
+            : REQUEST_TABS,
         isEditMode,
         branchId,
         branchOptions,
@@ -593,6 +911,6 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         isProcessing,
         setIsProcessing,
         handleImportSubmit,
-        handleConfirmImport
+        handleConfirmImport,
     };
 }
