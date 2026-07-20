@@ -9,6 +9,7 @@ function buildProductPayload(item, requestId, statusName) {
     return {
         requestId: Number(requestId),
         productName: item.nome,
+        variation: item.variation || "",
         measurementUnit: item.unit,
         quantity: item.quantity,
         statusName,

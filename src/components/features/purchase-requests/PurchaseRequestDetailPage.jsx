@@ -176,6 +176,7 @@ export default function PurchaseRequestDetailPage() {
                 setEditedProduct={() => {}}
                 closeModal={closeModal}
                 handleSave={closeModal}
+                crBranchLabel={solicitacao.crBranchLabel}
             />
         </div>
     );
