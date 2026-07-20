@@ -6,6 +6,7 @@ import Dropdown from "@/components/ui/select/Dropdown";
 export default function ProductTableRow({
     item,
     openModal,
+    isServiceRequest = false,
     showItemDecisions = false,
     decision = null,
     onAcceptItem,
@@ -21,16 +22,18 @@ export default function ProductTableRow({
                 className={`py-3 pl-4 min-[1350px]:pl-6 pr-3 text-left text-[13px] min-[1350px]:text-base text-gray-700 dark:text-[#E2E2EA] font-medium truncate cursor-pointer ${tdHoverAndRoundedClass}`}
                 onClick={() => openModal(item)}
             >
-                {item.code} {item.nome}
+                {isServiceRequest ? item.nome : `${item.code} ${item.nome}`}
             </td>
             <td
                 className={`py-3 pr-3 text-left text-[13px] min-[1350px]:text-base text-gray-500 dark:text-[#C3C6D3] truncate cursor-pointer ${tdHoverAndRoundedClass}`}
                 onClick={() => openModal(item)}
             >
-                {item.variation}
+                {isServiceRequest ? `SERV-${item.id}` : (item.variation || "-")}
             </td>
             <td className={`py-3 px-3 text-center text-[13px] min-[1350px]:text-base text-gray-600 dark:text-[#C3C6D3] font-medium truncate ${tdHoverAndRoundedClass}`}>
-                {item.quantity} {item.unit?.toLowerCase()}
+                {isServiceRequest
+                    ? (item.description || item.additionalInfo || "-")
+                    : `${item.quantity} ${item.unit?.toLowerCase() || ""}`}
             </td>
             <td className={`py-3 px-3 text-center ${tdHoverAndRoundedClass}`}>
                 <button

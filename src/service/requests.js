@@ -21,6 +21,7 @@ function normalizeProduct(item) {
         status: item.statusName,
         quantity: item.quantity,
         unit: item.measurementUnit,
+        additionalInformations: item.additionalInformations || "",
         additionalInfo: item.additionalInformations || "Sem informaÃ§Ãµes adicionais.",
     };
 }
@@ -33,6 +34,7 @@ function normalizeProvision(item) {
         description: item.provisionDescription,
         totalValue: item.totalValue,
         status: item.statusName,
+        additionalInformation: item.additionalInformation || "",
         additionalInfo:
             item.additionalInformation || "Sem informações adicionais.",
     };

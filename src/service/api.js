@@ -69,4 +69,10 @@ export const api = {
         method: 'POST',
         body: formData,
     }),
+
+    putFormData: (endpoint, formData, options) => handleRequest(endpoint, {
+        ...options,
+        method: 'PUT',
+        body: formData,
+    }),
 };

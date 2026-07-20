@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { api, getPageContent } from "@/service/api";
-import { createFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
+import { createFullRequest, editFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
 import { createFullServiceRequest } from "@/service/createServiceRequest";
 import { useNotification } from "@/contexts/NotificationContext";
 import { csvConvertForProducts, csvParse } from "@/lib/utils/csvToJson";
@@ -13,14 +13,19 @@ const REQUEST_TABS = [
     { valor: "importing", label: "IMPORTAR" }
 ];
 
-export function useRequestForm() {
+export function useRequestForm({ initialRequest = null, onSaved } = {}) {
     const { showNotification } = useNotification();
-    const [abaAtiva, setAbaAtiva] = useState("produto");
+    const initialIsService = (initialRequest?.servicos || []).length > 0
+        && (initialRequest?.produtos || []).length === 0;
+    const [abaAtiva, setAbaAtiva] = useState(initialIsService ? "servico" : "produto");
     const [attachments, setAttachments] = useState([]);
+    const [existingAttachments, setExistingAttachments] = useState(initialRequest?.attachments || []);
+    const [editingProductId, setEditingProductId] = useState(null);
+    const [editingServiceId, setEditingServiceId] = useState(null);
     const [branchId, setBranchId] = useState("");
     const [requester, setRequester] = useState("");
     const [phone, setPhone] = useState("");
-    const [crBranchId, setCrBranchId] = useState("");
+    const [crBranchId, setCrBranchId] = useState(String(initialRequest?.crBranchId || initialRequest?.crBranch?.id || ""));
     const [productName, setProductName] = useState("");
     const [variation, setVariation] = useState("");
     const [quantity, setQuantity] = useState("");
@@ -29,8 +34,22 @@ export function useRequestForm() {
     const [serviceName, setServiceName] = useState("");
     const [serviceValue, setServiceValue] = useState("");
     const [serviceAdditionalInfo, setServiceAdditionalInfo] = useState("");
-    const [products, setProducts] = useState([]);
-    const [services, setServices] = useState([]);
+    const [products, setProducts] = useState(() => (initialRequest?.produtos || []).map((product) => ({
+        id: product.id,
+        name: product.nome,
+        variation: product.variation || "",
+        quantity: Number(product.quantity),
+        measurementUnit: product.unit,
+        additionalInformations: product.additionalInformations || "",
+    })));
+    const [services, setServices] = useState(() => (initialRequest?.servicos || []).map((service) => ({
+        id: service.id,
+        provisionId: service.provisionId,
+        name: service.nome,
+        totalValue: Number(service.totalValue),
+        description: service.description || service.additionalInformation || "",
+        additionalInformation: service.additionalInformation || "",
+    })));
     const [crOptions, setCrOptions] = useState([]);
     const [branchOptions, setBranchOptions] = useState([]);
     const [unitOptions, setUnitOptions] = useState([]);
@@ -41,6 +60,7 @@ export function useRequestForm() {
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState("");
     const [success, setSuccess] = useState(false);
+    const isEditMode = Boolean(initialRequest?.id);
 
     useEffect(() => {
         let cancelled = false;
@@ -55,20 +75,24 @@ export function useRequestForm() {
 
                 if (cancelled) return;
 
-                setCrOptions(
-                    getPageContent(crs).map((cr) => ({
+                const nextCrOptions = getPageContent(crs).map((cr) => ({
                         value: String(cr.id),
                         label: `${cr.crCode} - ${cr.crName}`,
                         branchName: cr.branchName ?? "",
-                    }))
-                );
+                    }));
 
-                setBranchOptions(
-                    getPageContent(branches).map((branch) => ({
+                const nextBranchOptions = getPageContent(branches).map((branch) => ({
                         value: String(branch.id),
                         label: branch.name,
-                    }))
-                );
+                    }));
+
+                setCrOptions(nextCrOptions);
+                setBranchOptions(nextBranchOptions);
+
+                if (initialRequest) {
+                    const branchName = initialRequest.crBranch?.branchName || "";
+                    setBranchId(nextBranchOptions.find((option) => option.label === branchName)?.value || "");
+                }
 
                 setUnitOptions(
                     getPageContent(units).map((measurementUnit) => ({
@@ -90,7 +114,7 @@ export function useRequestForm() {
         return () => {
             cancelled = true;
         };
-    }, []);
+    }, [initialRequest]);
 
     useEffect(() => {
         let cancelled = false;
@@ -153,17 +177,20 @@ export function useRequestForm() {
             return;
         }
 
-        setProducts((currentProducts) => [
-            ...currentProducts,
-            {
-                id: crypto.randomUUID(),
+        setProducts((currentProducts) => {
+            const nextProduct = {
+                id: editingProductId || crypto.randomUUID(),
                 name: productName.trim(),
                 variation: variation.trim(),
                 quantity: Number(quantity),
                 measurementUnit: unit,
                 additionalInformations: additionalInfo.trim(),
-            },
-        ]);
+            };
+            return editingProductId
+                ? currentProducts.map((product) => product.id === editingProductId ? nextProduct : product)
+                : [...currentProducts, nextProduct];
+        });
+        setEditingProductId(null);
         setProductName("");
         setVariation("");
         setQuantity("");
@@ -175,6 +202,15 @@ export function useRequestForm() {
         setProducts((currentProducts) => currentProducts.filter((product) => product.id !== productId));
     }
 
+    function handleEditProduct(product) {
+        setEditingProductId(product.id);
+        setProductName(product.name || "");
+        setVariation(product.variation || "");
+        setQuantity(String(product.quantity ?? ""));
+        setUnit(product.measurementUnit || "");
+        setAdditionalInfo(product.additionalInformations || "");
+    }
+
     function handleAddService() {
         setFormError("");
         setSuccess(false);
@@ -184,15 +220,21 @@ export function useRequestForm() {
             return;
         }
 
-        setServices((currentServices) => [
-            ...currentServices,
-            {
-                id: crypto.randomUUID(),
+        setServices((currentServices) => {
+            const currentService = currentServices.find((service) => service.id === editingServiceId);
+            const nextService = {
+                id: editingServiceId || crypto.randomUUID(),
+                provisionId: currentService?.provisionId,
                 name: serviceName.trim(),
                 totalValue: Number(serviceValue),
+                description: currentService?.description || serviceAdditionalInfo.trim(),
                 additionalInformation: serviceAdditionalInfo.trim(),
-            },
-        ]);
+            };
+            return editingServiceId
+                ? currentServices.map((service) => service.id === editingServiceId ? nextService : service)
+                : [...currentServices, nextService];
+        });
+        setEditingServiceId(null);
         setServiceName("");
         setServiceValue("");
         setServiceAdditionalInfo("");
@@ -200,6 +242,13 @@ export function useRequestForm() {
 
     function handleRemoveService(serviceId) {
         setServices((currentServices) => currentServices.filter((service) => service.id !== serviceId));
+    }
+
+    function handleEditService(service) {
+        setEditingServiceId(service.id);
+        setServiceName(service.name || "");
+        setServiceValue(String(service.totalValue ?? ""));
+        setServiceAdditionalInfo(service.additionalInformation || service.description || "");
     }
 
     const ALLOWED_TYPES = [
@@ -238,6 +287,10 @@ export function useRequestForm() {
 
     function handleRemoveAttachment(index) {
         setAttachments((prev) => prev.filter((_, i) => i !== index));
+    }
+
+    function handleRemoveExistingAttachment(attachmentId) {
+        setExistingAttachments((current) => current.filter((attachment) => attachment.id !== attachmentId));
     }
 
     // this currently only supports products or provisions, if it's a coffee request, for example, it will throw an error.
@@ -335,6 +388,50 @@ export function useRequestForm() {
     }
 
 
+    async function saveProducts(payloadProducts) {
+        if (!isEditMode) {
+            return createFullRequest({ crBranchId, products: payloadProducts, attachments });
+        }
+
+        return editFullRequest({
+            id: initialRequest.id,
+            payload: {
+                crBranchId: Number(crBranchId),
+                products: payloadProducts.map((product) => ({
+                    productName: product.name,
+                    variation: product.variation || "",
+                    measurementUnit: product.measurementUnit,
+                    quantity: Number(product.quantity),
+                    additionalInformations: product.additionalInformations || "",
+                })),
+                retainedAttachmentIds: existingAttachments.map((attachment) => attachment.id),
+            },
+            attachments,
+        });
+    }
+
+    async function saveServices(payloadServices) {
+        if (!isEditMode) {
+            return createFullServiceRequest({ crBranchId, services: payloadServices, attachments });
+        }
+
+        return editFullRequest({
+            id: initialRequest.id,
+            payload: {
+                crBranchId: Number(crBranchId),
+                provisions: payloadServices.map((service) => ({
+                    provisionId: service.provisionId || null,
+                    name: service.name,
+                    totalValue: Number(service.totalValue),
+                    description: service.description || service.additionalInformation,
+                    additionalInformation: service.additionalInformation || "",
+                })),
+                retainedAttachmentIds: existingAttachments.map((attachment) => attachment.id),
+            },
+            attachments,
+        });
+    }
+
     async function handleSubmit(event) {
         event.preventDefault();
         setFormError("");
@@ -369,21 +466,22 @@ export function useRequestForm() {
 
             try {
                 setSubmitting(true);
-                await createFullRequest({
-                    crBranchId,
-                    products: payloadProducts,
-                    attachments,
-                });
+                const saved = await saveProducts(payloadProducts);
 
                 setSuccess(true);
-                showNotification("Solicitação criada com sucesso!", "success");
-                setBranchId("");
-                setCrBranchId("");
-                setProducts([]);
-                setAttachments([]);
+                showNotification(isEditMode ? "Solicitação atualizada com sucesso!" : "Solicitação criada com sucesso!", "success");
+                if (isEditMode) {
+                    onSaved?.(saved);
+                } else {
+                    setBranchId("");
+                    setCrBranchId("");
+                    setProducts([]);
+                    setAttachments([]);
+                }
             } catch (error) {
-                setFormError(error.message || "Erro ao criar a solicitação.");
-                showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
+                const fallback = isEditMode ? "Erro ao atualizar a solicitação." : "Erro ao criar a solicitação.";
+                setFormError(error.message || fallback);
+                showNotification(error.message || fallback, "error");
             } finally {
                 setSubmitting(false);
             }
@@ -408,21 +506,22 @@ export function useRequestForm() {
 
             try {
                 setSubmitting(true);
-                await createFullServiceRequest({
-                    crBranchId,
-                    services: payloadServices,
-                    attachments,
-                });
+                const saved = await saveServices(payloadServices);
 
                 setSuccess(true);
-                showNotification("Solicitação criada com sucesso!", "success");
-                setBranchId("");
-                setCrBranchId("");
-                setServices([]);
-                setAttachments([]);
+                showNotification(isEditMode ? "Solicitação atualizada com sucesso!" : "Solicitação criada com sucesso!", "success");
+                if (isEditMode) {
+                    onSaved?.(saved);
+                } else {
+                    setBranchId("");
+                    setCrBranchId("");
+                    setServices([]);
+                    setAttachments([]);
+                }
             } catch (error) {
-                setFormError(error.message || "Erro ao criar a solicitação.");
-                showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
+                const fallback = isEditMode ? "Erro ao atualizar a solicitação." : "Erro ao criar a solicitação.";
+                setFormError(error.message || fallback);
+                showNotification(error.message || fallback, "error");
             } finally {
                 setSubmitting(false);
             }
@@ -432,7 +531,8 @@ export function useRequestForm() {
     return {
         abaAtiva,
         setAbaAtiva,
-        abas: REQUEST_TABS,
+        abas: isEditMode ? REQUEST_TABS.filter((tab) => tab.valor !== "importing") : REQUEST_TABS,
+        isEditMode,
         branchId,
         branchOptions,
         requester,
@@ -473,13 +573,17 @@ export function useRequestForm() {
         handleBranchChange,
         handleCrBranchChange,
         handleAddProduct,
+        handleEditProduct,
         handleRemoveProduct,
         handleAddService,
+        handleEditService,
         handleRemoveService,
         handleFilesSelected,
         handleRemoveAttachment,
+        handleRemoveExistingAttachment,
         handleSubmit,
         attachments,
+        existingAttachments,
         setAttachments,
         csvData,
         setCsvData,
