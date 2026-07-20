@@ -1,10 +1,5 @@
 import { api } from "@/service/api";
 
-async function getStatusIdByName(statusName) {
-    const status = await api.get(`/status/statusName/${statusName}`);
-    return status.id;
-}
-
 const MIME_BY_EXT = {
     png: 'image/png',
     jpg: 'image/jpeg',
