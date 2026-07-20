@@ -155,15 +155,16 @@ export default function RequestDetailsView({ title, backHref, mode }) {
         </div>
       </div>
 
-      <ProductModal
-        isModalOpen={isModalOpen}
-        editing={editing}
-        selectedProduct={selectedProduct}
-        editedProduct={editedProduct}
-        setEditedProduct={setEditedProduct}
-        closeModal={closeModal}
-        handleSave={handleSave}
-      />
+        <ProductModal
+          isModalOpen={isModalOpen}
+          editing={editing}
+          selectedProduct={selectedProduct}
+          editedProduct={editedProduct}
+          setEditedProduct={setEditedProduct}
+          closeModal={closeModal}
+          handleSave={handleSave}
+          crBranchLabel={solicitacao.crBranchLabel}
+        />
 
       {isAnalysis && (
         <RejectionModal
