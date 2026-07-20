@@ -12,6 +12,15 @@ function formatRequestDate(request) {
     return (request.requestDate || request.updatedAt || "").slice(0, 10);
 }
 
+function formatCrBranchLabel(crBranch) {
+    if (!crBranch) return "Não informado";
+
+    const cr = [crBranch.crCode, crBranch.crName].filter(Boolean).join(" - ");
+
+    if (!crBranch.branchName) return cr || "Não informado";
+    return cr ? `${cr} (${crBranch.branchName})` : crBranch.branchName;
+}
+
 function normalizeProduct(item) {
     return {
         id: item.itemRequestProduct,
@@ -52,6 +61,7 @@ function normalizeRequest(request, products = [], crBranch = null, provisionsByI
         produtos: products,
         servicos: provisions.map(normalizeProvision),
         crBranch,
+        crBranchLabel: formatCrBranchLabel(crBranch),
     };
 }
 

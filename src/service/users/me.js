@@ -8,3 +8,9 @@ export async function getLoggedUser() {
         throw e;
     }
 }
+
+export async function updateLoggedUserProfilePicture(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return api.patchFormData("/users/me/profile-picture", formData);
+}

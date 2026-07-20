@@ -5,6 +5,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
 import RequestDetailsSkeleton from "@/components/features/solicitacoes/RequestDetailsSkeleton";
+import RequestAttachments from "@/components/features/solicitacoes/RequestAttachments";
 import RejectionModal from "@/components/ui/overlay/RejectionModal";
 import Button from "@/components/ui/button/Button";
 import { useRequestDetailsPage } from "@/hooks/useRequestDetailsPage";
@@ -132,6 +133,11 @@ export default function RequestDetailsView({ title, backHref, mode }) {
             onAcceptItem={handleAcceptItem}
             onRejectItem={openRejectModal}
           />
+
+          <RequestAttachments
+            attachments={solicitacao.attachments}
+            onError={(message) => setNotification({ type: "error", message })}
+          />
         </div>
 
      <div className="flex justify-stretch sm:justify-end pt-5">
@@ -155,15 +161,16 @@ export default function RequestDetailsView({ title, backHref, mode }) {
         </div>
       </div>
 
-      <ProductModal
-        isModalOpen={isModalOpen}
-        editing={editing}
-        selectedProduct={selectedProduct}
-        editedProduct={editedProduct}
-        setEditedProduct={setEditedProduct}
-        closeModal={closeModal}
-        handleSave={handleSave}
-      />
+        <ProductModal
+          isModalOpen={isModalOpen}
+          editing={editing}
+          selectedProduct={selectedProduct}
+          editedProduct={editedProduct}
+          setEditedProduct={setEditedProduct}
+          closeModal={closeModal}
+          handleSave={handleSave}
+          crBranchLabel={solicitacao.crBranchLabel}
+        />
 
       {isAnalysis && (
         <RejectionModal
