@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { api, getPageContent } from "@/service/api";
+import { getAllCRBranches } from "@/service/crSearch";
 import { createFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
 import { createFullServiceRequest } from "@/service/createServiceRequest";
 import { useNotification } from "@/contexts/NotificationContext";
@@ -48,7 +49,7 @@ export function useRequestForm() {
         async function loadData() {
             try {
                 const [crs, branches, units] = await Promise.all([
-                    api.get("/cr-branches?size=1000"),
+                    getAllCRBranches(),
                     api.get("/branches"),
                     getAllMeasurementUnits(),
                 ]);
@@ -56,10 +57,11 @@ export function useRequestForm() {
                 if (cancelled) return;
 
                 setCrOptions(
-                    getPageContent(crs).map((cr) => ({
+                    crs.map((cr) => ({
                         value: String(cr.id),
                         label: `${cr.crCode} - ${cr.crName}`,
                         branchName: cr.branchName ?? "",
+                        master: cr.master === true,
                     }))
                 );
 
