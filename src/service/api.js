@@ -69,4 +69,10 @@ export const api = {
         method: 'POST',
         body: formData,
     }),
+
+    patchFormData: (endpoint, formData, options) => handleRequest(endpoint, {
+        ...options,
+        method: 'PATCH',
+        body: formData,
+    }),
 };
