@@ -42,6 +42,46 @@ const STATUS_CATALOG = [
         aliases: ["em atendimento"],
     },
     {
+        key: "atrasada",
+        label: "Atrasada",
+        color: "bg-[#DC2626]",
+        category: "pendente",
+        selectable: true,
+        aliases: ["atrasada"],
+    },
+    {
+        key: "recebimento_parcial",
+        label: "Recebimento parcial",
+        color: "bg-[#F97316]",
+        category: "pendente",
+        selectable: true,
+        aliases: ["recebimento parcial"],
+    },
+    {
+        key: "fundo_rotativo",
+        label: "Fundo rotativo",
+        color: "bg-[#14B8A6]",
+        category: "pendente",
+        selectable: true,
+        aliases: ["fundo rotativo"],
+    },
+    {
+        key: "cd_central",
+        label: "CD Central",
+        color: "bg-[#6366F1]",
+        category: "pendente",
+        selectable: true,
+        aliases: ["cd central"],
+    },
+    {
+        key: "solicitado_portal",
+        label: "Solicitado Portal",
+        color: "bg-[#EC4899]",
+        category: "pendente",
+        selectable: true,
+        aliases: ["solicitado portal"],
+    },
+    {
         key: "recusado",
         label: "Recusado",
         color: "bg-[#E30613]",
@@ -72,6 +112,14 @@ const STATUS_CATALOG = [
         category: "pendente",
         selectable: true,
         aliases: ["parcialmente aprovada", "parcial aprovado", "parcialmente aprovado"],
+    },
+    {
+        key: "parcialmente_atendida",
+        label: "Parcialmente atendida",
+        color: "bg-[#A855F7]",
+        category: "pendente",
+        selectable: true,
+        aliases: ["parcialmente atendida"],
     },
     {
         key: "sem_produtos",
@@ -151,4 +199,53 @@ export const REQUEST_STATUS_FILTER_OPTIONS = [
         value: entry.label,
         label: entry.label,
     })),
+];
+
+// Único status em que o supervisor/coordenador ainda pode decidir. Qualquer outro
+// (Aprovado, Recusado, Auto-aprovado, Parcialmente aprovada, ou qualquer status que o
+// comprador já tenha atribuído depois disso) significa que a etapa dele já terminou —
+// por isso a checagem é negativa (não é mais o pendente) em vez de listar cada status
+// "final", que cresceria a cada novo status do fluxo do comprador.
+const PENDING_LABEL = "Aguardando aprovação";
+
+// Todo o ciclo de vida que o comprador acompanha: os 3 status de entrada (Recusado não
+// vai pro comprador) + os status que ele mesmo vai atribuindo dali pra frente.
+export const COMPRADOR_VISIBLE_LABELS = [
+    "Aprovado", "Auto-aprovado", "Parcialmente aprovada",
+    "Em atendimento", "Atrasada", "Recebimento parcial",
+    "Fundo rotativo", "CD Central", "Solicitado Portal", "Parcialmente atendida",
+    "Entregue", "Cancelado",
+];
+
+export function isFinalizedForSupervisor(rawStatus) {
+    return getStatusLabel(rawStatus) !== PENDING_LABEL;
+}
+
+export function isVisibleToComprador(rawStatus) {
+    return COMPRADOR_VISIBLE_LABELS.includes(getStatusLabel(rawStatus));
+}
+
+// Numa solicitação "Parcialmente aprovada" o comprador só deve ver/comprar os itens
+// que o supervisor aprovou — os recusados não geram trabalho de compra.
+export function keepOnlyApprovedItemsIfPartial(request) {
+    if (getStatusLabel(request.status) !== "Parcialmente aprovada") return request;
+
+    return {
+        ...request,
+        produtos: (request.produtos || []).filter((item) => getStatusLabel(item.status) === "Aprovado"),
+        servicos: (request.servicos || []).filter((item) => getStatusLabel(item.status) === "Aprovado"),
+    };
+}
+
+// Nomes literais exatos cadastrados no banco (Status.name) — usados no PATCH de status.
+// Alguns usam "_" ao inves de espaco; findByNameIgnoreCase so ignora maiusculas/minusculas,
+// entao o valor aqui precisa bater caractere a caractere com o que esta no banco.
+export const COMPRADOR_STATUS_OPTIONS = [
+    { value: "Em atendimento", label: "Em atendimento" },
+    { value: "Entregue", label: "Entregue" },
+    { value: "PEDIDO CANCELADO", label: "Pedido cancelado" },
+    { value: "RECEBIMENTO_PARCIAL", label: "Recebimento parcial" },
+    { value: "FUNDO_ROTATIVO", label: "Fundo rotativo" },
+    { value: "CD_CENTRAL", label: "CD Central" },
+    { value: "SOLICITADO_PORTAL", label: "Solicitado Portal" },
 ];

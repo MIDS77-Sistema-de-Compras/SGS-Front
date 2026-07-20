@@ -1,6 +1,7 @@
 "use client";
 
 import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
+import Dropdown from "@/components/ui/select/Dropdown";
 
 export default function ProductCard({
     item,
@@ -8,9 +9,10 @@ export default function ProductCard({
     isServiceRequest = false,
     showItemDecisions = false,
     decision = null,
-    isDeciding = false,
     onAcceptItem,
     onRejectItem,
+    itemStatusOptions = null,
+    onItemStatusChange,
 }) {
     return (
         <div
@@ -62,29 +64,38 @@ export default function ProductCard({
                 )}
 
                 {showItemDecisions && (
-                    decision ? (
-                        <span
-                            className={`inline-block text-center text-[13px] font-semibold py-1 px-3 rounded-full tracking-wide border ${
-                                decision === "Aceito"
-                                    ? "text-green-600 border-green-600 dark:text-green-400 dark:border-green-400"
-                                    : "text-[#BA1A1A] border-[#BA1A1A] dark:text-[#F87171] dark:border-[#F87171]"
-                            }`}
-                        >
-                            {decision}
-                        </span>
+                    itemStatusOptions ? (
+                        <div className="w-full min-w-[170px]" onClick={(e) => e.stopPropagation()}>
+                            <Dropdown
+                                name={`item-status-${item.id}`}
+                                value={decision || ""}
+                                onChange={(e) => onItemStatusChange?.(item, e.target.value)}
+                                placeholder={getStatusLabel(item.status)}
+                                options={itemStatusOptions}
+                                buttonClassName="py-1.5 text-[13px]"
+                            />
+                        </div>
                     ) : (
                         <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                             <button
                                 onClick={() => onAcceptItem?.(item)}
-                                disabled={isDeciding}
-                                className="text-[13px] font-semibold text-green-600 border border-green-600 rounded-full px-4 py-1 hover:bg-green-50 dark:hover:bg-green-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                title={decision === "Aprovado" ? "Clique para desfazer" : "Aprovar item"}
+                                className={`text-[13px] font-semibold rounded-full px-4 py-1 border transition-colors ${
+                                    decision === "Aprovado"
+                                        ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
+                                        : "text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-500/10"
+                                }`}
                             >
                                 Aprovar
                             </button>
                             <button
                                 onClick={() => onRejectItem?.(item)}
-                                disabled={isDeciding}
-                                className="text-[13px] font-semibold text-[#BA1A1A] border border-[#BA1A1A] rounded-full px-4 py-1 hover:bg-red-50 dark:hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                title={decision === "Recusado" ? "Clique para desfazer" : "Recusar item"}
+                                className={`text-[13px] font-semibold rounded-full px-4 py-1 border transition-colors ${
+                                    decision === "Recusado"
+                                        ? "bg-[#BA1A1A] border-[#BA1A1A] text-white hover:bg-[#a01717]"
+                                        : "text-[#BA1A1A] border-[#BA1A1A] hover:bg-red-50 dark:hover:bg-red-500/10"
+                                }`}
                             >
                                 Recusar
                             </button>

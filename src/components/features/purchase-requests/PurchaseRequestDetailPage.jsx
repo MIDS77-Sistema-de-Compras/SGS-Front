@@ -6,9 +6,15 @@ import { useParams } from "next/navigation";
 
 import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
+import Button from "@/components/ui/button/Button";
 import { useRequestDetails } from "@/hooks/useRequestDetails";
-import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
-import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
+import { useCompradorItemStatusFlow } from "@/hooks/useCompradorItemStatusFlow";
+import {
+    getStatusColor,
+    getStatusLabel,
+    keepOnlyApprovedItemsIfPartial,
+    COMPRADOR_STATUS_OPTIONS,
+} from "@/lib/utils/requestStatus";
 
 function formatDisplayDate(date) {
     if (!date) return "-";
@@ -19,59 +25,45 @@ function formatDisplayDate(date) {
     return parsedDate.toLocaleDateString("pt-BR");
 }
 
-export default function MyRequests() {
+export default function PurchaseRequestDetailPage() {
     const { id } = useParams();
-    const { request: solicitacao, loading, error } = useRequestDetails(id);
-
-    const isProfessor = true;
+    const { request: solicitacaoBruta, loading, error, refetch } = useRequestDetails(id);
+    const solicitacao = solicitacaoBruta ? keepOnlyApprovedItemsIfPartial(solicitacaoBruta) : null;
 
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editing, setEditing] = useState(false);
-    const [editedProduct, setEditedProduct] = useState(null);
     const [notification, setNotification] = useState(null);
-    const [editedProductsByRequestId, setEditedProductsByRequestId] = useState({});
-    const localProducts = editedProductsByRequestId[id] || solicitacao?.produtos || [];
+
+    const localProducts = solicitacao?.produtos || [];
     const localServices = solicitacao?.servicos || [];
+    const isServiceRequest = localProducts.length === 0 && localServices.length > 0;
+    const itensEmAnalise = isServiceRequest ? localServices : localProducts;
 
-    const isServiceRequest =
-    localProducts.length === 0 && localServices.length > 0;
+    const {
+        itemDecisions,
+        saving,
+        hasPendingChanges,
+        handleItemStatusChange,
+        handleSaveChanges,
+    } = useCompradorItemStatusFlow({
+        requestId: id,
+        items: itensEmAnalise,
+        isServiceRequest,
+        refetch,
+        setNotification,
+    });
 
-    const statusGeral = getStatusLabel(solicitacao?.status || calcularStatusSolicitacao(localProducts));
-    const corGeral = getStatusColor(statusGeral);
+    const statusGeral = getStatusLabel(solicitacao?.status);
+    const corGeral = getStatusColor(solicitacao?.status);
 
     const openModal = (item) => {
         setSelectedProduct(item);
-        setEditedProduct({ ...item });
-        setEditing(false);
-        setTimeout(() => setIsModalOpen(true), 10);
-    };
-
-    const openEditModal = (item) => {
-        setSelectedProduct(item);
-        setEditedProduct({ ...item });
-        setEditing(true);
         setTimeout(() => setIsModalOpen(true), 10);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setTimeout(() => setSelectedProduct(null), 300);
-    };
-
-    const handleSave = () => {
-        try {
-            setEditedProductsByRequestId(prev => ({
-                ...prev,
-                [id]: localProducts.map(item => item.id === editedProduct.id ? editedProduct : item),
-            }));
-            closeModal();
-            setNotification({ type: "success", message: "Solicitação atualizada com sucesso!" });
-            setTimeout(() => setNotification(null), 3000);
-        } catch {
-            setNotification({ type: "error", message: "Erro ao editar solicitação" });
-            setTimeout(() => setNotification(null), 3000);
-        }
     };
 
     if (loading) {
@@ -87,7 +79,7 @@ export default function MyRequests() {
             <div className="flex-1 flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-gray-500 dark:text-[#C3C6D3] text-lg mb-4">{error || "Solicitação não encontrada."}</p>
-                    <Link href="/solicitacoes" className="text-[#103D85] dark:text-[#5D8EF7] underline">
+                    <Link href="/solicitacoes-compra" className="text-[#103D85] dark:text-[#5D8EF7] underline">
                         Voltar para solicitações
                     </Link>
                 </div>
@@ -143,33 +135,47 @@ export default function MyRequests() {
                         </div>
                     </div>
 
-                    <ProductTable 
-                        localProducts={isServiceRequest ? localServices : localProducts}
-                        isProfessor={isProfessor}
+                    <ProductTable
+                        localProducts={itensEmAnalise}
                         openModal={openModal}
-                        openEditModal={openEditModal}
                         isServiceRequest={isServiceRequest}
+                        showItemDecisions
+                        itemDecisions={itemDecisions}
+                        itemStatusOptions={COMPRADOR_STATUS_OPTIONS}
+                        onItemStatusChange={handleItemStatusChange}
                     />
                 </div>
 
-                <div className="flex justify-stretch sm:justify-end pt-5">
-                    <Link
-                        href="/solicitacoes-compra"
-                        className="w-full sm:w-auto text-center bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
-                    >
-                        Fechar produtos
-                    </Link>
-                </div>
+      <div className="flex justify-stretch sm:justify-end pt-5">
+    {hasPendingChanges ? (
+        <Button
+            variant="primary"
+            fullWidth
+            className="sm:w-auto px-11 py-3 rounded-xl"
+            isLoading={saving}
+            onClick={handleSaveChanges}
+        >
+            Salvar alterações
+        </Button>
+    ) : (
+        <Link
+            href="/solicitacoes-compra"
+            className="w-full sm:w-auto text-center bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
+        >
+            Fechar produtos
+        </Link>
+    )}
+</div>
             </div>
 
-            <ProductModal 
+            <ProductModal
                 isModalOpen={isModalOpen}
-                editing={editing}
+                editing={false}
                 selectedProduct={selectedProduct}
-                editedProduct={editedProduct}
-                setEditedProduct={setEditedProduct}
+                editedProduct={selectedProduct}
+                setEditedProduct={() => {}}
                 closeModal={closeModal}
-                handleSave={handleSave}
+                handleSave={closeModal}
             />
         </div>
     );

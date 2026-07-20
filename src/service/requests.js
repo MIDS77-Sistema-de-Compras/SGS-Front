@@ -1,5 +1,4 @@
 import { api, getPageContent } from "@/service/api";
-import { getUserRole } from "@/lib/utils/getUserRole";
 
 function formatRequestCode(crBranch) {
     if (!crBranch?.crCode) return "SolicitaÃ§Ã£o";
@@ -127,8 +126,8 @@ export function updateRequestCrBranch(id, payload) {
     return api.put(`/requests/${id}`, payload);
 }
 
-export async function getRequestById(id) {
-    const endpoint = getUserRole() === "DOCENTE" ? `/requests/me/${id}` : `/requests/${id}`;
+export async function getRequestById(id, { ownRequest = false } = {}) {
+    const endpoint = ownRequest ? `/requests/me/${id}` : `/requests/${id}`;
     const request = await api.get(endpoint);
 
     const [products, crBranch] = await Promise.all([

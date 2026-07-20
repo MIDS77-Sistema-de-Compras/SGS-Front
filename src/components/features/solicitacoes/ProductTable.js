@@ -9,9 +9,10 @@ export default function ProductTable({
     isServiceRequest = false,
     showItemDecisions = false,
     itemDecisions = {},
-    saving = false,
     onAcceptItem,
     onRejectItem,
+    itemStatusOptions = null,
+    onItemStatusChange,
 }) {
     const colSpan = showItemDecisions ? 6 : 5;
     const emptyLabel = `Nenhum ${isServiceRequest ? "serviço" : "produto"} encontrado.`;
@@ -28,9 +29,10 @@ export default function ProductTable({
                             isServiceRequest={isServiceRequest}
                             showItemDecisions={showItemDecisions}
                             decision={itemDecisions[item.id]}
-                            isDeciding={saving && itemDecisions[item.id] !== undefined}
                             onAcceptItem={onAcceptItem}
                             onRejectItem={onRejectItem}
+                            itemStatusOptions={itemStatusOptions}
+                            onItemStatusChange={onItemStatusChange}
                         />
                     ))
                 ) : (
@@ -56,10 +58,18 @@ export default function ProductTable({
                         </th>
 
                         <th className="py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[110px] min-[1350px]:w-32">
-                            <span className="block leading-tight">Informações<br />adicionais</span>
+                            <span className="block leading-tight">
+                                Informações
+                                <br />
+                                adicionais
+                            </span>
                         </th>
 
-                        <th className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[170px] min-[1350px]:w-[190px] ${showItemDecisions ? "" : "rounded-r-xl"}`}>
+                        <th
+                            className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[170px] min-[1350px]:w-[190px] ${
+                                showItemDecisions ? "" : "rounded-r-xl"
+                            }`}
+                        >
                             Status
                         </th>
 
@@ -81,9 +91,10 @@ export default function ProductTable({
                                 isServiceRequest={isServiceRequest}
                                 showItemDecisions={showItemDecisions}
                                 decision={itemDecisions[item.id]}
-                                isDeciding={decidingItemId === item.id}
                                 onAcceptItem={onAcceptItem}
                                 onRejectItem={onRejectItem}
+                                itemStatusOptions={itemStatusOptions}
+                                onItemStatusChange={onItemStatusChange}
                             />
                         ))
                     ) : (

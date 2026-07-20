@@ -4,7 +4,7 @@ import { calcularTempoDecorrido } from '@/lib/utils/calculateTime';
 import { getStatusColor, getStatusLabel } from '@/lib/utils/requestStatus';
 import Link from 'next/link';
 
-export default function RequestManagementCard({ item, onApprove, onReject, isDeciding = false }) {
+export default function RequestManagementCard({ item, onApprove, onReject, isDeciding = false, hrefBase = '/solicitacoes/gestao' }) {
     const quantidadeProdutos = item.produtos?.length || 0;
     const titulo = `${item.codigo}${quantidadeProdutos > 0
         ? `: Lista de ${quantidadeProdutos} ${quantidadeProdutos === 1 ? 'produto' : 'produtos'}`
@@ -20,7 +20,7 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
 
     return (
         <Link
-            href={`/solicitacoes/gestao/${item.id}`}
+            href={`${hrefBase}/${item.id}`}
             className="group block"
         >
             <div className="hover:bg-gray-100 dark:hover:bg-white/5 px-2 rounded-xl flex flex-col gap-3 py-4 xl:flex-row xl:items-center xl:justify-between xl:gap-6 transition-colors">
