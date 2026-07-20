@@ -55,7 +55,7 @@ export default function ProductTableRow({
             {showItemDecisions && (
                 <td className={`py-3 px-3 text-center ${tdHoverAndRoundedClass}`}>
                     {itemStatusOptions ? (
-                        <div className="min-w-[170px] mx-auto">
+                        <div className="w-full max-w-[180px] mx-auto">
                             <Dropdown
                                 name={`item-status-${item.id}`}
                                 value={decision || ""}
@@ -70,22 +70,20 @@ export default function ProductTableRow({
                             <button
                                 onClick={() => onAcceptItem?.(item)}
                                 title={decision === "Aprovado" ? "Clique para desfazer" : "Aprovar item"}
-                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${
-                                    decision === "Aprovado"
+                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${decision === "Aprovado"
                                         ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
                                         : "text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-500/10"
-                                }`}
+                                    }`}
                             >
                                 Aprovar
                             </button>
                             <button
                                 onClick={() => onRejectItem?.(item)}
                                 title={decision === "Recusado" ? "Clique para desfazer" : "Recusar item"}
-                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${
-                                    decision === "Recusado"
+                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${decision === "Recusado"
                                         ? "bg-[#BA1A1A] border-[#BA1A1A] text-white hover:bg-[#a01717]"
                                         : "text-[#BA1A1A] border-[#BA1A1A] hover:bg-red-50 dark:hover:bg-red-500/10"
-                                }`}
+                                    }`}
                             >
                                 Recusar
                             </button>
