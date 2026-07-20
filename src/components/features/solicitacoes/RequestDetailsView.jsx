@@ -29,7 +29,7 @@ export default function RequestDetailsView({ title, backHref, mode }) {
     localProducts, localServices, isServiceRequest,
     statusGeral, corGeral,
     selectedProduct, isModalOpen, editing, editedProduct, setEditedProduct,
-    notification, setNotification,
+    setNotification,
     openModal, openEditModal, closeModal, handleSave,
   } = useRequestDetailsPage({ ownRequest: mode === "minhas" });
 
@@ -73,15 +73,6 @@ export default function RequestDetailsView({ title, backHref, mode }) {
 
   return (
     <div className="flex-1 p-0">
-      {notification && (
-        <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl text-white shadow-lg ${notification.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
-          <div className="flex items-center gap-3">
-            <span>{notification.message}</span>
-            <button onClick={() => setNotification(null)} className="hover:opacity-80">×</button>
-          </div>
-        </div>
-      )}
-
       <div className="w-full">
         <div className="border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
           <div className="flex items-center gap-3 px-5 py-3">

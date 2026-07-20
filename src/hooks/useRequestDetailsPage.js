@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useRequestDetails } from "@/hooks/useRequestDetails";
+import { useNotification } from "@/contexts/NotificationContext";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
 import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
 
 export function useRequestDetailsPage({ ownRequest = false } = {}) {
   const { id } = useParams();
   const { request: solicitacao, loading, error, refetch } = useRequestDetails(id, { ownRequest });
+  const { showNotification } = useNotification();
+
+  const setNotification = (n) => {
+    if (n?.message) showNotification(n.message, n.type);
+  };
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState(null);
-  const [notification, setNotification] = useState(null);
   const [editedProductsByRequestId, setEditedProductsByRequestId] = useState({});
 
   const localProducts = editedProductsByRequestId[id] || solicitacao?.produtos || [];
@@ -48,11 +53,9 @@ export function useRequestDetailsPage({ ownRequest = false } = {}) {
         [id]: localProducts.map((item) => (item.id === editedProduct.id ? editedProduct : item)),
       }));
       closeModal();
-      setNotification({ type: "success", message: "Solicitação atualizada com sucesso!" });
-      setTimeout(() => setNotification(null), 3000);
+      showNotification("Solicitação atualizada com sucesso!", "success");
     } catch {
-      setNotification({ type: "error", message: "Erro ao editar solicitação" });
-      setTimeout(() => setNotification(null), 3000);
+      showNotification("Erro ao editar solicitação", "error");
     }
   };
 
@@ -61,7 +64,7 @@ export function useRequestDetailsPage({ ownRequest = false } = {}) {
     localProducts, localServices, isServiceRequest,
     statusGeral, corGeral,
     selectedProduct, isModalOpen, editing, editedProduct, setEditedProduct,
-    notification, setNotification,
+    setNotification,
     openModal, openEditModal, closeModal, handleSave,
   };
 }

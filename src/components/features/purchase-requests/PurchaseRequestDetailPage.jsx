@@ -9,6 +9,7 @@ import ProductModal from "@/components/features/solicitacoes/ProductModal";
 import RequestAttachments from "@/components/features/solicitacoes/RequestAttachments";
 import Button from "@/components/ui/button/Button";
 import { useRequestDetails } from "@/hooks/useRequestDetails";
+import { useNotification } from "@/contexts/NotificationContext";
 import { useCompradorItemStatusFlow } from "@/hooks/useCompradorItemStatusFlow";
 import {
     getStatusColor,
@@ -33,7 +34,11 @@ export default function PurchaseRequestDetailPage() {
 
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [notification, setNotification] = useState(null);
+    const { showNotification } = useNotification();
+
+    const setNotification = (n) => {
+        if (n?.message) showNotification(n.message, n.type);
+    };
 
     const localProducts = solicitacao?.produtos || [];
     const localServices = solicitacao?.servicos || [];
@@ -90,15 +95,6 @@ export default function PurchaseRequestDetailPage() {
 
     return (
         <div className="flex-1 p-0">
-            {notification && (
-                <div className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] px-5 py-3 rounded-xl text-white shadow-sm ${notification.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
-                    <div className="flex items-center gap-3">
-                        <span>{notification.message}</span>
-                        <button onClick={() => setNotification(null)} className="hover:opacity-80">×</button>
-                    </div>
-                </div>
-            )}
-
             <div className="w-full">
                 <div className="border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
                     <div className="flex items-center gap-3 px-5 py-3">
@@ -116,15 +112,15 @@ export default function PurchaseRequestDetailPage() {
                         <div className="flex flex-col gap-3 min-[1350px]:flex-row min-[1350px]:items-center min-[1350px]:justify-between">
                             <div className="flex flex-col gap-1 min-w-0 min-[1350px]:flex-row min-[1350px]:items-baseline min-[1350px]:gap-4">
                                 <h4 className="text-[16px] sm:text-[18px] min-[1350px]:text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
-                                {solicitacao.codigo} : Lista de{" "}
-                                {isServiceRequest ? localServices.length : localProducts.length}{" "}
-                                {isServiceRequest
-                                    ? localServices.length === 1
-                                        ? "serviço"
-                                        : "serviços"
-                                    : localProducts.length === 1
-                                        ? "produto"
-                                        : "produtos"}
+                                    {solicitacao.codigo} : Lista de{" "}
+                                    {isServiceRequest ? localServices.length : localProducts.length}{" "}
+                                    {isServiceRequest
+                                        ? localServices.length === 1
+                                            ? "serviço"
+                                            : "serviços"
+                                        : localProducts.length === 1
+                                            ? "produto"
+                                            : "produtos"}
                                 </h4>
                                 <span className="text-gray-600 dark:text-[#C3C6D3] text-[13px] sm:text-sm min-[1350px]:text-[16px] font-medium whitespace-nowrap min-[1350px]:px-7">
                                     Realizada em: {formatDisplayDate(solicitacao.data)}
@@ -152,26 +148,26 @@ export default function PurchaseRequestDetailPage() {
                     />
                 </div>
 
-      <div className="flex justify-stretch sm:justify-end pt-5">
-    {hasPendingChanges ? (
-        <Button
-            variant="primary"
-            fullWidth
-            className="sm:w-auto px-11 py-3 rounded-xl"
-            isLoading={saving}
-            onClick={handleSaveChanges}
-        >
-            Salvar alterações
-        </Button>
-    ) : (
-        <Link
-            href="/solicitacoes-compra"
-            className="w-full sm:w-auto text-center bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
-        >
-            Fechar produtos
-        </Link>
-    )}
-</div>
+                <div className="flex justify-stretch sm:justify-end pt-5">
+                    {hasPendingChanges ? (
+                        <Button
+                            variant="primary"
+                            fullWidth
+                            className="sm:w-auto px-11 py-3 rounded-xl"
+                            isLoading={saving}
+                            onClick={handleSaveChanges}
+                        >
+                            Salvar alterações
+                        </Button>
+                    ) : (
+                        <Link
+                            href="/solicitacoes-compra"
+                            className="w-full sm:w-auto text-center bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
+                        >
+                            Fechar produtos
+                        </Link>
+                    )}
+                </div>
             </div>
 
             <ProductModal
@@ -179,7 +175,7 @@ export default function PurchaseRequestDetailPage() {
                 editing={false}
                 selectedProduct={selectedProduct}
                 editedProduct={selectedProduct}
-                setEditedProduct={() => {}}
+                setEditedProduct={() => { }}
                 closeModal={closeModal}
                 handleSave={closeModal}
                 crBranchLabel={solicitacao.crBranchLabel}
