@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+
 import { useRequestDetails } from "@/hooks/useRequestDetails";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
-import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
+import { getStatusColor, getStatusLabel, isRequestEditable } from "@/lib/utils/requestStatus";
+import { api, getPageContent } from "@/service/api";
+import { editFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
+import { getUserRole } from "@/lib/utils/getUserRole";
 
 export function useRequestDetailsPage({ ownRequest = false } = {}) {
   const { id } = useParams();
@@ -12,56 +16,139 @@ export function useRequestDetailsPage({ ownRequest = false } = {}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState(null);
+  const [selectedCrBranchId, setSelectedCrBranchId] = useState("");
+  const [crBranchOptions, setCrBranchOptions] = useState([]);
+  const [unitOptions, setUnitOptions] = useState([]);
+  const [optionsLoading, setOptionsLoading] = useState(false);
+  const [savingEdit, setSavingEdit] = useState(false);
   const [notification, setNotification] = useState(null);
-  const [editedProductsByRequestId, setEditedProductsByRequestId] = useState({});
 
-  const localProducts = editedProductsByRequestId[id] || solicitacao?.produtos || [];
+  const localProducts = solicitacao?.produtos || [];
   const localServices = solicitacao?.servicos || [];
   const isServiceRequest = localProducts.length === 0 && localServices.length > 0;
+  const currentRole = (getUserRole() || "").replace(/^ROLE_/, "");
+  const canEditRequest = isRequestEditable(solicitacao?.status)
+    && ["DOCENTE", "SUPERVISOR", "COORDENADOR"].includes(currentRole);
 
   const statusGeral = getStatusLabel(solicitacao?.status || calcularStatusSolicitacao(localProducts));
   const corGeral = getStatusColor(statusGeral);
 
+  useEffect(() => {
+    if (!isModalOpen || !canEditRequest || crBranchOptions.length > 0) return;
+
+    let cancelled = false;
+    async function loadOptions() {
+      try {
+        setOptionsLoading(true);
+        const [crs, units] = await Promise.all([
+          api.get("/cr-branches?size=1000"),
+          getAllMeasurementUnits(),
+        ]);
+        if (cancelled) return;
+
+        setCrBranchOptions(getPageContent(crs).map((cr) => ({
+          value: String(cr.id),
+          label: `${cr.crCode} - ${cr.crName}${cr.branchName ? ` | ${cr.branchName}` : ""}`,
+        })));
+        setUnitOptions(getPageContent(units).map((unit) => ({
+          value: unit.name,
+          label: unit.abbreviation ? `${unit.name} (${unit.abbreviation})` : unit.name,
+        })));
+      } catch (optionError) {
+        setNotification({ type: "error", message: optionError.message || "Erro ao carregar opções de edição." });
+      } finally {
+        if (!cancelled) setOptionsLoading(false);
+      }
+    }
+    loadOptions();
+    return () => { cancelled = true; };
+  }, [canEditRequest, crBranchOptions.length, isModalOpen]);
+
   const openModal = (item) => {
     setSelectedProduct(item);
     setEditedProduct({ ...item });
+    setSelectedCrBranchId(String(solicitacao?.crBranchId || solicitacao?.crBranch?.id || ""));
     setEditing(false);
     setTimeout(() => setIsModalOpen(true), 10);
   };
 
   const openEditModal = (item) => {
-    setSelectedProduct(item);
-    setEditedProduct({ ...item });
+    openModal(item);
+    if (canEditRequest) setEditing(true);
+  };
+
+  const beginEditing = () => {
+    setEditedProduct({ ...selectedProduct });
+    setSelectedCrBranchId(String(solicitacao?.crBranchId || solicitacao?.crBranch?.id || ""));
     setEditing(true);
-    setTimeout(() => setIsModalOpen(true), 10);
+  };
+
+  const discardEdit = () => {
+    setEditedProduct({ ...selectedProduct });
+    setSelectedCrBranchId(String(solicitacao?.crBranchId || solicitacao?.crBranch?.id || ""));
+    setEditing(false);
   };
 
   const closeModal = () => {
+    setEditing(false);
     setIsModalOpen(false);
     setTimeout(() => setSelectedProduct(null), 300);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (!editedProduct || !selectedCrBranchId) return;
+
     try {
-      setEditedProductsByRequestId((prev) => ({
-        ...prev,
-        [id]: localProducts.map((item) => (item.id === editedProduct.id ? editedProduct : item)),
-      }));
+      setSavingEdit(true);
+      const payload = {
+        crBranchId: Number(selectedCrBranchId),
+        retainedAttachmentIds: (solicitacao.attachments || []).map((attachment) => attachment.id),
+      };
+
+      if (isServiceRequest) {
+        payload.provisions = localServices.map((service) => {
+          const item = service.id === editedProduct.id ? editedProduct : service;
+          return {
+            provisionId: item.provisionId || null,
+            name: item.nome,
+            totalValue: Number(item.totalValue),
+            description: item.description || item.additionalInfo,
+            additionalInformation: item.additionalInformation ?? item.additionalInfo ?? "",
+          };
+        });
+      } else {
+        payload.products = localProducts.map((product) => {
+          const item = product.id === editedProduct.id ? editedProduct : product;
+          return {
+            productName: item.nome,
+            variation: item.variation || "",
+            measurementUnit: item.unit,
+            quantity: Number(item.quantity),
+            additionalInformations: item.additionalInformations ?? item.additionalInfo ?? "",
+          };
+        });
+      }
+
+      await editFullRequest({ id, payload });
+      await refetch();
       closeModal();
       setNotification({ type: "success", message: "Solicitação atualizada com sucesso!" });
-      setTimeout(() => setNotification(null), 3000);
-    } catch {
-      setNotification({ type: "error", message: "Erro ao editar solicitação" });
+    } catch (saveError) {
+      setNotification({ type: "error", message: saveError.message || "Erro ao editar solicitação." });
+    } finally {
+      setSavingEdit(false);
       setTimeout(() => setNotification(null), 3000);
     }
   };
 
   return {
     id, solicitacao, loading, error, refetch,
-    localProducts, localServices, isServiceRequest,
+    localProducts, localServices, isServiceRequest, canEditRequest,
     statusGeral, corGeral,
     selectedProduct, isModalOpen, editing, editedProduct, setEditedProduct,
+    selectedCrBranchId, setSelectedCrBranchId,
+    crBranchOptions, unitOptions, optionsLoading, savingEdit,
     notification, setNotification,
-    openModal, openEditModal, closeModal, handleSave,
+    openModal, openEditModal, beginEditing, discardEdit, closeModal, handleSave,
   };
 }

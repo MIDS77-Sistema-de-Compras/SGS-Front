@@ -5,7 +5,7 @@ export async function getAllMeasurementUnits() {
 }
 
 export async function createFullRequest({ crBranchId, products, attachments = [] }) {
-    const request = await api.post("/requests", {
+    const payload = {
         crBranchId: Number(crBranchId),
         userIds: [],
         products: products.map((product) => ({
@@ -15,29 +15,36 @@ export async function createFullRequest({ crBranchId, products, attachments = []
             quantity: Number(product.quantity),
             additionalInformations: product.additionalInformations || "",
         })),
-    });
+    };
 
-    if (attachments.length > 0) {
-        const MIME_BY_EXT = {
-            png: 'image/png',
-            jpg: 'image/jpeg',
-            jpeg: 'image/jpeg',
-            pdf: 'application/pdf',
-            docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        };
-
-        const formData = new FormData();
-        attachments.forEach((attachment) => {
-            const mime = attachment.type
-                || MIME_BY_EXT[attachment.name.split('.').pop().toLowerCase()]
-                || 'application/octet-stream';
-            const blob = attachment.type
-                ? attachment
-                : new Blob([attachment], { type: mime });
-            formData.append("files", blob, attachment.name);
-        });
-        await api.postFormData(`/requests/${request.id}/attachments`, formData);
-    }
+    const formData = buildRequestFormData(payload, attachments);
+    const request = await api.postFormData("/requests/with-attachments", formData);
 
     return { request };
+}
+
+export function buildRequestFormData(payload, attachments = []) {
+    const formData = new FormData();
+    formData.append("request", new Blob([JSON.stringify(payload)], { type: "application/json" }));
+
+    attachments.forEach((attachment) => {
+        const mimeByExtension = {
+            png: "image/png",
+            jpg: "image/jpeg",
+            jpeg: "image/jpeg",
+            pdf: "application/pdf",
+            docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            csv: "text/csv",
+        };
+        const extension = attachment.name?.split(".").pop()?.toLowerCase();
+        const mime = attachment.type || mimeByExtension[extension] || "application/octet-stream";
+        const content = attachment.type ? attachment : new Blob([attachment], { type: mime });
+        formData.append("files", content, attachment.name);
+    });
+    return formData;
+}
+
+export function editFullRequest({ id, payload, attachments = [] }) {
+    const formData = buildRequestFormData(payload, attachments);
+    return api.putFormData(`/requests/${id}/content-with-attachments`, formData);
 }

@@ -1,6 +1,6 @@
 import SolicitacaoRow from "./requestRow";
 
-export default function SolicitacoesTable({ itens, onItemClick }) {
+export default function SolicitacoesTable({ itens, onItemClick, onItemEdit }) {
     return (
         <div className="flex flex-col">
             {itens.map((item) => (
@@ -8,6 +8,7 @@ export default function SolicitacoesTable({ itens, onItemClick }) {
                     key={item.id}
                     item={item}
                     onClick={() => onItemClick(item.id)}
+                    onEdit={onItemEdit}
                 />
             ))}
         </div>
