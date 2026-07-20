@@ -22,7 +22,7 @@ function formatDisplayDate(date) {
     const parsedDate = new Date(date);
     if (Number.isNaN(parsedDate.getTime())) return "-";
 
-    return parsedDate.toLocaleDateString("pt-BR");
+    return parsedDate.toLocaleDateString("pt-BR", { timeZone: "UTC" });
 }
 
 export default function PurchaseRequestDetailPage() {
@@ -115,15 +115,15 @@ export default function PurchaseRequestDetailPage() {
                         <div className="flex flex-col gap-3 min-[1350px]:flex-row min-[1350px]:items-center min-[1350px]:justify-between">
                             <div className="flex flex-col gap-1 min-w-0 min-[1350px]:flex-row min-[1350px]:items-baseline min-[1350px]:gap-4">
                                 <h4 className="text-[16px] sm:text-[18px] min-[1350px]:text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
-                                {solicitacao.codigo} : Lista de{" "}
-                                {isServiceRequest ? localServices.length : localProducts.length}{" "}
-                                {isServiceRequest
-                                    ? localServices.length === 1
-                                        ? "serviço"
-                                        : "serviços"
-                                    : localProducts.length === 1
-                                        ? "produto"
-                                        : "produtos"}
+                                    {solicitacao.codigo} : Lista de{" "}
+                                    {isServiceRequest ? localServices.length : localProducts.length}{" "}
+                                    {isServiceRequest
+                                        ? localServices.length === 1
+                                            ? "serviço"
+                                            : "serviços"
+                                        : localProducts.length === 1
+                                            ? "produto"
+                                            : "produtos"}
                                 </h4>
                                 <span className="text-gray-600 dark:text-[#C3C6D3] text-[13px] sm:text-sm min-[1350px]:text-[16px] font-medium whitespace-nowrap min-[1350px]:px-7">
                                     Realizada em: {formatDisplayDate(solicitacao.data)}
@@ -146,26 +146,26 @@ export default function PurchaseRequestDetailPage() {
                     />
                 </div>
 
-      <div className="flex justify-stretch sm:justify-end pt-5">
-    {hasPendingChanges ? (
-        <Button
-            variant="primary"
-            fullWidth
-            className="sm:w-auto px-11 py-3 rounded-xl"
-            isLoading={saving}
-            onClick={handleSaveChanges}
-        >
-            Salvar alterações
-        </Button>
-    ) : (
-        <Link
-            href="/solicitacoes-compra"
-            className="w-full sm:w-auto text-center bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
-        >
-            Fechar produtos
-        </Link>
-    )}
-</div>
+                <div className="flex justify-stretch sm:justify-end pt-5">
+                    {hasPendingChanges ? (
+                        <Button
+                            variant="primary"
+                            fullWidth
+                            className="sm:w-auto px-11 py-3 rounded-xl"
+                            isLoading={saving}
+                            onClick={handleSaveChanges}
+                        >
+                            Salvar alterações
+                        </Button>
+                    ) : (
+                        <Link
+                            href="/solicitacoes-compra"
+                            className="w-full sm:w-auto text-center bg-[#103D85] dark:bg-[#1A4A9E] text-white font-bold text-sm px-11 py-3 rounded-xl hover:bg-[#0c2f66] dark:hover:bg-[#2456b0] transition-colors shadow-sm"
+                        >
+                            Fechar produtos
+                        </Link>
+                    )}
+                </div>
             </div>
 
             <ProductModal
@@ -173,7 +173,7 @@ export default function PurchaseRequestDetailPage() {
                 editing={false}
                 selectedProduct={selectedProduct}
                 editedProduct={selectedProduct}
-                setEditedProduct={() => {}}
+                setEditedProduct={() => { }}
                 closeModal={closeModal}
                 handleSave={closeModal}
             />

@@ -35,7 +35,7 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
             </div>
 
           
-            <div className="flex-1 min-w-0 flex flex-row items-start justify-between gap-4">
+            <div className="flex-1 min-w-0 flex flex-row items-start justify-between gap-15">
                 
                 <div className="flex-1 min-w-0 flex flex-col">
                     <p className="text-[14px] sm:text-[15px] font-bold leading-tight text-black dark:text-[#E2E2EA]">

@@ -8,9 +8,9 @@ import RequestManagementSkeleton from '@/components/features/solicitacoes-gestao
 import SolicitacoesFilter from '../solicitacoes/requestFilter';
 
 const ABAS = [
-  { valor: 'todas', label: 'Todas' },
-  { valor: 'pendentes', label: 'Em Andamento' },
-  { valor: 'concluidas', label: 'Concluídas' },
+  { valor: 'todas', label: 'TODAS' },
+  { valor: 'pendentes', label: 'EM ANDAMENTO' },
+  { valor: 'concluidas', label: 'CONCLUÍDAS' },
 ];
 
 export default function PurchaseRequestsPage() {

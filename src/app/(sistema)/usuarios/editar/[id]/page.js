@@ -145,20 +145,7 @@ export default function EditarUsuarios() {
 
     async function handleDelete() {
         try {
-            try {
-                await deleteUser(userId);
-            } catch (apiError) {
-                console.warn('API delete failed, proceeding with local exclusion:', apiError);
-            }
-
-            if (typeof window !== "undefined") {
-                const deleted = JSON.parse(localStorage.getItem("deleted_users") || "[]");
-                const userIdStr = String(userId);
-                if (!deleted.includes(userIdStr)) {
-                    deleted.push(userIdStr);
-                    localStorage.setItem("deleted_users", JSON.stringify(deleted));
-                }
-            }
+            await deleteUser(userId); 
 
             setToast({
                 type: 'success',
@@ -167,7 +154,9 @@ export default function EditarUsuarios() {
 
             setTimeout(() => {
                 router.push('/usuarios/gerenciar');
+                router.refresh(); 
             }, 1500);
+            
         } catch (error) {
             console.error('Erro ao excluir usuário:', error);
             setToast({
