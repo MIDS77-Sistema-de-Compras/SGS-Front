@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 
 import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
+import RequestAttachments from "@/components/features/solicitacoes/RequestAttachments";
 import Button from "@/components/ui/button/Button";
 import { useRequestDetails } from "@/hooks/useRequestDetails";
 import { useCompradorItemStatusFlow } from "@/hooks/useCompradorItemStatusFlow";
@@ -143,6 +144,11 @@ export default function PurchaseRequestDetailPage() {
                         itemDecisions={itemDecisions}
                         itemStatusOptions={COMPRADOR_STATUS_OPTIONS}
                         onItemStatusChange={handleItemStatusChange}
+                    />
+
+                    <RequestAttachments
+                        attachments={solicitacao.attachments}
+                        onError={(message) => setNotification({ type: "error", message })}
                     />
                 </div>
 
