@@ -92,6 +92,7 @@ function normalizeListItem(item) {
         status: item.statusName,
         statusCategory: item.statusCategory,
         produtos: (item.productNames || []).map((nome) => ({ nome })),
+        servicos: (item.provisionNames || []).map((nome) => ({ nome })),
     };
 }
 

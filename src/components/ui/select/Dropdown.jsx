@@ -124,7 +124,16 @@ export default function Dropdown({
                   isSelected && 'font-semibold'
                 )}
               >
-                <span className="truncate">{option.label}</span>
+                <span className="flex min-w-0 items-center gap-2">
+                  {option.color && (
+                    <span
+                      className="h-2.5 w-2.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: option.color }}
+                      aria-hidden="true"
+                    />
+                  )}
+                  <span className="truncate">{option.label}</span>
+                </span>
                 {isSelected && <Check size={14} className="shrink-0" />}
               </button>
             </li>

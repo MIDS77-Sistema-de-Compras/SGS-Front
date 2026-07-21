@@ -31,7 +31,7 @@ export default function RequestDetailsView({ title, backHref, mode }) {
     selectedProduct, isModalOpen, editing, editedProduct, setEditedProduct,
     selectedCrBranchId, setSelectedCrBranchId,
     crBranchOptions, unitOptions, optionsLoading, savingEdit,
-    notification, setNotification,
+    setNotification,
     openModal, openEditModal, beginEditing, discardEdit, closeModal, handleSave,
   } = useRequestDetailsPage({ ownRequest: mode === "minhas" });
 

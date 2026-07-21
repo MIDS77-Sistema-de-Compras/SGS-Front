@@ -31,7 +31,7 @@ export default function SolicitacaoRow({ item, onClick, onEdit }) {
                             {itemCount > 0 && `: Lista de ${itemCount} ${isServiceRequest
                                 ? itemCount === 1 ? "serviço" : "serviços"
                                 : itemCount === 1 ? "produto" : "produtos"
-                                }`}
+                            }`}
                         </span>
                         {canEdit && onEdit && (
                             <button

@@ -1,6 +1,6 @@
 "use client";
 
-import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
+import { getStatusColor, getStatusLabel, getCustomStatusColor } from "@/lib/utils/requestStatus";
 import Dropdown from "@/components/ui/select/Dropdown";
 
 export default function ProductTableRow({
@@ -13,8 +13,10 @@ export default function ProductTableRow({
     onRejectItem,
     itemStatusOptions = null,
     onItemStatusChange,
+    customStatusColorMap = null,
 }) {
     const tdHoverAndRoundedClass = "transition-colors mt-2 group-hover:bg-gray-50 dark:group-hover:bg-white/10 first:rounded-l-xl last:rounded-r-xl";
+    const customColor = getCustomStatusColor(item.status, customStatusColorMap);
 
     return (
         <tr className="group">
@@ -46,10 +48,16 @@ export default function ProductTableRow({
             <td className={`py-3 px-3 text-center relative ${tdHoverAndRoundedClass}`}>
                 {showItemDecisions ? (
                     <div className="flex items-center justify-center" title={getStatusLabel(item.status)}>
-                        <span className={`inline-block w-6 h-6 rounded-full shadow-sm ${getStatusColor(item.status)}`} />
+                        <span
+                            className={`inline-block w-6 h-6 rounded-full shadow-sm ${customColor ? "" : getStatusColor(item.status)}`}
+                            style={customColor ? { backgroundColor: customColor } : undefined}
+                        />
                     </div>
                 ) : (
-                    <span className={`inline-block max-w-full truncate whitespace-nowrap text-center text-[12px] min-[1350px]:text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[140px] min-[1350px]:min-w-[150px] shadow-sm tracking-wide ${getStatusColor(item.status)}`}>
+                    <span
+                        className={`inline-block max-w-full truncate whitespace-nowrap text-center text-[12px] min-[1350px]:text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[140px] min-[1350px]:min-w-[150px] shadow-sm tracking-wide ${customColor ? "" : getStatusColor(item.status)}`}
+                        style={customColor ? { backgroundColor: customColor } : undefined}
+                    >
                         {getStatusLabel(item.status)}
                     </span>
                 )}

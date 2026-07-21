@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import SummaryItem from "./SummaryItem";
 import SummaryCardSkeleton from "./SummaryCardSkeleton";
 import { requestsService } from "@/service/requests";
-import { resolveRequestStatus } from "@/lib/utils/requestStatus";
+import { resolveRequestStatus, getStatusLabel, isVisibleToComprador } from "@/lib/utils/requestStatus";
 import { getUserRole } from "@/lib/utils/getUserRole";
 
 const APPROVED_STATUS_KEYS = new Set([
@@ -78,6 +78,30 @@ function getSummaryCounts(requests) {
     });
 }
 
+// Para o comprador as solicitações vêm sempre pra ele (não existe "comprador
+// responsável" no back) — o resumo cobre todas as que já chegaram na etapa de
+// compra. Aprovadas = já entregues; Recusadas = pedido cancelado; o resto ainda
+// está em andamento (Aprovado, Em atendimento, Atrasada, Parcialmente atendida etc.).
+function getCompradorSummaryCounts(requests) {
+    return requests.reduce((counts, request) => {
+        const label = getStatusLabel(request.statusName);
+
+        if (label === "Entregue") {
+            return { ...counts, approved: counts.approved + 1 };
+        }
+
+        if (label === "Cancelado") {
+            return { ...counts, refused: counts.refused + 1 };
+        }
+
+        return { ...counts, pending: counts.pending + 1 };
+    }, {
+        pending: 0,
+        approved: 0,
+        refused: 0,
+    });
+}
+
 function formatCount(value) {
     return String(value).padStart(2, "0");
 }
@@ -86,18 +110,20 @@ export default function SummaryCard() {
     const [requests, setRequests] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
+    const [isComprador, setIsComprador] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
+        const comprador = getUserRole() === "COMPRADOR";
 
         async function loadRequests() {
             try {
-                const role = getUserRole();
-                const data = role === "COMPRADOR"
-                    ? await requestsService.findAll()
+                const data = comprador
+                    ? (await requestsService.findAll()).filter((request) => isVisibleToComprador(request.statusName))
                     : await requestsService.findMine();
 
                 if (isMounted) {
+                    setIsComprador(comprador);
                     setRequests(Array.isArray(data) ? data : []);
                     setError("");
                 }
@@ -119,7 +145,10 @@ export default function SummaryCard() {
         };
     }, []);
 
-    const counts = useMemo(() => getSummaryCounts(requests), [requests]);
+    const counts = useMemo(
+        () => (isComprador ? getCompradorSummaryCounts(requests) : getSummaryCounts(requests)),
+        [requests, isComprador]
+    );
 
     return (
         <div className="w-full lg:w-[360px] min-[1350px]:w-[430px] lg:shrink-0 border border-gray-100 dark:border-white/10 rounded-xl px-4 sm:px-5 py-4 sm:py-3 shadow-sm dark:bg-[#1A2233]">

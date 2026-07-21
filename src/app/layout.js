@@ -2,6 +2,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { QueryProvider } from '@/providers/QueryProvider';
 import Script from 'next/script';
 
 const montserrat = Montserrat({
@@ -47,9 +48,11 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ThemeProvider>
-          <NotificationProvider>
-            {children}
-          </NotificationProvider>
+          <QueryProvider>
+            <NotificationProvider>
+              {children}
+            </NotificationProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

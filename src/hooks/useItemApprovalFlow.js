@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { getStatusLabel } from "@/lib/utils/requestStatus";
 import {
     updateItemRequestProduct,
@@ -52,6 +53,7 @@ function computeAggregateStatus(items, itemDecisions) {
 }
 
 export function useItemApprovalFlow({ requestId, items, isServiceRequest, refetch, setNotification }) {
+    const queryClient = useQueryClient();
     const [itemDecisions, setItemDecisions] = useState({});
     const [rejectItemTarget, setRejectItemTarget] = useState(null);
     const [saving, setSaving] = useState(false);
@@ -121,6 +123,7 @@ export function useItemApprovalFlow({ requestId, items, isServiceRequest, refetc
 
             setItemDecisions({});
             await refetch();
+            queryClient.invalidateQueries({ queryKey: ["requests"] });
             setNotification({ type: "success", message: "Alterações salvas com sucesso!" });
         } catch (err) {
             setNotification({ type: "error", message: err.message || "Erro ao salvar alterações." });

@@ -5,7 +5,7 @@ import { useNotification } from '@/contexts/NotificationContext';
 import {
     createCr,
     createCrBranch,
-    getActiveSupervisors,
+    getActiveCrResponsibles,
     getBranchesSimple,
     getSectorsSimple,
 } from '@/service/createCr';
@@ -42,7 +42,8 @@ export function useCreateCr() {
     const [branches, setBranches] = useState([]);
     const [branchesLoading, setBranchesLoading] = useState(true);
     const [supervisors, setSupervisors] = useState([]);
-    const [supervisorsLoading, setSupervisorsLoading] = useState(true);
+    const [coordinators, setCoordinators] = useState([]);
+    const [responsiblesLoading, setResponsiblesLoading] = useState(true);
     const { showNotification } = useNotification();
 
     useEffect(() => {
@@ -70,20 +71,23 @@ export function useCreateCr() {
             }
         }
 
-        async function loadSupervisors() {
+        async function loadResponsibles() {
             try {
-                const data = await getActiveSupervisors();
-                if (!cancelled) setSupervisors(data || []);
+                const data = await getActiveCrResponsibles();
+                if (!cancelled) {
+                    setSupervisors(data.supervisors || []);
+                    setCoordinators(data.coordinators || []);
+                }
             } catch {
-                if (!cancelled) showNotification('Não foi possível carregar os supervisores.', 'error');
+                if (!cancelled) showNotification('Não foi possível carregar os responsáveis.', 'error');
             } finally {
-                if (!cancelled) setSupervisorsLoading(false);
+                if (!cancelled) setResponsiblesLoading(false);
             }
         }
 
         loadSectors();
         loadBranches();
-        loadSupervisors();
+        loadResponsibles();
 
         return () => {
             cancelled = true;
@@ -91,7 +95,20 @@ export function useCreateCr() {
     }, [showNotification]);
 
     const handleChange = (field, value) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
+        setFormData((prev) => field === 'master'
+            ? {
+                ...prev,
+                master: value,
+                responsibleUserId1: '',
+                responsibleUserId2: '',
+            }
+            : { ...prev, [field]: value }
+        );
+        setErrors((current) => ({
+            ...current,
+            [field]: '',
+            ...(field === 'master' && { responsibleUserId1: '', responsibleUserId2: '' }),
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -108,7 +125,17 @@ export function useCreateCr() {
             return;
         }
 
+        if (formData.master && !formData.responsibleUserId1) {
+            setErrors((current) => ({
+                ...current,
+                responsibleUserId1: 'Selecione o coordenador responsável pelo CR Master.',
+            }));
+            showNotification('Selecione o coordenador responsável pelo CR Master.', 'error');
+            return;
+        }
+
         if (
+            !formData.master &&
             formData.responsibleUserId1 &&
             formData.responsibleUserId2 &&
             formData.responsibleUserId1 === formData.responsibleUserId2
@@ -125,7 +152,11 @@ export function useCreateCr() {
             sectorName: formData.sectorName,
         };
 
-        const responsibleUsersId = [formData.responsibleUserId1, formData.responsibleUserId2]
+        const selectedResponsibleIds = formData.master
+            ? [formData.responsibleUserId1]
+            : [formData.responsibleUserId1, formData.responsibleUserId2];
+
+        const responsibleUsersId = selectedResponsibleIds
             .filter(Boolean)
             .map(Number);
 
@@ -163,7 +194,8 @@ export function useCreateCr() {
         branches,
         branchesLoading,
         supervisors,
-        supervisorsLoading,
+        coordinators,
+        responsiblesLoading,
         handleChange,
         handleSubmit,
     };

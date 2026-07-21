@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { admRoutes, coordenadorRoutes, docenteRoutes, supervisorRoutes, compradorRoutes } from "@/app/config/navigation"
+import { isRouteActive } from "@/components/layout/sidebar/routeMatch"
 
 export function Navigation({ userRole }) {
     const pathname = usePathname()
@@ -17,19 +18,21 @@ export function Navigation({ userRole }) {
     }
 
     const routes = routesMap[userRole] || []
+    const allHrefs = routes.map((route) => route.href)
 
     return (
         <nav>
             <ul className="flex flex-col gap-2">
                 {routes.map((route) => {
-                    const isActive = pathname === route.href
-                    
+                    const isActive = isRouteActive(pathname, route.href, allHrefs)
+
                     const IconComponent = route.icon
 
                     return (
                         <li key={route.href}>
                             <Link
                                 href={route.href}
+                                aria-current={isActive ? "page" : undefined}
                                 className={`
                                     flex items-center gap-5 px-4 py-3 rounded-xl font-medium text-[15px]
                                     transition-all duration-200 ease-in-out group active:scale-[0.98]                                         
