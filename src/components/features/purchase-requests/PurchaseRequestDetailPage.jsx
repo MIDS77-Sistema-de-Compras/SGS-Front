@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
@@ -8,16 +8,22 @@ import ProductTable from "@/components/features/solicitacoes/ProductTable";
 import RequestDetailsSkeleton from "@/components/features/solicitacoes/RequestDetailsSkeleton";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
 import RequestAttachments from "@/components/features/solicitacoes/RequestAttachments";
+import AddStatusModal from "@/components/ui/overlay/AddStatusModal";
 import Button from "@/components/ui/button/Button";
 import { useRequestDetails } from "@/hooks/useRequestDetails";
 import { useNotification } from "@/contexts/NotificationContext";
 import { useCompradorItemStatusFlow } from "@/hooks/useCompradorItemStatusFlow";
+import { useStatusCatalog } from "@/hooks/useStatusCatalog";
 import {
     getStatusColor,
     getStatusLabel,
     keepOnlyApprovedItemsIfPartial,
+    buildCustomStatusColorMap,
+    getCustomStatusColor,
     COMPRADOR_STATUS_OPTIONS,
 } from "@/lib/utils/requestStatus";
+
+const ADD_STATUS_VALUE = "__add_status__";
 
 function formatDisplayDate(date) {
     if (!date) return "-";
@@ -41,6 +47,31 @@ export default function PurchaseRequestDetailPage() {
         if (n?.message) showNotification(n.message, n.type);
     };
 
+    const { customStatuses, addCustomStatus } = useStatusCatalog();
+    const [addStatusTargetItem, setAddStatusTargetItem] = useState(null);
+    const [creatingStatus, setCreatingStatus] = useState(false);
+
+    const customStatusColorMap = useMemo(
+        () => buildCustomStatusColorMap(customStatuses),
+        [customStatuses]
+    );
+
+    const compradorStatusOptions = useMemo(() => {
+        const knownValues = new Set(
+            COMPRADOR_STATUS_OPTIONS.map((option) => option.value.toLowerCase())
+        );
+
+        const extraOptions = customStatuses
+            .filter((status) => !knownValues.has(status.name.toLowerCase()))
+            .map((status) => ({ value: status.name, label: status.name, color: status.color }));
+
+        return [
+            ...COMPRADOR_STATUS_OPTIONS,
+            ...extraOptions,
+            { value: ADD_STATUS_VALUE, label: "+ Adicionar status" },
+        ];
+    }, [customStatuses]);
+
     const localProducts = solicitacao?.produtos || [];
     const localServices = solicitacao?.servicos || [];
     const isServiceRequest = localProducts.length === 0 && localServices.length > 0;
@@ -61,7 +92,29 @@ export default function PurchaseRequestDetailPage() {
     });
 
     const statusGeral = getStatusLabel(solicitacao?.status);
-    const corGeral = getStatusColor(solicitacao?.status);
+    const corGeralCustom = getCustomStatusColor(solicitacao?.status, customStatusColorMap);
+    const corGeral = corGeralCustom ? "" : getStatusColor(solicitacao?.status);
+
+    const handleItemStatusOptionChange = (item, value) => {
+        if (value === ADD_STATUS_VALUE) {
+            setAddStatusTargetItem(item);
+            return;
+        }
+        handleItemStatusChange(item, value);
+    };
+
+    const handleCreateStatus = async ({ name, color }) => {
+        setCreatingStatus(true);
+        try {
+            const created = await addCustomStatus({ name, color });
+            handleItemStatusChange(addStatusTargetItem, created.name);
+            setAddStatusTargetItem(null);
+        } catch (err) {
+            setNotification({ type: "error", message: err.message || "Erro ao criar status." });
+        } finally {
+            setCreatingStatus(false);
+        }
+    };
 
     const openModal = (item) => {
         setSelectedProduct(item);
@@ -123,7 +176,10 @@ export default function PurchaseRequestDetailPage() {
                                     Realizada em: {formatDisplayDate(solicitacao.data)}
                                 </span>
                             </div>
-                            <span className={`inline-block w-fit shrink-0 whitespace-nowrap text-center text-[12px] sm:text-[13px] font-semibold text-white py-1 px-3 rounded-full min-w-[140px] min-[1350px]:min-w-[150px] shadow-sm tracking-wide min-[1350px]:mr-8 ${corGeral}`}>
+                            <span
+                                className={`inline-block w-fit shrink-0 whitespace-nowrap text-center text-[12px] sm:text-[13px] font-semibold text-white py-1 px-3 rounded-full min-w-[140px] min-[1350px]:min-w-[150px] shadow-sm tracking-wide min-[1350px]:mr-8 ${corGeral}`}
+                                style={corGeralCustom ? { backgroundColor: corGeralCustom } : undefined}
+                            >
                                 {statusGeral}
                             </span>
                         </div>
@@ -135,8 +191,9 @@ export default function PurchaseRequestDetailPage() {
                         isServiceRequest={isServiceRequest}
                         showItemDecisions
                         itemDecisions={itemDecisions}
-                        itemStatusOptions={COMPRADOR_STATUS_OPTIONS}
-                        onItemStatusChange={handleItemStatusChange}
+                        itemStatusOptions={compradorStatusOptions}
+                        onItemStatusChange={handleItemStatusOptionChange}
+                        customStatusColorMap={customStatusColorMap}
                     />
 
                     <RequestAttachments
@@ -176,6 +233,13 @@ export default function PurchaseRequestDetailPage() {
                 closeModal={closeModal}
                 handleSave={closeModal}
                 crBranchLabel={solicitacao.crBranchLabel}
+            />
+
+            <AddStatusModal
+                isOpen={Boolean(addStatusTargetItem)}
+                onClose={() => setAddStatusTargetItem(null)}
+                onConfirm={handleCreateStatus}
+                isLoading={creatingStatus}
             />
         </div>
     );

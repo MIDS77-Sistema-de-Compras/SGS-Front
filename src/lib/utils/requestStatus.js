@@ -182,6 +182,29 @@ export function getStatusCategory(rawStatus, apiCategory) {
     return resolveRequestStatus(rawStatus, apiCategory).category;
 }
 
+// Status customizados (criados pelo comprador via "+ Adicionar status") não têm
+// entrada no STATUS_CATALOG estático, então sua cor vem do backend (hex) e é
+// aplicada via style inline em vez de classe Tailwind.
+export function buildCustomStatusColorMap(apiStatuses = []) {
+    const map = new Map();
+
+    for (const status of apiStatuses) {
+        if (!status?.color) continue;
+
+        const normalized = normalizeStatusName(status.name);
+        if (ALIAS_TO_ENTRY.has(normalized)) continue;
+
+        map.set(normalized, status.color);
+    }
+
+    return map;
+}
+
+export function getCustomStatusColor(rawStatus, colorMap) {
+    if (!colorMap) return null;
+    return colorMap.get(normalizeStatusName(rawStatus)) ?? null;
+}
+
 export function isPendingStatus(rawStatus, apiCategory) {
     return getStatusCategory(rawStatus, apiCategory) === "pendente";
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import SolicitacoesTabs from '@/lib/utils/requestTabs';
 import { useRequestsList } from '@/hooks/useRequestsList';
 import { useCRSearch } from '@/hooks/useCRSearch';
@@ -36,7 +37,8 @@ const MENSAGENS_VAZIO = {
 };
 
 export default function RequestsManagement() {
-    const { requests, loading, error } = useRequestsList();
+    const queryClient = useQueryClient();
+    const { requests, loading, error } = useRequestsList({ queryKey: ['requests', 'all'] });
     const { filteredCRs: crs } = useCRSearch();
 
     const [abaAtiva, setAbaAtiva] = useState('pendentes');
@@ -127,6 +129,8 @@ export default function RequestsManagement() {
                 statusName: novoStatus,
                 justification,
             });
+
+            queryClient.invalidateQueries({ queryKey: ['requests'] });
 
             setNotification({
                 type: 'success',

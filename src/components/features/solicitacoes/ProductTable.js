@@ -13,6 +13,7 @@ export default function ProductTable({
     onRejectItem,
     itemStatusOptions = null,
     onItemStatusChange,
+    customStatusColorMap = null,
 }) {
     const colSpan = showItemDecisions ? 6 : 5;
     const emptyLabel = `Nenhum ${isServiceRequest ? "serviço" : "produto"} encontrado.`;
@@ -33,6 +34,7 @@ export default function ProductTable({
                             onRejectItem={onRejectItem}
                             itemStatusOptions={itemStatusOptions}
                             onItemStatusChange={onItemStatusChange}
+                            customStatusColorMap={customStatusColorMap}
                         />
                     ))
                 ) : (
@@ -95,6 +97,7 @@ export default function ProductTable({
                                 onRejectItem={onRejectItem}
                                 itemStatusOptions={itemStatusOptions}
                                 onItemStatusChange={onItemStatusChange}
+                                customStatusColorMap={customStatusColorMap}
                             />
                         ))
                     ) : (

@@ -3,7 +3,7 @@ import { useRequestsList } from "@/hooks/useRequestsList";
 import { isVisibleToComprador, keepOnlyApprovedItemsIfPartial } from "@/lib/utils/requestStatus";
 
 export function useCompradorRequestsList() {
-    const { requests, loading, error } = useRequestsList();
+    const { requests, loading, error } = useRequestsList({ queryKey: ['requests', 'all'] });
 
     const compradorRequests = useMemo(() => {
         return requests
