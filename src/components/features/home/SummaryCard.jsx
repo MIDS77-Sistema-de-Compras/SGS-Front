@@ -5,6 +5,30 @@ import SummaryItem from "./SummaryItem";
 import SummaryCardSkeleton from "./SummaryCardSkeleton";
 import { requestsService } from "@/service/requests";
 import { resolveRequestStatus } from "@/lib/utils/requestStatus";
+import { getUserRole } from "@/lib/utils/getUserRole";
+
+const APPROVED_STATUS_KEYS = new Set([
+    "aprovado",
+    "auto_aprovado",
+    "parcialmente_aprovada",
+    "entregue",
+]);
+
+const REFUSED_STATUS_KEYS = new Set([
+    "recusado",
+    "cancelado",
+]);
+
+const PENDING_STATUS_KEYS = new Set([
+    "aguardando_aprovacao",
+    "em_atendimento",
+    "atrasada",
+    "recebimento_parcial",
+    "fundo_rotativo",
+    "cd_central",
+    "solicitado_portal",
+    "parcialmente_atendida",
+]);
 
 const summaryConfig = [
     {
@@ -34,15 +58,15 @@ function getSummaryCounts(requests) {
     return requests.reduce((counts, request) => {
         const { key } = resolveRequestStatus(request.statusName);
 
-        if (key === "aprovado") {
+        if (APPROVED_STATUS_KEYS.has(key)) {
             return { ...counts, approved: counts.approved + 1 };
         }
 
-        if (key === "recusado") {
+        if (REFUSED_STATUS_KEYS.has(key)) {
             return { ...counts, refused: counts.refused + 1 };
         }
 
-        if (key === "aguardando_aprovacao" || key === "em_atendimento") {
+        if (PENDING_STATUS_KEYS.has(key)) {
             return { ...counts, pending: counts.pending + 1 };
         }
 
@@ -68,7 +92,10 @@ export default function SummaryCard() {
 
         async function loadRequests() {
             try {
-                const data = await requestsService.findMine();
+                const role = getUserRole();
+                const data = role === "COMPRADOR"
+                    ? await requestsService.findAll()
+                    : await requestsService.findMine();
 
                 if (isMounted) {
                     setRequests(Array.isArray(data) ? data : []);
