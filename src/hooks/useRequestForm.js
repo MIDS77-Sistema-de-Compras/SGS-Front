@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { api, getPageContent } from "@/service/api";
 import { getAllCRBranches } from "@/service/crSearch";
@@ -17,6 +17,14 @@ import {
     handleProductRequest,
     handleProvisionRequest,
 } from "@/lib/utils/csvHandlers";
+import {
+    CATALOG_SERVICE_MESSAGE,
+    DUPLICATE_PRODUCT_MESSAGE,
+    DUPLICATE_SERVICE_MESSAGE,
+    getRequestErrorMessage,
+    hasCatalogServiceWithName,
+    hasEquivalentRequestItem,
+} from "@/lib/utils/requestItemValidation";
 
 const REQUEST_TABS = [
     { valor: "produto", label: "PRODUTO" },
@@ -88,6 +96,11 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState("");
     const [success, setSuccess] = useState(false);
+    const [productError, setProductError] = useState("");
+    const [serviceError, setServiceError] = useState("");
+    const [serviceCatalog, setServiceCatalog] = useState([]);
+    const [selectedServiceId, setSelectedServiceId] = useState(null);
+    const submittingRef = useRef(false);
 
     const isEditMode = Boolean(initialRequest?.id);
 
@@ -96,10 +109,11 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
 
         async function loadData() {
             try {
-                const [crs, branches, units] = await Promise.all([
+                const [crs, branches, units, provisions] = await Promise.all([
                     getAllCRBranches(),
                     api.get("/branches"),
                     getAllMeasurementUnits(),
+                    api.get("/provisions").catch(() => []),
                 ]);
 
                 if (cancelled) return;
@@ -140,6 +154,8 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                             : measurementUnit.name,
                     }))
                 );
+
+                setServiceCatalog(getPageContent(provisions));
             } catch (error) {
                 if (!cancelled) {
                     setFormError(
@@ -218,7 +234,32 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         setCrBranchId(event.target.value);
     }
 
+    function handleProductNameChange(name) {
+        setProductName(name);
+        setProductError("");
+    }
+
+    function handleProductSelection(product) {
+        handleProductNameChange(product.name);
+    }
+
+    function handleServiceNameChange(name) {
+        setServiceName(name);
+        setSelectedServiceId(null);
+        setServiceError("");
+    }
+
+    function handleServiceSelection(provision) {
+        setServiceName(provision.name);
+        setServiceValue(String(provision.totalValue ?? ""));
+        setServiceAdditionalInfo(provision.description ?? "");
+        setSelectedServiceId(provision.id);
+        setServiceError("");
+    }
+
     function handleAddProduct() {
+        if (submittingRef.current) return;
+
         setFormError("");
         setSuccess(false);
 
@@ -226,6 +267,16 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
             setFormError(
                 "Preencha produto, quantidade e unidade de medida antes de adicionar."
             );
+            return;
+        }
+
+        const otherProducts = editingProductId
+            ? products.filter((p) => p.id !== editingProductId)
+            : products;
+
+        if (hasEquivalentRequestItem(otherProducts, productName)) {
+            setProductError(DUPLICATE_PRODUCT_MESSAGE);
+            showNotification(DUPLICATE_PRODUCT_MESSAGE, "error");
             return;
         }
 
@@ -248,6 +299,7 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                 : [...currentProducts, nextProduct];
         });
 
+        setProductError("");
         setEditingProductId(null);
         setProductName("");
         setVariation("");
@@ -260,6 +312,7 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         setProducts((currentProducts) =>
             currentProducts.filter((product) => product.id !== productId)
         );
+        setProductError("");
     }
 
     function handleEditProduct(product) {
@@ -272,6 +325,8 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
     }
 
     function handleAddService() {
+        if (submittingRef.current) return;
+
         setFormError("");
         setSuccess(false);
 
@@ -283,6 +338,25 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
             setFormError(
                 "Preencha título, valor e informações adicionais do serviço antes de adicionar."
             );
+            return;
+        }
+
+        const otherServices = editingServiceId
+            ? services.filter((s) => s.id !== editingServiceId)
+            : services;
+
+        if (hasEquivalentRequestItem(otherServices, serviceName)) {
+            setServiceError(DUPLICATE_SERVICE_MESSAGE);
+            showNotification(DUPLICATE_SERVICE_MESSAGE, "error");
+            return;
+        }
+
+        if (
+            selectedServiceId === null &&
+            hasCatalogServiceWithName(serviceCatalog, serviceName)
+        ) {
+            setServiceError(CATALOG_SERVICE_MESSAGE);
+            showNotification(CATALOG_SERVICE_MESSAGE, "error");
             return;
         }
 
@@ -311,16 +385,19 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                 : [...currentServices, nextService];
         });
 
+        setServiceError("");
         setEditingServiceId(null);
         setServiceName("");
         setServiceValue("");
         setServiceAdditionalInfo("");
+        setSelectedServiceId(null);
     }
 
     function handleRemoveService(serviceId) {
         setServices((currentServices) =>
             currentServices.filter((service) => service.id !== serviceId)
         );
+        setServiceError("");
     }
 
     function handleEditService(service) {
@@ -655,6 +732,9 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
 
     async function handleSubmit(event) {
         event.preventDefault();
+
+        if (submittingRef.current) return;
+
         setFormError("");
         setSuccess(false);
 
@@ -723,6 +803,7 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
             );
 
             try {
+                submittingRef.current = true;
                 setSubmitting(true);
 
                 const saved = await saveProducts(
@@ -750,16 +831,16 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                 const fallback = isEditMode
                     ? "Erro ao atualizar a solicitação."
                     : "Erro ao criar a solicitação.";
+                const message = getRequestErrorMessage(error) || error.message || fallback;
 
-                setFormError(
-                    error.message || fallback
-                );
-
-                showNotification(
-                    error.message || fallback,
-                    "error"
-                );
+                if (error?.status === 409) {
+                    setProductError(message);
+                } else {
+                    setFormError(message);
+                }
+                showNotification(message, "error");
             } finally {
+                submittingRef.current = false;
                 setSubmitting(false);
             }
 
@@ -800,6 +881,7 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
             );
 
             try {
+                submittingRef.current = true;
                 setSubmitting(true);
 
                 const saved = await saveServices(
@@ -827,16 +909,16 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                 const fallback = isEditMode
                     ? "Erro ao atualizar a solicitação."
                     : "Erro ao criar a solicitação.";
+                const message = getRequestErrorMessage(error) || error.message || fallback;
 
-                setFormError(
-                    error.message || fallback
-                );
-
-                showNotification(
-                    error.message || fallback,
-                    "error"
-                );
+                if (error?.status === 409) {
+                    setServiceError(message);
+                } else {
+                    setFormError(message);
+                }
+                showNotification(message, "error");
             } finally {
+                submittingRef.current = false;
                 setSubmitting(false);
             }
         }
@@ -860,7 +942,7 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         crBranchId,
         setCrBranchId,
         productName,
-        setProductName,
+        setProductName: handleProductNameChange,
         variation,
         setVariation,
         quantity,
@@ -870,7 +952,7 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         additionalInfo,
         setAdditionalInfo,
         serviceName,
-        setServiceName,
+        setServiceName: handleServiceNameChange,
         serviceValue,
         setServiceValue,
         serviceAdditionalInfo,
@@ -886,6 +968,8 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         setSubmitting,
         formError,
         setFormError,
+        productError,
+        serviceError,
         success,
         setSuccess,
         handleBranchChange,
@@ -896,6 +980,8 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
         handleAddService,
         handleEditService,
         handleRemoveService,
+        handleProductSelection,
+        handleServiceSelection,
         handleFilesSelected,
         handleRemoveAttachment,
         handleRemoveExistingAttachment,
