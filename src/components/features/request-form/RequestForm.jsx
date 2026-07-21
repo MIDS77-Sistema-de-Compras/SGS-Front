@@ -10,6 +10,7 @@ import file from "../../../../public/images/icons/file.svg";
 import fileWhite from "../../../../public/images/icons/fileWhite.svg";
 import FormField from "@/components/ui/form/FormField";
 import { Input } from "@/components/ui/input/Input";
+import FieldError from "@/components/ui/notifications/FieldError";
 import PhoneInput from "@/components/ui/input/PhoneInput";
 import SectionHeader from "@/components/ui/layout/SectionHeader";
 import Button from "@/components/ui/button/Button";
@@ -21,10 +22,10 @@ import ProductRequestTable from "./local-csv-viewer/ProductRequestTable";
 import ProvisionRequestTable from "./local-csv-viewer/ProvisionRequestTable";
 
 // this needs componentization
-export default function RequestForm() {
+export default function RequestForm({ initialRequest = null, onSaved }) {
     const {
         abaAtiva, setAbaAtiva,
-        abas,
+        abas, isEditMode,
         branchId,
         branchOptions,
         requester, setRequester,
@@ -44,20 +45,22 @@ export default function RequestForm() {
         unitOptions,
         submitting, setSubmitting,
         formError, setFormError,
+        productError, serviceError,
         success, setSuccess,
         handleBranchChange, handleCrBranchChange,
-        handleAddProduct, handleRemoveProduct,
-        handleAddService, handleRemoveService,
-        handleFilesSelected, handleRemoveAttachment,
+        handleAddProduct, handleEditProduct, handleRemoveProduct,
+        handleAddService, handleEditService, handleRemoveService,
+        handleProductSelection, handleServiceSelection,
+        handleFilesSelected, handleRemoveAttachment, handleRemoveExistingAttachment,
         handleSubmit,
-        attachments, setAttachments,
+        attachments, setAttachments, existingAttachments,
         csvData, setCsvData,
         csvError, setCsvError,
         csvType,
         isProcessing, setIsProcessing,
         handleImportSubmit,
         handleConfirmImport
-    } = useRequestForm();
+    } = useRequestForm({ initialRequest, onSaved });
 
     function formatFileSize(bytes) {
         if (bytes < 1024) return `${bytes} B`;
@@ -68,7 +71,7 @@ export default function RequestForm() {
     return (
         <div className="border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
             <SolicitacoesTabs
-                titulo="Nova Solicitação"
+                titulo={isEditMode ? "Editar Solicitação" : "Nova Solicitação"}
                 abaAtiva={abaAtiva}
                 setAbaAtiva={setAbaAtiva}
                 abas={abas}
@@ -150,11 +153,11 @@ export default function RequestForm() {
                                     <ProductAutocomplete
                                         value={productName}
                                         onChange={setProductName}
-                                        onSelectProduct={(product) => {
-                                            setProductName(product.name);
-                                        }}
+                                        onSelectProduct={handleProductSelection}
                                         placeholder="Digite o nome do produto..."
+                                        error={productError}
                                     />
+                                    <FieldError message={productError} />
                                 </FormField>
 
                                 <FormField
@@ -215,13 +218,15 @@ export default function RequestForm() {
                                         variant="primary"
                                         className="w-10 h-10 mt-auto flex items-center justify-center text-2xl"
                                         onClick={handleAddProduct}
+                                        disabled={submitting}
+                                        isLoading={submitting}
                                     >
                                         +
                                     </Button>
                                 </div>
 
                                 <div className="mt-5">
-                                    <ListProducts products={products} onRemove={handleRemoveProduct} tipo={"produto"} />
+                                    <ListProducts products={products} onEdit={handleEditProduct} onRemove={handleRemoveProduct} tipo={"produto"} />
                                 </div>
                             </div>
 
@@ -232,15 +237,14 @@ export default function RequestForm() {
 
                              <div className="flex flex-col md:flex-row w-full gap-5">
                                  <FormField label="Título do Serviço" required className="flex-2">
-                                    <ServiceAutocomplete
-                                        placeholder="Digite para buscar um serviço..."
-                                        value={serviceName}
-                                        onChange={setServiceName}
-                                        onSelectProvision={(provision) => {
-                                            setServiceValue(String(provision.totalValue ?? ""));
-                                            setServiceAdditionalInfo(provision.description ?? "");
-                                        }}
-                                    />
+                                     <ServiceAutocomplete
+                                         placeholder="Digite para buscar um serviço..."
+                                         value={serviceName}
+                                         onChange={setServiceName}
+                                         onSelectProvision={handleServiceSelection}
+                                         error={serviceError}
+                                     />
+                                     <FieldError message={serviceError} />
                                 </FormField>
 
                                     <FormField label="Valor" required className="flex-1">
@@ -271,13 +275,15 @@ export default function RequestForm() {
                                         variant="primary"
                                         className="w-10 h-10 flex items-center justify-center text-2xl"
                                         onClick={handleAddService}
+                                        disabled={submitting}
+                                        isLoading={submitting}
                                     >
                                         +
                                     </Button>
                                 </div>
 
                                 <div className="mt-5">
-                                    <ListProducts products={services} onRemove={handleRemoveService} tipo={"serviço"} />
+                                    <ListProducts products={services} onEdit={handleEditService} onRemove={handleRemoveService} tipo={"serviço"} />
                                 </div>
                             </div>
                         )}
@@ -295,6 +301,39 @@ export default function RequestForm() {
                                     accept=".pdf,.jpg,.jpeg,.png,.docx,.csv"
                                     onFilesSelected={handleFilesSelected}
                                 />
+
+                                {existingAttachments.length > 0 && (
+                                    <ul className="mt-3 flex flex-col gap-2">
+                                        {existingAttachments.map((attachment) => (
+                                            <li
+                                                key={attachment.id}
+                                                className="flex items-center justify-between rounded-lg border border-[#AAAAAA] px-4 py-2 text-sm"
+                                            >
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <a
+                                                        href={attachment.url}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="truncate font-medium text-[#103D85] dark:text-[#5D8EF7] hover:underline"
+                                                    >
+                                                        {attachment.originalName}
+                                                    </a>
+                                                    <span className="shrink-0 text-[#747782]">
+                                                        {formatFileSize(attachment.size)}
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveExistingAttachment(attachment.id)}
+                                                    className="ml-3 shrink-0 font-bold text-[#BA1A1A] hover:opacity-70"
+                                                    aria-label={`Remover ${attachment.originalName}`}
+                                                >
+                                                    ×
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
 
                                 {attachments.length > 0 && (
                                     <ul className="mt-3 flex flex-col gap-2">
@@ -330,7 +369,9 @@ export default function RequestForm() {
                                 <p className="mb-3 text-sm font-semibold text-[#BA1A1A] dark:text-[#F87171]">{formError}</p>
                             )}
                             {success && (
-                                <p className="mb-3 text-sm font-semibold text-[#2E7D32] dark:text-[#4ADE80]">Solicitação criada com sucesso.</p>
+                                <p className="mb-3 text-sm font-semibold text-[#2E7D32] dark:text-[#4ADE80]">
+                                    {isEditMode ? "Solicitação atualizada com sucesso." : "Solicitação criada com sucesso."}
+                                </p>
                             )}
 
                             <Button
@@ -338,9 +379,10 @@ export default function RequestForm() {
                                 variant="primary"
                                 className="py-3 px-7 text-[14px] font-semibold"
                                 isLoading={submitting}
+                                disabled={submitting}
                             >
                                 <span className="flex gap-5">
-                                    FINALIZAR SOLICITAÇÃO
+                                    {isEditMode ? "SALVAR ALTERAÇÕES" : "FINALIZAR SOLICITAÇÃO"}
                                     <Image
                                         src={send}
                                         alt="Paper Plane Send Icon"

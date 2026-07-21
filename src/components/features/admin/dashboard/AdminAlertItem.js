@@ -10,7 +10,7 @@ export default function AdminAlertItem({ count, label = "Alertas" }) {
                 </p>
             </div>
             <p className="shrink-0 font-semibold text-[18px] sm:text-[20px] text-red-700 dark:text-red-400">
-                {String(count).padStart(2, "0")}
+                {count}
             </p>
         </li>
     );

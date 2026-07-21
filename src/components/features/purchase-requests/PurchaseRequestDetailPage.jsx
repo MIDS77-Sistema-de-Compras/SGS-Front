@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 
 import ProductTable from "@/components/features/solicitacoes/ProductTable";
+import RequestDetailsSkeleton from "@/components/features/solicitacoes/RequestDetailsSkeleton";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
 import RequestAttachments from "@/components/features/solicitacoes/RequestAttachments";
 import Button from "@/components/ui/button/Button";
@@ -73,11 +74,7 @@ export default function PurchaseRequestDetailPage() {
     };
 
     if (loading) {
-        return (
-            <div className="flex-1 flex items-center justify-center">
-                <p className="text-gray-500 dark:text-[#C3C6D3] text-lg">Carregando solicitação...</p>
-            </div>
-        );
+        return <RequestDetailsSkeleton rows={4} showActionColumn />;
     }
 
     if (error || !solicitacao) {

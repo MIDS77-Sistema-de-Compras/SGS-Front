@@ -26,15 +26,20 @@ export default function RequestDetailsView({ title, backHref, mode }) {
 
   const {
     id, solicitacao, loading, error, refetch,
-    localProducts, localServices, isServiceRequest,
+    localProducts, localServices, isServiceRequest, canEditRequest,
     statusGeral, corGeral,
     selectedProduct, isModalOpen, editing, editedProduct, setEditedProduct,
-    setNotification,
-    openModal, openEditModal, closeModal, handleSave,
+    selectedCrBranchId, setSelectedCrBranchId,
+    crBranchOptions, unitOptions, optionsLoading, savingEdit,
+    notification, setNotification,
+    openModal, openEditModal, beginEditing, discardEdit, closeModal, handleSave,
   } = useRequestDetailsPage({ ownRequest: mode === "minhas" });
 
   const itemsEmAnalise = isServiceRequest ? localServices : localProducts;
   const isFinalizada = isAnalysis && isFinalizedForSupervisor(solicitacao?.status);
+  const editHref = mode === "gestao"
+    ? `/solicitacoes/gestao/${id}/editar`
+    : `/solicitacoes/${id}/editar`;
 
   const {
     itemDecisions,
@@ -89,13 +94,28 @@ export default function RequestDetailsView({ title, backHref, mode }) {
           <div className="mb-6 px-4 sm:px-6">
             <div className="flex items-start justify-between gap-3 min-[1350px]:items-center">
               <div className="flex flex-col gap-1 min-w-0 min-[1350px]:flex-row min-[1350px]:items-baseline min-[1350px]:gap-4">
-                <h4 className="text-[16px] sm:text-[18px] min-[1350px]:text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
-                  {solicitacao.codigo} : Lista de{" "}
-                  {isServiceRequest ? localServices.length : localProducts.length}{" "}
-                  {isServiceRequest
-                    ? localServices.length === 1 ? "serviço" : "serviços"
-                    : localProducts.length === 1 ? "produto" : "produtos"}
-                </h4>
+                <div className="flex min-w-0 items-center gap-2">
+                  <h4 className="text-[16px] sm:text-[18px] min-[1350px]:text-[20px] font-bold text-gray-900 dark:text-[#E2E2EA]">
+                    {solicitacao.codigo} : Lista de{" "}
+                    {isServiceRequest ? localServices.length : localProducts.length}{" "}
+                    {isServiceRequest
+                      ? localServices.length === 1 ? "serviço" : "serviços"
+                      : localProducts.length === 1 ? "produto" : "produtos"}
+                  </h4>
+                  {canEditRequest && (
+                    <Link
+                      href={editHref}
+                      className="shrink-0 rounded-md p-1.5 text-gray-400 transition-colors hover:bg-[#103D85]/10 hover:text-[#103D85] dark:hover:bg-[#5D8EF7]/10 dark:hover:text-[#5D8EF7]"
+                      aria-label={`Editar ${solicitacao.codigo}`}
+                      title="Editar solicitação"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                      </svg>
+                    </Link>
+                  )}
+                </div>
                 <span className="text-gray-600 dark:text-[#C3C6D3] text-[13px] sm:text-sm min-[1350px]:text-[16px] font-medium whitespace-nowrap min-[1350px]:px-7">
                   Realizada em: {formatDisplayDate(solicitacao.data)}
                 </span>
@@ -131,7 +151,7 @@ export default function RequestDetailsView({ title, backHref, mode }) {
           />
         </div>
 
-     <div className="flex justify-stretch sm:justify-end pt-5">
+        <div className="flex justify-stretch sm:justify-end pt-5">
           {hasPendingChanges ? (
             <Button
               variant="primary"
@@ -152,16 +172,28 @@ export default function RequestDetailsView({ title, backHref, mode }) {
         </div>
       </div>
 
-        <ProductModal
-          isModalOpen={isModalOpen}
-          editing={editing}
-          selectedProduct={selectedProduct}
-          editedProduct={editedProduct}
-          setEditedProduct={setEditedProduct}
-          closeModal={closeModal}
-          handleSave={handleSave}
-          crBranchLabel={solicitacao.crBranchLabel}
-        />
+      <ProductModal
+        isModalOpen={isModalOpen}
+        editing={editing}
+        canEditRequest={canEditRequest}
+        isServiceRequest={isServiceRequest}
+        selectedProduct={selectedProduct}
+        editedProduct={editedProduct}
+        setEditedProduct={setEditedProduct}
+        closeModal={closeModal}
+        beginEditing={beginEditing}
+        discardEdit={discardEdit}
+        handleSave={handleSave}
+        savingEdit={savingEdit}
+        crBranchOptions={crBranchOptions}
+        unitOptions={unitOptions}
+        optionsLoading={optionsLoading}
+        selectedCrBranchId={selectedCrBranchId}
+        setSelectedCrBranchId={setSelectedCrBranchId}
+        crBranchLabel={solicitacao?.crBranch
+          ? `${solicitacao.crBranch.crCode} - ${solicitacao.crBranch.crName}${solicitacao.crBranch.branchName ? ` | ${solicitacao.crBranch.branchName}` : ""}`
+          : "-"}
+      />
 
       {isAnalysis && (
         <RejectionModal

@@ -151,9 +151,16 @@ const SearchableSelect = forwardRef(function SearchableSelect(
           'dark:bg-[#303746] dark:border-white/15 dark:text-[#E2E2EA]',
           'dark:focus:border-[#1A4A9E] dark:focus:ring-[#1A4A9E]',
           'disabled:opacity-60 disabled:cursor-not-allowed',
+          selectedOption?.master === true && !isEditing && 'pr-36 border-[#E5A900] dark:border-[#F2C94C]',
           className
         )}
       />
+
+      {selectedOption?.master === true && !isEditing && (
+        <span className="pointer-events-none absolute right-16 rounded-full border border-[#D39A00] bg-[#FFE39A] px-2 py-1 text-[10px] font-extrabold leading-none tracking-wide text-[#694B00] dark:border-[#F2C94C] dark:bg-[#F2C94C]/20 dark:text-[#FFE9A8]">
+          MASTER
+        </span>
+      )}
 
       {selectedOption && !disabled && (
         <button
@@ -202,12 +209,18 @@ const SearchableSelect = forwardRef(function SearchableSelect(
                 onClick={() => selectOption(option)}
                 onMouseEnter={() => setHighlightedIndex(index)}
                 className={cn(
-                  'px-4 py-2.5 text-sm cursor-pointer text-gray-800 dark:text-[#E2E2EA]',
+                  'flex items-center justify-between gap-3 px-4 py-2.5 text-sm cursor-pointer text-gray-800 dark:text-[#E2E2EA]',
+                  option.master === true && 'border-l-4 border-[#E5A900] dark:border-[#F2C94C]',
                   index === highlightedIndex && 'bg-[#103D85]/10 dark:bg-white/10',
                   String(option.value) === String(value ?? '') && 'font-semibold'
                 )}
               >
-                {option.label}
+                <span className="min-w-0 truncate">{option.label}</span>
+                {option.master === true && (
+                  <span className="shrink-0 rounded-full border border-[#D39A00] bg-[#FFE39A] px-2 py-1 text-[10px] font-extrabold leading-none tracking-wide text-[#694B00] dark:border-[#F2C94C] dark:bg-[#F2C94C]/20 dark:text-[#FFE9A8]">
+                    MASTER
+                  </span>
+                )}
               </li>
             ))
           )}
