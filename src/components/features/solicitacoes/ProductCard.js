@@ -1,6 +1,6 @@
 "use client";
 
-import { getStatusColor, getStatusLabel } from "@/lib/utils/requestStatus";
+import { getStatusColor, getStatusLabel, getCustomStatusColor } from "@/lib/utils/requestStatus";
 import Dropdown from "@/components/ui/select/Dropdown";
 
 export default function ProductCard({
@@ -13,7 +13,9 @@ export default function ProductCard({
     onRejectItem,
     itemStatusOptions = null,
     onItemStatusChange,
+    customStatusColorMap = null,
 }) {
+    const customColor = getCustomStatusColor(item.status, customStatusColorMap);
     return (
         <div
             onClick={() => openModal(item)}
@@ -54,13 +56,19 @@ export default function ProductCard({
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                 {showItemDecisions ? (
                     <div className="flex items-center gap-2">
-                        <span className={`inline-block w-5 h-5 rounded-full shadow-sm shrink-0 ${getStatusColor(item.status)}`} />
+                        <span
+                            className={`inline-block w-5 h-5 rounded-full shadow-sm shrink-0 ${customColor ? "" : getStatusColor(item.status)}`}
+                            style={customColor ? { backgroundColor: customColor } : undefined}
+                        />
                         <span className="text-sm font-medium text-gray-600 dark:text-[#C3C6D3]">
                             {getStatusLabel(item.status)}
                         </span>
                     </div>
                 ) : (
-                    <span className={`inline-block whitespace-nowrap text-center text-[12px] font-semibold text-white py-1.5 px-4 rounded-full min-w-[140px] shadow-sm tracking-wide ${getStatusColor(item.status)}`}>
+                    <span
+                        className={`inline-block whitespace-nowrap text-center text-[12px] font-semibold text-white py-1.5 px-4 rounded-full min-w-[140px] shadow-sm tracking-wide ${customColor ? "" : getStatusColor(item.status)}`}
+                        style={customColor ? { backgroundColor: customColor } : undefined}
+                    >
                         {getStatusLabel(item.status)}
                     </span>
                 )}

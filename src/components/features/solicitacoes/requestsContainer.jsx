@@ -12,7 +12,11 @@ import RequestsTableSkeleton from "./RequestsTableSkeleton";
 export default function RequestsContainer({ solicitacoesIniciais = [] }) {
     const router = useRouter();
     
-    const { requests: solicitacoes, loading, error } = useRequestsList(solicitacoesIniciais, getMyRequests);
+    const { requests: solicitacoes, loading, error } = useRequestsList({
+        queryKey: ['requests', 'me'],
+        fetchRequests: getMyRequests,
+        initialData: solicitacoesIniciais,
+    });
 
     const {
         filtros: { status, data, busca, abaAtiva },

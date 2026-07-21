@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { api, getPageContent } from "@/service/api";
 import { getAllCRBranches } from "@/service/crSearch";
@@ -34,6 +35,7 @@ const REQUEST_TABS = [
 
 export function useRequestForm({ initialRequest = null, onSaved } = {}) {
     const { showNotification } = useNotification();
+    const queryClient = useQueryClient();
 
     const initialIsService =
         (initialRequest?.servicos || []).length > 0 &&
@@ -811,6 +813,7 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                 );
 
                 setSuccess(true);
+                queryClient.invalidateQueries({ queryKey: ["requests"] });
 
                 showNotification(
                     isEditMode
@@ -889,6 +892,7 @@ export function useRequestForm({ initialRequest = null, onSaved } = {}) {
                 );
 
                 setSuccess(true);
+                queryClient.invalidateQueries({ queryKey: ["requests"] });
 
                 showNotification(
                     isEditMode
