@@ -2,8 +2,11 @@ import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
 import StatusBadge from "./statusBadge";
 
 export default function SolicitacaoRow({ item, onClick }) {
-    const isServiceRequest = item.tipo === "servico"; 
-    const produtos = (isServiceRequest ? item.servicos : item.produtos) || [];
+    const produtosList = item.produtos || [];
+    const servicosList = item.servicos || [];
+    const isServiceRequest = produtosList.length === 0 && servicosList.length > 0;
+    const produtos = isServiceRequest ? servicosList : produtosList;
+
     const statusSolicitacao = item.status || calcularStatusSolicitacao(produtos);
     const quantidadeProdutos = produtos.length;
     const dataFormatada = item.data
@@ -19,10 +22,9 @@ export default function SolicitacaoRow({ item, onClick }) {
                 <span className="font-bold text-[#333333] dark:text-[#E2E2EA] break-words xl:whitespace-nowrap">
                     {item.codigo}
                     {quantidadeProdutos > 0 &&
-                        `: Lista de ${quantidadeProdutos} ${
-                            isServiceRequest
-                                ? quantidadeProdutos === 1 ? "serviço" : "serviços"
-                                : quantidadeProdutos === 1 ? "produto" : "produtos"
+                        `: Lista de ${quantidadeProdutos} ${isServiceRequest
+                            ? quantidadeProdutos === 1 ? "serviço" : "serviços"
+                            : quantidadeProdutos === 1 ? "produto" : "produtos"
                         }`}
                 </span>
 
