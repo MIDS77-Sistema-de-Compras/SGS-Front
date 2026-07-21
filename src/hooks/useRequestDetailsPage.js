@@ -7,6 +7,7 @@ import { getStatusColor, getStatusLabel, isRequestEditable } from "@/lib/utils/r
 import { api, getPageContent } from "@/service/api";
 import { editFullRequest, getAllMeasurementUnits } from "@/service/createProductRequest";
 import { getUserRole } from "@/lib/utils/getUserRole";
+import { useNotification } from "@/contexts/NotificationContext";
 
 export function useRequestDetailsPage({ ownRequest = false } = {}) {
   const { id } = useParams();
@@ -21,7 +22,11 @@ export function useRequestDetailsPage({ ownRequest = false } = {}) {
   const [unitOptions, setUnitOptions] = useState([]);
   const [optionsLoading, setOptionsLoading] = useState(false);
   const [savingEdit, setSavingEdit] = useState(false);
-  const [notification, setNotification] = useState(null);
+  const { showNotification } = useNotification();
+  
+  const setNotification = (payload) => {
+    if (payload?.message) showNotification(payload.message, payload.type);
+  };
 
   const localProducts = solicitacao?.produtos || [];
   const localServices = solicitacao?.servicos || [];
@@ -132,12 +137,11 @@ export function useRequestDetailsPage({ ownRequest = false } = {}) {
       await editFullRequest({ id, payload });
       await refetch();
       closeModal();
-      setNotification({ type: "success", message: "Solicitação atualizada com sucesso!" });
+      showNotification("Solicitação atualizada com sucesso!", "success");
     } catch (saveError) {
-      setNotification({ type: "error", message: saveError.message || "Erro ao editar solicitação." });
+      showNotification(saveError.message || "Erro ao editar solicitação.", "error");
     } finally {
       setSavingEdit(false);
-      setTimeout(() => setNotification(null), 3000);
     }
   };
 
@@ -148,7 +152,7 @@ export function useRequestDetailsPage({ ownRequest = false } = {}) {
     selectedProduct, isModalOpen, editing, editedProduct, setEditedProduct,
     selectedCrBranchId, setSelectedCrBranchId,
     crBranchOptions, unitOptions, optionsLoading, savingEdit,
-    notification, setNotification,
+    setNotification,
     openModal, openEditModal, beginEditing, discardEdit, closeModal, handleSave,
   };
 }

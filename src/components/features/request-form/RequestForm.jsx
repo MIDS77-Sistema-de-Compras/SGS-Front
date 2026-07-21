@@ -99,19 +99,19 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
                         <div className="mt-10">
                             <SectionHeader label="IDENTIFICAÇÃO E CENTRO DE CUSTO" />
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-5">
-                            <FormField
-                                label="Solicitante/Destinatário"
-                                required
-                                className="sm:col-span-2"
-                            >
-                                <Input
-                                    variant="form"
-                                    placeholder="Nome completo do docente..."
-                                    value={requester || ""}
-                                    onChange={(event) => setRequester(event.target.value)}
-                                />
-                            </FormField>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-5">
+                                <FormField
+                                    label="Solicitante/Destinatário"
+                                    required
+                                    className="sm:col-span-2"
+                                >
+                                    <Input
+                                        variant="form"
+                                        placeholder="Nome completo do docente..."
+                                        value={requester || ""}
+                                        onChange={(event) => setRequester(event.target.value)}
+                                    />
+                                </FormField>
 
                                 <FormField label="Ramal" required>
                                     <PhoneInput
@@ -139,38 +139,38 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
                             </FormField>
                         </div>
 
-                    {abaAtiva === "produto" ? (
-                        <div className="mt-10">
-                            <SectionHeader label="PRODUTOS" />
+                        {abaAtiva === "produto" ? (
+                            <div className="mt-10">
+                                <SectionHeader label="PRODUTOS" />
 
 
-                            <div className="flex flex-col md:flex-row w-full gap-5">
-                                <FormField
-                                    label="Produto"
-                                    required
-                                    className="flex-2"
-                                >
-                                    <ProductAutocomplete
-                                        value={productName}
-                                        onChange={setProductName}
-                                        onSelectProduct={handleProductSelection}
-                                        placeholder="Digite o nome do produto..."
-                                        error={productError}
-                                    />
-                                    <FieldError message={productError} />
-                                </FormField>
+                                <div className="flex flex-col md:flex-row w-full gap-5">
+                                    <FormField
+                                        label="Produto"
+                                        required
+                                        className="flex-2"
+                                    >
+                                        <ProductAutocomplete
+                                            value={productName}
+                                            onChange={setProductName}
+                                            onSelectProduct={handleProductSelection}
+                                            placeholder="Digite o nome do produto..."
+                                            error={productError}
+                                        />
+                                        <FieldError message={productError} />
+                                    </FormField>
 
-                                <FormField
-                                    label="Variação"
-                                    className="flex-1"
-                                >
-                                    <Input
-                                        variant="form"
-                                        placeholder="Ex: Tamanho G, Azul..."
-                                        value={variation || ""}
-                                        onChange={(event) => setVariation(event.target.value)}
-                                    />
-                                </FormField>
+                                    <FormField
+                                        label="Variação"
+                                        className="flex-1"
+                                    >
+                                        <Input
+                                            variant="form"
+                                            placeholder="Ex: Tamanho G, Azul..."
+                                            value={variation || ""}
+                                            onChange={(event) => setVariation(event.target.value)}
+                                        />
+                                    </FormField>
 
                                     <FormField
                                         label="Quantidade"
@@ -219,7 +219,7 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
                                         className="w-10 h-10 mt-auto flex items-center justify-center text-2xl"
                                         onClick={handleAddProduct}
                                         disabled={submitting}
-                                        isLoading={submitting}
+                                        aria-label="Adicionar produto"
                                     >
                                         +
                                     </Button>
@@ -235,17 +235,17 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
                             <div className="mt-10">
                                 <SectionHeader label="SERVIÇOS" />
 
-                             <div className="flex flex-col md:flex-row w-full gap-5">
-                                 <FormField label="Título do Serviço" required className="flex-2">
-                                     <ServiceAutocomplete
-                                         placeholder="Digite para buscar um serviço..."
-                                         value={serviceName}
-                                         onChange={setServiceName}
-                                         onSelectProvision={handleServiceSelection}
-                                         error={serviceError}
-                                     />
-                                     <FieldError message={serviceError} />
-                                </FormField>
+                                <div className="flex flex-col md:flex-row w-full gap-5">
+                                    <FormField label="Título do Serviço" required className="flex-2">
+                                        <ServiceAutocomplete
+                                            placeholder="Digite para buscar um serviço..."
+                                            value={serviceName}
+                                            onChange={setServiceName}
+                                            onSelectProvision={handleServiceSelection}
+                                            error={serviceError}
+                                        />
+                                        <FieldError message={serviceError} />
+                                    </FormField>
 
                                     <FormField label="Valor" required className="flex-1">
                                         <Input
@@ -276,7 +276,7 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
                                         className="w-10 h-10 flex items-center justify-center text-2xl"
                                         onClick={handleAddService}
                                         disabled={submitting}
-                                        isLoading={submitting}
+                                        aria-label="Adicionar serviço"
                                     >
                                         +
                                     </Button>
@@ -460,9 +460,8 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
 
                     {csvData && csvData.length > 0 && !isProcessing && (
                         <>
-                            {/* NOTA: O algoritmo de conversão está em BETA e pode apresentar comportamento instável */}
-                            {csvType === "product" && ( <><ProductRequestTable csvData={csvData} /></> )}
-                            {csvType === "provision" && ( <><ProvisionRequestTable csvData={csvData} /></> )}
+                            {csvType === "product" && (<><ProductRequestTable csvData={csvData} /></>)}
+                            {csvType === "provision" && (<><ProvisionRequestTable csvData={csvData} /></>)}
 
                             <div className="mb-6 flex justify-end">
                                 <Button
