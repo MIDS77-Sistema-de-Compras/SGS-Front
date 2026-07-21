@@ -1,7 +1,7 @@
 'use client'
 
 import Button from "@/components/ui/button/Button";
-import notFoundPerson from "../../public/images/etc/notfound-person.png";
+import notfound from "../../public/images/etc/notfound.png";
 import Image from "next/image";
 
 import { Montserrat } from "next/font/google";
@@ -37,7 +37,7 @@ export default function NotFoundPage(){
         <body className="bg-white dark:bg-[#1A2233]">
             <div className="h-screen flex items-center justify-center">
                 <div className="max-h-1/2 bg-gray-200 dark:bg-[#303746] rounded-xl p-4 flex flex-col items-center gap-4">
-                    <Image src={notFoundPerson} alt="Pessoa perdida com um mapa" width={150} loading="eager" className="dark:invert dark:brightness-90" />
+                    <Image src={notfound} alt="Pessoa perdida com um mapa" width={150} loading="eager" className="dark:invert dark:brightness-90" />
                     <div className="flex flex-col items-center">
                         <strong className="text-gray-900 dark:text-[#E2E2EA]">Página não encontrada!</strong>
                         <sub className="mt-2 mb-10 text-gray-600 dark:text-[#C3C6D3]">Por aqui! O botão te guiará de volta.</sub>
