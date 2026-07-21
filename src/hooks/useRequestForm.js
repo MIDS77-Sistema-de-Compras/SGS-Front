@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { api, getPageContent } from "@/service/api";
 import { getAllCRBranches } from "@/service/crSearch";
@@ -7,6 +7,14 @@ import { createFullServiceRequest } from "@/service/createServiceRequest";
 import { useNotification } from "@/contexts/NotificationContext";
 import { csvConvertForProducts, csvParse } from "@/lib/utils/csvToJson";
 import { checkAndPushElements, checkAndPushProducts, checkAndSubmitElements, handleProductRequest, handleProvisionRequest } from "@/lib/utils/csvHandlers";
+import {
+    CATALOG_SERVICE_MESSAGE,
+    DUPLICATE_PRODUCT_MESSAGE,
+    DUPLICATE_SERVICE_MESSAGE,
+    getRequestErrorMessage,
+    hasCatalogServiceWithName,
+    hasEquivalentRequestItem,
+} from "@/lib/utils/requestItemValidation";
 
 const REQUEST_TABS = [
     { valor: "produto", label: "PRODUTO" },
@@ -42,16 +50,22 @@ export function useRequestForm() {
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState("");
     const [success, setSuccess] = useState(false);
+    const [productError, setProductError] = useState("");
+    const [serviceError, setServiceError] = useState("");
+    const [serviceCatalog, setServiceCatalog] = useState([]);
+    const [selectedServiceId, setSelectedServiceId] = useState(null);
+    const submittingRef = useRef(false);
 
     useEffect(() => {
         let cancelled = false;
 
         async function loadData() {
             try {
-                const [crs, branches, units] = await Promise.all([
+                const [crs, branches, units, provisions] = await Promise.all([
                     getAllCRBranches(),
                     api.get("/branches"),
                     getAllMeasurementUnits(),
+                    api.get("/provisions").catch(() => []),
                 ]);
 
                 if (cancelled) return;
@@ -80,6 +94,8 @@ export function useRequestForm() {
                             : measurementUnit.name,
                     }))
                 );
+
+                setServiceCatalog(getPageContent(provisions));
             } catch (error) {
                 if (!cancelled) {
                     setFormError(error.message || "Erro ao carregar dados do formulário.");
@@ -146,12 +162,43 @@ export function useRequestForm() {
         setCrBranchId(event.target.value);
     }
 
+    function handleProductNameChange(name) {
+        setProductName(name);
+        setProductError("");
+    }
+
+    function handleProductSelection(product) {
+        handleProductNameChange(product.name);
+    }
+
+    function handleServiceNameChange(name) {
+        setServiceName(name);
+        setSelectedServiceId(null);
+        setServiceError("");
+    }
+
+    function handleServiceSelection(provision) {
+        setServiceName(provision.name);
+        setServiceValue(String(provision.totalValue ?? ""));
+        setServiceAdditionalInfo(provision.description ?? "");
+        setSelectedServiceId(provision.id);
+        setServiceError("");
+    }
+
     function handleAddProduct() {
+        if (submittingRef.current) return;
+
         setFormError("");
         setSuccess(false);
 
         if (!productName.trim() || !quantity || !unit) {
             setFormError("Preencha produto, quantidade e unidade de medida antes de adicionar.");
+            return;
+        }
+
+        if (hasEquivalentRequestItem(products, productName)) {
+            setProductError(DUPLICATE_PRODUCT_MESSAGE);
+            showNotification(DUPLICATE_PRODUCT_MESSAGE, "error");
             return;
         }
 
@@ -166,6 +213,7 @@ export function useRequestForm() {
                 additionalInformations: additionalInfo.trim(),
             },
         ]);
+        setProductError("");
         setProductName("");
         setVariation("");
         setQuantity("");
@@ -175,14 +223,32 @@ export function useRequestForm() {
 
     function handleRemoveProduct(productId) {
         setProducts((currentProducts) => currentProducts.filter((product) => product.id !== productId));
+        setProductError("");
     }
 
     function handleAddService() {
+        if (submittingRef.current) return;
+
         setFormError("");
         setSuccess(false);
 
         if (!serviceName.trim() || !serviceValue || !serviceAdditionalInfo.trim()) {
             setFormError("Preencha título, valor e informações adicionais do serviço antes de adicionar.");
+            return;
+        }
+
+        if (hasEquivalentRequestItem(services, serviceName)) {
+            setServiceError(DUPLICATE_SERVICE_MESSAGE);
+            showNotification(DUPLICATE_SERVICE_MESSAGE, "error");
+            return;
+        }
+
+        if (
+            selectedServiceId === null &&
+            hasCatalogServiceWithName(serviceCatalog, serviceName)
+        ) {
+            setServiceError(CATALOG_SERVICE_MESSAGE);
+            showNotification(CATALOG_SERVICE_MESSAGE, "error");
             return;
         }
 
@@ -195,13 +261,16 @@ export function useRequestForm() {
                 additionalInformation: serviceAdditionalInfo.trim(),
             },
         ]);
+        setServiceError("");
         setServiceName("");
         setServiceValue("");
         setServiceAdditionalInfo("");
+        setSelectedServiceId(null);
     }
 
     function handleRemoveService(serviceId) {
         setServices((currentServices) => currentServices.filter((service) => service.id !== serviceId));
+        setServiceError("");
     }
 
     const ALLOWED_TYPES = [
@@ -339,6 +408,9 @@ export function useRequestForm() {
 
     async function handleSubmit(event) {
         event.preventDefault();
+
+        if (submittingRef.current) return;
+
         setFormError("");
         setSuccess(false);
 
@@ -370,6 +442,7 @@ export function useRequestForm() {
             const payloadProducts = products.map(({ id, ...rest }) => rest);
 
             try {
+                submittingRef.current = true;
                 setSubmitting(true);
                 await createFullRequest({
                     crBranchId,
@@ -384,9 +457,16 @@ export function useRequestForm() {
                 setProducts([]);
                 setAttachments([]);
             } catch (error) {
-                setFormError(error.message || "Erro ao criar a solicitação.");
-                showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
+                const message = getRequestErrorMessage(error);
+
+                if (error?.status === 409) {
+                    setProductError(message);
+                } else {
+                    setFormError(message);
+                }
+                showNotification(message, "error");
             } finally {
+                submittingRef.current = false;
                 setSubmitting(false);
             }
             return;
@@ -409,6 +489,7 @@ export function useRequestForm() {
             const payloadServices = services.map(({ id, ...rest }) => rest);
 
             try {
+                submittingRef.current = true;
                 setSubmitting(true);
                 await createFullServiceRequest({
                     crBranchId,
@@ -423,9 +504,16 @@ export function useRequestForm() {
                 setServices([]);
                 setAttachments([]);
             } catch (error) {
-                setFormError(error.message || "Erro ao criar a solicitação.");
-                showNotification("Erro ao criar a solicitação. Verifique os dados ou a conexão.", "error");
+                const message = getRequestErrorMessage(error);
+
+                if (error?.status === 409) {
+                    setServiceError(message);
+                } else {
+                    setFormError(message);
+                }
+                showNotification(message, "error");
             } finally {
+                submittingRef.current = false;
                 setSubmitting(false);
             }
         }
@@ -444,7 +532,7 @@ export function useRequestForm() {
         crBranchId,
         setCrBranchId,
         productName,
-        setProductName,
+        setProductName: handleProductNameChange,
         variation,
         setVariation,
         quantity,
@@ -454,7 +542,7 @@ export function useRequestForm() {
         additionalInfo,
         setAdditionalInfo,
         serviceName,
-        setServiceName,
+        setServiceName: handleServiceNameChange,
         serviceValue,
         setServiceValue,
         serviceAdditionalInfo,
@@ -470,6 +558,8 @@ export function useRequestForm() {
         setSubmitting,
         formError,
         setFormError,
+        productError,
+        serviceError,
         success,
         setSuccess,
         handleBranchChange,
@@ -478,6 +568,8 @@ export function useRequestForm() {
         handleRemoveProduct,
         handleAddService,
         handleRemoveService,
+        handleProductSelection,
+        handleServiceSelection,
         handleFilesSelected,
         handleRemoveAttachment,
         handleSubmit,
