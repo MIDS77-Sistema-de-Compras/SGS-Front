@@ -15,11 +15,15 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
             onMarkAsViewed(notification.id);
         }
 
-        if (notification.requestId) {
+        if (!notification.requestId) return;
+
+        if (notification.notificationType === "SOLICITACAO_VINCULADA_CR") {
+            router.push(`/solicitacoes/gestao/${notification.requestId}`);
+        } else {
             const basePath = getUserRole() === "COMPRADOR"
                 ? "/solicitacoes-compra"
                 : "/solicitacoes";
-            router.push(`${basePath}/${notification.requestId}`);
+            router.push(basePath);
         }
     }
 
@@ -38,14 +42,14 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
                 />
             </div>
 
-          
+
             <div className="flex-1 min-w-0 flex flex-row items-start justify-between gap-15">
-                
+
                 <div className="flex-1 min-w-0 flex flex-col">
                     <p className="text-[14px] sm:text-[15px] font-bold leading-tight text-black dark:text-[#E2E2EA]">
                         {notification.title || `Solicitação #${notification.requestId || ""}`}
                     </p>
-                    <p 
+                    <p
                         className="mt-1 text-[11px] sm:text-[12px] leading-relaxed text-black/70 dark:text-[#C3C6D3] break-words"
                         dangerouslySetInnerHTML={{ __html: notification.message || "Atualização de solicitação" }}
                     />
