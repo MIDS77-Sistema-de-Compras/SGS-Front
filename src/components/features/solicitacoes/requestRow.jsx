@@ -6,10 +6,10 @@ import { getUserRole } from "@/lib/utils/getUserRole";
 export default function SolicitacaoRow({ item, onClick, onEdit }) {
     const produtos = item.produtos || [];
     const servicos = item.servicos || [];
-    const statusSolicitacao = item.status || calcularStatusSolicitacao(produtos);
-    const quantidadeProdutos = produtos.length;
-    const isService = quantidadeProdutos === 0 && servicos.length > 0;
-    const itemCount = isService ? servicos.length : quantidadeProdutos;
+    const isServiceRequest = produtos.length === 0 && servicos.length > 0;
+    const itens = isServiceRequest ? servicos : produtos;
+    const statusSolicitacao = item.status || calcularStatusSolicitacao(itens);
+    const itemCount = itens.length;
     const currentRole = (getUserRole() || "").replace(/^ROLE_/, "");
     const canEdit = isRequestEditable(statusSolicitacao)
         && ["DOCENTE", "SUPERVISOR", "COORDENADOR"].includes(currentRole);
@@ -31,7 +31,10 @@ export default function SolicitacaoRow({ item, onClick, onEdit }) {
                     <div className="flex min-w-0 items-center gap-3">
                         <span className="font-bold text-[#333333] dark:text-[#E2E2EA] break-words xl:whitespace-nowrap">
                             {item.codigo}
-                            {itemCount > 0 && `: Lista de ${itemCount} ${isService ? (itemCount === 1 ? "serviço" : "serviços") : (itemCount === 1 ? "produto" : "produtos")}`}
+                            {itemCount > 0 && `: Lista de ${itemCount} ${isServiceRequest
+                                ? itemCount === 1 ? "serviço" : "serviços"
+                                : itemCount === 1 ? "produto" : "produtos"
+                            }`}
                         </span>
                         {canEdit && onEdit && (
                             <button

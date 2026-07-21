@@ -10,9 +10,18 @@ import { getUserRole } from '@/lib/utils/getUserRole';
 export default function RequestManagementCard({ item, onApprove, onReject, isDeciding = false, hrefBase = '/solicitacoes/gestao' }) {
     const router = useRouter();
     const currentRole = (getUserRole() || '').replace(/^ROLE_/, '');
-    const quantidadeProdutos = item.produtos?.length || 0;
-    const titulo = `${item.codigo}${quantidadeProdutos > 0
-        ? `: Lista de ${quantidadeProdutos} ${quantidadeProdutos === 1 ? 'produto' : 'produtos'}`
+    
+    const servicos = item.servicos || [];
+    const produtos = item.produtos || [];
+    const isServiceRequest = servicos.length > 0;
+    const itens = isServiceRequest ? servicos : produtos;
+    const quantidadeItens = itens.length;
+
+    const titulo = `${item.codigo}${quantidadeItens > 0
+        ? `: Lista de ${quantidadeItens} ${isServiceRequest
+            ? quantidadeItens === 1 ? 'serviço' : 'serviços'
+            : quantidadeItens === 1 ? 'produto' : 'produtos'
+        }`
         : ''}`;
 
     const responsaveis = item.crBranch?.responsibleUsersName || [];
@@ -32,9 +41,8 @@ export default function RequestManagementCard({ item, onApprove, onReject, isDec
             onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') router.push(`${hrefBase}/${item.id}`);
             }}
-            className="group block cursor-pointer"
-        >
-            <div className="hover:bg-gray-100 dark:hover:bg-white/5 px-2 rounded-xl flex flex-col gap-3 py-4 xl:flex-row xl:items-center xl:justify-between xl:gap-6 transition-colors">
+            className="group block cursor-pointer hover:bg-gray-100 dark:hover:bg-white/5">
+            <div className="px-2 rounded-xl flex flex-col gap-3 py-4 xl:flex-row xl:items-center xl:justify-between xl:gap-6 transition-colors">
                 <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                     <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full shrink-0 ${getStatusColor(item.status)}`} />
 

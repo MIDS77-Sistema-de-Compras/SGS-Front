@@ -161,6 +161,7 @@ describe("getMyRequests", () => {
             statusCategory: "PENDENTE",
             requestDate: "2026-07-20",
             productNames: [`Produto ${index}`, `Extra ${index}`],
+            provisionNames: [],
         }));
 
         api.get.mockImplementation((endpoint) => {
@@ -211,6 +212,28 @@ describe("getMyRequests", () => {
             { nome: "Extra 0" },
         ]);
         expect(requests[1].produtos).toHaveLength(2);
+    });
+
+    it("transforma os nomes de serviços em itens contáveis", async () => {
+        api.get.mockResolvedValue({
+            content: [{
+                id: 1,
+                crCode: "1234",
+                statusName: "Em análise",
+                requestDate: "2026-07-20",
+                productNames: [],
+                provisionNames: ["Instalação", "Manutenção", "Treinamento"],
+            }],
+        });
+
+        const [request] = await getMyRequests();
+
+        expect(request.produtos).toEqual([]);
+        expect(request.servicos).toEqual([
+            { nome: "Instalação" },
+            { nome: "Manutenção" },
+            { nome: "Treinamento" },
+        ]);
     });
 });
 

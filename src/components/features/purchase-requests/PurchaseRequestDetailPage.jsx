@@ -25,7 +25,7 @@ function formatDisplayDate(date) {
     const parsedDate = new Date(date);
     if (Number.isNaN(parsedDate.getTime())) return "-";
 
-    return parsedDate.toLocaleDateString("pt-BR");
+    return parsedDate.toLocaleDateString("pt-BR", { timeZone: "UTC" });
 }
 
 export default function PurchaseRequestDetailPage() {

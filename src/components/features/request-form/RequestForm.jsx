@@ -397,14 +397,13 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
             ) : (
                 <div className="flex-1 overflow-y-auto p-6">
                     <div className="mb-6">
-                        <h2 className="text-xl font-bold mb-4 dark:text-white">Importar Produtos via CSV</h2>
-                        <p className="text-gray-600 dark:text-gray-400">
+                        <SectionHeader label="Importar Produtos via CSV" />
+                        <p className="text-[14px] mt-2 text-gray-600 dark:text-gray-300">
                             Faça upload do arquivo CSV exportado do Google Sheets. O arquivo deve seguir o formato do modelo fornecido.
                         </p>
                     </div>
 
                     <div className="mb-6">
-                        <label className="block text-sm font-medium mb-2 dark:text-white">Selecione o arquivo CSV</label>
                         <FileDropzone
                             icon={file}
                             iconDark={fileWhite}

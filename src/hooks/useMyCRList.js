@@ -1,11 +1,12 @@
 import { useState, useMemo } from "react";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
 import {
-    getStatusCategory,
     getStatusLabel,
     REQUEST_STATUS_FILTER_OPTIONS,
 } from "@/lib/utils/requestStatus";
 
+const STATUS_PENDENTE = "Aguardando aprovação";
+const STATUS_CONCLUIDOS = ["Entregue", "Recusado", "Cancelado"];
 
 function toIsoDateString(value) {
     if (!value) return "";
@@ -41,14 +42,13 @@ export function useRequestsFilter(solicitacoes = []) {
         return solicitacoes.filter((item) => {
             const produtos = item.produtos || [];
             const statusSolicitacao = item.status || calcularStatusSolicitacao(produtos);
-            const categoria = getStatusCategory(statusSolicitacao, item.statusCategory);
             const statusLabel = getStatusLabel(statusSolicitacao);
 
-            if (abaAtiva === "pendentes" && categoria !== "pendente") {
+            if (abaAtiva === "em_andamento" && (statusLabel === STATUS_PENDENTE || STATUS_CONCLUIDOS.includes(statusLabel))) {
                 return false;
             }
 
-            if (abaAtiva === "concluidas" && categoria !== "concluida") {
+            if (abaAtiva === "concluidas" && !STATUS_CONCLUIDOS.includes(statusLabel)) {
                 return false;
             }
 

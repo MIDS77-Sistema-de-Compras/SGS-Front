@@ -3,7 +3,7 @@ const LEVEL_COLORS = {
     COORDENADOR: "bg-[#022E7C1A] text-[#0040B0] dark:bg-[#1A4A9E]/25 dark:text-[#7FA9F5]",
     SUPERVISOR: "bg-[#FFC1071A] text-[#FFC107] dark:bg-[#D97706]/20 dark:text-[#F0B95B]",
     ADMIN: "bg-[#ffedee] text-[#E30613] dark:bg-[#C62834]/25 dark:text-[#F08B92]",
-    COMPRADOR: "bg-[#022E7C1A] text-[#0040B0] dark:bg-[#1A4A9E]/25 dark:text-[#7FA9F5]",
+    COMPRADOR: "bg-[#f3e0ff] text-[#7d16c7] dark:bg-[#8c2bcc]/25 dark:text-[#c58deb]",
 };
 
 function formatLevel(level) {
