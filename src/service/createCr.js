@@ -16,9 +16,16 @@ export function getBranchesSimple() {
     return api.get('/branches');
 }
 
-export async function getActiveSupervisors() {
+export async function getActiveCrResponsibles() {
     const users = await api.get('/users?size=1000').then(getPageContent);
-    return users.filter(
-        (user) => user.active && user.roleName?.toUpperCase() === 'SUPERVISOR'
-    );
+    const activeUsers = users.filter((user) => user.active);
+
+    return {
+        supervisors: activeUsers.filter(
+            (user) => user.roleName?.toUpperCase() === 'SUPERVISOR'
+        ),
+        coordinators: activeUsers.filter(
+            (user) => user.roleName?.toUpperCase() === 'COORDENADOR'
+        ),
+    };
 }

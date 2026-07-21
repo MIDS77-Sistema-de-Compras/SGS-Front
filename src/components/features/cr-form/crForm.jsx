@@ -20,7 +20,8 @@ export default function RequestFormCR() {
         branches,
         branchesLoading,
         supervisors,
-        supervisorsLoading,
+        coordinators,
+        responsiblesLoading,
         handleChange,
         handleSubmit,
     } = useCreateCr();
@@ -29,6 +30,11 @@ export default function RequestFormCR() {
         supervisors
             .filter((supervisor) => String(supervisor.id) !== String(excludeId))
             .map((supervisor) => ({ value: String(supervisor.id), label: supervisor.name }));
+
+    const coordinatorOptions = coordinators.map((coordinator) => ({
+        value: String(coordinator.id),
+        label: coordinator.name,
+    }));
 
     return (
         <div className="shadow-sm border border-gray-100 dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-col">
@@ -145,27 +151,49 @@ export default function RequestFormCR() {
                         )}
                     </FormField>
 
-                    <FormField label="Supervisor responsável 1">
-                        <Dropdown
-                            name="responsibleUserId1"
-                            placeholder={supervisorsLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
-                            value={formData.responsibleUserId1}
-                            onChange={(e) => handleChange('responsibleUserId1', e.target.value)}
-                            options={supervisorOptions(formData.responsibleUserId2)}
-                            disabled={supervisorsLoading}
-                        />
-                    </FormField>
+                    {formData.master ? (
+                        <FormField label="Coordenador responsável" required className="sm:col-span-2">
+                            <Dropdown
+                                name="responsibleUserId1"
+                                placeholder={responsiblesLoading ? "Carregando coordenadores..." : "Selecione o coordenador"}
+                                value={formData.responsibleUserId1}
+                                onChange={(e) => handleChange('responsibleUserId1', e.target.value)}
+                                options={coordinatorOptions}
+                                error={errors.responsibleUserId1}
+                                disabled={responsiblesLoading}
+                                isRequired
+                            />
+                            {errors.responsibleUserId1 && (
+                                <span className="text-[11px] text-[#BA1A1A] mt-1 block">
+                                    {errors.responsibleUserId1}
+                                </span>
+                            )}
+                        </FormField>
+                    ) : (
+                        <>
+                            <FormField label="Supervisor responsável 1">
+                                <Dropdown
+                                    name="responsibleUserId1"
+                                    placeholder={responsiblesLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
+                                    value={formData.responsibleUserId1}
+                                    onChange={(e) => handleChange('responsibleUserId1', e.target.value)}
+                                    options={supervisorOptions(formData.responsibleUserId2)}
+                                    disabled={responsiblesLoading}
+                                />
+                            </FormField>
 
-                    <FormField label="Supervisor responsável 2">
-                        <Dropdown
-                            name="responsibleUserId2"
-                            placeholder={supervisorsLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
-                            value={formData.responsibleUserId2}
-                            onChange={(e) => handleChange('responsibleUserId2', e.target.value)}
-                            options={supervisorOptions(formData.responsibleUserId1)}
-                            disabled={supervisorsLoading}
-                        />
-                    </FormField>
+                            <FormField label="Supervisor responsável 2">
+                                <Dropdown
+                                    name="responsibleUserId2"
+                                    placeholder={responsiblesLoading ? "Carregando supervisores..." : "Selecione (opcional)"}
+                                    value={formData.responsibleUserId2}
+                                    onChange={(e) => handleChange('responsibleUserId2', e.target.value)}
+                                    options={supervisorOptions(formData.responsibleUserId1)}
+                                    disabled={responsiblesLoading}
+                                />
+                            </FormField>
+                        </>
+                    )}
 
                 </div>
 
