@@ -9,7 +9,13 @@ import SectionHeader from '@/components/ui/layout/SectionHeader';
 import Button from '@/components/ui/button/Button';
 import UserIdentificationSection from '@/components/features/admin/UserIdentification';
 import AccessLevelSelector from '@/components/features/admin/AccessLevelSelector';
-import { getUserById, deleteUser, getLoggedUser, changeUserActivationStatus } from '@/service/users/usersSearch';
+import {
+    getUserById,
+    updateUser,
+    deleteUser,
+    getLoggedUser,
+    changeUserActivationStatus,
+} from '@/service/users/usersSearch';
 import { useNotification } from '@/contexts/NotificationContext';
 import { ModalUser } from '@/components/coord/ModalUser';
 import { Lock, Unlock } from 'lucide-react';
@@ -59,33 +65,28 @@ export default function EditarUsuarios() {
     };
 
     useEffect(() => {
-        if (userId) {
-            loadUser();
-        }
-    }, [userId]);
+        async function loadUser() {
+            try {
+                const response = await getUserById(userId);
 
-    async function loadUser() {
-        try {
-            const response = await getUserById(userId);
-
-            setFormData({
-                nome: response.name ?? '',
-                cpf: '***.***.***-**',
-                telefone: '',
-                ramal: response.extensionNumber ?? '',
-                email: response.email ?? '',
-                senha: '',
-                nivelAcesso: response.roleName ?? '',
-                ativo: response.active ?? true
-            });
-        } catch (error) {
-            console.error('Erro ao buscar usuário:', error);
-            setToast({
-                type: 'error',
-                message: error.message || 'Erro ao carregar usuário.'
-            });
+                setFormData({
+                    nome: response.name ?? '',
+                    cpf: '***.***.***-**',
+                    telefone: '',
+                    ramal: response.extensionNumber ?? '',
+                    email: response.email ?? '',
+                    senha: '',
+                    nivelAcesso: response.roleName ?? '',
+                    ativo: response.active ?? true
+                });
+            } catch (error) {
+                console.error('Erro ao buscar usuário:', error);
+                showNotification(error.message || 'Erro ao carregar usuário.', 'error');
+            }
         }
-    }
+
+        if (userId) loadUser();
+    }, [userId, showNotification]);
 
     const handleChange = (field, value) => {
         if (field === 'cpf') return;
