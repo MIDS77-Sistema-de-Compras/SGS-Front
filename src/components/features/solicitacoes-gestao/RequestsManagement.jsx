@@ -5,7 +5,7 @@ import SolicitacoesTabs from '@/lib/utils/requestTabs';
 import { useRequestsList } from '@/hooks/useRequestsList';
 import { useCRSearch } from '@/hooks/useCRSearch';
 import { api } from '@/service/api';
-import ToastNotification from '@/components/ui/notifications/ToastNotification';
+import { useNotification } from '@/contexts/NotificationContext';
 import { Modal } from '@/components/ui/overlay/Modal';
 import Button from '@/components/ui/button/Button';
 import RequestManagementFilters from './RequestManagementFilters';
@@ -38,6 +38,7 @@ const MENSAGENS_VAZIO = {
 export default function RequestsManagement() {
     const { requests, loading, error } = useRequestsList();
     const { filteredCRs: crs } = useCRSearch();
+    const { showNotification } = useNotification();
 
     const [abaAtiva, setAbaAtiva] = useState('pendentes');
     const [status, setStatus] = useState('');
@@ -47,7 +48,6 @@ export default function RequestsManagement() {
 
     const [overrides, setOverrides] = useState({});
     const [decidingId, setDecidingId] = useState(null);
-    const [notification, setNotification] = useState(null);
 
     const [rejectTarget, setRejectTarget] = useState(null);
     const [justificativa, setJustificativa] = useState('');
@@ -88,10 +88,10 @@ export default function RequestsManagement() {
         });
 
         return filtrados.sort((a, b) => {
-            const dataA = new Date(a.data).getTime(); 
+            const dataA = new Date(a.data).getTime();
             const dataB = new Date(b.data).getTime();
-            
-            return dataB - dataA; 
+
+            return dataB - dataA;
         });
     }, [itensComOverrides, abaAtiva, status, cr, supervisor, busca]);
 
@@ -128,12 +128,12 @@ export default function RequestsManagement() {
                 justification,
             });
 
-            setNotification({
-                type: 'success',
-                message: novoStatus === 'Aprovado'
+            showNotification(
+                novoStatus === 'Aprovado'
                     ? 'Solicitação aprovada com sucesso.'
                     : 'Solicitação recusada.',
-            });
+                'success'
+            );
         } catch (err) {
             setOverrides((prev) => {
                 const next = { ...prev };
@@ -141,10 +141,7 @@ export default function RequestsManagement() {
                 return next;
             });
 
-            setNotification({
-                type: 'error',
-                message: err.message || 'Não foi possível atualizar a solicitação.',
-            });
+            showNotification(err.message || 'Não foi possível atualizar a solicitação.', 'error');
         } finally {
             setDecidingId(null);
         }
@@ -152,8 +149,6 @@ export default function RequestsManagement() {
 
     return (
         <div className="flex flex-col gap-4 h-full min-h-0">
-            <ToastNotification notification={notification} setNotification={setNotification} />
-
             <RequestManagementFilters
                 status={status}
                 setStatus={setStatus}
