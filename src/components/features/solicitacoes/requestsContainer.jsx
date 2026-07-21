@@ -64,6 +64,7 @@ export default function RequestsContainer({ solicitacoesIniciais = [] }) {
                         <SolicitacoesTable
                             itens={solicitacoesOrdenadas} 
                             onItemClick={(id) => router.push(`/solicitacoes/${id}`)}
+                            onItemEdit={(id) => router.push(`/solicitacoes/${id}/editar`)}
                         />
                     )}
                 </div>

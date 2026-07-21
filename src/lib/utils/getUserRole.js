@@ -1,18 +1,34 @@
 import Cookies from 'js-cookie';
 
+function normalizeRole(role) {
+    return typeof role === 'string'
+        ? role.trim().toUpperCase().replace(/^ROLE_/, '')
+        : null;
+}
+
+function decodeJwtPayload(token) {
+    const payload = token.split('.')[1];
+    if (!payload) return null;
+
+    const base64 = payload
+        .replace(/-/g, '+')
+        .replace(/_/g, '/')
+        .padEnd(Math.ceil(payload.length / 4) * 4, '=');
+
+    return JSON.parse(atob(base64));
+}
+
 export function getUserRole() {
     const token = Cookies.get('jwt');
-    
-    if (!token) return null;
+    const roleFromCookie = normalizeRole(Cookies.get('role'));
+
+    if (!token) return roleFromCookie;
 
     try {
-        const payloadBase64 = token.split('.')[1];
-        const decodedJson = atob(payloadBase64);
-        const usuario = JSON.parse(decodedJson);
-        
-        return usuario?.role?.toUpperCase() || null; 
+        const user = decodeJwtPayload(token);
+        return normalizeRole(user?.role) || roleFromCookie;
     } catch (error) {
         console.error("Erro ao decodificar token no frontend:", error);
-        return null;
+        return roleFromCookie;
     }
 }

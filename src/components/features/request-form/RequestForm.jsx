@@ -22,10 +22,10 @@ import ProductRequestTable from "./local-csv-viewer/ProductRequestTable";
 import ProvisionRequestTable from "./local-csv-viewer/ProvisionRequestTable";
 
 // this needs componentization
-export default function RequestForm() {
+export default function RequestForm({ initialRequest = null, onSaved }) {
     const {
         abaAtiva, setAbaAtiva,
-        abas,
+        abas, isEditMode,
         branchId,
         branchOptions,
         requester, setRequester,
@@ -48,19 +48,19 @@ export default function RequestForm() {
         productError, serviceError,
         success, setSuccess,
         handleBranchChange, handleCrBranchChange,
-        handleAddProduct, handleRemoveProduct,
-        handleAddService, handleRemoveService,
+        handleAddProduct, handleEditProduct, handleRemoveProduct,
+        handleAddService, handleEditService, handleRemoveService,
         handleProductSelection, handleServiceSelection,
-        handleFilesSelected, handleRemoveAttachment,
+        handleFilesSelected, handleRemoveAttachment, handleRemoveExistingAttachment,
         handleSubmit,
-        attachments, setAttachments,
+        attachments, setAttachments, existingAttachments,
         csvData, setCsvData,
         csvError, setCsvError,
         csvType,
         isProcessing, setIsProcessing,
         handleImportSubmit,
         handleConfirmImport
-    } = useRequestForm();
+    } = useRequestForm({ initialRequest, onSaved });
 
     function formatFileSize(bytes) {
         if (bytes < 1024) return `${bytes} B`;
@@ -71,7 +71,7 @@ export default function RequestForm() {
     return (
         <div className="border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
             <SolicitacoesTabs
-                titulo="Nova Solicitação"
+                titulo={isEditMode ? "Editar Solicitação" : "Nova Solicitação"}
                 abaAtiva={abaAtiva}
                 setAbaAtiva={setAbaAtiva}
                 abas={abas}
@@ -226,7 +226,7 @@ export default function RequestForm() {
                                 </div>
 
                                 <div className="mt-5">
-                                    <ListProducts products={products} onRemove={handleRemoveProduct} tipo={"produto"} />
+                                    <ListProducts products={products} onEdit={handleEditProduct} onRemove={handleRemoveProduct} tipo={"produto"} />
                                 </div>
                             </div>
 
@@ -283,7 +283,7 @@ export default function RequestForm() {
                                 </div>
 
                                 <div className="mt-5">
-                                    <ListProducts products={services} onRemove={handleRemoveService} tipo={"serviço"} />
+                                    <ListProducts products={services} onEdit={handleEditService} onRemove={handleRemoveService} tipo={"serviço"} />
                                 </div>
                             </div>
                         )}
@@ -301,6 +301,39 @@ export default function RequestForm() {
                                     accept=".pdf,.jpg,.jpeg,.png,.docx,.csv"
                                     onFilesSelected={handleFilesSelected}
                                 />
+
+                                {existingAttachments.length > 0 && (
+                                    <ul className="mt-3 flex flex-col gap-2">
+                                        {existingAttachments.map((attachment) => (
+                                            <li
+                                                key={attachment.id}
+                                                className="flex items-center justify-between rounded-lg border border-[#AAAAAA] px-4 py-2 text-sm"
+                                            >
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <a
+                                                        href={attachment.url}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="truncate font-medium text-[#103D85] dark:text-[#5D8EF7] hover:underline"
+                                                    >
+                                                        {attachment.originalName}
+                                                    </a>
+                                                    <span className="shrink-0 text-[#747782]">
+                                                        {formatFileSize(attachment.size)}
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveExistingAttachment(attachment.id)}
+                                                    className="ml-3 shrink-0 font-bold text-[#BA1A1A] hover:opacity-70"
+                                                    aria-label={`Remover ${attachment.originalName}`}
+                                                >
+                                                    ×
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
 
                                 {attachments.length > 0 && (
                                     <ul className="mt-3 flex flex-col gap-2">
@@ -336,7 +369,9 @@ export default function RequestForm() {
                                 <p className="mb-3 text-sm font-semibold text-[#BA1A1A] dark:text-[#F87171]">{formError}</p>
                             )}
                             {success && (
-                                <p className="mb-3 text-sm font-semibold text-[#2E7D32] dark:text-[#4ADE80]">Solicitação criada com sucesso.</p>
+                                <p className="mb-3 text-sm font-semibold text-[#2E7D32] dark:text-[#4ADE80]">
+                                    {isEditMode ? "Solicitação atualizada com sucesso." : "Solicitação criada com sucesso."}
+                                </p>
                             )}
 
                             <Button
@@ -347,7 +382,7 @@ export default function RequestForm() {
                                 disabled={submitting}
                             >
                                 <span className="flex gap-5">
-                                    FINALIZAR SOLICITAÇÃO
+                                    {isEditMode ? "SALVAR ALTERAÇÕES" : "FINALIZAR SOLICITAÇÃO"}
                                     <Image
                                         src={send}
                                         alt="Paper Plane Send Icon"
