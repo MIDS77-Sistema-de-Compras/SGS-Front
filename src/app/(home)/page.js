@@ -8,8 +8,9 @@ import HomeFooter from "@/components/features/home/HomeFooter"
 import RecentActivity from "@/components/features/home/RecentActivity"
 import { getUserRole } from "@/lib/utils/getUserRole";
 import CompradorFooter from "@/components/features/home/CompradorFooter";
+import CompradorSummaryCard from "@/components/features/home/CompradorSummaryCard";
 
-export default function Home(){
+export default function Home() {
     useDocumentTitle("Home");
 
     const [role, setRole] = useState(null);
@@ -22,13 +23,18 @@ export default function Home(){
         setMounted(true);
     }, []);
 
-    return(
+    return (
         <div className="flex flex-1 flex-col gap-8 lg:gap-0">
             <Header />
 
             <section className="flex flex-col-reverse lg:flex-row gap-6 min-[1350px]:gap-10 lg:my-auto">
                 <RecentActivity />
-                <SummaryCard />
+                {mounted ? (
+                    role === "COMPRADOR" ? <CompradorSummaryCard /> : <SummaryCard />
+                ) : (
+                    <div className="min-h-[172px]" />
+                )}
+                
             </section>
 
             {mounted ? (

@@ -92,6 +92,7 @@ function normalizeListItem(item) {
         status: item.statusName,
         statusCategory: item.statusCategory,
         produtos: (item.productNames || []).map((nome) => ({ nome })),
+        servicos: (item.provisionNames || []).map((nome) => ({ nome })),
     };
 }
 
@@ -181,6 +182,10 @@ export async function getRequestById(id, { ownRequest = false } = {}) {
 }
 
 export const requestsService = {
+    findAll: () => api.get("/requests?size=1000").then(
+        getPageContent
+    ),
+
     findMine: () => api.get("/requests/me?size=1000").then(
         getPageContent
     ),

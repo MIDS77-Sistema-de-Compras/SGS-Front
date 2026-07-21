@@ -9,6 +9,7 @@ export default function ProductAutocomplete({
     onChange,
     onSelectProduct,
     placeholder,
+    error,
 }) {
     const [allProducts, setAllProducts] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -70,6 +71,7 @@ export default function ProductAutocomplete({
                 variant="form"
                 placeholder={placeholder}
                 value={value || ''}
+                error={error}
                 onChange={(event) => {
                     onChange(event.target.value);
                     setIsOpen(true);

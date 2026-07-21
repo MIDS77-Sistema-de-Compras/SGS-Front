@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input/Input';
 import { api } from '@/service/api';
 
-export default function ServiceAutocomplete({ value, onChange, onSelectProvision, placeholder }) {
+export default function ServiceAutocomplete({ value, onChange, onSelectProvision, placeholder, error }) {
     const [allProvisions, setAllProvisions] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -52,6 +52,7 @@ export default function ServiceAutocomplete({ value, onChange, onSelectProvision
                 variant="form"
                 placeholder={placeholder}
                 value={value || ""}
+                error={error}
                 onChange={(event) => {
                     onChange(event.target.value);
                     setIsOpen(true);

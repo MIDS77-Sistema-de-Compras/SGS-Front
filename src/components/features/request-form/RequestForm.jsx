@@ -10,6 +10,7 @@ import file from "../../../../public/images/icons/file.svg";
 import fileWhite from "../../../../public/images/icons/fileWhite.svg";
 import FormField from "@/components/ui/form/FormField";
 import { Input } from "@/components/ui/input/Input";
+import FieldError from "@/components/ui/notifications/FieldError";
 import PhoneInput from "@/components/ui/input/PhoneInput";
 import SectionHeader from "@/components/ui/layout/SectionHeader";
 import Button from "@/components/ui/button/Button";
@@ -44,10 +45,12 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
         unitOptions,
         submitting, setSubmitting,
         formError, setFormError,
+        productError, serviceError,
         success, setSuccess,
         handleBranchChange, handleCrBranchChange,
         handleAddProduct, handleEditProduct, handleRemoveProduct,
         handleAddService, handleEditService, handleRemoveService,
+        handleProductSelection, handleServiceSelection,
         handleFilesSelected, handleRemoveAttachment, handleRemoveExistingAttachment,
         handleSubmit,
         attachments, setAttachments, existingAttachments,
@@ -150,11 +153,11 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
                                     <ProductAutocomplete
                                         value={productName}
                                         onChange={setProductName}
-                                        onSelectProduct={(product) => {
-                                            setProductName(product.name);
-                                        }}
+                                        onSelectProduct={handleProductSelection}
                                         placeholder="Digite o nome do produto..."
+                                        error={productError}
                                     />
+                                    <FieldError message={productError} />
                                 </FormField>
 
                                 <FormField
@@ -215,6 +218,8 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
                                         variant="primary"
                                         className="w-10 h-10 mt-auto flex items-center justify-center text-2xl"
                                         onClick={handleAddProduct}
+                                        disabled={submitting}
+                                        isLoading={submitting}
                                     >
                                         +
                                     </Button>
@@ -232,15 +237,14 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
 
                              <div className="flex flex-col md:flex-row w-full gap-5">
                                  <FormField label="Título do Serviço" required className="flex-2">
-                                    <ServiceAutocomplete
-                                        placeholder="Digite para buscar um serviço..."
-                                        value={serviceName}
-                                        onChange={setServiceName}
-                                        onSelectProvision={(provision) => {
-                                            setServiceValue(String(provision.totalValue ?? ""));
-                                            setServiceAdditionalInfo(provision.description ?? "");
-                                        }}
-                                    />
+                                     <ServiceAutocomplete
+                                         placeholder="Digite para buscar um serviço..."
+                                         value={serviceName}
+                                         onChange={setServiceName}
+                                         onSelectProvision={handleServiceSelection}
+                                         error={serviceError}
+                                     />
+                                     <FieldError message={serviceError} />
                                 </FormField>
 
                                     <FormField label="Valor" required className="flex-1">
@@ -271,6 +275,8 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
                                         variant="primary"
                                         className="w-10 h-10 flex items-center justify-center text-2xl"
                                         onClick={handleAddService}
+                                        disabled={submitting}
+                                        isLoading={submitting}
                                     >
                                         +
                                     </Button>
@@ -373,6 +379,7 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
                                 variant="primary"
                                 className="py-3 px-7 text-[14px] font-semibold"
                                 isLoading={submitting}
+                                disabled={submitting}
                             >
                                 <span className="flex gap-5">
                                     {isEditMode ? "SALVAR ALTERAÇÕES" : "FINALIZAR SOLICITAÇÃO"}
@@ -390,14 +397,13 @@ export default function RequestForm({ initialRequest = null, onSaved }) {
             ) : (
                 <div className="flex-1 overflow-y-auto p-6">
                     <div className="mb-6">
-                        <h2 className="text-xl font-bold mb-4 dark:text-white">Importar Produtos via CSV</h2>
-                        <p className="text-gray-600 dark:text-gray-400">
+                        <SectionHeader label="Importar Produtos via CSV" />
+                        <p className="text-[14px] mt-2 text-gray-600 dark:text-gray-300">
                             Faça upload do arquivo CSV exportado do Google Sheets. O arquivo deve seguir o formato do modelo fornecido.
                         </p>
                     </div>
 
                     <div className="mb-6">
-                        <label className="block text-sm font-medium mb-2 dark:text-white">Selecione o arquivo CSV</label>
                         <FileDropzone
                             icon={file}
                             iconDark={fileWhite}

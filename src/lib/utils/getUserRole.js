@@ -19,16 +19,6 @@ function decodeJwtPayload(token) {
 }
 
 export function getUserRole() {
-    const token = Cookies.get('jwt');
-    const roleFromCookie = normalizeRole(Cookies.get('role'));
-
-    if (!token) return roleFromCookie;
-
-    try {
-        const user = decodeJwtPayload(token);
-        return normalizeRole(user?.role) || roleFromCookie;
-    } catch (error) {
-        console.error("Erro ao decodificar token no frontend:", error);
-        return roleFromCookie;
-    }
+    const role = Cookies.get('role');
+    return role ? role.toUpperCase() : null;
 }

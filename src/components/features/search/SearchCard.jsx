@@ -11,9 +11,8 @@ export function SearchCard({ cr }) {
                 ? 'border-[#E5A900] bg-white ring-1 ring-[#E5A900]/25 dark:border-[#F2C94C] dark:bg-[#303746] dark:ring-[#F2C94C]/20'
                 : 'border-gray-100 bg-white dark:border-white/10 dark:bg-[#303746]'
         }`}>
-            {cr.master === true && (
-                <span className="absolute inset-y-0 left-0 w-1 bg-[#E5A900] dark:bg-[#F2C94C]" aria-hidden="true" />
-            )}
+            {/* O bloco que criava a borda grossa na esquerda foi removido daqui */}
+            
             <div className="flex justify-between items-start gap-3">
                 <div className="flex items-center gap-2 shrink-0">
                     <span className="font-bold text-lg text-gray-800 dark:text-[#E2E2EA] tracking-wide">

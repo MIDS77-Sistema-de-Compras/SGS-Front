@@ -56,7 +56,7 @@ export default function UserTable({ users, onImpersonate }) {
 
                             <th className="py-3 px-4 font-medium w-[15%]">
                                 <div className="flex items-center gap-1 cursor-pointer hover:text-[#103D85] dark:hover:text-[#5D8EF7]">
-                                    Último Acesso <ChevronsUpDown size={14} className="text-gray-400" />
+                                    Última Atualização <ChevronsUpDown size={14} className="text-gray-400" />
                                 </div>
                             </th>
                             <th className="py-3 px-4 font-medium w-[8%] text-center dark:text-[#E2E2EA]">Ações</th>

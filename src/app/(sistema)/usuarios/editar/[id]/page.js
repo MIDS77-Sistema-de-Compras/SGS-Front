@@ -10,7 +10,7 @@ import Button from '@/components/ui/button/Button';
 import UserIdentificationSection from '@/components/features/admin/UserIdentification';
 import AccessLevelSelector from '@/components/features/admin/AccessLevelSelector';
 import { getUserById, deleteUser, getLoggedUser, changeUserActivationStatus } from '@/service/users/usersSearch';
-import Toast from '@/components/ui/notifications/Toast';
+import { useNotification } from '@/contexts/NotificationContext';
 import { ModalUser } from '@/components/coord/ModalUser';
 import { Lock, Unlock } from 'lucide-react';
 
@@ -52,7 +52,11 @@ export default function EditarUsuarios() {
         action: 'desativar'
     });
 
-    const [toast, setToast] = useState(null);
+    const { showNotification } = useNotification();
+
+    const setToast = (t) => {
+        if (t?.message) showNotification(t.message, t.type);
+    };
 
     useEffect(() => {
         if (userId) {
@@ -145,20 +149,7 @@ export default function EditarUsuarios() {
 
     async function handleDelete() {
         try {
-            try {
-                await deleteUser(userId);
-            } catch (apiError) {
-                console.warn('API delete failed, proceeding with local exclusion:', apiError);
-            }
-
-            if (typeof window !== "undefined") {
-                const deleted = JSON.parse(localStorage.getItem("deleted_users") || "[]");
-                const userIdStr = String(userId);
-                if (!deleted.includes(userIdStr)) {
-                    deleted.push(userIdStr);
-                    localStorage.setItem("deleted_users", JSON.stringify(deleted));
-                }
-            }
+            await deleteUser(userId); 
 
             setToast({
                 type: 'success',
@@ -167,7 +158,9 @@ export default function EditarUsuarios() {
 
             setTimeout(() => {
                 router.push('/usuarios/gerenciar');
+                router.refresh(); 
             }, 1500);
+            
         } catch (error) {
             console.error('Erro ao excluir usuário:', error);
             setToast({
@@ -236,17 +229,6 @@ export default function EditarUsuarios() {
 
     return (
         <>
-            {toast && (
-                <div className="fixed top-4 right-4 z-50">
-                    <Toast
-                        message={toast.message}
-                        type={toast.type}
-                        duration={4000}
-                        onClose={() => setToast(null)}
-                    />
-                </div>
-            )}
-
             <div className="flex flex-col w-full gap-5 flex-1 min-h-0 overflow-y-auto pl-1 pr-3 pb-4">
                 <div className="bg-white dark:bg-[#1A2233] px-5 py-3 rounded-xl shadow-sm border border-gray-100 dark:border-white/10">
                     <div className="flex items-center">

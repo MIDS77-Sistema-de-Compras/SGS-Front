@@ -4,31 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import SummaryItem from "./SummaryItem";
 import SummaryCardSkeleton from "./SummaryCardSkeleton";
 import { requestsService } from "@/service/requests";
-import { resolveRequestStatus, getStatusLabel, isVisibleToComprador } from "@/lib/utils/requestStatus";
-import { getUserRole } from "@/lib/utils/getUserRole";
-
-const APPROVED_STATUS_KEYS = new Set([
-    "aprovado",
-    "auto_aprovado",
-    "parcialmente_aprovada",
-    "entregue",
-]);
-
-const REFUSED_STATUS_KEYS = new Set([
-    "recusado",
-    "cancelado",
-]);
-
-const PENDING_STATUS_KEYS = new Set([
-    "aguardando_aprovacao",
-    "em_atendimento",
-    "atrasada",
-    "recebimento_parcial",
-    "fundo_rotativo",
-    "cd_central",
-    "solicitado_portal",
-    "parcialmente_atendida",
-]);
+import { resolveRequestStatus } from "@/lib/utils/requestStatus";
 
 const summaryConfig = [
     {
@@ -42,15 +18,15 @@ const summaryConfig = [
         id: "approved",
         iconSrc: "/images/home/solAprovada.png",
         iconSrcDark: "/images/home/solAprovada-darktheme.svg",
-        iconAlt: "Icone Solicitações Aprovadas",
-        label: "Aprovadas",
+        iconAlt: "Icone Solicitações Concluídas",
+        label: "Concluídas",
     },
     {
         id: "refused",
         iconSrc: "/images/home/solRecusada.png",
         iconSrcDark: "/images/home/solRecusada-darktheme.svg",
-        iconAlt: "Icone Solicitações Recusadas",
-        label: "Recusadas",
+        iconAlt: "Icone Solicitações Canceladas",
+        label: "Canceladas",
     },
 ];
 
@@ -58,15 +34,15 @@ function getSummaryCounts(requests) {
     return requests.reduce((counts, request) => {
         const { key } = resolveRequestStatus(request.statusName);
 
-        if (APPROVED_STATUS_KEYS.has(key)) {
+        if (key === "aprovado") {
             return { ...counts, approved: counts.approved + 1 };
         }
 
-        if (REFUSED_STATUS_KEYS.has(key)) {
+        if (key === "recusado") {
             return { ...counts, refused: counts.refused + 1 };
         }
 
-        if (PENDING_STATUS_KEYS.has(key)) {
+        if (key === "aguardando_aprovacao" || key === "em_atendimento") {
             return { ...counts, pending: counts.pending + 1 };
         }
 
@@ -78,52 +54,23 @@ function getSummaryCounts(requests) {
     });
 }
 
-// Para o comprador as solicitações vêm sempre pra ele (não existe "comprador
-// responsável" no back) — o resumo cobre todas as que já chegaram na etapa de
-// compra. Aprovadas = já entregues; Recusadas = pedido cancelado; o resto ainda
-// está em andamento (Aprovado, Em atendimento, Atrasada, Parcialmente atendida etc.).
-function getCompradorSummaryCounts(requests) {
-    return requests.reduce((counts, request) => {
-        const label = getStatusLabel(request.statusName);
-
-        if (label === "Entregue") {
-            return { ...counts, approved: counts.approved + 1 };
-        }
-
-        if (label === "Cancelado") {
-            return { ...counts, refused: counts.refused + 1 };
-        }
-
-        return { ...counts, pending: counts.pending + 1 };
-    }, {
-        pending: 0,
-        approved: 0,
-        refused: 0,
-    });
-}
-
 function formatCount(value) {
     return String(value).padStart(2, "0");
 }
 
-export default function SummaryCard() {
+export default function CompradorSummaryCard() {
     const [requests, setRequests] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
-    const [isComprador, setIsComprador] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
-        const comprador = getUserRole() === "COMPRADOR";
 
         async function loadRequests() {
             try {
-                const data = comprador
-                    ? (await requestsService.findAll()).filter((request) => isVisibleToComprador(request.statusName))
-                    : await requestsService.findMine();
+                const data = await requestsService.findMine();
 
                 if (isMounted) {
-                    setIsComprador(comprador);
                     setRequests(Array.isArray(data) ? data : []);
                     setError("");
                 }
@@ -145,10 +92,7 @@ export default function SummaryCard() {
         };
     }, []);
 
-    const counts = useMemo(
-        () => (isComprador ? getCompradorSummaryCounts(requests) : getSummaryCounts(requests)),
-        [requests, isComprador]
-    );
+    const counts = useMemo(() => getSummaryCounts(requests), [requests]);
 
     return (
         <div className="w-full lg:w-[360px] min-[1350px]:w-[430px] lg:shrink-0 border border-gray-100 dark:border-white/10 rounded-xl px-4 sm:px-5 py-4 sm:py-3 shadow-sm dark:bg-[#1A2233]">
@@ -157,7 +101,7 @@ export default function SummaryCard() {
                     Resumo
                 </h2>
                 <p className="shrink-0 text-right text-[#103D85] dark:text-[#C3C6D3] text-[11px] sm:text-[12px] leading-tight">
-                    Minhas <br /> solicitações
+                    Solicitações <br /> de compra
                 </p>
             </div>
 

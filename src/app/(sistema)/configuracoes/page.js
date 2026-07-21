@@ -9,9 +9,9 @@ export default function Settings() {
     useDocumentTitle("Configurações");
 
     return (
-        <div className="flex flex-col flex-1 min-h-0">
+        <div className="flex flex-col flex-1 min-h-0 overflow-y-auto pb-6 pr-2">
 
-            <header className="mb-5">
+            <header className="mb-5 shrink-0">
                 <h1 className="text-xl sm:text-[22px] font-bold text-[#1E3A8A] dark:text-[#E2E2EA] tracking-tight font-sans">Configurações</h1>
                 <p className="text-xs sm:text-sm text-gray-400 dark:text-[#C3C6D3] mt-1">Gerencie suas preferências e configurações do sistema</p>
             </header>

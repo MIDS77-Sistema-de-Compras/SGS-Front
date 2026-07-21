@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { formatRelativeTime, getNotificationIcon } from "./notificationUtils";
+import { getUserRole } from "@/lib/utils/getUserRole";
 
 export default function NotificationCard({ notification, onMarkAsViewed, isUpdating = false }) {
     const router = useRouter();
@@ -15,7 +16,10 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
         }
 
         if (notification.requestId) {
-            router.push(`/solicitacoes/${notification.requestId}`);
+            const basePath = getUserRole() === "COMPRADOR"
+                ? "/solicitacoes-compra"
+                : "/solicitacoes";
+            router.push(`${basePath}/${notification.requestId}`);
         }
     }
 
@@ -35,7 +39,7 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
             </div>
 
           
-            <div className="flex-1 min-w-0 flex flex-row items-start justify-between gap-4">
+            <div className="flex-1 min-w-0 flex flex-row items-start justify-between gap-15">
                 
                 <div className="flex-1 min-w-0 flex flex-col">
                     <p className="text-[14px] sm:text-[15px] font-bold leading-tight text-black dark:text-[#E2E2EA]">
