@@ -6,6 +6,7 @@ import ActivityItem from "./ActivityItem";
 import RecentActivitySkeleton from "./RecentActivitySkeleton";
 import { notificationsService } from "@/service/notifications";
 import { formatRelativeTime, getNotificationIcon, sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
+import { getUserRole } from "@/lib/utils/getUserRole";
 
 export default function RecentActivity() {
     const router = useRouter();
@@ -46,6 +47,13 @@ export default function RecentActivity() {
         sortNotificationsByDate(notifications).slice(0, 4)
     ), [notifications]);
 
+    function openRequest(requestId) {
+        const basePath = getUserRole() === "COMPRADOR"
+            ? "/solicitacoes-compra"
+            : "/solicitacoes";
+        router.push(`${basePath}/${requestId}`);
+    }
+
     return (
         <div className="min-w-0 flex-1 flex flex-col border border-gray-100 dark:border-white/10 rounded-xl px-4 sm:px-5 py-4 sm:py-3 shadow-sm dark:bg-[#1A2233]">
             <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[18px] sm:text-[22px]">
@@ -80,7 +88,7 @@ export default function RecentActivity() {
                                 title={notification.title || `Solicitacao #${notification.requestId}`}
                                 subtitle={notification.message || "Atualizacao de solicitacao"}
                                 time={formatRelativeTime(notification.createdAt)}
-                                onClick={notification.requestId ? () => router.push(`/solicitacoes/${notification.requestId}`) : undefined}
+                                onClick={notification.requestId ? () => openRequest(notification.requestId) : undefined}
                             />
                         );
                     })}

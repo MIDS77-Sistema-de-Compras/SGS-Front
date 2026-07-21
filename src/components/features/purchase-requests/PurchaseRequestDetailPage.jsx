@@ -5,10 +5,12 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 
 import ProductTable from "@/components/features/solicitacoes/ProductTable";
+import RequestDetailsSkeleton from "@/components/features/solicitacoes/RequestDetailsSkeleton";
 import ProductModal from "@/components/features/solicitacoes/ProductModal";
 import RequestAttachments from "@/components/features/solicitacoes/RequestAttachments";
 import Button from "@/components/ui/button/Button";
 import { useRequestDetails } from "@/hooks/useRequestDetails";
+import { useNotification } from "@/contexts/NotificationContext";
 import { useCompradorItemStatusFlow } from "@/hooks/useCompradorItemStatusFlow";
 import {
     getStatusColor,
@@ -33,7 +35,11 @@ export default function PurchaseRequestDetailPage() {
 
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [notification, setNotification] = useState(null);
+    const { showNotification } = useNotification();
+
+    const setNotification = (n) => {
+        if (n?.message) showNotification(n.message, n.type);
+    };
 
     const localProducts = solicitacao?.produtos || [];
     const localServices = solicitacao?.servicos || [];
@@ -68,11 +74,7 @@ export default function PurchaseRequestDetailPage() {
     };
 
     if (loading) {
-        return (
-            <div className="flex-1 flex items-center justify-center">
-                <p className="text-gray-500 dark:text-[#C3C6D3] text-lg">Carregando solicitação...</p>
-            </div>
-        );
+        return <RequestDetailsSkeleton rows={4} showActionColumn />;
     }
 
     if (error || !solicitacao) {
@@ -90,15 +92,6 @@ export default function PurchaseRequestDetailPage() {
 
     return (
         <div className="flex-1 p-0">
-            {notification && (
-                <div className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] px-5 py-3 rounded-xl text-white shadow-sm ${notification.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
-                    <div className="flex items-center gap-3">
-                        <span>{notification.message}</span>
-                        <button onClick={() => setNotification(null)} className="hover:opacity-80">×</button>
-                    </div>
-                </div>
-            )}
-
             <div className="w-full">
                 <div className="border border-gray-100 shadow-sm dark:border-white/10 dark:bg-[#1A2233] rounded-xl flex flex-1 flex-col overflow-hidden min-h-0">
                     <div className="flex items-center gap-3 px-5 py-3">

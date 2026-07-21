@@ -2,7 +2,7 @@ import FileDropzone from '@/components/ui/upload/FileDropzone';
 import fileBox from '../../../../public/images/icons/fileBox.svg';
 import fileBoxWhite from '../../../../public/images/icons/fileBoxWhite.svg';
 
-export default function ListProducts({ products = [], onRemove, tipo = "produto" }) {
+export default function ListProducts({ products = [], onEdit, onRemove, tipo = "produto" }) {
     if (products.length === 0) {
         return (
             <FileDropzone
@@ -32,17 +32,32 @@ export default function ListProducts({ products = [], onRemove, tipo = "produto"
                         <p className="font-bold text-[14px] text-gray-800 dark:text-[#E2E2EA] break-words">
                             {product.name}
                         </p>
-                        {product.additionalInformations && (
+                        {(product.additionalInformations || product.additionalInformation) && (
                             <p className="text-[12px] text-neutral-500 dark:text-[#C3C6D3] break-all">
-                                {product.additionalInformations}
+                                {product.additionalInformations || product.additionalInformation}
                             </p>
                         )}
                     </div>
 
                     <div className="flex items-center gap-4 shrink-0">
                         <span className="text-[13px] font-medium text-[#355C9C] dark:text-[#5D8EF7] whitespace-nowrap">
-                            {product.quantity} {product.measurementUnit}
+                            {tipo === "produto"
+                                ? `${product.quantity} ${product.measurementUnit}`
+                                : Number(product.totalValue || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
                         </span>
+                        {onEdit && (
+                            <button
+                                type="button"
+                                onClick={() => onEdit(product)}
+                                className="text-gray-400 hover:text-[#103D85] dark:hover:text-[#5D8EF7] transition-colors"
+                                aria-label={`Editar ${tipo}`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M12 20h9" />
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                                </svg>
+                            </button>
+                        )}
                         {onRemove && (
                             <button
                                 type="button"

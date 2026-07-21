@@ -6,6 +6,7 @@ import Dropdown from "@/components/ui/select/Dropdown";
 export default function ProductTableRow({
     item,
     openModal,
+    isServiceRequest = false,
     showItemDecisions = false,
     decision = null,
     onAcceptItem,
@@ -21,16 +22,18 @@ export default function ProductTableRow({
                 className={`py-3 pl-4 min-[1350px]:pl-6 pr-3 text-left text-[13px] min-[1350px]:text-base text-gray-700 dark:text-[#E2E2EA] font-medium truncate cursor-pointer ${tdHoverAndRoundedClass}`}
                 onClick={() => openModal(item)}
             >
-                {item.code} {item.nome}
+                {isServiceRequest ? item.nome : `${item.code} ${item.nome}`}
             </td>
             <td
                 className={`py-3 pr-3 text-left text-[13px] min-[1350px]:text-base text-gray-500 dark:text-[#C3C6D3] truncate cursor-pointer ${tdHoverAndRoundedClass}`}
                 onClick={() => openModal(item)}
             >
-                {item.variation || "—"}
-            </td>
+{isServiceRequest ? `SERV-${item.id}` : (item.variation || "—")}
+</td>
             <td className={`py-3 px-3 text-center text-[13px] min-[1350px]:text-base text-gray-600 dark:text-[#C3C6D3] font-medium truncate ${tdHoverAndRoundedClass}`}>
-                {item.quantity} {item.unit?.toLowerCase()}
+                {isServiceRequest
+                    ? (item.description || item.additionalInfo || "-")
+                    : `${item.quantity} ${item.unit?.toLowerCase() || ""}`}
             </td>
             <td className={`py-3 px-3 text-center ${tdHoverAndRoundedClass}`}>
                 <button
@@ -55,7 +58,7 @@ export default function ProductTableRow({
             {showItemDecisions && (
                 <td className={`py-3 px-3 text-center ${tdHoverAndRoundedClass}`}>
                     {itemStatusOptions ? (
-                        <div className="min-w-[170px] mx-auto">
+                        <div className="w-full max-w-[180px] mx-auto">
                             <Dropdown
                                 name={`item-status-${item.id}`}
                                 value={decision || ""}
@@ -70,22 +73,20 @@ export default function ProductTableRow({
                             <button
                                 onClick={() => onAcceptItem?.(item)}
                                 title={decision === "Aprovado" ? "Clique para desfazer" : "Aprovar item"}
-                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${
-                                    decision === "Aprovado"
+                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${decision === "Aprovado"
                                         ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
                                         : "text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-500/10"
-                                }`}
+                                    }`}
                             >
                                 Aprovar
                             </button>
                             <button
                                 onClick={() => onRejectItem?.(item)}
                                 title={decision === "Recusado" ? "Clique para desfazer" : "Recusar item"}
-                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${
-                                    decision === "Recusado"
+                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${decision === "Recusado"
                                         ? "bg-[#BA1A1A] border-[#BA1A1A] text-white hover:bg-[#a01717]"
                                         : "text-[#BA1A1A] border-[#BA1A1A] hover:bg-red-50 dark:hover:bg-red-500/10"
-                                }`}
+                                    }`}
                             >
                                 Recusar
                             </button>

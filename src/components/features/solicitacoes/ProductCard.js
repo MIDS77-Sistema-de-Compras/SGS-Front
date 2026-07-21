@@ -21,7 +21,7 @@ export default function ProductCard({
         >
             <div className="flex items-center justify-between gap-3">
                 <p className="font-semibold text-[15px] text-gray-800 dark:text-[#E2E2EA] break-words min-w-0">
-                    {item.code} {item.nome}
+                    {isServiceRequest ? item.nome : `${item.code} ${item.nome}`}
                 </p>
                 <span className="shrink-0 text-[22px] leading-none text-[#103D85] dark:text-[#5D8EF7]">
                     ›
@@ -36,7 +36,7 @@ export default function ProductCard({
                         {isServiceRequest ? "Código" : "Variação"}
                     </dt>
                     <dd className="text-[#355C9C] dark:text-[#C3C6D3] font-medium break-words">
-                        {item.variation || "—"}
+                        {isServiceRequest ? `SERV-${item.id}` : (item.variation || "—")}
                     </dd>
                 </div>
                 <div>
@@ -44,7 +44,9 @@ export default function ProductCard({
                         {isServiceRequest ? "Informações" : "Quantidade"}
                     </dt>
                     <dd className="text-[#355C9C] dark:text-[#C3C6D3] font-medium break-words">
-                        {item.quantity} {item.unit?.toLowerCase()}
+                        {isServiceRequest
+                            ? (item.description || item.additionalInfo || "—")
+                            : `${item.quantity} ${item.unit?.toLowerCase() || ""}`}
                     </dd>
                 </div>
             </dl>

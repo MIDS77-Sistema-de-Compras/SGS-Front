@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { formatRelativeTime, getNotificationIcon } from "./notificationUtils";
+import { getUserRole } from "@/lib/utils/getUserRole";
 
 export default function NotificationCard({ notification, onMarkAsViewed, isUpdating = false }) {
     const router = useRouter();
@@ -15,7 +16,10 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
         }
 
         if (notification.requestId) {
-            router.push(`/solicitacoes/${notification.requestId}`);
+            const basePath = getUserRole() === "COMPRADOR"
+                ? "/solicitacoes-compra"
+                : "/solicitacoes";
+            router.push(`${basePath}/${notification.requestId}`);
         }
     }
 

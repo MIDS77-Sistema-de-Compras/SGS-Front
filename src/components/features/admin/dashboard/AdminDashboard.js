@@ -1,7 +1,13 @@
+"use client"
+
 import AdminSummaryCard from "./AdminSummaryCard"
 import Header from "../../home/HomeHeader"
 import AdminUserResume from "./AdminUserResume"
 import AdmFooter from "./AdminFooter"
+import { useEffect, useMemo, useState } from "react";
+import { getAllUsers } from "@/service/users/usersSearch"
+import { useAuditLogs } from "@/hooks/useAuditLogs"
+import { TriangleAlert } from "lucide-react"
 
 const TotalUsersIcon = () => (
     <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#103D85] dark:text-[#5D8EF7]">
@@ -33,58 +39,114 @@ const ActiveUsersIcon = () => (
 )
 
 const ActionsIcon = () => (
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#16A34A] dark:text-green-300">
-        <rect x="5" y="5" width="14" height="14" rx="2" stroke="currentColor" strokeWidth="1.3" />
-        <path d="M16 3V7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-        <path d="M8 3V7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-        <path d="M5 10H19" stroke="currentColor" strokeWidth="1.3" />
-        <rect x="8" y="13" width="3" height="3" rx="0.5" fill="currentColor" />
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="text-green-600 dark:text-[#5FD68A] lucide lucide-calendar-icon lucide-calendar" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" >
+        <path d="M8 2v4"/>
+        <path d="M16 2v4"/>
+        <rect width="18" height="18" x="3" y="4" rx="2"/>
+        <path d="M3 10h18"/>
     </svg>
 )
 
-const LoginAttemptsIcon = () => (
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#103D85] dark:text-[#5D8EF7]">
-        <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="1.3" />
-        <path d="M12 9V12L14.5 14.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M12 4V6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-        <path d="M12 18V20" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-        <path d="M4 12H6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-        <path d="M18 12H20" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+const AttemptsLogIn = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="text-orange-500 dark:text-[#F0B95B] lucide lucide-log-in-icon lucide-log-in" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m10 17 5-5-5-5"/>
+        <path d="M15 12H3"/>
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
     </svg>
 )
 
-const userItems = [
-    {
-        icon: <TotalUsersIcon />,
-        label: "Total de Usuarios",
-        count: "20",
-    },
-    {
-        icon: <InactiveUsersIcon />,
-        label: "Usuarios Inativos",
-        count: "20",
-    },
-    {
-        icon: <ActiveUsersIcon />,
-        label: "Usuarios Ativos",
-        count: "20",
-    },
-]
+function returnStatsUsers(users, deletedUserIds){
 
-const recordItems = [
-    {
-        icon: <ActionsIcon />,
-        label: "Usuarios de Hoje",
-        count: "20",
-    },
-    {
-        icon: <LoginAttemptsIcon />,
-        label: "Tentativas de Login",
-        count: "20",
-    },
-]
+    const visibleUsers = useMemo(() => {
+        return users.filter((user) => !deletedUserIds.includes(String(user.id)));
+    }, [users, deletedUserIds]);
+
+    const totalUsers = visibleUsers.length;
+    const activeUsers = visibleUsers.filter((u) => u.active).length;
+    const inactiveUsers = visibleUsers.filter((u) => !u.active).length;
+
+    const userItems = [
+        {
+            icon: <TotalUsersIcon />,
+            label: "Total de Usuarios",
+            count: totalUsers,
+        },
+        {
+            icon: <InactiveUsersIcon />,
+            label: "Usuarios Inativos",
+            count: inactiveUsers,
+        },
+        {
+            icon: <ActiveUsersIcon />,
+            label: "Usuarios Ativos",
+            count: activeUsers,
+        },
+    ]
+
+    return userItems;
+}
+
+function returnStatsLogs(logs){
+
+    const today = new Date().toLocaleDateString("pt-BR");
+
+    const recordItems = [
+        {
+            icon: <TriangleAlert size={28} strokeWidth={2} className="text-[#c00202] dark:text-red-400" />,
+            label: "Alertas",
+            count: logs.filter((log) => /DESATI|EXCLU|REMOV|ATUALI/.test(log.actionId.toUpperCase())).length
+        },
+        {
+            icon: <ActionsIcon />,
+            label: "Ações de Hoje",
+            count: logs.filter( (log) => log.date === today || log.timestamp?.startsWith(today)).length,
+        },
+        {
+            icon: <AttemptsLogIn />,
+            label: "Tentativas de Login",
+            count: logs.filter( (log) => log.actionId?.toUpperCase().includes("LOGAR")).length
+        }
+    ]
+
+
+
+    return recordItems;
+}
 
 export default function AdminDashboard() {
+
+    const [users, setUsers] = useState([]);
+    const [deletedUserIds, setDeletedUserIds] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const { logs, error } = useAuditLogs();
+
+    async function loadUsers() {
+        try {
+            setLoading(true);
+            const response = await getAllUsers();
+            setUsers(response.content ?? []);
+        } catch (error) {
+            console.error("Erro ao buscar usuários:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const deleted = JSON.parse(localStorage.getItem("deleted_users") || "[]");
+            setDeletedUserIds(deleted.map(String));
+        }
+    }, []);
+
+    useEffect(() => {
+        loadUsers();
+    }, []);
+
+    const userItems = returnStatsUsers(users, deletedUserIds);
+    const recordItems = returnStatsLogs(logs);
+
     return (
         <div className="flex flex-1 flex-col gap-8 lg:gap-0">
             <Header />
@@ -92,7 +154,6 @@ export default function AdminDashboard() {
                 <AdminSummaryCard
                     title="Resumo registros"
                     items={recordItems}
-                    alertCount={5}
                     variant="records"
                 />
                 <AdminUserResume

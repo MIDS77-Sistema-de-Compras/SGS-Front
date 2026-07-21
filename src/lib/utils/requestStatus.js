@@ -221,6 +221,10 @@ export function isFinalizedForSupervisor(rawStatus) {
     return getStatusLabel(rawStatus) !== PENDING_LABEL;
 }
 
+export function isRequestEditable(rawStatus) {
+    return getStatusLabel(rawStatus) === PENDING_LABEL;
+}
+
 export function isVisibleToComprador(rawStatus) {
     return COMPRADOR_VISIBLE_LABELS.includes(getStatusLabel(rawStatus));
 }

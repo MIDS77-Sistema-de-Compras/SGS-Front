@@ -1,6 +1,6 @@
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 
-export default function RequestDetailsSkeleton({ rows = 6 }) {
+export default function RequestDetailsSkeleton({ rows = 6, showActionColumn = false }) {
     return (
         <div className="flex-1 p-0 font-sans">
             <div className="w-full">
@@ -29,13 +29,19 @@ export default function RequestDetailsSkeleton({ rows = 6 }) {
                             {Array.from({ length: rows }).map((_, index) => (
                                 <div
                                     key={index}
-                                    className="grid grid-cols-[1fr_1fr_6rem_8rem_8rem] items-center gap-4 py-4"
+                                    className={`grid items-center gap-4 py-4 ${showActionColumn
+                                            ? "grid-cols-[1fr_1fr_6rem_8rem_8rem_10rem]"
+                                            : "grid-cols-[1fr_1fr_6rem_8rem_8rem]"
+                                        }`}
                                 >
                                     <Skeleton className="h-4 w-40" />
                                     <Skeleton className="h-4 w-28" />
                                     <Skeleton className="h-4 w-10 justify-self-center" />
                                     <Skeleton className="h-4 w-16 justify-self-center" />
                                     <Skeleton className="h-6 w-24 rounded-full justify-self-center" />
+                                    {showActionColumn && (
+                                        <Skeleton className="h-8 w-36 rounded-xl justify-self-center" />
+                                    )}
                                 </div>
                             ))}
                         </div>
