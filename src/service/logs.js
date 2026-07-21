@@ -44,9 +44,15 @@ export function normalizeAuditLog(dto) {
     };
 }
 
+export function isAuditAlertAction(action) {
+    if (!action) return false;
+
+    return /DESATI|EXCLU|REMOV|ATUALI|STATUS_ATIVACAO/.test(action.toUpperCase());
+}
+
 export function getAllLogs() {
     return api
-        .get("/logs", { headers: getAuthHeaders() })
+        .get("/logs?size=100&sort=timestamp,desc", { headers: getAuthHeaders() })
         .then(getPageContent)
         .then((logs) => logs.map(normalizeAuditLog));
 }
