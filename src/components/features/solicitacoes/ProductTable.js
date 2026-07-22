@@ -47,19 +47,19 @@ export default function ProductTable({
             <table className="hidden lg:table w-full min-w-[720px] border-separate border-spacing-y-3 table-fixed">
                 <thead className="sticky top-0 z-10">
                     <tr className="bg-[#EEF2F6] dark:bg-[#303746] text-[13px] min-[1350px]:text-base">
-                        <th className="py-3 pl-4 min-[1350px]:pl-6 pr-3 text-left font-bold text-[#103D85] dark:text-[#E2E2EA] rounded-l-xl w-[28%] whitespace-nowrap">
+                        <th className={`py-3 pl-4 min-[1350px]:pl-6 pr-3 text-left font-bold text-[#103D85] dark:text-[#E2E2EA] rounded-l-xl whitespace-nowrap ${showItemDecisions ? "w-[24%]" : "w-[28%]"}`}>
                             {isServiceRequest ? "Serviço" : "Produto"}
                         </th>
 
-                        <th className="py-3 pr-3 text-left font-bold text-[#103D85] dark:text-[#E2E2EA] w-[20%] whitespace-nowrap">
+                        <th className={`py-3 pr-3 text-left font-bold text-[#103D85] dark:text-[#E2E2EA] whitespace-nowrap ${showItemDecisions ? "w-[16%]" : "w-[18%]"}`}>
                             {isServiceRequest ? "Código" : "Variação"}
                         </th>
 
-                        <th className="py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[110px] whitespace-nowrap">
+                        <th className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] whitespace-nowrap ${showItemDecisions ? "w-[14%]" : "w-[16%]"}`}>
                             {isServiceRequest ? "Informações" : "Quantidade"}
                         </th>
 
-                        <th className="py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[110px] min-[1350px]:w-32">
+                        <th className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] ${showItemDecisions ? "w-[16%]" : "w-[18%]"}`}>
                             <span className="block leading-tight">
                                 Informações
                                 <br />
@@ -68,15 +68,15 @@ export default function ProductTable({
                         </th>
 
                         <th
-                            className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[170px] min-[1350px]:w-[190px] ${
-                                showItemDecisions ? "" : "rounded-r-xl"
+                            className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] ${
+                                showItemDecisions ? "w-[16%]" : "w-[20%] rounded-r-xl"
                             }`}
                         >
                             Status
                         </th>
 
                         {showItemDecisions && (
-                            <th className="py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-40 rounded-r-xl">
+                            <th className="py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[14%] rounded-r-xl">
                                 Ação
                             </th>
                         )}
