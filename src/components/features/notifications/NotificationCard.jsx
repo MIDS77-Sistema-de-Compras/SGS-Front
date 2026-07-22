@@ -19,11 +19,10 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
 
         if (notification.notificationType === "SOLICITACAO_VINCULADA_CR") {
             router.push(`/solicitacoes/gestao/${notification.requestId}`);
+        } else if (getUserRole() === "COMPRADOR") {
+            router.push(`/solicitacoes-compra/${notification.requestId}`);
         } else {
-            const basePath = getUserRole() === "COMPRADOR"
-                ? "/solicitacoes-compra"
-                : "/solicitacoes";
-            router.push(basePath);
+            router.push("/solicitacoes");
         }
     }
 
