@@ -1,15 +1,20 @@
 "use client";
 
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import NotificationsList from "@/components/features/notifications/NotificationsList";
 import NotificationsListSkeleton from "@/components/features/notifications/NotificationsListSkeleton";
-import { sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
+import {
+    filterNotificationsForRole,
+    sortNotificationsByDate,
+} from "@/components/features/notifications/notificationUtils";
 import { notificationsService } from "@/service/notifications";
 import HomeFooter from "@/components/features/home/HomeFooter";
 import { getUserRole } from "@/lib/utils/getUserRole";
 import AdmFooter from "@/components/features/admin/dashboard/AdminFooter";
 import CompradorFooter from "@/components/features/home/CompradorFooter";
+
+const subscribeToHydration = () => () => {};
 
 export default function Notificacoes() {
     useDocumentTitle("Notificações");
@@ -19,17 +24,11 @@ export default function Notificacoes() {
     const [error, setError] = useState("");
     const [updatingId, setUpdatingId] = useState(null);
     
-    const [role, setRole] = useState(null);
-    const [mounted, setMounted] = useState(false);
+    const mounted = useSyncExternalStore(subscribeToHydration, () => true, () => false);
+    const role = mounted ? getUserRole() : null;
 
     useEffect(() => {
         let isMounted = true;
-
-        const userRole = getUserRole();
-        if (isMounted) {
-            setRole(userRole);
-            setMounted(true);
-        }
 
         async function loadNotifications() {
             try {
@@ -77,8 +76,8 @@ export default function Notificacoes() {
     }
 
     const orderedNotifications = useMemo(() => (
-        sortNotificationsByDate(notifications)
-    ), [notifications]);
+        sortNotificationsByDate(filterNotificationsForRole(notifications, role))
+    ), [notifications, role]);
 
     return (
         <div className="flex flex-1 flex-col gap-10 min-h-0">
