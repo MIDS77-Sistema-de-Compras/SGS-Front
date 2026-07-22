@@ -10,9 +10,17 @@ import StatCard from "@/components/features/gerenciar-users/StatCard";
 import UserTable from "@/components/features/gerenciar-users/UserTable";
 import Dropdown from "@/components/ui/select/Dropdown";
 import UserTableSkeleton from "@/components/features/gerenciar-users/UserTableSkeleton";
-import { getAllUsers, getLoggedUser } from "@/service/users/usersSearch";
+import { getAllUsers } from "@/service/users/usersSearch";
 import { impersonateUser } from "@/service/auth/auth-impersonate";
 import { useLoggedUser } from "@/hooks/useLoggedUser";
+
+const ROLES_INFERIORES = {
+    ADMIN: ["COORDENADOR", "SUPERVISOR", "DOCENTE", "COMPRADOR"],
+    COORDENADOR: ["SUPERVISOR", "DOCENTE"],
+    SUPERVISOR: ["DOCENTE"],
+    DOCENTE: [],
+    COMPRADOR: [],
+};
 
 export default function GerenciarUsuarios() {
     useDocumentTitle("Gerenciar Usuários");
@@ -72,8 +80,6 @@ export default function GerenciarUsuarios() {
             const response = await getAllUsers();
             setUsers(response.content ?? []);
 
-            console.log(await filterRolesUsers())
-
         } catch (error) {
             console.error("Erro ao buscar usuários:", error);
         } finally {
@@ -82,8 +88,11 @@ export default function GerenciarUsuarios() {
     }
 
     const visibleUsers = useMemo(() => {
-        return users.filter((user) => !deletedUserIds.includes(String(user.id)));
-    }, [users, deletedUserIds]);
+        if (!loggedUser?.roleName) return [];
+
+        const rolesPermitidas = ROLES_INFERIORES[loggedUser.roleName] ?? [];
+        return users.filter((user) => rolesPermitidas.includes(user.roleName));
+    }, [users, loggedUser]);
 
     const filteredUsers = useMemo(() => {
         return visibleUsers.filter((user) => {
@@ -274,11 +283,4 @@ export default function GerenciarUsuarios() {
             </Modal>
         </div>
     );
-}
-
-async function filterRolesUsers(listUsers){
-    const actualUser = await getLoggedUser();
-    
-    return await actualUser.roleName;
-
 }
