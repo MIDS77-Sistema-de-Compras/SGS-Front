@@ -10,7 +10,7 @@ import StatCard from "@/components/features/gerenciar-users/StatCard";
 import UserTable from "@/components/features/gerenciar-users/UserTable";
 import Dropdown from "@/components/ui/select/Dropdown";
 import UserTableSkeleton from "@/components/features/gerenciar-users/UserTableSkeleton";
-import { getAllUsers } from "@/service/users/usersSearch";
+import { getAllUsers, getLoggedUser } from "@/service/users/usersSearch";
 import { impersonateUser } from "@/service/auth/auth-impersonate";
 import { useLoggedUser } from "@/hooks/useLoggedUser";
 
@@ -71,6 +71,9 @@ export default function GerenciarUsuarios() {
             setLoading(true);
             const response = await getAllUsers();
             setUsers(response.content ?? []);
+
+            console.log(await filterRolesUsers())
+
         } catch (error) {
             console.error("Erro ao buscar usuários:", error);
         } finally {
@@ -271,4 +274,11 @@ export default function GerenciarUsuarios() {
             </Modal>
         </div>
     );
+}
+
+async function filterRolesUsers(listUsers){
+    const actualUser = await getLoggedUser();
+    
+    return await actualUser.roleName;
+
 }
