@@ -55,7 +55,7 @@ export default function ProductModal({
             <div className={`bg-white dark:bg-[#303746] p-6 sm:p-8 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl border border-gray-100 dark:border-white/10 relative transition-all duration-300 transform ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
                 <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 dark:text-[#C3C6D3] hover:text-gray-600 dark:hover:text-[#E2E2EA] transition-colors" aria-label="Fechar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                        <path d="M18 6 6 18" /><path d="m6 6 12 12" />
                     </svg>
                 </button>
 
@@ -125,7 +125,7 @@ export default function ProductModal({
                                 {editing ? (
                                     <input type="number" min="0.01" step="0.01" value={editedProduct.quantity ?? ""} onChange={(event) => update("quantity", event.target.value)} className={inputClass} />
                                 ) : (
-                                    <span className="text-sm text-gray-700 dark:text-[#E2E2EA]">{selectedProduct.quantity}</span>
+                                    <span className="text-sm text-gray-700 dark:text-[#E2E2EA]">{selectedProduct.quantity ?? "-"}</span>
                                 )}
                             </Field>
                             <Field label="Unidade de Medida">
@@ -139,7 +139,7 @@ export default function ProductModal({
                                         isRequired
                                     />
                                 ) : (
-                                    <span className="text-sm text-gray-700 dark:text-[#E2E2EA]">{selectedProduct.unit}</span>
+                                    <span className="text-sm text-gray-700 dark:text-[#E2E2EA]">{selectedProduct.unit || "-"}</span>
                                 )}
                             </Field>
                         </>
@@ -169,7 +169,7 @@ export default function ProductModal({
                                 rows={3}
                             />
                         ) : (
-                            <p className="text-sm text-gray-600 dark:text-[#C3C6D3] leading-relaxed break-all">{selectedProduct.additionalInfo}</p>
+                            <p className="text-sm text-gray-600 dark:text-[#C3C6D3] leading-relaxed break-all">{selectedProduct.additionalInfo || "-"}</p>
                         )}
                     </Field>
 
@@ -180,8 +180,8 @@ export default function ProductModal({
                                 {selectedProduct.status === "Aprovado"
                                     ? "A solicitação cumpre com os requisitos técnicos da unidade."
                                     : selectedProduct.status === "Recusado" || selectedProduct.status === "Reprovado"
-                                    ? "A solicitação foi recusada durante a análise."
-                                    : "Aguardando análise do supervisor responsável."}
+                                        ? "A solicitação foi recusada durante a análise."
+                                        : "Aguardando análise do supervisor responsável."}
                             </p>
                         </div>
                     )}
