@@ -31,7 +31,7 @@ function normalizeProduct(item) {
         quantity: item.quantity,
         unit: item.measurementUnit,
         additionalInformations: item.additionalInformations || "",
-        additionalInfo: item.additionalInformations || "Sem informaÃ§Ãµes adicionais.",
+        additionalInfo: item.additionalInformations || "Sem informações adicionais.",
     };
 }
 
