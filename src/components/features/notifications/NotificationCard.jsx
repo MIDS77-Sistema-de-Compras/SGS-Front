@@ -2,13 +2,15 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { formatRelativeTime, getNotificationIcon } from "./notificationUtils";
+import { formatRelativeTime, getNotificationIcon, getNotificationTitle } from "./notificationUtils";
 import { getUserRole } from "@/lib/utils/getUserRole";
 
 export default function NotificationCard({ notification, onMarkAsViewed, isUpdating = false }) {
     const router = useRouter();
     const icon = getNotificationIcon(notification);
     const canMarkAsViewed = !notification.viewed && !isUpdating;
+
+    console.log(notification)
 
     function handleClick() {
         if (canMarkAsViewed) {
@@ -19,11 +21,10 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
 
         if (notification.notificationType === "SOLICITACAO_VINCULADA_CR") {
             router.push(`/solicitacoes/gestao/${notification.requestId}`);
+        } else if (getUserRole() === "COMPRADOR") {
+            router.push(`/solicitacoes-compra/${notification.requestId}`);
         } else {
-            const basePath = getUserRole() === "COMPRADOR"
-                ? "/solicitacoes-compra"
-                : "/solicitacoes";
-            router.push(basePath);
+            router.push(`/solicitacoes/${notification.requestId}`);
         }
     }
 
@@ -42,12 +43,11 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
                 />
             </div>
 
-
             <div className="flex-1 min-w-0 flex flex-row items-start justify-between gap-15">
 
                 <div className="flex-1 min-w-0 flex flex-col">
                     <p className="text-[14px] sm:text-[15px] font-bold leading-tight text-black dark:text-[#E2E2EA]">
-                        {notification.title || `Solicitação #${notification.requestId || ""}`}
+                        {getNotificationTitle(notification)}
                     </p>
                     <p
                         className="mt-1 text-[11px] sm:text-[12px] leading-relaxed text-black/70 dark:text-[#C3C6D3] break-words"

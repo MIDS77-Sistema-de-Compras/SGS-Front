@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import SearchableSelect from "@/components/ui/select/SearchableSelect";
 import FileDropzone from "@/components/ui/upload/FileDropzone";
