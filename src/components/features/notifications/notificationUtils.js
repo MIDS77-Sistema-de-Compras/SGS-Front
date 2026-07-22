@@ -1,3 +1,5 @@
+import { getUserRole } from "@/lib/utils/getUserRole";
+
 export function normalizeText(value = "") {
     return value
         .normalize("NFD")
@@ -5,8 +7,31 @@ export function normalizeText(value = "") {
         .toLowerCase();
 }
 
+// Para o comprador, a notificação genérica de mudança de status (STATUS_ALTERADO)
+// só chega quando uma solicitação entra no fluxo de compra (Aprovado, Auto-aprovado,
+// Parcialmente aprovada) — pra ele isso é trabalho novo, então trocamos o título
+// genérico por um mais claro. Apenas exibição; o dado do backend não muda.
+const STATUS_UPDATED_TITLE_NORMALIZED = "status da solicitacao atualizado";
+
+export function getNotificationTitle(notification) {
+    const title = notification.title || `Solicitação #${notification.requestId || ""}`;
+
+    if (getUserRole() === "COMPRADOR" && normalizeText(title).trim() === STATUS_UPDATED_TITLE_NORMALIZED) {
+        return "Nova solicitação para atendimento";
+    }
+
+    return title;
+}
+
 export function getNotificationIcon(notification) {
     const content = normalizeText(`${notification.title || ""} ${notification.message || ""}`);
+
+    if(getUserRole() === "COMPRADOR" && content.includes("atualizado")){
+        return {
+            src: "/images/home/atualizacao.png",
+            alt: "Icone de atualizacao",
+        };
+    }
 
     if (content.includes("aprov")) {
         return {
