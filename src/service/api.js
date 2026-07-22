@@ -1,16 +1,23 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+export const API_BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://sgs-back.onrender.com";
 
 export function getPageContent(response) {
-    return Array.isArray(response) ? response : (response?.content ?? []);
+    return Array.isArray(response)
+        ? response
+        : response?.content ?? [];
 }
 
 function getToken() {
-    if (typeof document === 'undefined') return null;
+    if (typeof document === "undefined") return null;
 
     const match = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('jwt='));
-    return match ? decodeURIComponent(match.split('=')[1]) : null;
+        .split("; ")
+        .find((row) => row.startsWith("jwt="));
+
+    return match
+        ? decodeURIComponent(match.split("=")[1])
+        : null;
 }
 
 async function handleRequest(endpoint, options = {}) {
@@ -19,22 +26,34 @@ async function handleRequest(endpoint, options = {}) {
     const isFormData = options.body instanceof FormData;
 
     const headers = {
-        ...(!isFormData && { 'Content-Type': 'application/json' }),
-        ...(token && { Authorization: `Bearer ${token}` }),
+        ...(!isFormData && {
+            "Content-Type": "application/json",
+        }),
+        ...(token && {
+            Authorization: `Bearer ${token}`,
+        }),
         ...options.headers,
     };
 
     const response = await fetch(url, {
-        credentials: 'include',
+        credentials: "include",
         ...options,
         headers,
     });
 
     if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const error = new Error(errorData.message || 'Erro na requisicao');
+        const errorData = await response
+            .json()
+            .catch(() => ({}));
+
+        const error = new Error(
+            errorData.message ||
+                "Erro na requisição"
+        );
+
         error.status = response.status;
         error.details = errorData;
+
         throw error;
     }
 
@@ -42,31 +61,59 @@ async function handleRequest(endpoint, options = {}) {
 }
 
 export const api = {
-    get: (endpoint, options) => handleRequest(endpoint, { ...options, method: 'GET' }),
+    get: (endpoint, options) =>
+        handleRequest(endpoint, {
+            ...options,
+            method: "GET",
+        }),
 
-    post: (endpoint, body, options) => handleRequest(endpoint, {
-        ...options,
-        method: 'POST',
-        body: JSON.stringify(body)
-    }),
+    post: (endpoint, body, options) =>
+        handleRequest(endpoint, {
+            ...options,
+            method: "POST",
+            body: JSON.stringify(body),
+        }),
 
-    put: (endpoint, body, options) => handleRequest(endpoint, {
-        ...options,
-        method: 'PUT',
-        body: JSON.stringify(body)
-    }),
+    put: (endpoint, body, options) =>
+        handleRequest(endpoint, {
+            ...options,
+            method: "PUT",
+            body: JSON.stringify(body),
+        }),
 
-    patch: (endpoint, body, options) => handleRequest(endpoint, {
-        ...options,
-        method: 'PATCH',
-        body: body ? JSON.stringify(body) : undefined
-    }),
+    patch: (endpoint, body, options) =>
+        handleRequest(endpoint, {
+            ...options,
+            method: "PATCH",
+            body: body
+                ? JSON.stringify(body)
+                : undefined,
+        }),
 
-    delete: (endpoint, options) => handleRequest(endpoint, { ...options, method: 'DELETE' }),
+    delete: (endpoint, options) =>
+        handleRequest(endpoint, {
+            ...options,
+            method: "DELETE",
+        }),
 
-    postFormData: (endpoint, formData, options) => handleRequest(endpoint, {
-        ...options,
-        method: 'POST',
-        body: formData,
-    }),
+    postFormData: (endpoint, formData, options) =>
+        handleRequest(endpoint, {
+            ...options,
+            method: "POST",
+            body: formData,
+        }),
+
+    putFormData: (endpoint, formData, options) =>
+        handleRequest(endpoint, {
+            ...options,
+            method: "PUT",
+            body: formData,
+        }),
+
+    patchFormData: (endpoint, formData, options) =>
+        handleRequest(endpoint, {
+            ...options,
+            method: "PATCH",
+            body: formData,
+        }),
 };

@@ -1,49 +1,46 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import SolicitacoesTabs from '@/lib/utils/requestTabs';
 import { useRequestsList } from '@/hooks/useRequestsList';
 import { useCRSearch } from '@/hooks/useCRSearch';
 import { api } from '@/service/api';
-import ToastNotification from '@/components/ui/notifications/ToastNotification';
+import { useNotification } from '@/contexts/NotificationContext';
 import { Modal } from '@/components/ui/overlay/Modal';
 import Button from '@/components/ui/button/Button';
 import RequestManagementFilters from './RequestManagementFilters';
 import RequestManagementCard from './RequestManagementCard';
+import { getStatusLabel } from '@/lib/utils/requestStatus';
+import RequestManagementSkeleton from './RequestManagementSkeleton';
 
 const ABAS = [
-    { valor: 'pendentes', label: 'Pendentes' },
-    { valor: 'andamento', label: 'Em Andamento' },
-    { valor: 'aprovadas', label: 'Aprovadas' },
-    { valor: 'concluidas', label: 'Concluídas' },
+    { valor: 'pendentes', label: 'PENDENTES' },
+    { valor: 'andamento', label: 'EM ANDAMENTO' },
+    { valor: 'concluidas', label: 'CONCLUÍDAS' },
 ];
 
 const STATUS_POR_ABA = {
     pendentes: ['Aguardando aprovação'],
     andamento: [
-        'Em atendimento',
-        'Atrasada',
-        'Aguardando comprador',
-        'Solicitando orçamento',
-        'Recebimento Parcial',
-        'Fundo Rotativo',
-        'CD central',
-        'Solicitado pelo portal',
+        'Aprovado', 'Auto-aprovado', 'Parcialmente aprovada',
+        'Em atendimento', 'Atrasada', 'Recebimento parcial',
+        'Fundo rotativo', 'CD Central', 'Solicitado Portal', 'Parcialmente atendida',
     ],
-    aprovadas: ['Aprovado'],
-    concluidas: ['Entregue', 'Cancelado', 'Recusado', 'Pedido Cancelado'],
+    concluidas: ['Entregue', 'Cancelado', 'Recusado'],
 };
 
 const MENSAGENS_VAZIO = {
     pendentes: 'Nenhuma solicitação pendente encontrada.',
     andamento: 'Nenhuma solicitação em andamento encontrada.',
-    aprovadas: 'Nenhuma solicitação aprovada encontrada.',
     concluidas: 'Nenhuma solicitação concluída encontrada.',
 };
 
 export default function RequestsManagement() {
-    const { requests, loading, error } = useRequestsList();
+    const queryClient = useQueryClient();
+    const { requests, loading, error } = useRequestsList({ queryKey: ['requests', 'all'] });
     const { filteredCRs: crs } = useCRSearch();
+    const { showNotification } = useNotification();
 
     const [abaAtiva, setAbaAtiva] = useState('pendentes');
     const [status, setStatus] = useState('');
@@ -53,7 +50,6 @@ export default function RequestsManagement() {
 
     const [overrides, setOverrides] = useState({});
     const [decidingId, setDecidingId] = useState(null);
-    const [notification, setNotification] = useState(null);
 
     const [rejectTarget, setRejectTarget] = useState(null);
     const [justificativa, setJustificativa] = useState('');
@@ -73,9 +69,11 @@ export default function RequestsManagement() {
     const itensFiltrados = useMemo(() => {
         const statusPermitidos = STATUS_POR_ABA[abaAtiva] || [];
 
-        return itensComOverrides.filter((item) => {
-            if (!statusPermitidos.includes(item.status)) return false;
-            if (status && item.status !== status) return false;
+        const filtrados = itensComOverrides.filter((item) => {
+            const statusLabel = getStatusLabel(item.status);
+
+            if (!statusPermitidos.includes(statusLabel)) return false;
+            if (status && statusLabel !== status) return false;
             if (cr && String(item.crBranchId) !== String(cr)) return false;
 
             if (supervisor && !(item.crBranch?.responsibleUsersName || []).includes(supervisor)) {
@@ -84,11 +82,18 @@ export default function RequestsManagement() {
 
             if (busca) {
                 const texto = busca.toLowerCase();
-                const pesquisavel = `${item.codigo || ''} ${item.requesterName || ''} ${item.status || ''}`.toLowerCase();
+                const pesquisavel = `${item.codigo || ''} ${item.requesterName || ''} ${statusLabel || ''}`.toLowerCase();
                 if (!pesquisavel.includes(texto)) return false;
             }
 
             return true;
+        });
+
+        return filtrados.sort((a, b) => {
+            const dataA = new Date(a.data).getTime();
+            const dataB = new Date(b.data).getTime();
+
+            return dataB - dataA;
         });
     }, [itensComOverrides, abaAtiva, status, cr, supervisor, busca]);
 
@@ -125,12 +130,14 @@ export default function RequestsManagement() {
                 justification,
             });
 
-            setNotification({
-                type: 'success',
-                message: novoStatus === 'Aprovado'
+            queryClient.invalidateQueries({ queryKey: ['requests'] });
+
+            showNotification(
+                novoStatus === 'Aprovado'
                     ? 'Solicitação aprovada com sucesso.'
                     : 'Solicitação recusada.',
-            });
+                'success'
+            );
         } catch (err) {
             setOverrides((prev) => {
                 const next = { ...prev };
@@ -138,19 +145,14 @@ export default function RequestsManagement() {
                 return next;
             });
 
-            setNotification({
-                type: 'error',
-                message: err.message || 'Não foi possível atualizar a solicitação.',
-            });
+            showNotification(err.message || 'Não foi possível atualizar a solicitação.', 'error');
         } finally {
             setDecidingId(null);
         }
     }
 
     return (
-        <div className="flex flex-col gap-4">
-            <ToastNotification notification={notification} setNotification={setNotification} />
-
+        <div className="flex flex-col gap-4 h-full min-h-0">
             <RequestManagementFilters
                 status={status}
                 setStatus={setStatus}
@@ -164,7 +166,7 @@ export default function RequestsManagement() {
                 supervisores={supervisores}
             />
 
-            <div className="bg-white dark:bg-[#1A2233] border border-[#797979] dark:border-white/10 rounded-2xl overflow-hidden">
+            <div className="flex flex-col flex-1 min-h-0 dark:bg-[#1A2233] border border-gray-100 shadow-sm dark:border-white/10 rounded-xl overflow-hidden">
                 <SolicitacoesTabs
                     abaAtiva={abaAtiva}
                     setAbaAtiva={setAbaAtiva}
@@ -172,12 +174,8 @@ export default function RequestsManagement() {
                     abas={ABAS}
                 />
 
-                <div className="h-[500px] overflow-y-auto px-6 bg-white dark:bg-[#1A2233]">
-                    {loading && (
-                        <div className="text-gray-400 dark:text-[#C3C6D3] text-center pt-10">
-                            Carregando solicitações...
-                        </div>
-                    )}
+                <div className="flex-1 overflow-y-auto px-3 sm:px-5 bg-white dark:bg-[#1A2233]">
+                    {loading && <RequestManagementSkeleton />}
 
                     {!loading && error && (
                         <div className="text-center pt-10 text-sm font-semibold text-[#BA1A1A] dark:text-[#F87171]">
@@ -192,7 +190,7 @@ export default function RequestsManagement() {
                     )}
 
                     {!loading && !error && itensFiltrados.length > 0 && (
-                        <div className="flex flex-col">
+                        <div className="flex flex-col mt-2">
                             {itensFiltrados.map((item) => (
                                 <RequestManagementCard
                                     key={item.id}
@@ -230,13 +228,14 @@ export default function RequestsManagement() {
                     <p className="text-xs font-medium text-[#BA1A1A] dark:text-[#F87171]">{justificativaErro}</p>
                 )}
 
-                <div className="flex justify-end gap-3">
-                    <Button variant="outline" onClick={closeRejectModal}>
+                <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+                    <Button variant="outline" fullWidth className="sm:w-auto" onClick={closeRejectModal}>
                         Cancelar
                     </Button>
                     <Button
                         variant="danger"
-                        className="rounded-full"
+                        fullWidth
+                        className="sm:w-auto rounded-full"
                         isLoading={decidingId === rejectTarget?.id}
                         onClick={confirmReject}
                     >

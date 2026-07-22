@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import ActivityItem from "./ActivityItem";
+import RecentActivitySkeleton from "./RecentActivitySkeleton";
 import { notificationsService } from "@/service/notifications";
-import { formatRelativeTime, getNotificationIcon, sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
+import { formatRelativeTime, getNotificationIcon, getNotificationTitle, sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
+import { getUserRole } from "@/lib/utils/getUserRole";
 
 export default function RecentActivity() {
+    const router = useRouter();
     const [notifications, setNotifications] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
@@ -43,23 +47,37 @@ export default function RecentActivity() {
         sortNotificationsByDate(notifications).slice(0, 4)
     ), [notifications]);
 
+    function openRequest(notification) {
+        if (notification.notificationType === "SOLICITACAO_VINCULADA_CR") {
+            router.push(`/solicitacoes/gestao/${notification.requestId}`);
+            return;
+        }
+
+        const basePath = getUserRole() === "COMPRADOR"
+            ? "/solicitacoes-compra"
+            : "/solicitacoes";
+        router.push(basePath);
+    }
+
     return (
-        <div className="flex-1 border border-[#AAAAAA] dark:border-white/10 rounded-xl px-5 py-3 shadow-lg dark:bg-[#1A2233]">
-            <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[22px]">
+        <div className="min-w-0 flex-1 flex flex-col border border-gray-100 dark:border-white/10 rounded-xl px-4 sm:px-5 py-4 sm:py-3 shadow-sm dark:bg-[#1A2233]">
+            <h2 className="text-[#103D85] dark:text-[#E2E2EA] font-bold text-[18px] sm:text-[22px]">
                 Atividade Recente
             </h2>
-            <div className="border-t border-[#AAAAAA] dark:border-white/10 mt-2 -mx-5" />
+            <div className="border-t border-gray-100 dark:border-white/10 -mx-4 sm:-mx-5 my-2 sm:my-3" />
 
-            {isLoading && (
-                <p className="text-sm text-[#666666]">Carregando atividades...</p>
-            )}
+            {isLoading && <RecentActivitySkeleton />}
 
             {!isLoading && error && (
                 <p className="text-sm text-red-600">{error}</p>
             )}
 
             {!isLoading && !error && !recentActivities.length && (
-                <p className="text-sm text-[#666666]">Nenhuma atividade recente.</p>
+                <div className="flex flex-1 items-center justify-center">
+                    <p className="text-sm text-[#666666] dark:text-[#C3C6D3]">
+                        Nenhuma atividade recente.
+                    </p>
+                </div>
             )}
 
             {!isLoading && !error && Boolean(recentActivities.length) && (
@@ -72,9 +90,10 @@ export default function RecentActivity() {
                                 key={notification.id}
                                 iconSrc={icon.src}
                                 iconAlt={icon.alt}
-                                title={notification.title || `Solicitacao #${notification.requestId}`}
+                                title={getNotificationTitle(notification)}
                                 subtitle={notification.message || "Atualizacao de solicitacao"}
                                 time={formatRelativeTime(notification.createdAt)}
+                                onClick={notification.requestId ? () => openRequest(notification) : undefined}
                             />
                         );
                     })}

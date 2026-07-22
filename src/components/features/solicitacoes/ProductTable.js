@@ -1,36 +1,112 @@
 "use client";
 
 import ProductTableRow from "./ProductTableRow";
+import ProductCard from "./ProductCard";
 
-export default function ProductTable({ localProducts, isProfessor, statusCores, openModal, openEditModal }) {
+export default function ProductTable({
+    localProducts,
+    openModal,
+    isServiceRequest = false,
+    showItemDecisions = false,
+    itemDecisions = {},
+    onAcceptItem,
+    onRejectItem,
+    itemStatusOptions = null,
+    onItemStatusChange,
+    customStatusColorMap = null,
+}) {
+    const colSpan = showItemDecisions ? 6 : 5;
+    const emptyLabel = `Nenhum ${isServiceRequest ? "serviço" : "produto"} encontrado.`;
+
     return (
-        <div className="w-full flex-1 overflow-y-auto px-5">
-            <table className="w-full border-collapse table-fixed">
+        <div className="w-full flex-1 overflow-auto px-4 sm:px-5">
+            <div className="flex flex-col gap-3 pb-4 lg:hidden">
+                {localProducts.length > 0 ? (
+                    localProducts.map((item) => (
+                        <ProductCard
+                            key={item.id || item.code}
+                            item={item}
+                            openModal={openModal}
+                            isServiceRequest={isServiceRequest}
+                            showItemDecisions={showItemDecisions}
+                            decision={itemDecisions[item.id]}
+                            onAcceptItem={onAcceptItem}
+                            onRejectItem={onRejectItem}
+                            itemStatusOptions={itemStatusOptions}
+                            onItemStatusChange={onItemStatusChange}
+                            customStatusColorMap={customStatusColorMap}
+                        />
+                    ))
+                ) : (
+                    <p className="py-8 text-center text-sm text-gray-400 dark:text-[#C3C6D3]">
+                        {emptyLabel}
+                    </p>
+                )}
+            </div>
+
+            <table className="hidden lg:table w-full min-w-[720px] border-separate border-spacing-y-3 table-fixed">
                 <thead className="sticky top-0 z-10">
-                    <tr className="bg-[#EEF2F6] dark:bg-[#303746]">
-                        <th className="py-3 pl-6 text-left text-base font-bold text-[#103D85] dark:text-[#E2E2EA] rounded-l-xl w-1/3">Produto</th>
-                        <th className="py-3 pl-10 text-left text-base font-bold text-[#103D85] dark:text-[#E2E2EA] w-1/4">Variação</th>
-                        <th className="py-3 text-center text-base font-bold text-[#103D85] dark:text-[#E2E2EA] w-24">Quantidade</th>
-                        <th className="py-3 pl-5 text-center text-base font-bold text-[#103D85] dark:text-[#E2E2EA] w-32">Informações adicionais</th>
-                        <th className="py-3 text-center text-base font-bold text-[#103D85] dark:text-[#E2E2EA] rounded-r-xl w-32">Status</th>
+                    <tr className="bg-[#EEF2F6] dark:bg-[#303746] text-[13px] min-[1350px]:text-base">
+                        <th className={`py-3 pl-4 min-[1350px]:pl-6 pr-3 text-left font-bold text-[#103D85] dark:text-[#E2E2EA] rounded-l-xl whitespace-nowrap ${showItemDecisions ? "w-[24%]" : "w-[28%]"}`}>
+                            {isServiceRequest ? "Serviço" : "Produto"}
+                        </th>
+
+                        <th className={`py-3 pr-3 text-left font-bold text-[#103D85] dark:text-[#E2E2EA] whitespace-nowrap ${showItemDecisions ? "w-[16%]" : "w-[18%]"}`}>
+                            {isServiceRequest ? "Código" : "Variação"}
+                        </th>
+
+                        <th className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] whitespace-nowrap ${showItemDecisions ? "w-[14%]" : "w-[16%]"}`}>
+                            {isServiceRequest ? "Informações" : "Quantidade"}
+                        </th>
+
+                        <th className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] ${showItemDecisions ? "w-[16%]" : "w-[18%]"}`}>
+                            <span className="block leading-tight">
+                                Informações
+                                <br />
+                                adicionais
+                            </span>
+                        </th>
+
+                        <th
+                            className={`py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] ${
+                                showItemDecisions ? "w-[16%]" : "w-[20%] rounded-r-xl"
+                            }`}
+                        >
+                            Status
+                        </th>
+
+                        {showItemDecisions && (
+                            <th className="py-3 px-3 text-center font-bold text-[#103D85] dark:text-[#E2E2EA] w-[14%] rounded-r-xl">
+                                Ação
+                            </th>
+                        )}
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-white/10">
+
+                <tbody className="w-full">
                     {localProducts.length > 0 ? (
                         localProducts.map((item) => (
-                            <ProductTableRow 
+                            <ProductTableRow
                                 key={item.id || item.code}
                                 item={item}
-                                isProfessor={isProfessor}
-                                statusCores={statusCores}
                                 openModal={openModal}
-                                openEditModal={openEditModal}
+                                isServiceRequest={isServiceRequest}
+                                showItemDecisions={showItemDecisions}
+                                decision={itemDecisions[item.id]}
+                                onAcceptItem={onAcceptItem}
+                                onRejectItem={onRejectItem}
+                                itemStatusOptions={itemStatusOptions}
+                                onItemStatusChange={onItemStatusChange}
+                                customStatusColorMap={customStatusColorMap}
                             />
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={5} className="py-8 text-center text-sm text-gray-400 dark:text-[#C3C6D3]">
-                                Nenhum produto encontrado.
+                            <td
+                                colSpan={colSpan}
+                                className="py-8 text-center text-sm text-gray-400 dark:text-[#C3C6D3]"
+                            >
+                                {emptyLabel}
                             </td>
                         </tr>
                     )}

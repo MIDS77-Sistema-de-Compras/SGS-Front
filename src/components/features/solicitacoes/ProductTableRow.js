@@ -1,24 +1,43 @@
 "use client";
 
-export default function ProductTableRow({ item, isProfessor, statusCores, openModal, openEditModal }) {
+import { getStatusColor, getStatusLabel, getCustomStatusColor } from "@/lib/utils/requestStatus";
+import Dropdown from "@/components/ui/select/Dropdown";
+
+export default function ProductTableRow({
+    item,
+    openModal,
+    isServiceRequest = false,
+    showItemDecisions = false,
+    decision = null,
+    onAcceptItem,
+    onRejectItem,
+    itemStatusOptions = null,
+    onItemStatusChange,
+    customStatusColorMap = null,
+}) {
+    const tdHoverAndRoundedClass = "transition-colors mt-2 group-hover:bg-gray-50 dark:group-hover:bg-white/10 first:rounded-l-xl last:rounded-r-xl";
+    const customColor = getCustomStatusColor(item.status, customStatusColorMap);
+
     return (
-        <tr className="hover:bg-gray-50/40 dark:hover:bg-white/5 transition-colors">
-            <td 
-                className="py-3 pl-6 text-left text-base text-gray-700 dark:text-[#E2E2EA] font-medium truncate w-[100px] cursor-pointer" 
+        <tr className="group">
+            <td
+                className={`py-3 pl-4 min-[1350px]:pl-6 pr-3 text-left text-[13px] min-[1350px]:text-base text-gray-700 dark:text-[#E2E2EA] font-medium truncate cursor-pointer ${tdHoverAndRoundedClass}`}
                 onClick={() => openModal(item)}
             >
-                {item.code} {item.nome}
+                {isServiceRequest ? item.nome : `${item.code} ${item.nome}`}
             </td>
-            <td 
-                className="py-3 pl-10 text-left text-base text-gray-500 dark:text-[#C3C6D3] truncate w-[20px] cursor-pointer" 
+            <td
+                className={`py-3 pr-3 text-left text-[13px] min-[1350px]:text-base text-gray-500 dark:text-[#C3C6D3] truncate cursor-pointer ${tdHoverAndRoundedClass}`}
                 onClick={() => openModal(item)}
             >
-                {item.variation}
+                {isServiceRequest ? `SERV-${item.id}` : (item.variation || "—")}
             </td>
-            <td className="py-3 text-center text-base text-gray-600 dark:text-[#C3C6D3] font-medium">
-                {item.quantity} {item.unit?.toLowerCase()}
+            <td className={`py-3 px-3 text-center text-[13px] min-[1350px]:text-base text-gray-600 dark:text-[#C3C6D3] font-medium truncate ${tdHoverAndRoundedClass}`}>
+                {isServiceRequest
+                    ? (item.description || item.additionalInfo || "-")
+                    : `${item.quantity} ${item.unit?.toLowerCase() || ""}`}
             </td>
-            <td className="py-3 pl-5 text-center text-base">
+            <td className={`py-3 px-3 text-center ${tdHoverAndRoundedClass}`}>
                 <button
                     onClick={() => openModal(item)}
                     className="text-gray-400 dark:text-[#5D8EF7] underline underline-offset-2 hover:text-gray-600 dark:hover:text-[#7BA5F9] text-sm transition-colors"
@@ -26,23 +45,63 @@ export default function ProductTableRow({ item, isProfessor, statusCores, openMo
                     Ver mais
                 </button>
             </td>
-            <td className="py-3 text-center relative">
-                <span className={`inline-block text-center text-[13px] font-semibold text-white py-1 rounded-full min-w-[150px] shadow-sm tracking-wide ${statusCores[item.status] || "bg-gray-400"}`}>
-                    {item.status}
-                </span>
-                {isProfessor && item.status === "Em análise" && (
-                    <button
-                        onClick={() => openEditModal(item)}
-                        title="Editar solicitação"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-yellow-500 hover:text-yellow-600 transition-colors"
+            <td className={`py-3 px-3 text-center relative ${tdHoverAndRoundedClass}`}>
+                {showItemDecisions ? (
+                    <div className="flex items-center justify-center" title={getStatusLabel(item.status)}>
+                        <span
+                            className={`inline-block w-6 h-6 rounded-full shadow-sm ${customColor ? "" : getStatusColor(item.status)}`}
+                            style={customColor ? { backgroundColor: customColor } : undefined}
+                        />
+                    </div>
+                ) : (
+                    <span
+                        className={`inline-block max-w-full truncate whitespace-nowrap text-center text-[12px] min-[1350px]:text-[14px] font-semibold text-white py-1 px-3 rounded-full min-w-[140px] min-[1350px]:min-w-[150px] shadow-sm tracking-wide ${customColor ? "" : getStatusColor(item.status)}`}
+                        style={customColor ? { backgroundColor: customColor } : undefined}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
-                            <path d="m15 5 4 4"/>
-                        </svg>
-                    </button>
+                        {getStatusLabel(item.status)}
+                    </span>
                 )}
             </td>
+
+            {showItemDecisions && (
+                <td className={`py-3 px-3 text-center ${tdHoverAndRoundedClass}`}>
+                    {itemStatusOptions ? (
+                        <div className="w-full max-w-[180px] mx-auto">
+                            <Dropdown
+                                name={`item-status-${item.id}`}
+                                value={decision || ""}
+                                onChange={(e) => onItemStatusChange?.(item, e.target.value)}
+                                placeholder={getStatusLabel(item.status)}
+                                options={itemStatusOptions}
+                                buttonClassName="py-1.5 text-[13px]"
+                            />
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center gap-2">
+                            <button
+                                onClick={() => onAcceptItem?.(item)}
+                                title={decision === "Aprovado" ? "Clique para desfazer" : "Aprovar item"}
+                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${decision === "Aprovado"
+                                    ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
+                                    : "text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-500/10"
+                                    }`}
+                            >
+                                Aprovar
+                            </button>
+                            <button
+                                onClick={() => onRejectItem?.(item)}
+                                title={decision === "Recusado" ? "Clique para desfazer" : "Recusar item"}
+                                className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${decision === "Recusado"
+                                    ? "bg-[#BA1A1A] border-[#BA1A1A] text-white hover:bg-[#a01717]"
+                                    : "text-[#BA1A1A] border-[#BA1A1A] hover:bg-red-50 dark:hover:bg-red-500/10"
+                                    }`}
+                            >
+                                Recusar
+                            </button>
+                        </div>
+                    )}
+                </td>
+            )}
         </tr>
     );
 }

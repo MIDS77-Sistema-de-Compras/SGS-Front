@@ -5,10 +5,10 @@ import { cn } from '@/lib/cn';
 
 const variantStyles = {
   primary: 'bg-[#103D85] hover:bg-[#0b2a5c] text-white border-[#103D85] dark:bg-[#1A4A9E] dark:hover:bg-[#2456b0] dark:border-[#1A4A9E]',
-  outline: 'bg-white text-[#103D85] border-gray-200 hover:bg-gray-100 dark:bg-[#303746] dark:text-[#E2E2EA] dark:border-white/15 dark:hover:bg-white/5',
+  outline: 'bg-white text-[#103D85] border-gray-100 hover:bg-gray-100 dark:bg-[#303746] dark:text-[#E2E2EA] dark:border-white/15 dark:hover:bg-white/5',
   auth: 'bg-[#5D8EF7] hover:bg-[#4B84F4] text-white border-[#5D8EF7] shadow-md active:scale-[0.98]',
-  success: 'bg-white text-[#4CAF50] border-[#4CAF50] hover:bg-[#4CAF50]/5',
-  danger: 'bg-white text-[#F44336] border-[#F44336] hover:bg-[#F44336]/5',
+  success: 'bg-[#4CAF50] hover:bg-[#37823A] text-white border-[#10B981] hover:border-[#047857] dark:bg-[#37823A] dark:hover:bg-[#2b652e] dark:border-[#37823A]',
+  danger: 'bg-[#E30613] hover:bg-[#9F0009] text-white border-[#E30613] hover:border-[#9F0009] dark:bg-[#C62834] dark:hover:bg-[#A01F29] dark:border-[#C62834]',
 };
 
 const sizeStyles = {

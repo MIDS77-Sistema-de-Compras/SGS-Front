@@ -7,13 +7,33 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 
 import { playwright } from '@vitest/browser-playwright';
 
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
 const dirname =
   typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
+  plugins: [basicSsl()],
+  server: {
+    port: 3001,
+    https: true,
+  },
+  resolve: {
+    alias: {
+      '@': path.join(dirname, 'src'),
+    },
+  },
   test: {
     projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          environment: 'node',
+          include: ['src/**/*.test.js'],
+        },
+      },
       {
         extends: true,
         plugins: [

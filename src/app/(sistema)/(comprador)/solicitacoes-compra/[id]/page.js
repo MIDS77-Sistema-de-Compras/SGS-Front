@@ -1,9 +1,9 @@
-﻿import PurchaseRequestDetailPage from '@/components/features/purchase-requests/PurchaseRequestDetailPage';
-import { findPurchaseRequestById } from '@/components/features/purchase-requests/purchaseRequestsMock';
+import PurchaseRequestDetailPage from '@/components/features/purchase-requests/PurchaseRequestDetailPage';
 
-export default async function DetalheSolicitacaoPage({ params }) {
-  const { id } = await params;
-  const request = findPurchaseRequestById(id);
+export const metadata = {
+  title: "Detalhe da Compra",
+};
 
-  return <PurchaseRequestDetailPage request={request} />;
+export default function DetalheSolicitacaoPage() {
+  return <PurchaseRequestDetailPage />;
 }

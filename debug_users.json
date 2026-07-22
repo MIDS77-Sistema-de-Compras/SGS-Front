@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1902,
+    "name": "Viviane Ciez",
+    "cpf": "33526a5b56878cf78717eb5c3f127145ba0eccced3e28b6d1ed29193fede15e3",
+    "email": "vivianeciez@protonmail.com",
+    "extensionNumber": "1234",
+    "active": true,
+    "createdAt": "2026-07-03T16:27:14.536902",
+    "updatedAt": "2026-07-03T16:27:14.536902",
+    "userProfile": null,
+    "roleName": "COORDENADOR"
+  },
+  {
+    "id": 2102,
+    "name": "Gabriel QA",
+    "cpf": "055fb93326833df13ba1b712c754d7bcb6e35bd8ea3f53fe7f4673166ef968ce",
+    "email": "gabriel_e_fagundes@estudante.sesisenai.org.br",
+    "extensionNumber": "5555",
+    "active": false,
+    "createdAt": "2026-07-08T16:22:56.321131",
+    "updatedAt": "2026-07-13T17:24:11.716038",
+    "userProfile": null,
+    "roleName": "DOCENTE"
+  },
+  {
+    "id": 2252,
+    "name": "Melisso pereiro",
+    "cpf": "64c2d874628ae4f220744300ca5872fe6d8c6128f8a27f7eef90bfbc06f5538b",
+    "email": "melisso.pereiro@protonmail.com",
+    "extensionNumber": "4322",
+    "active": true,
+    "createdAt": "2026-07-13T17:37:11.573314",
+    "updatedAt": "2026-07-15T23:19:28.689457",
+    "userProfile": null,
+    "roleName": "COMPRADOR"
+  },
+  {
+    "id": 2552,
+    "name": "murilo ",
+    "cpf": "67d22ec547d027aa6138bf57db96ba29054677bb03dd7402d21ff8ffc2cd4425",
+    "email": "murilo@gmail.com",
+    "extensionNumber": "3344",
+    "active": false,
+    "createdAt": "2026-07-17T00:19:32.992487",
+    "updatedAt": "2026-07-17T00:19:32.992495",
+    "userProfile": null,
+    "roleName": "DOCENTE"
+  },
+  {
+    "id": 2553,
+    "name": "lucas teste",
+    "cpf": "568025b5b720b67b8aad7f7e924d947161f2430de070518cf92e3bd7d0732d91",
+    "email": "teste@gmail.com",
+    "extensionNumber": "3344",
+    "active": false,
+    "createdAt": "2026-07-17T00:22:46.07619",
+    "updatedAt": "2026-07-17T00:22:46.076196",
+    "userProfile": null,
+    "roleName": "SUPERVISOR"
+  },
+  {
+    "id": 1952,
+    "name": "Administrador",
+    "cpf": "37bf912923ebe03c44ba0cd8a1a77f6b9deff12f618a2f435e1229f13e8aa175",
+    "email": "administradorsgs@protonmail.com",
+    "extensionNumber": "1234",
+    "active": true,
+    "createdAt": "2026-07-03T16:52:46.962418",
+    "updatedAt": "2026-07-03T16:52:46.962418",
+    "userProfile": null,
+    "roleName": "ADMIN"
+  },
+  {
+    "id": 2352,
+    "name": "Emerson Tissi",
+    "cpf": "aa1b979b54853edc9645a1b403a03a35243a9cc781bc6f1e0306d244fa7175b3",
+    "email": "emersontissisgs@protonmail.com",
+    "extensionNumber": "9823",
+    "active": true,
+    "createdAt": "2026-07-13T20:58:17.768742",
+    "updatedAt": "2026-07-13T20:58:17.768749",
+    "userProfile": null,
+    "roleName": "SUPERVISOR"
+  },
+  {
+    "id": 2353,
+    "name": "Vinicius Trindade",
+    "cpf": "cd53cd92c93c000455bdd018cb71e3a324b1436509a6c2f1228ce961daf439bf",
+    "email": "viniciostrindadesgs@protonmail.com",
+    "extensionNumber": "1029",
+    "active": true,
+    "createdAt": "2026-07-13T20:59:10.091174",
+    "updatedAt": "2026-07-13T20:59:10.091181",
+    "userProfile": null,
+    "roleName": "DOCENTE"
+  }
+]

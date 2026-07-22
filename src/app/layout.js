@@ -2,6 +2,8 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { QueryProvider } from '@/providers/QueryProvider';
+import Script from 'next/script';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -10,10 +12,13 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: "SGS-Front",
+  title: {
+    default: "SGS",
+    template: "SGS | %s",
+  },
   description: "Projeto Final - Sistema de Compras - FrontEnd",
   icons: {
-    icon: "/images/logos/sgc.png"
+    icon: "/images/logos/favicon-sgs.png"
   }
 };
 
@@ -29,16 +34,25 @@ const themeScript = `
 `;
 
 export default function RootLayout({ children }) {
+  console.group();
+  console.log("%cBem-Vindo ao %cSGS!\n%cNão cole comandos que você desconhece aqui, pois eles podem ser %cmaliciosos!", 
+      "font-size: 25px; font-weight: semibold;", 
+      "font-size: 25px; font-weight: bold; color: #2577fa", 
+      "font-size-12px", "color: red");
+  console.groupEnd();
+
   return (
     <html lang="pt-BR" className={montserrat.variable} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
         <ThemeProvider>
-          <NotificationProvider>
-            {children}
-          </NotificationProvider>
+          <QueryProvider>
+            <NotificationProvider>
+              {children}
+            </NotificationProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,33 +1,255 @@
-import { levelStyles } from "./auditData";
+"use client";
 
-const columns = ["ID", "Usuário", "Nível", "Tipo", "Usuário Afetado", "Solicitação", "Timestamp"];
+import { useMemo, useState } from "react";
+import { ChevronsUpDown, ChevronUp, ChevronDown, ChevronRight, Clock, User } from "lucide-react";
+import LevelBadge from "./LevelBadge";
+import { isAuditAlertAction } from "@/service/logs";
 
-function SortIcon() {
-    return <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="inline ml-1 opacity-40" aria-hidden="true"><path d="M5 1L8 4H2L5 1Z" fill="currentColor" /><path d="M5 9L2 6H8L5 9Z" fill="currentColor" /></svg>;
+const columns = [
+    { label: "ID", field: "id", type: "number", width: "w-[6%]", sortable: true },
+    { label: "Usuário", field: "user", type: "text", width: "w-[20%]", sortable: true },
+    { label: "Nível", field: "level", type: "text", width: "w-[128px] min-[1350px]:w-[150px]", sortable: true },
+    { label: "Tipo", field: "action", type: "text", width: "w-[17%]", sortable: true },
+    { label: "Usuário Afetado", field: "affectedUser", width: "w-[18%]", sortable: false },
+    { label: "Solicitação", field: "request", width: "w-[11%]", sortable: false },
+    { label: "Timestamp", field: "timestamp", type: "date", width: "w-[16%]", sortable: true },
+];
+
+function isCriticalAction(log) {
+    return isAuditAlertAction(log.actionId);
 }
 
-function LevelBadge({ level }) {
-    const style = levelStyles[level];
-    return <span className="inline-block px-3 py-1 rounded-full text-[12px] font-bold whitespace-nowrap" style={{ color: style.color, backgroundColor: style.background }}>{level}</span>;
+function parseBrDate(value) {
+    if (!value) return null;
+
+    const [datePart, timePart = "00:00"] = String(value).split(" ");
+    const [day, month, year] = datePart.split("/").map(Number);
+    const [hours, minutes] = timePart.split(":").map(Number);
+
+    if (!day || !month || !year) return null;
+
+    return new Date(year, month - 1, day, hours || 0, minutes || 0);
 }
 
-export default function AuditLogTable({ logs }) {
+function compareValues(a, b, type) {
+    if (a == null && b == null) return 0;
+    if (a == null) return 1;
+    if (b == null) return -1;
+
+    if (type === "number") {
+        return Number(a) - Number(b);
+    }
+
+    if (type === "date") {
+        const dateA = parseBrDate(a);
+        const dateB = parseBrDate(b);
+        if (dateA && dateB) {
+            return dateA.getTime() - dateB.getTime();
+        }
+    }
+
+    return String(a).localeCompare(String(b), "pt", { numeric: true, sensitivity: "base" });
+}
+
+function MobileCard({ log, onSelect }) {
+    const critical = isCriticalAction(log);
+
     return (
-        <div className="min-w-[860px]">
-            <div className="grid grid-cols-[60px_1fr_110px_100px_1fr_110px_110px] gap-2 px-6 py-3 border-b border-gray-200 bg-gray-50/50 text-[13px] font-semibold text-gray-500">
-                {columns.map((column, index) => <span key={column}>{column}{[0, 1, 2, 3, 6].includes(index) && <SortIcon />}</span>)}
+        <button
+            type="button"
+            onClick={() => onSelect(log)}
+            className="w-full text-left p-3 sm:p-4 rounded-2xl border border-gray-100 dark:border-white/10 bg-white dark:bg-[#1A2233] hover:border-[#103D85]/20 dark:hover:border-[#5D8EF7]/30 hover:shadow-sm transition-all"
+        >
+            <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500 dark:text-[#A0A5B5]">
+                        <Clock size={14} />
+                        <span>{log.timestamp}</span>
+                    </div>
+
+                    <div className="mt-1 flex items-center gap-2 min-w-0">
+                        <User size={16} className="text-gray-400 flex-shrink-0" />
+                        <p className="font-semibold text-sm sm:text-base text-gray-900 dark:text-[#E2E2EA] truncate">
+                            {log.user}
+                        </p>
+                    </div>
+                </div>
+
+                <ChevronRight size={18} className="text-gray-400 flex-shrink-0 mt-0.5" />
             </div>
-            <div className="flex flex-col flex-1">
-                {logs.map((log, index) => <div key={log.id} className={`grid grid-cols-[60px_1fr_110px_100px_1fr_110px_110px] gap-2 px-6 py-3 items-center text-[13px] border-b border-gray-100 ${index % 2 === 0 ? "bg-white" : "bg-gray-50/30"}`}>
-                    <span className="text-gray-700 font-medium">{log.id}</span>
-                    <span className="text-gray-600 whitespace-pre-line leading-tight">{log.user}</span>
-                    <span><LevelBadge level={log.level} /></span>
-                    <span className="text-gray-600 whitespace-pre-line leading-tight">{log.action}</span>
-                    <span className="text-gray-500 whitespace-pre-line leading-tight">{log.affectedUser}</span>
-                    <span className="text-gray-500">{log.request}</span>
-                    <span className="text-gray-400 whitespace-pre-line leading-tight">{log.timestamp}</span>
-                </div>)}
-                {logs.length === 0 && <p className="px-6 py-8 text-center text-sm text-gray-500">Nenhum registro encontrado.</p>}
+
+            <div className="mt-2.5 sm:mt-3 flex items-center gap-2 flex-wrap">
+                <LevelBadge level={log.level} />
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${critical
+                        ? "bg-purple-100 text-purple-600 dark:bg-[#7C3AED]/20 dark:text-[#B48CF7] font-semibold"
+                        : "bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-[#C3C6D3]"
+                    }`}>
+                    {log.action}
+                </span>
+            </div>
+
+            {(log.affectedUser || log.request) && (
+                <div className="mt-2.5 sm:mt-3 space-y-1.5 sm:space-y-2 text-[13px] sm:text-sm">
+                    {log.affectedUser && (
+                        <div>
+                            <p className="text-gray-500 dark:text-[#A0A5B5] text-xs uppercase tracking-wide">
+                                Usuário afetado
+                            </p>
+                            <p className="text-gray-700 dark:text-[#C3C6D3] break-all">
+                                {log.affectedUser}
+                            </p>
+                        </div>
+                    )}
+
+                    {log.request && (
+                        <div>
+                            <p className="text-gray-500 dark:text-[#A0A5B5] text-xs uppercase tracking-wide">
+                                Solicitação
+                            </p>
+                            <p className="text-gray-700 dark:text-[#C3C6D3]">{log.request}</p>
+                        </div>
+                    )}
+                </div>
+            )}
+        </button>
+    );
+}
+
+export default function AuditLogTable({ logs, onSelectLog }) {
+    const [sortField, setSortField] = useState("timestamp");
+    const [sortDirection, setSortDirection] = useState("desc");
+
+    function handleSort(column) {
+        if (!column.sortable) return;
+
+        if (sortField === column.field) {
+            setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+        } else {
+            setSortField(column.field);
+            setSortDirection("asc");
+        }
+    }
+
+    const sortedLogs = useMemo(() => {
+        if (!sortField) return logs;
+
+        const column = columns.find((col) => col.field === sortField);
+        const type = column?.type ?? "text";
+
+        return [...logs].sort((a, b) => {
+            const result = compareValues(a[sortField], b[sortField], type);
+            return sortDirection === "asc" ? result : -result;
+        });
+    }, [logs, sortField, sortDirection]);
+
+    function renderSortIcon(column) {
+        if (sortField !== column.field) {
+            return <ChevronsUpDown size={14} className="text-gray-400" />;
+        }
+        return sortDirection === "asc"
+            ? <ChevronUp size={14} className="text-[#103D85] dark:text-[#5D8EF7]" />
+            : <ChevronDown size={14} className="text-[#103D85] dark:text-[#5D8EF7]" />;
+    }
+
+    return (
+        <div className="flex-1 flex flex-col min-h-0 w-full bg-white dark:bg-[#1A2233] overflow-hidden">
+            <div className="lg:hidden p-3 space-y-3 max-h-[560px] overflow-y-auto">
+                {sortedLogs.length > 0 ? (
+                    sortedLogs.map((log) => (
+                        <MobileCard key={log.id} log={log} onSelect={onSelectLog} />
+                    ))
+                ) : (
+                    <div className="text-center py-10">
+                        <p className="text-sm text-gray-500 dark:text-[#C3C6D3]">
+                            Nenhum registro encontrado.
+                        </p>
+                    </div>
+                )}
+            </div>
+
+            <div className="hidden lg:block flex-1 min-h-0 w-full overflow-auto pr-2 pb-2">
+                <table className="w-full text-left border-separate border-spacing-0 table-fixed min-w-[900px]">
+                    <thead>
+                        <tr className="text-[12px] min-[1350px]:text-sm font-semibold text-gray-700 dark:text-[#E2E2EA]">
+                            {columns.map((col) => (
+                                <th
+                                    key={col.label}
+                                    className={`sticky top-0 z-10 py-3 px-2 min-[1350px]:px-4 font-medium whitespace-nowrap bg-[#F8FAFC] dark:bg-[#303746] shadow-[0_1px_0_0_rgba(243,244,246,1)] dark:shadow-[0_1px_0_0_#303746] ${col.width}`}
+                                >
+                                    {col.sortable ? (
+                                        <div
+                                            onClick={() => handleSort(col)}
+                                            className="flex items-center gap-1 cursor-pointer hover:text-[#103D85] dark:hover:text-[#5D8EF7]"
+                                        >
+                                            {col.label} {renderSortIcon(col)}
+                                        </div>
+                                    ) : (
+                                        col.label
+                                    )}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+
+                    <tbody className="text-[12px] min-[1350px]:text-sm bg-white dark:bg-[#1A2233]">
+                        {sortedLogs.map((log) => {
+                            const critical = isCriticalAction(log);
+
+                            return (
+                                <tr
+                                    key={log.id}
+                                    onClick={() => onSelectLog(log)}
+                                    className="border-b border-gray-50 dark:border-white/5 hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                                >
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[6%] text-gray-700 dark:text-[#E2E2EA] font-medium">
+                                        {log.id}
+                                    </td>
+
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[20%] font-medium text-gray-800 dark:text-[#E2E2EA] truncate">
+                                        {log.user}
+                                    </td>
+
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[128px] min-[1350px]:w-[150px]">
+                                        <LevelBadge
+                                            level={log.level}
+                                            className="px-2 py-0.5 text-[10px] min-w-[96px] min-[1350px]:px-3 min-[1350px]:py-1 min-[1350px]:text-xs min-[1350px]:min-w-[110px]"
+                                        />
+                                    </td>
+
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[17%] truncate">
+                                        {critical ? (
+                                            <span className="block max-w-full w-[140px] min-[1350px]:w-[170px] truncate text-center rounded-full px-2 py-0.5 text-[10px] min-[1350px]:px-3 min-[1350px]:py-1 min-[1350px]:text-xs font-semibold bg-purple-100 text-purple-600 dark:bg-[#7C3AED]/20 dark:text-[#B48CF7]">
+                                                {log.action}
+                                            </span>
+                                        ) : (
+                                            <span className="text-gray-600 dark:text-[#C3C6D3]">
+                                                {log.action}
+                                            </span>
+                                        )}
+                                    </td>
+
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[18%] text-gray-500 dark:text-[#C3C6D3] truncate">
+                                        {log.affectedUser || "-"}
+                                    </td>
+
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[11%] text-gray-500 dark:text-[#C3C6D3] truncate">
+                                        {log.request}
+                                    </td>
+
+                                    <td className="py-2.5 px-2 min-[1350px]:px-4 w-[16%] text-gray-400 dark:text-[#A0A5B5] whitespace-pre-line leading-tight">
+                                        {log.timestamp}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+
+                {logs.length === 0 && (
+                    <p className="px-6 py-8 text-center text-sm text-gray-500 dark:text-[#C3C6D3]">
+                        Nenhum registro encontrado.
+                    </p>
+                )}
             </div>
         </div>
     );

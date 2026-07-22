@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 import { useNotification } from '@/contexts/NotificationContext';
 
-import { createUser } from '@/service/createUser';
+import { createUser } from '@/service/users/usersSearch';
 
-
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,30}$/;
 
 const VALIDATORS = {
     nome: (v) => v.trim().length < 3 ? 'Nome deve ter ao menos 3 caracteres.' : '',
@@ -12,20 +12,14 @@ const VALIDATORS = {
     cpf: (v) => v.replace(/\D/g, '').length !== 11 ? 'CPF deve ter 11 dígitos.' : '',
     ramal: (v) => {
         const apenasNumeros = v.replace(/\D/g, '');
-        return apenasNumeros.length < 3 || apenasNumeros.length > 4
-            ? 'O ramal deve ter 4 números.'
+        return apenasNumeros.length < 4 || apenasNumeros.length > 6
+            ? 'O ramal deve ter entre 4 e 6 números.'
             : '';
     },
     senha: (v) => {
-        const senhaValida =
-            v &&
-            v.length >= 8 &&
-            /[A-Z]/.test(v) &&
-            /[a-z]/.test(v) &&
-            /[0-9]/.test(v) &&
-            /[\W]/.test(v);
-        
-        return senhaValida ? '' : 'invalid'
+        return PASSWORD_REGEX.test(v || '')
+            ? ''
+            : 'A senha deve ter 8-30 caracteres, com maiúscula, minúscula, número e um dos símbolos @$!%*#?&.';
     },
 };
 
@@ -79,7 +73,7 @@ export function useCreateUser() {
 
         try {
             setIsLoading(true);
-            await createUser.create(payload);
+            await createUser(payload);
 
             showNotification("Usuário cadastrado com sucesso!", "success");
             setFormData(INITIAL_FORM_STATE);
@@ -87,7 +81,7 @@ export function useCreateUser() {
 
         } catch (error) {
             console.error("Erro ao cadastrar:", error.details || error.message);
-            showNotification("Erro ao cadastrar usuário. Verifique os dados ou a conexão.", "error");
+            showNotification(error.message || "Erro ao cadastrar usuário. Verifique os dados ou a conexão.", "error");
 
         } finally {
             setIsLoading(false)

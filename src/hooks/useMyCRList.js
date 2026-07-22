@@ -1,5 +1,30 @@
 import { useState, useMemo } from "react";
 import { calcularStatusSolicitacao } from "@/lib/utils/calculateRequestStatus";
+import {
+    getStatusLabel,
+    REQUEST_STATUS_FILTER_OPTIONS,
+} from "@/lib/utils/requestStatus";
+
+const STATUS_PENDENTE = "Aguardando aprovação";
+const STATUS_CONCLUIDOS = ["Entregue", "Recusado", "Cancelado"];
+
+function toIsoDateString(value) {
+    if (!value) return "";
+    const str = String(value).trim();
+
+    if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
+
+    const brMatch = str.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+    if (brMatch) return `${brMatch[3]}-${brMatch[2]}-${brMatch[1]}`;
+
+    return "";
+}
+
+function formatBrDateString(isoDate) {
+    if (!isoDate) return "";
+    const [year, month, day] = isoDate.split("-");
+    return `${day}/${month}/${year}`;
+}
 
 export function useRequestsFilter(solicitacoes = []) {
     const [status, setStatus] = useState("");
@@ -8,38 +33,32 @@ export function useRequestsFilter(solicitacoes = []) {
     const [abaAtiva, setAbaAtiva] = useState('todas');
 
     const statusDisponiveis = useMemo(() => {
-        const baseStatuses = ["Em análise", "Reprovado", "Parcial Aprovado", "Aprovado"];
-        const apiStatuses = solicitacoes
-            .map((item) => item.status || calcularStatusSolicitacao(item.produtos || []))
-            .filter(Boolean);
-
-        return [...new Set([...baseStatuses, ...apiStatuses])].map((nome, index) => ({
-            id: index + 1,
-            nome,
-        }));
-    }, [solicitacoes]);
+        return REQUEST_STATUS_FILTER_OPTIONS
+            .filter((option) => option.value)
+            .map((option, index) => ({ id: index + 1, nome: option.label }));
+    }, []);
 
     const solicitacoesFiltradas = useMemo(() => {
         return solicitacoes.filter((item) => {
             const produtos = item.produtos || [];
             const statusSolicitacao = item.status || calcularStatusSolicitacao(produtos);
+            const statusLabel = getStatusLabel(statusSolicitacao);
 
-            if (abaAtiva === "pendentes" && statusSolicitacao !== "Em análise") {
+            if (abaAtiva === "em_andamento" && STATUS_CONCLUIDOS.includes(statusLabel)) {
                 return false;
             }
 
-            if (
-                abaAtiva === "concluidas" &&
-                (statusSolicitacao === "Em análise" || statusSolicitacao === "Reprovado")
-            ) {
+            if (abaAtiva === "pendentes" && (statusLabel === STATUS_PENDENTE || STATUS_CONCLUIDOS.includes(statusLabel))) {
                 return false;
             }
 
-            if (status && statusSolicitacao !== status) {
+            if (abaAtiva === "concluidas" && !STATUS_CONCLUIDOS.includes(statusLabel)) {
                 return false;
             }
 
-            if (data && item.data !== data) {
+            const itemIsoDate = toIsoDateString(item.data || item.requestDate);
+
+            if (data && itemIsoDate !== data) {
                 return false;
             }
 
@@ -47,10 +66,11 @@ export function useRequestsFilter(solicitacoes = []) {
                 const textoBusca = busca.toLowerCase();
                 const textoPesquisavel = `
                     ${item.codigo || ""}
-                    ${statusSolicitacao || ""}
+                    ${statusLabel || ""}
                     Lista de ${produtos.length} ${produtos.length === 1 ? "produto" : "produtos"}
                     ${produtos.map((p) => p.nome).join(" ")}
-                    ${item.data || ""}
+                    ${itemIsoDate}
+                    ${formatBrDateString(itemIsoDate)}
                 `.toLowerCase();
 
                 if (!textoPesquisavel.includes(textoBusca)) {
