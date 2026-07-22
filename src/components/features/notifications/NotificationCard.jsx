@@ -22,7 +22,7 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
         } else if (getUserRole() === "COMPRADOR") {
             router.push(`/solicitacoes-compra/${notification.requestId}`);
         } else {
-            router.push("/solicitacoes");
+            router.push(`/solicitacoes/${notification.requestId}`);
         }
     }
 
