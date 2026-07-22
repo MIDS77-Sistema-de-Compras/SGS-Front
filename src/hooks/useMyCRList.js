@@ -44,7 +44,7 @@ export function useRequestsFilter(solicitacoes = []) {
             const statusSolicitacao = item.status || calcularStatusSolicitacao(produtos);
             const statusLabel = getStatusLabel(statusSolicitacao);
 
-            if (abaAtiva === "em_andamento" && (statusLabel === STATUS_PENDENTE || STATUS_CONCLUIDOS.includes(statusLabel))) {
+            if (abaAtiva === "pendentes" && (statusLabel === STATUS_PENDENTE || STATUS_CONCLUIDOS.includes(statusLabel))) {
                 return false;
             }
 

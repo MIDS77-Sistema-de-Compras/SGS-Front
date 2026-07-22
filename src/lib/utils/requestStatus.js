@@ -170,6 +170,12 @@ export function resolveRequestStatus(rawStatus, apiCategory) {
     };
 }
 
+export function getStatusHexColor(rawStatus) {
+    const color = resolveRequestStatus(rawStatus).color;
+    const match = color.match(/^bg-\[(#[0-9A-Fa-f]{6})\]$/);
+    return match ? match[1] : null;
+}
+
 export function getStatusLabel(rawStatus) {
     return resolveRequestStatus(rawStatus).label;
 }
@@ -268,11 +274,11 @@ export function keepOnlyApprovedItemsIfPartial(request) {
 // Alguns usam "_" ao inves de espaco; findByNameIgnoreCase so ignora maiusculas/minusculas,
 // entao o valor aqui precisa bater caractere a caractere com o que esta no banco.
 export const COMPRADOR_STATUS_OPTIONS = [
-    { value: "Em atendimento", label: "Em atendimento" },
-    { value: "Entregue", label: "Entregue" },
-    { value: "PEDIDO CANCELADO", label: "Pedido cancelado" },
-    { value: "RECEBIMENTO_PARCIAL", label: "Recebimento parcial" },
-    { value: "FUNDO_ROTATIVO", label: "Fundo rotativo" },
-    { value: "CD_CENTRAL", label: "CD Central" },
-    { value: "SOLICITADO_PORTAL", label: "Solicitado Portal" },
+    { value: "Em atendimento", label: "Em atendimento", color: getStatusHexColor("Em atendimento") },
+    { value: "Entregue", label: "Entregue", color: getStatusHexColor("Entregue") },
+    { value: "PEDIDO CANCELADO", label: "Pedido cancelado", color: getStatusHexColor("Cancelado") },
+    { value: "RECEBIMENTO_PARCIAL", label: "Recebimento parcial", color: getStatusHexColor("Recebimento parcial") },
+    { value: "FUNDO_ROTATIVO", label: "Fundo rotativo", color: getStatusHexColor("Fundo rotativo") },
+    { value: "CD_CENTRAL", label: "CD Central", color: getStatusHexColor("CD Central") },
+    { value: "SOLICITADO_PORTAL", label: "Solicitado Portal", color: getStatusHexColor("Solicitado Portal") },
 ];
