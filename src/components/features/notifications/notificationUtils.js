@@ -5,6 +5,20 @@ export function normalizeText(value = "") {
         .toLowerCase();
 }
 
+export const ADMINISTRATIVE_ALERT_TYPE = "ALERTA_ADMINISTRATIVO";
+
+export function isAdministrativeAlert(notification) {
+    return notification?.notificationType === ADMINISTRATIVE_ALERT_TYPE;
+}
+
+export function filterNotificationsForRole(notifications = [], role) {
+    if (role !== "ADMIN") {
+        return notifications;
+    }
+
+    return notifications.filter(isAdministrativeAlert);
+}
+
 export function getNotificationIcon(notification) {
     const content = normalizeText(`${notification.title || ""} ${notification.message || ""}`);
 

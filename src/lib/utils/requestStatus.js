@@ -296,7 +296,7 @@ export function keepOnlyApprovedItemsIfPartial(request) {
 
 export const COMPRADOR_STATUS_OPTIONS = [
     { value: "EM_ATENDIMENTO", label: "Em atendimento", color: getStatusHexColor("Em atendimento") },
-    { value: "Entregue", label: "Entregue", color: getStatusHexColor("Entregue") },
+    { value: "ENTREGUE", label: "Entregue", color: getStatusHexColor("Entregue") },
     { value: "PEDIDO CANCELADO", label: "Pedido cancelado", color: getStatusHexColor("Cancelado") },
     { value: "RECEBIMENTO_PARCIAL", label: "Recebimento parcial", color: getStatusHexColor("Recebimento parcial") },
     { value: "FUNDO_ROTATIVO", label: "Fundo rotativo", color: getStatusHexColor("Fundo rotativo") },

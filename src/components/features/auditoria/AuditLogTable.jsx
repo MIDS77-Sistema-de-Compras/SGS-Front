@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ChevronsUpDown, ChevronUp, ChevronDown, ChevronRight, Clock, User } from "lucide-react";
 import LevelBadge from "./LevelBadge";
+import { isAuditAlertAction } from "@/service/logs";
 
 const columns = [
     { label: "ID", field: "id", type: "number", width: "w-[6%]", sortable: true },
@@ -14,10 +15,8 @@ const columns = [
     { label: "Timestamp", field: "timestamp", type: "date", width: "w-[16%]", sortable: true },
 ];
 
-const CRITICAL_ACTION_REGEX = /DESATI|EXCLU|REMOV|ATUALI/;
-
 function isCriticalAction(log) {
-    return CRITICAL_ACTION_REGEX.test((log.actionId || "").toUpperCase());
+    return isAuditAlertAction(log.actionId);
 }
 
 function parseBrDate(value) {

@@ -2,17 +2,28 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { formatRelativeTime, getNotificationIcon } from "./notificationUtils";
+import { TriangleAlert } from "lucide-react";
+import {
+    formatRelativeTime,
+    getNotificationIcon,
+    isAdministrativeAlert,
+} from "./notificationUtils";
 import { getUserRole } from "@/lib/utils/getUserRole";
 
 export default function NotificationCard({ notification, onMarkAsViewed, isUpdating = false }) {
     const router = useRouter();
     const icon = getNotificationIcon(notification);
+    const administrativeAlert = isAdministrativeAlert(notification);
     const canMarkAsViewed = !notification.viewed && !isUpdating;
 
     function handleClick() {
         if (canMarkAsViewed) {
             onMarkAsViewed(notification.id);
+        }
+
+        if (administrativeAlert) {
+            router.push("/auditoria");
+            return;
         }
 
         if (!notification.requestId) return;
@@ -30,16 +41,20 @@ export default function NotificationCard({ notification, onMarkAsViewed, isUpdat
     return (
         <li
             onClick={handleClick}
-            className={`flex items-start gap-3 sm:gap-4 border-b border-gray-100 dark:border-white/10 mb-2 py-4 transition-colors last:border-b-0 ${notification.requestId ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5" : ""}`}
-            title={notification.requestId ? "Ver solicitação" : undefined}
+            className={`flex items-start gap-3 sm:gap-4 border-b mb-2 py-4 transition-colors last:border-b-0 ${administrativeAlert ? "border-purple-200/70 dark:border-purple-400/20 cursor-pointer hover:bg-purple-50/60 dark:hover:bg-purple-500/5" : "border-gray-100 dark:border-white/10"} ${!administrativeAlert && notification.requestId ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5" : ""}`}
+            title={administrativeAlert ? "Ver registro na auditoria" : notification.requestId ? "Ver solicitação" : undefined}
         >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-[#303746] shrink-0 mt-0.5">
-                <Image
-                    src={icon.src}
-                    alt={icon.alt}
-                    width={30}
-                    height={30}
-                />
+            <div className={`flex h-8 w-8 items-center justify-center rounded-full shrink-0 mt-0.5 ${administrativeAlert ? "bg-purple-100 text-purple-600 dark:bg-[#7C3AED]/20 dark:text-[#B48CF7]" : "bg-white dark:bg-[#303746]"}`}>
+                {administrativeAlert ? (
+                    <TriangleAlert size={19} strokeWidth={2.2} aria-label="Alerta administrativo" />
+                ) : (
+                    <Image
+                        src={icon.src}
+                        alt={icon.alt}
+                        width={30}
+                        height={30}
+                    />
+                )}
             </div>
 
 
