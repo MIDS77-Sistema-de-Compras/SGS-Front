@@ -30,8 +30,8 @@ export default function ProductTableRow({
                 className={`py-3 pr-3 text-left text-[13px] min-[1350px]:text-base text-gray-500 dark:text-[#C3C6D3] truncate cursor-pointer ${tdHoverAndRoundedClass}`}
                 onClick={() => openModal(item)}
             >
-{isServiceRequest ? `SERV-${item.id}` : (item.variation || "—")}
-</td>
+                {isServiceRequest ? `SERV-${item.id}` : (item.variation || "—")}
+            </td>
             <td className={`py-3 px-3 text-center text-[13px] min-[1350px]:text-base text-gray-600 dark:text-[#C3C6D3] font-medium truncate ${tdHoverAndRoundedClass}`}>
                 {isServiceRequest
                     ? (item.description || item.additionalInfo || "-")
@@ -82,8 +82,8 @@ export default function ProductTableRow({
                                 onClick={() => onAcceptItem?.(item)}
                                 title={decision === "Aprovado" ? "Clique para desfazer" : "Aprovar item"}
                                 className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${decision === "Aprovado"
-                                        ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
-                                        : "text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-500/10"
+                                    ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
+                                    : "text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-500/10"
                                     }`}
                             >
                                 Aprovar
@@ -92,8 +92,8 @@ export default function ProductTableRow({
                                 onClick={() => onRejectItem?.(item)}
                                 title={decision === "Recusado" ? "Clique para desfazer" : "Recusar item"}
                                 className={`text-[13px] font-semibold rounded-full px-3 py-1 border transition-colors ${decision === "Recusado"
-                                        ? "bg-[#BA1A1A] border-[#BA1A1A] text-white hover:bg-[#a01717]"
-                                        : "text-[#BA1A1A] border-[#BA1A1A] hover:bg-red-50 dark:hover:bg-red-500/10"
+                                    ? "bg-[#BA1A1A] border-[#BA1A1A] text-white hover:bg-[#a01717]"
+                                    : "text-[#BA1A1A] border-[#BA1A1A] hover:bg-red-50 dark:hover:bg-red-500/10"
                                     }`}
                             >
                                 Recusar
