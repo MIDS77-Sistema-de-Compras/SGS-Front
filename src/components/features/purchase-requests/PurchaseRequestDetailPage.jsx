@@ -18,6 +18,7 @@ import {
     getStatusColor,
     getStatusLabel,
     keepOnlyApprovedItemsIfPartial,
+    toCompradorRequestView,
     buildCustomStatusColorMap,
     getCustomStatusColor,
     COMPRADOR_STATUS_OPTIONS,
@@ -37,7 +38,9 @@ function formatDisplayDate(date) {
 export default function PurchaseRequestDetailPage() {
     const { id } = useParams();
     const { request: solicitacaoBruta, loading, error, refetch } = useRequestDetails(id);
-    const solicitacao = solicitacaoBruta ? keepOnlyApprovedItemsIfPartial(solicitacaoBruta) : null;
+    const solicitacao = solicitacaoBruta
+        ? toCompradorRequestView(keepOnlyApprovedItemsIfPartial(solicitacaoBruta))
+        : null;
 
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
