@@ -25,7 +25,13 @@ const routePermissions = [
 function getUsuarioPayload(token) {
     try {
         const payloadBase64 = token.split('.')[1];
-        const decodedJson = atob(payloadBase64);
+        if (!payloadBase64) return null;
+
+        // base64url -> base64 padrão
+        const base64 = payloadBase64.replace(/-/g, '+').replace(/_/g, '/');
+        const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
+
+        const decodedJson = atob(padded);
         return JSON.parse(decodedJson);
     } catch (error) {
         console.error("Erro ao decodificar o token JWT:", error);
@@ -47,10 +53,10 @@ export function proxy(request) {
             }
 
             const usuario = getUsuarioPayload(token);
-            const role = usuario?.role?.toLowerCase(); 
-            
+            const role = usuario?.role?.toLowerCase();
+
             if (role === "admin") {
-                return NextResponse.redirect(new URL("/admin", request.url)); 
+                return NextResponse.redirect(new URL("/admin", request.url));
             }
             return NextResponse.redirect(new URL("/", request.url));
         }
