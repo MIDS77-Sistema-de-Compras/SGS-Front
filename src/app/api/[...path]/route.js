@@ -1,4 +1,4 @@
-const API_TARGET_URL = process.env.API_TARGET_URL || "https://sgs-back.onrender.com";
+const API_TARGET_URL = process.env.API_TARGET_URL || "https://recluse-elaborate-chuck.ngrok-free.dev";
 
 function buildTargetUrl(path, search) {
     const cleanBaseUrl = API_TARGET_URL.replace(/\/$/, "");
