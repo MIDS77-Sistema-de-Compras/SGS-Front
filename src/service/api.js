@@ -1,6 +1,6 @@
 export const API_BASE_URL =
     process.env.NEXT_PUBLIC_API_URL ||
-    "https://sgs-back.onrender.com";
+    "https://recluse-elaborate-chuck.ngrok-free.dev";
 
 export function getPageContent(response) {
     return Array.isArray(response)
@@ -26,6 +26,7 @@ async function handleRequest(endpoint, options = {}) {
     const isFormData = options.body instanceof FormData;
 
     const headers = {
+        "ngrok-skip-browser-warning": "true",
         ...(!isFormData && {
             "Content-Type": "application/json",
         }),
