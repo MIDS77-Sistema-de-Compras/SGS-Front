@@ -1,6 +1,6 @@
 export const API_BASE_URL =
     process.env.NEXT_PUBLIC_API_URL ||
-    "https://recluse-elaborate-chuck.ngrok-free.dev";
+    "http://10.129.227.138:8081";
 
 export function getPageContent(response) {
     return Array.isArray(response)

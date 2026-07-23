@@ -1,4 +1,4 @@
-const API_TARGET_URL = process.env.API_TARGET_URL || "https://recluse-elaborate-chuck.ngrok-free.dev";
+const API_TARGET_URL = process.env.API_TARGET_URL || "http://10.129.227.138:8081";
 
 function buildTargetUrl(path, search) {
     const cleanBaseUrl = API_TARGET_URL.replace(/\/$/, "");
