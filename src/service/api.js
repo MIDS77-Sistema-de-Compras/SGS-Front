@@ -26,6 +26,7 @@ async function handleRequest(endpoint, options = {}) {
     const isFormData = options.body instanceof FormData;
 
     const headers = {
+        "ngrok-skip-browser-warning": "true",
         ...(!isFormData && {
             "Content-Type": "application/json",
         }),
