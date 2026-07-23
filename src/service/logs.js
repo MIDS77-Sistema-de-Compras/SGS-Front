@@ -53,7 +53,7 @@ export function isAuditAlertAction(action) {
 
 export function getAllLogs() {
     return api
-        .get("/logs?size=100&sort=timestamp,desc", { headers: getAuthHeaders() })
+        .get("/logs?size=100&sort=timestamp,desc&sort=id,desc", { headers: getAuthHeaders() })
         .then(getPageContent)
         .then((logs) => logs.map(normalizeAuditLog));
 }
