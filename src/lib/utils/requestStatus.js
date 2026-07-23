@@ -170,6 +170,12 @@ export function resolveRequestStatus(rawStatus, apiCategory) {
     };
 }
 
+export function getStatusHexColor(rawStatus) {
+    const color = resolveRequestStatus(rawStatus).color;
+    const match = color.match(/^bg-\[(#[0-9A-Fa-f]{6})\]$/);
+    return match ? match[1] : null;
+}
+
 export function getStatusLabel(rawStatus) {
     return resolveRequestStatus(rawStatus).label;
 }
@@ -252,6 +258,26 @@ export function isVisibleToComprador(rawStatus) {
     return COMPRADOR_VISIBLE_LABELS.includes(getStatusLabel(rawStatus));
 }
 
+const COMPRADOR_INBOUND_LABELS = ["Aprovado", "Auto-aprovado", "Parcialmente aprovada"];
+
+export function toCompradorViewStatus(rawStatus) {
+    return COMPRADOR_INBOUND_LABELS.includes(getStatusLabel(rawStatus))
+        ? "Em atendimento"
+        : rawStatus;
+}
+
+// Aplica o mapeamento acima na solicitação e nos seus itens. Deve rodar DEPOIS de
+// keepOnlyApprovedItemsIfPartial, que ainda depende dos status originais
+// ("Parcialmente aprovada" na solicitação e "Aprovado" nos itens).
+export function toCompradorRequestView(request) {
+    return {
+        ...request,
+        status: toCompradorViewStatus(request.status),
+        produtos: (request.produtos || []).map((item) => ({ ...item, status: toCompradorViewStatus(item.status) })),
+        servicos: (request.servicos || []).map((item) => ({ ...item, status: toCompradorViewStatus(item.status) })),
+    };
+}
+
 // Numa solicitação "Parcialmente aprovada" o comprador só deve ver/comprar os itens
 // que o supervisor aprovou — os recusados não geram trabalho de compra.
 export function keepOnlyApprovedItemsIfPartial(request) {
@@ -267,12 +293,13 @@ export function keepOnlyApprovedItemsIfPartial(request) {
 // Nomes literais exatos cadastrados no banco (Status.name) — usados no PATCH de status.
 // Alguns usam "_" ao inves de espaco; findByNameIgnoreCase so ignora maiusculas/minusculas,
 // entao o valor aqui precisa bater caractere a caractere com o que esta no banco.
+
 export const COMPRADOR_STATUS_OPTIONS = [
-    { value: "Em atendimento", label: "Em atendimento" },
-    { value: "Entregue", label: "Entregue" },
-    { value: "PEDIDO CANCELADO", label: "Pedido cancelado" },
-    { value: "RECEBIMENTO_PARCIAL", label: "Recebimento parcial" },
-    { value: "FUNDO_ROTATIVO", label: "Fundo rotativo" },
-    { value: "CD_CENTRAL", label: "CD Central" },
-    { value: "SOLICITADO_PORTAL", label: "Solicitado Portal" },
+    { value: "EM_ATENDIMENTO", label: "Em atendimento", color: getStatusHexColor("Em atendimento") },
+    { value: "ENTREGUE", label: "Entregue", color: getStatusHexColor("Entregue") },
+    { value: "PEDIDO CANCELADO", label: "Pedido cancelado", color: getStatusHexColor("Cancelado") },
+    { value: "RECEBIMENTO_PARCIAL", label: "Recebimento parcial", color: getStatusHexColor("Recebimento parcial") },
+    { value: "FUNDO_ROTATIVO", label: "Fundo rotativo", color: getStatusHexColor("Fundo rotativo") },
+    { value: "CD_CENTRAL", label: "CD Central", color: getStatusHexColor("CD Central") },
+    { value: "SOLICITADO_PORTAL", label: "Solicitado Portal", color: getStatusHexColor("Solicitado Portal") },
 ];

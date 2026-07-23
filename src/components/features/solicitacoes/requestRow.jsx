@@ -23,9 +23,6 @@ export default function SolicitacaoRow({ item, onClick, onEdit }) {
             className="py-4 xl:py-5 border-b border-gray-100 dark:border-white/10 cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition"
         >
             <div className="flex flex-col gap-3 px-4 sm:px-6 xl:grid xl:grid-cols-3 xl:flex-1 xl:items-center xl:gap-12 2xl:gap-20">
-                <span className="text-[#555555] dark:text-[#C3C6D3] whitespace-nowrap">
-                    {dataFormatada}
-                </span>
 
                 <div className="flex items-center justify-between gap-4 xl:contents">
                     <div className="flex min-w-0 items-center gap-3">
@@ -54,6 +51,10 @@ export default function SolicitacaoRow({ item, onClick, onEdit }) {
                             </button>
                         )}
                     </div>
+                    <span className="text-[#555555] dark:text-[#C3C6D3] whitespace-nowrap">
+                        {dataFormatada}
+                    </span>
+
                     <div className="flex justify-end shrink-0">
                         <StatusBadge status={statusSolicitacao} className="px-4 text-[15px] min-w-[150px]" />
                     </div>

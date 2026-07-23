@@ -5,7 +5,7 @@ import {
     resolveStatusIdsByName,
 } from "@/service/requests";
 
-function buildProductPayload(item, requestId, statusName) {
+export function buildProductPayload(item, requestId, statusName) {
     return {
         requestId: Number(requestId),
         productName: item.nome,
@@ -13,16 +13,16 @@ function buildProductPayload(item, requestId, statusName) {
         measurementUnit: item.unit,
         quantity: item.quantity,
         statusName,
-        additionalInformations: item.additionalInfo,
+        additionalInformations: item.additionalInformations ?? "",
     };
 }
 
-function buildProvisionPayload(item, requestId, statusName, statusIdsByName) {
+export function buildProvisionPayload(item, requestId, statusName, statusIdsByName) {
     return {
         requestId: Number(requestId),
         provisionId: item.provisionId,
         statusId: statusIdsByName.get(statusName),
-        additionalInformation: item.additionalInfo,
+        additionalInformation: item.additionalInformation ?? "",
     };
 }
 

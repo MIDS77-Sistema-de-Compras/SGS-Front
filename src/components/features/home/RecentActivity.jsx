@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import ActivityItem from "./ActivityItem";
 import RecentActivitySkeleton from "./RecentActivitySkeleton";
 import { notificationsService } from "@/service/notifications";
-import { formatRelativeTime, getNotificationIcon, sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
+import { formatRelativeTime, getNotificationIcon, getNotificationTitle, sortNotificationsByDate } from "@/components/features/notifications/notificationUtils";
 import { getUserRole } from "@/lib/utils/getUserRole";
 
 export default function RecentActivity() {
@@ -47,11 +47,16 @@ export default function RecentActivity() {
         sortNotificationsByDate(notifications).slice(0, 4)
     ), [notifications]);
 
-    function openRequest(requestId) {
+    function openRequest(notification) {
+        if (notification.notificationType === "SOLICITACAO_VINCULADA_CR") {
+            router.push(`/solicitacoes/gestao/${notification.requestId}`);
+            return;
+        }
+
         const basePath = getUserRole() === "COMPRADOR"
             ? "/solicitacoes-compra"
             : "/solicitacoes";
-        router.push(`${basePath}/${requestId}`);
+        router.push(basePath);
     }
 
     return (
@@ -85,10 +90,10 @@ export default function RecentActivity() {
                                 key={notification.id}
                                 iconSrc={icon.src}
                                 iconAlt={icon.alt}
-                                title={notification.title || `Solicitacao #${notification.requestId}`}
+                                title={getNotificationTitle(notification)}
                                 subtitle={notification.message || "Atualizacao de solicitacao"}
                                 time={formatRelativeTime(notification.createdAt)}
-                                onClick={notification.requestId ? () => openRequest(notification.requestId) : undefined}
+                                onClick={notification.requestId ? () => openRequest(notification) : undefined}
                             />
                         );
                     })}

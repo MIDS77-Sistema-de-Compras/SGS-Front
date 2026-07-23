@@ -7,6 +7,7 @@ import AdmFooter from "./AdminFooter"
 import { useEffect, useMemo, useState } from "react";
 import { getAllUsers } from "@/service/users/usersSearch"
 import { useAuditLogs } from "@/hooks/useAuditLogs"
+import { isAuditAlertAction } from "@/service/logs"
 import { TriangleAlert } from "lucide-react"
 
 const TotalUsersIcon = () => (
@@ -94,7 +95,7 @@ function returnStatsLogs(logs){
         {
             icon: <TriangleAlert size={28} strokeWidth={2} className="text-[#c00202] dark:text-red-400" />,
             label: "Alertas",
-            count: logs.filter((log) => /DESATI|EXCLU|REMOV|ATUALI/.test(log.actionId.toUpperCase())).length
+            count: logs.filter((log) => isAuditAlertAction(log.actionId)).length
         },
         {
             icon: <ActionsIcon />,

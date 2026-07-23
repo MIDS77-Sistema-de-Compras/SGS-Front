@@ -1,3 +1,10 @@
+import { getUserRole } from "@/lib/utils/getUserRole";
+
+export const ADMINISTRATIVE_ALERT_TYPE = "ALERTA_ADMINISTRATIVO";
+
+const STATUS_UPDATED_TITLE_NORMALIZED =
+    "status da solicitacao atualizado";
+
 export function normalizeText(value = "") {
     return value
         .normalize("NFD")
@@ -5,8 +12,47 @@ export function normalizeText(value = "") {
         .toLowerCase();
 }
 
+export function isAdministrativeAlert(notification) {
+    return notification?.notificationType === ADMINISTRATIVE_ALERT_TYPE;
+}
+
+export function filterNotificationsForRole(notifications = [], role) {
+    if (role !== "ADMIN") {
+        return notifications;
+    }
+
+    return notifications.filter(isAdministrativeAlert);
+}
+
+export function getNotificationTitle(notification) {
+    const title =
+        notification.title ||
+        `Solicitação #${notification.requestId || ""}`;
+
+    if (
+        getUserRole() === "COMPRADOR" &&
+        normalizeText(title).trim() === STATUS_UPDATED_TITLE_NORMALIZED
+    ) {
+        return "Nova solicitação para atendimento";
+    }
+
+    return title;
+}
+
 export function getNotificationIcon(notification) {
-    const content = normalizeText(`${notification.title || ""} ${notification.message || ""}`);
+    const content = normalizeText(
+        `${notification.title || ""} ${notification.message || ""}`
+    );
+
+    if (
+        getUserRole() === "COMPRADOR" &&
+        content.includes("atualizado")
+    ) {
+        return {
+            src: "/images/home/atualizacao.png",
+            alt: "Icone de atualizacao",
+        };
+    }
 
     if (content.includes("aprov")) {
         return {
@@ -59,7 +105,9 @@ export function formatRelativeTime(value) {
         return "";
     }
 
-    const diffInSeconds = Math.floor((Date.now() - date.getTime()) / 1000);
+    const diffInSeconds = Math.floor(
+        (Date.now() - date.getTime()) / 1000
+    );
 
     if (diffInSeconds < 60) {
         return "Agora";
@@ -88,8 +136,13 @@ export function formatRelativeTime(value) {
 
 export function sortNotificationsByDate(notifications = []) {
     return [...notifications].sort((current, next) => {
-        const currentDate = new Date(current.createdAt || 0).getTime();
-        const nextDate = new Date(next.createdAt || 0).getTime();
+        const currentDate = new Date(
+            current.createdAt || 0
+        ).getTime();
+
+        const nextDate = new Date(
+            next.createdAt || 0
+        ).getTime();
 
         return nextDate - currentDate;
     });

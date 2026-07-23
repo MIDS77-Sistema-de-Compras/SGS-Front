@@ -6,16 +6,22 @@ function normalizeRole(role) {
         : null;
 }
 
-function decodeJwtPayload(token) {
-    const payload = token.split('.')[1];
-    if (!payload) return null;
+export function decodeJwtPayload(token) {
+    if (!token) return null;
+    try {
+        const payload = token.split('.')[1];
+        if (!payload) return null;
 
-    const base64 = payload
-        .replace(/-/g, '+')
-        .replace(/_/g, '/')
-        .padEnd(Math.ceil(payload.length / 4) * 4, '=');
+        const base64 = payload
+            .replace(/-/g, '+')
+            .replace(/_/g, '/')
+            .padEnd(Math.ceil(payload.length / 4) * 4, '=');
 
-    return JSON.parse(atob(base64));
+        return JSON.parse(atob(base64));
+    } catch (error) {
+        console.error("Erro ao decodificar o token JWT:", error);
+        return null;
+    }
 }
 
 export function getUserRole() {

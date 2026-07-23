@@ -1,5 +1,6 @@
 import { api, API_BASE_URL, getPageContent } from "./api";
 import { getAuthHeaders } from "./authHeaders";
+import { parseApiDate } from "@/lib/utils/calculateTime";
 
 function pad(value) {
     return String(value).padStart(2, "0");
@@ -8,8 +9,8 @@ function pad(value) {
 function formatTimestamp(isoString) {
     if (!isoString) return { date: "", label: "—" };
 
-    const parsed = new Date(isoString);
-    if (Number.isNaN(parsed.getTime())) return { date: "", label: String(isoString) };
+    const parsed = parseApiDate(isoString);
+    if (!parsed) return { date: "", label: String(isoString) };
 
     const date = `${parsed.getFullYear()}-${pad(parsed.getMonth() + 1)}-${pad(parsed.getDate())}`;
     const label = `${pad(parsed.getDate())}/${pad(parsed.getMonth() + 1)}/${parsed.getFullYear()} ${pad(parsed.getHours())}:${pad(parsed.getMinutes())}`;
@@ -44,9 +45,15 @@ export function normalizeAuditLog(dto) {
     };
 }
 
+export function isAuditAlertAction(action) {
+    if (!action) return false;
+
+    return /DESATI|EXCLU|REMOV|ATUALI|STATUS_ATIVACAO/.test(action.toUpperCase());
+}
+
 export function getAllLogs() {
     return api
-        .get("/logs", { headers: getAuthHeaders() })
+        .get("/logs?size=100&sort=timestamp,desc", { headers: getAuthHeaders() })
         .then(getPageContent)
         .then((logs) => logs.map(normalizeAuditLog));
 }

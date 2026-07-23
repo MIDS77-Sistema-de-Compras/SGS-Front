@@ -12,6 +12,7 @@ import { ModalTermos } from "@/components/features/auth/ModalTermos";
 import { ModalPoliticas } from "@/components/features/auth/ModalPoliticas";
 import { getSafeRedirect } from "@/lib/utils/safeRedirect";
 import { loginUser } from "@/service/auth/auth-login";
+import { decodeJwtPayload } from "@/lib/utils/getUserRole";
 
 export default function LoginPage() {
     useDocumentTitle("Login");
@@ -66,8 +67,8 @@ export default function LoginPage() {
             Cookies.set("jwt", token, cookieOptions);
 
             try {
-                const payloadBase64 = token.split(".")[1];
-                const decodedPayload = JSON.parse(atob(payloadBase64));
+                const decodedPayload = decodeJwtPayload(token);
+                if (!decodedPayload) throw new Error("Payload invalido");
 
                 const userRole = decodedPayload.role;
                 const userName = decodedPayload.name || decodedPayload.nome || "Usuario";
